@@ -1,5 +1,3 @@
-# web_adarts
-
 ## Project setup
 ```
 npm install

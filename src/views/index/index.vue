@@ -6,18 +6,60 @@
       </a-carousel>
     </a-row>
     <a-row class="rowStyle" type="flex" justify="space-between">
-      <a-col :span="7" class="newBox">
-        <img :src="img" alt="">
+      <a-col :span="7">
+        <div class="newBox">
+          <img :src="img" alt="">
+        </div>
+        <div class="newContentStyle">
+          <div class="newTitle">111111111111111111111111</div>
+          <div class="newContent">222222222222222</div>
+          <div class="newIcon">
+            <span style="margin:0 10px">
+              <EyeOutlined /> {{ 20 }}
+            </span>
+            <span>
+              <ScheduleOutlined /> {{ 20 }}
+            </span>
+          </div>
+        </div>
       </a-col>
-      <a-col :span="7" class="newBox">
-        <img :src="img" alt="">
+      <a-col :span="7">
+        <div class="newBox">
+          <img :src="img" alt="">
+        </div>
+        <div class="newContentStyle">
+          <div class="newTitle">111111111111111111111111</div>
+          <div class="newContent">222222222222222</div>
+          <div class="newIcon">
+            <span style="margin:0 10px">
+              <EyeOutlined /> {{ 20 }}
+            </span>
+            <span>
+              <ScheduleOutlined /> {{ 20 }}
+            </span>
+          </div>
+        </div>
       </a-col>
-      <a-col :span="7" class="newBox">
-        <img :src="img" alt="">
+      <a-col :span="7">
+        <div class="newBox">
+          <img :src="img" alt="">
+        </div>
+        <div class="newContentStyle">
+          <div class="newTitle">111111111111111111111111</div>
+          <div class="newContent">222222222222222</div>
+          <div class="newIcon">
+            <span style="margin:0 10px">
+              <EyeOutlined /> {{ 20 }}
+            </span>
+            <span>
+              <ScheduleOutlined /> {{ 20 }}
+            </span>
+          </div>
+        </div>
       </a-col>
     </a-row>
 
-    <divLine :msg="title" :lastDate="getDate()" />
+    <divTitle :msg="title" :lastDate="getDate()" />
 
     <a-row class="bg">
       <a-col :span='8'>
@@ -56,7 +98,7 @@
             <img class="matchImg" :src="item.img">
           </a-col>
           <a-col :span='10'>
-            <div>
+            <div @click="showMore(item.state)" style="cursor:pointer">
               <div>{{ item.title }}</div>
               <div>{{ item.tip }}</div>
             </div>
@@ -78,10 +120,10 @@
       </a-col>
     </a-row>
 
-    <divLine :msg="matchTitle" :lastDate="getDate()" />
+    <divTitle :msg="matchTitle" :lastDate="getDate()" />
 
     <a-row class="rowStyle">
-      <a-tabs class="tabsBox">
+      <a-tabs class="tabsBox" type='card'>
         <a-tab-pane key="1" tab="队伍" class="teamBG">
           <a-col :span="7" class="colStyle">
             <div class="gameStyle">01米老鼠</div>
@@ -94,7 +136,9 @@
                   <div class="teamName">{{ item.teamName }}</div>
                   <div class="name">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
-                    <span @click="showDetail"><InfoCircleFilled /></span>
+                    <span @click="showDetail">
+                      <InfoCircleFilled />
+                    </span>
                   </div>
                   <div class="current">{{ item.current }}</div>
                   <div class="number">{{ item.number }}</div>
@@ -102,10 +146,12 @@
                 <div v-else class="detailStyle">
                   <div class="name">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
-                    <span @click="showDetail"><InfoCircleFilled /></span>
+                    <span @click="showDetail">
+                      <InfoCircleFilled />
+                    </span>
                   </div>
                   <div class="current">
-                    <span>{{ item.current }}</span>     <span>{{ item.number }}</span>
+                    <span>{{ item.current }}</span> <span>{{ item.number }}</span>
                   </div>
                 </div>
               </div>
@@ -126,7 +172,9 @@
                   <div class="teamName">{{ item.teamName }}</div>
                   <div class="name">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
-                    <span @click="showDetail"><InfoCircleFilled /></span>
+                    <span @click="showDetail">
+                      <InfoCircleFilled />
+                    </span>
                   </div>
                   <div class="current">{{ item.current }}</div>
                   <div class="number">{{ item.number }}</div>
@@ -134,10 +182,12 @@
                 <div v-else class="detailStyle">
                   <div class="name">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
-                    <span @click="showDetail"><InfoCircleFilled /></span>
+                    <span @click="showDetail">
+                      <InfoCircleFilled />
+                    </span>
                   </div>
                   <div class="current">
-                    <span>{{ item.current }}</span>     <span>{{ item.number }}</span>
+                    <span>{{ item.current }}</span> <span>{{ item.number }}</span>
                   </div>
                 </div>
               </div>
@@ -158,7 +208,9 @@
                   <div class="teamName">{{ item.teamName }}</div>
                   <div class="name">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
-                    <span @click="showDetail"><InfoCircleFilled /></span>
+                    <span @click="showDetail">
+                      <InfoCircleFilled />
+                    </span>
                   </div>
                   <div class="current">{{ item.current }}</div>
                   <div class="number">{{ item.number }}</div>
@@ -166,10 +218,12 @@
                 <div v-else class="detailStyle">
                   <div class="name">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
-                    <span @click="showDetail"><InfoCircleFilled /></span>
+                    <span @click="showDetail">
+                      <InfoCircleFilled />
+                    </span>
                   </div>
                   <div class="current">
-                    <span>{{ item.current }}</span>     <span>{{ item.number }}</span>
+                    <span>{{ item.current }}</span> <span>{{ item.number }}</span>
                   </div>
                 </div>
               </div>
@@ -193,9 +247,12 @@ import {
   DownOutlined,
   BankFilled,
   SearchOutlined,
-  InfoCircleFilled
+  InfoCircleFilled,
+  EyeOutlined,
+  ScheduleOutlined,
 } from "@ant-design/icons-vue";
-import divLine from "@/components/DividingLine.vue";
+import divTitle from "@/components/DividingLine.vue";
+import router from "@/router";
 interface DataProps {
   click: () => void;
 }
@@ -205,7 +262,9 @@ export default defineComponent({
     BankFilled,
     SearchOutlined,
     InfoCircleFilled,
-    divLine,
+    EyeOutlined,
+    ScheduleOutlined,
+    divTitle,
   },
   name: "index",
   setup() {
@@ -256,9 +315,9 @@ export default defineComponent({
           img: require("@/assets/1.jpg"),
           teamName: "2020第一次比赛",
           name: "张自然",
-          area:"0981-广州",
-          current:"PPD",
-          number:"25.94",
+          area: "0981-广州",
+          current: "PPD",
+          number: "25.94",
           ppd: true,
         },
         {
@@ -266,9 +325,9 @@ export default defineComponent({
           img: require("@/assets/1.jpg"),
           teamName: "2021第二次比赛",
           name: "李逍遥",
-          area:"0-08武汉",
-          current:"MPR",
-          number:"215.04",
+          area: "0-08武汉",
+          current: "MPR",
+          number: "215.04",
           ppd: false,
         },
         {
@@ -276,9 +335,9 @@ export default defineComponent({
           img: require("@/assets/1.jpg"),
           teamName: "2022第三次比赛",
           name: "王富贵",
-          area:"7192-2青岛",
-          current:"WIN",
-          number:"5.40",
+          area: "7192-2青岛",
+          current: "WIN",
+          number: "5.40",
           ppd: false,
         },
         {
@@ -286,9 +345,9 @@ export default defineComponent({
           img: require("@/assets/1.jpg"),
           teamName: "2022第三次比赛",
           name: "王富贵",
-          area:"7192-2青岛",
-          current:"WIN",
-          number:"5.40",
+          area: "7192-2青岛",
+          current: "WIN",
+          number: "5.40",
           ppd: false,
         },
         {
@@ -296,9 +355,9 @@ export default defineComponent({
           img: require("@/assets/1.jpg"),
           teamName: "2022第三次比赛",
           name: "王富贵",
-          area:"7192-2青岛",
-          current:"WIN",
-          number:"5.40",
+          area: "7192-2青岛",
+          current: "WIN",
+          number: "5.40",
           ppd: false,
         },
       ],
@@ -320,9 +379,15 @@ export default defineComponent({
       intoPhoto: (value: string) => {
         console.log(value);
       },
-      showDetail:() => {
-        console.log('1')
-      }
+      showDetail: () => {
+        console.log("1");
+      },
+      showMore: (value: string) => {
+        router.push({
+          path: "/calendar",
+          query: { value },
+        });
+      },
     });
     onMounted(() => {
       console.log("1111111");
@@ -350,7 +415,6 @@ export default defineComponent({
 }
 .newBox {
   height: 205px;
-  width: 365px;
 }
 .newBox img {
   height: 100%;
@@ -399,30 +463,30 @@ export default defineComponent({
   background: #d9d9d9;
   color: #797878;
 }
-.first .teamImgBox{
+.first .teamImgBox {
   height: 100px;
 }
-.noFirst .teamImgBox{
+.noFirst .teamImgBox {
   height: 60px;
 }
-.teamImgBox img{
+.teamImgBox img {
   height: 100%;
 }
-.first{
+.first {
   height: 150px;
   display: flex;
   justify-content: space-around;
 }
-.first .detailStyle{
+.first .detailStyle {
   text-align: left;
 }
-.first .teamName{
+.first .teamName {
   font-size: 20px;
 }
-.first .name{
+.first .name {
   font-weight: bold;
 }
-.first .current{
+.first .current {
   width: 60px;
   text-align: center;
   font-weight: bold;
@@ -430,64 +494,74 @@ export default defineComponent({
   background: #000;
   border-radius: 10px;
 }
-.first .number{
+.first .number {
   font-size: 25px;
   color: red;
   font-weight: bold;
 }
-.colStyle{
+.colStyle {
   border: 1px solid #000;
 }
-.gameStyle{
+.gameStyle {
   height: 30px;
   line-height: 30px;
   font-size: 20px;
   background: #000;
   color: #fff;
 }
-.noFirst{
+.noFirst {
   display: flex;
   height: 60px;
   padding-left: 25px;
 }
-.noFirst .current{
+.noFirst .current {
   color: red;
 }
-.noFirst .detailStyle{
+.noFirst .detailStyle {
   margin-left: 20px;
   text-align: left;
 }
-.teamBox{
+.teamBox {
   background: #eee;
   margin: 5px 0;
   padding: 5px;
   box-sizing: border-box;
 }
-.area span{
+.area span {
   cursor: pointer;
 }
-.more{
+.more {
   height: 50px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
-.more div{
+.more div {
   color: #fff;
   background: red;
   width: 60px;
   border-radius: 10px;
   height: 22px;
 }
-.teamBG{
+.teamBG {
   display: flex;
   justify-content: space-around;
 }
 .tabsBox >>> .ant-tabs-nav-scroll {
   display: flex;
-  margin: 10px;
 }
-#dots>>>.dots li{
+#dots >>> .dots li {
   background: red;
+}
+.newContentStyle {
+  text-align: left;
+  margin: 5px 0;
+}
+.newTitle {
+  font-size: 25px;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

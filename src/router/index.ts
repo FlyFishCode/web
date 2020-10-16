@@ -29,6 +29,30 @@ const routes: Array<RouteRecordRaw> = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "calendar" */ '@/views/result/calendar/index.vue')
+  },
+  {
+    path: '/ranking',
+    name: 'Ranking',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "calendar" */ '@/views/result/calendar/ranking.vue')
+  },
+  {
+    path: '/matchTeam',
+    name: 'MatchTeam',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "matchTeam" */ '@/views/result/calendar/matchTeam.vue')
+  },
+  {
+    path: '/teamIndex',
+    name: 'teamIndex',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "teamIndex" */ '@/views/team/teamIndex.vue')
   }
 ]
 

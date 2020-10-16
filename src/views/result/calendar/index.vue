@@ -4,7 +4,7 @@
       <img :src="img" alt="">
     </a-row>
     <a-row>
-      <a-tabs>
+      <a-tabs class="tabsBox">
         <a-tab-pane key="1" tab="比赛信息">
           <matchInfo />
         </a-tab-pane>
@@ -12,10 +12,10 @@
           <calendar />
         </a-tab-pane>
         <a-tab-pane key="3" tab="排名/记录">
-          Content of Tab Pane 3
+          <ranking />
         </a-tab-pane>
         <a-tab-pane key="4" tab="参赛队伍">
-          Content of Tab Pane 3
+          <matchTeam />
         </a-tab-pane>
       </a-tabs>
     </a-row>
@@ -23,32 +23,23 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
+import { useRoute } from 'vue-router'
 import matchInfo from "@/views/result/calendar/matchInfo.vue";
 import calendar from "@/views/result/calendar/calendar.vue";
-// import {
-//   DownOutlined,
-//   BankFilled,
-//   SearchOutlined,
-//   SettingFilled,
-// } from "@ant-design/icons-vue";
-// interface HTMLInputEvent {
-//   value: HTMLInputElement & EventTarget;
-// }
-// interface DataProp {
-//   monthList: { id: number; value: number }[];
-//   currentValue: string;
-// }
+import ranking from '@/views/result/calendar/ranking.vue'
+import matchTeam from '@/views/result/calendar/matchTeam.vue'
 export default defineComponent({
   name: "hearder",
-  components: { matchInfo, calendar },
+  components: { matchInfo, calendar,matchTeam,ranking },
   setup() {
+    const route = useRoute()
     const data = reactive({
       img: require("@/assets/21.jpg"),
       place: "地点",
       currentState: "当前状态",
     });
     onMounted(() => {
-      console.log(1);
+      console.log(route.query);
     });
     return {
       ...toRefs(data),
@@ -63,5 +54,8 @@ export default defineComponent({
 .imgBox img {
   height: 100%;
   width: 100%;
+}
+.tabsBox >>> .ant-tabs-nav-scroll {
+  display: flex;
 }
 </style>

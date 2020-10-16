@@ -34,44 +34,46 @@
     <a-row class="centerStyle">
       <a-tabs>
         <a-tab-pane key="1" tab="Multi League" class="tab">
-          <a-col :span='2'>
-            <BankFilled class="fontIcon" />{{ place }}
-          </a-col>
-          <a-col :span='2'>
-            <a-dropdown>
-              <template v-slot:overlay>
-                <a-menu>
-                  <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                    {{ item.value }}
-                  </a-menu-item>
-                </a-menu>
-              </template>
-              <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-                <DownOutlined />
-              </a-button>
-            </a-dropdown>
-          </a-col>
-          <a-col :span='3'>{{ currentState }}</a-col>
-          <a-col :span='2'>
-            <a-dropdown>
-              <template v-slot:overlay>
-                <a-menu>
-                  <a-menu-item v-for="item in stateList" :key="item.id" @click="handleMenuClick(item.value)">
-                    {{ item.value }}
-                  </a-menu-item>
-                </a-menu>
-              </template>
-              <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-                <DownOutlined />
-              </a-button>
-            </a-dropdown>
-          </a-col>
-          <a-col :span='2' :offset="8">
-            <SearchOutlined class="fontIcon" />{{ matchName }}
-          </a-col>
-          <a-col :span='5'>
-            <a-input-search v-model:value="value" enter-button="Search" size="default" @search="onSearch" />
-          </a-col>
+          <a-row class=" rowSearchBox">
+            <a-col :span='2'>
+              <BankFilled class="fontIcon" />{{ place }}
+            </a-col>
+            <a-col :span='2'>
+              <a-dropdown>
+                <template v-slot:overlay>fontIcon
+                  <a-menu>
+                    <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
+                      {{ item.value }}
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+                <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
+                  <DownOutlined />
+                </a-button>
+              </a-dropdown>
+            </a-col>
+            <a-col :span='3'>{{ currentState }}</a-col>
+            <a-col :span='2'>
+              <a-dropdown>
+                <template v-slot:overlay>
+                  <a-menu>
+                    <a-menu-item v-for="item in stateList" :key="item.id" @click="handleMenuClick(item.value)">
+                      {{ item.value }}
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+                <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
+                  <DownOutlined />
+                </a-button>
+              </a-dropdown>
+            </a-col>
+            <a-col :span='2' :offset="8">
+              <SearchOutlined class="fontIcon" />{{ matchName }}
+            </a-col>
+            <a-col :span='5'>
+              <a-input-search v-model:value="value" enter-button="Search" size="default" @search="onSearch" />
+            </a-col>
+          </a-row>
           <a-row>
             <a-col :span='4' class="centerFont">
               <SettingFilled /> {{ matchTitle + '  ' +matchTotal }}
@@ -91,7 +93,7 @@
                 <a-col :span='5' class="matchImgBox">
                   <img class="matchImg" :src="item.img">
                 </a-col>
-                <a-col :span='10'>
+                <a-col @click="showMore(item.state)" style="cursor:pointer" :span='10'>
                   <div>
                     <div>{{ item.title }}</div>
                     <div>{{ item.tip }}</div>
@@ -119,44 +121,46 @@
         </a-tab-pane>
 
         <a-tab-pane key="2" tab="The Champion" class="tab">
-          <a-col :span='2'>
-            <BankFilled class="fontIcon" />{{ place }}
-          </a-col>
-          <a-col :span='2'>
-            <a-dropdown>
-              <template v-slot:overlay>
-                <a-menu>
-                  <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                    {{ item.value }}
-                  </a-menu-item>
-                </a-menu>
-              </template>
-              <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-                <DownOutlined />
-              </a-button>
-            </a-dropdown>
-          </a-col>
-          <a-col :span='3'>{{ currentState }}</a-col>
-          <a-col :span='2'>
-            <a-dropdown>
-              <template v-slot:overlay>
-                <a-menu>
-                  <a-menu-item v-for="item in stateList" :key="item.id" @click="handleMenuClick(item.value)">
-                    {{ item.value }}
-                  </a-menu-item>
-                </a-menu>
-              </template>
-              <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-                <DownOutlined />
-              </a-button>
-            </a-dropdown>
-          </a-col>
-          <a-col :span='2' :offset="8">
-            <SearchOutlined class="fontIcon" />{{ matchName }}
-          </a-col>
-          <a-col :span='5'>
-            <a-input-search v-model:value="value" enter-button="Search" size="default" @search="onSearch" />
-          </a-col>
+          <a-row class="rowSearchBox">
+            <a-col :span='2'>
+              <BankFilled class="fontIcon" />{{ place }}
+            </a-col>
+            <a-col :span='2'>
+              <a-dropdown>
+                <template v-slot:overlay>
+                  <a-menu>
+                    <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
+                      {{ item.value }}
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+                <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
+                  <DownOutlined />
+                </a-button>
+              </a-dropdown>
+            </a-col>
+            <a-col :span='3'>{{ currentState }}</a-col>
+            <a-col :span='2'>
+              <a-dropdown>
+                <template v-slot:overlay>
+                  <a-menu>
+                    <a-menu-item v-for="item in stateList" :key="item.id" @click="handleMenuClick(item.value)">
+                      {{ item.value }}
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+                <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
+                  <DownOutlined />
+                </a-button>
+              </a-dropdown>
+            </a-col>
+            <a-col :span='2' :offset="8">
+              <SearchOutlined class="fontIcon" />{{ matchName }}
+            </a-col>
+            <a-col :span='5'>
+              <a-input-search v-model:value="value" enter-button="Search" size="default" @search="onSearch" />
+            </a-col>
+          </a-row>
           <a-row>
             <a-col :span='6' class="centerFont">
               <SettingFilled /> {{ champion + '  ' +matchTotal }}
@@ -176,7 +180,7 @@
                 <a-col :span='5' class="matchImgBox">
                   <img class="matchImg" :src="item.img">
                 </a-col>
-                <a-col :span='10'>
+                <a-col @click="showMore(item.state)" style="cursor:pointer" :span='10'>
                   <div>
                     <div>{{ '高分赛' }}</div>
                     <div>{{ item.tip }}</div>
@@ -208,6 +212,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import {
   DownOutlined,
   BankFilled,
@@ -225,6 +230,7 @@ export default defineComponent({
   name: "hearder",
   components: { DownOutlined, BankFilled, SearchOutlined, SettingFilled },
   setup() {
+    const Router = useRouter();
     const data: DataProp = reactive({
       title: "日程表/结果",
       currentValue: "新闻",
@@ -285,6 +291,12 @@ export default defineComponent({
       onSearch: (e: string) => {
         console.log(e);
       },
+      showMore: (value: string) => {
+        Router.push({
+          path: "/calendar",
+          query: { value },
+        });
+      },
     });
     onMounted(() => {
       for (let i = 1; i < 13; i += 1) {
@@ -323,11 +335,6 @@ export default defineComponent({
 }
 .centerStyle {
   line-height: 32px;
-}
-.fontIcon {
-  font-size: 20px;
-  position: relative;
-  top: 1px;
 }
 .tabs {
   display: flex;

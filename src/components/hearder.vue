@@ -62,12 +62,10 @@
     </a-col>
   </a-row>
   <a-row class="rowStyle">
-    <a-tabs class="tabsBox" @tabClick="tabClick">
+    <a-tabs class="tabsBox" type='card' @tabClick="tabClick">
       <a-tab-pane key="/news" tab="新闻"></a-tab-pane>
       <a-tab-pane key="/result" tab="日程表/结果"></a-tab-pane>
-      <a-tab-pane key="3" tab="队伍">
-        Content of Tab Pane 3
-      </a-tab-pane>
+      <a-tab-pane key="/teamIndex" tab="队伍"></a-tab-pane>
       <a-tab-pane key="4" tab="玩家">
         Content of Tab Pane 3
       </a-tab-pane>
@@ -80,6 +78,11 @@
       <a-tab-pane key="7" tab="比赛指南">
         Content of Tab Pane 3
       </a-tab-pane>
+      <template v-slot:tabBarExtraContent>
+        <a-button>
+          myPage
+        </a-button>
+      </template>
     </a-tabs>
   </a-row>
 </template>
@@ -131,6 +134,5 @@ export default defineComponent({
 }
 .tabsBox >>> .ant-tabs-nav-scroll {
   display: flex;
-  margin: 10px;
 }
 </style>>

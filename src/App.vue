@@ -58,4 +58,18 @@ export default defineComponent({
 .dropdown button {
   width: 100%;
 }
+.fontIcon {
+  font-size: 20px;
+  position: relative;
+  top: 1px;
+}
+ /* 字体图表/选择框 一行的文字样式 */
+.titleStyle {
+  height: 32px;
+  line-height: 32px;
+}
+.rowSearchBox{
+  background: #f3f3f3;
+  padding: 12px 0;
+}
 </style>

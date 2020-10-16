@@ -1,12 +1,12 @@
 <template>
   <div>
     <a-row>
-      <a-col :span='4' class="centerFont">
+      <a-col :span='3' class="centerFont">
         <SettingFilled /> {{ msg}}
       </a-col>
     </a-row>
     <a-row>
-      <a-col :span='4' class="sencend">
+      <a-col :span='3' class="sencend">
         <SettingFilled /> {{ sencend }}
       </a-col>
     </a-row>

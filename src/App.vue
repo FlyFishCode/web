@@ -1,27 +1,40 @@
 <template>
   <a-row type="flex" justify="center">
     <a-col :span="14" class="bg">
-      <hearder />
-      <router-view />
-      <afooter />
+      <!-- <a-config-provider :locale="locale"> -->
+        <hearder />
+        <router-view />
+        <afooter />
+      <!-- </a-config-provider> -->
     </a-col>
   </a-row>
 </template>
 
-<script lang="ts">
+<script>
 import hearder from "@/components/hearder.vue";
 import afooter from "@/components/footer.vue";
-import { defineComponent } from "vue";
+import { defineComponent,reactive,toRefs } from "vue";
+import zhCN from 'ant-design-vue/es/locale/en_GB';
 export default defineComponent({
   name: "app",
   components: {
     hearder,
     afooter,
   },
+  setup(){
+    const data = reactive({
+      locale:zhCN
+    });
+    return {
+      ...toRefs(data)
+    }
+  }
 });
 </script>
 
 <style>
+/* // 下载模块animate.css  是ts类型文件 报错 所以改全局引入 */
+@import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css";
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -35,7 +48,7 @@ export default defineComponent({
 .rowStyle {
   margin: 15px 0;
 }
-#title-g{
+#title-g {
   height: 50px;
   border-radius: 20px 20px 0 0;
   border: 1px solid #2b2b2b;
@@ -63,13 +76,19 @@ export default defineComponent({
   position: relative;
   top: 1px;
 }
- /* 字体图表/选择框 一行的文字样式 */
+/* 字体图表/选择框 一行的文字样式 */
 .titleStyle {
   height: 32px;
   line-height: 32px;
 }
-.rowSearchBox{
+.rowSearchBox {
   background: #f3f3f3;
   padding: 12px 0;
+}
+.pagination {
+  display: flex;
+}
+.content {
+  margin: 5px;
 }
 </style>

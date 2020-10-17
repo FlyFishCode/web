@@ -1,0 +1,313 @@
+<template>
+  <div>
+    <a-row class="rowStyle">
+      <a-col :span='12' class="allBox">
+        <a-col :span='12' class="firstClass">
+          <img class="imgBg" :src="infoData.img" alt="">
+        </a-col>
+        <a-col :span='12' class="firstClass FONT">
+          <div class="teamName" @click="showTeamInfo">{{ infoData.teamName }}</div>
+          <div class="disabledClass">{{ infoData.captainName }}</div>
+          <div class="disabledClass">{{ infoData.place }}
+            <span @click="showDetail" class="icon">
+              <InfoCircleFilled />
+            </span>
+          </div>
+          <div class="disabledClass">{{ infoData.country }}</div>
+        </a-col>
+      </a-col>
+      <!-- // 左侧按钮 -->
+      <a-col :span='12' class="carousel">
+        <a-col :span='2' class="iconFont leftIcon">
+          <LeftCircleOutlined @click="leftClick" />
+        </a-col>
+        <a-col class="center animate__backOutRight" id="Box">
+          <div v-for="item in infoData.resultList" :key="item.id" class="centerBox">
+            <div class="progressStyle">
+              <div class="title">{{ '队伍等级' }}</div>
+              <a-progress type="circle" class="myYuan" :percent="75" />
+            </div>
+            <div class="matchBox">
+              <div class="fontStyle">
+                <div class="left">
+                  <div v-if="item.rating">{{ 'RATING' }}
+                    <a-progress :percent="item.rating" strokeColor='red' />
+                  </div>
+                  <div v-if="item.ppd">{{ 'PPD' }}
+                    <a-progress :percent="item.ppd" strokeColor='red' />
+                  </div>
+                  <div v-if="item.mpr">{{ 'MPR' }}
+                    <a-progress :percent="item.mpr" strokeColor='red' />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a-col>
+        <!-- 右侧按钮 -->
+        <a-col :span='2' class="iconFont rightIcon">
+          <RightCircleOutlined @click="rightClick" />
+        </a-col>
+        <!-- 展示条 -->
+        <div class="showIndex">
+          <div v-for="(item,index) in infoData.resultList" :key="item.index" class='otherBox' :class="{isActived:index === currentIndex}"></div>
+        </div>
+      </a-col>
+    </a-row>
+  </div>
+</template>
+
+<script lang='ts'>
+import { useRoute } from "vue-router";
+import { reactive, toRefs, onMounted, ref } from "vue";
+import {
+  InfoCircleFilled,
+  LeftCircleOutlined,
+  RightCircleOutlined,
+} from "@ant-design/icons-vue";
+export default {
+  name: "showTeamTopOne",
+  components: {
+    InfoCircleFilled,
+    LeftCircleOutlined,
+    RightCircleOutlined,
+  },
+  setup() {
+    const route = useRoute();
+    let currentPosition = 0;
+    const currentIndex = ref(0);
+    const data = reactive({
+      infoData: {
+        img: require("@/assets/1.jpg"),
+        teamName: "上海市消防总队黄埔支队嵩山中队",
+        captainName: "李逍遥",
+        place: "李逍遥",
+        country: "山东",
+        allScore: "总分数",
+        scoreNumber: 59,
+        ppdNumber: 51,
+        mprNumber: 65,
+        resultList: [
+          {
+            id: 1,
+            name: "Award 01",
+            rating:0,
+            ppd: 20,
+            mpr: 25,
+          },
+          {
+            id: 1,
+            name: "Award 02",
+            rating:0,
+            ppd: 20,
+            mpr: 25,
+          },
+          {
+            id: 1,
+            name: "Award 03",
+            rating:42,
+            ppd: 20,
+            mpr: 25,
+          }
+        ],
+      },
+      showTeamInfo: () => {
+        console.log("111");
+      },
+      showDetail: () => {
+        console.log("222");
+      },
+      leftClick: () => {
+        const box = document.getElementById("Box") as HTMLElement;
+        if (currentIndex.value === 0) {
+          currentIndex.value = 0;
+        } else {
+          currentIndex.value -= 1;
+        }
+        if (currentPosition === 0) {
+          currentPosition = 0;
+        } else {
+          currentPosition += 550;
+        }
+        box.style.left = `${currentPosition}px`;
+      },
+      rightClick: () => {
+        const box = document.getElementById("Box") as HTMLElement;
+        if (currentIndex.value === data.infoData.resultList.length - 1) {
+          currentIndex.value = data.infoData.resultList.length - 1;
+        } else {
+          currentIndex.value += 1;
+        }
+        if (
+          Math.abs(currentPosition) ===
+          (data.infoData.resultList.length - 1) * 550
+        ) {
+          currentPosition = -(data.infoData.resultList.length - 1) * 550;
+        } else {
+          currentPosition -= 550;
+        }
+        box.style.left = `${currentPosition}px`;
+      },
+    });
+    onMounted(() => {
+      console.log(route.query);
+    });
+    return {
+      ...toRefs(data),
+      currentIndex,
+    };
+  },
+};
+</script>
+<style scoped>
+.rowStyle {
+  height: 190px;
+  margin: 10px 0;
+  padding: 5px;
+  background: #555;
+  box-sizing: border-box;
+}
+.imgBg {
+  width: 60%;
+}
+.allBox {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #fff;
+}
+.carousel {
+  display: flex;
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+}
+.firstClass {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+}
+.FONT {
+  padding-left: 10px;
+}
+.teamName {
+  font-size: 15px;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+}
+.disabledClass {
+  color: #eee;
+  cursor: pointer;
+}
+.icon {
+  position: relative;
+  top: 1px;
+}
+.secondClass .bigFont {
+  font-size: 25px;
+  color: #fff;
+  height: 100%;
+}
+.score {
+  color: red;
+  font-size: 50px;
+}
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+}
+.matchBox {
+  height: 90%;
+  width: 100%;
+  color: #fff;
+}
+.fontStyle {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+}
+.iconFont {
+  color: #fff;
+  font-size: 25px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.iconFont :hover {
+  opacity: 0.7;
+}
+.center {
+  display: flex;
+  position: relative;
+  left: 0px;
+}
+.leftIcon {
+  position: absolute;
+  left: 0px;
+  top: calc(50% - 10px);
+  z-index: 1;
+}
+.rightIcon {
+  position: absolute;
+  right: 0px;
+  top: calc(50% - 10px);
+}
+.centerBox {
+  width: 510px;
+  margin: 0 20px;
+  display: flex;
+  justify-content: space-around;
+}
+.animate__backOutRight {
+  transition: all 1s ease;
+}
+.myYuan >>> .ant-progress-inner {
+  width: 100px !important;
+  height: 100px !important;
+}
+.myProgress {
+  display: flex;
+  justify-content: space-around;
+}
+.myProgressBox {
+  width: 40%;
+}
+.myProgressBox >>> .ant-progress-text {
+  display: none;
+}
+.showIndex {
+  display: flex;
+  width: 100%;
+  bottom: 5px;
+  left: 0px;
+  justify-content: center;
+  position: absolute;
+}
+.otherBox {
+  width: 20px;
+  height: 5px;
+  margin: 0 3px;
+  background: #fff;
+}
+.isActived {
+  background: red;
+}
+.progressStyle{
+  height: 90%;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.left{
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+</style>

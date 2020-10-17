@@ -34,7 +34,7 @@
     <a-row class="centerStyle">
       <a-tabs>
         <a-tab-pane key="1" tab="Multi League" class="tab">
-          <a-row class=" rowSearchBox">
+          <a-row class="rowSearchBox">
             <a-col :span='2'>
               <BankFilled class="fontIcon" />{{ place }}
             </a-col>
@@ -322,9 +322,6 @@ export default defineComponent({
 }
 .btnStyle {
   width: 100%;
-}
-.content {
-  margin: 5px;
 }
 .btnBox {
   height: 50px;

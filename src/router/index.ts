@@ -14,6 +14,7 @@ const routes: Array<RouteRecordRaw> = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "news" */ '@/views/news/news.vue')
   },
+  // 日程表/结果
   {
     path: '/result',
     name: 'Result',
@@ -46,6 +47,7 @@ const routes: Array<RouteRecordRaw> = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "matchTeam" */ '@/views/result/calendar/matchTeam.vue')
   },
+  // 队伍模块
   {
     path: '/teamIndex',
     name: 'teamIndex',
@@ -53,6 +55,14 @@ const routes: Array<RouteRecordRaw> = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "teamIndex" */ '@/views/team/teamIndex.vue')
+  },
+  {
+    path: '/teamInfo',
+    name: 'teamInfo',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "teamInfo" */ '@/views/team/teamInfo.vue')
   }
 ]
 

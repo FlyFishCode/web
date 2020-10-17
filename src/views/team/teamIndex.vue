@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <divTitle :msg="title" :lastDate="getDate()" />
+  <div class="content">
+    <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
     <a-row class="rowStyle">
       <a-col :span='5' class="centerFont">
         <SettingFilled /> {{ msg }}
@@ -44,7 +44,7 @@
             </div>
           </div>
           <div class="backBox">
-            <u class="backFont" @click="showDetail">{{ item.top }}</u>
+            <u class="backFont" @click="showDetail(item.id)">{{ item.top }}</u>
           </div>
         </div>
       </a-col>
@@ -109,38 +109,82 @@
         <SettingFilled /> {{ `队伍列表 (${teamList.length})` }}
       </a-col>
     </a-row>
-    <a-row v-for="item in teamList" :key="item.id" class="eveyTeam">
-      <a-col :span='3' class="imgColStyle">
-        <div>
-          <img class="matchImg" :src="item.img" alt="">
-        </div>
-      </a-col>
-      <a-col :span='4'>
-        <div>{{ item.teamName }}</div>
-        <div>
-          <div>{{ item.place }}</div>
-          <div>{{ item.couny }}</div>
-        </div>
-        <div>{{ item.captain }}</div>
-      </a-col>
-      <a-col :span='3'>
-        <div></div>
-        <div></div>
-      </a-col>
-      <a-col :span='8'>
-        <div></div>
-        <div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </a-col>
-      <a-col :span='3'>
-        <div></div>
-        <div></div>
-      </a-col>
-      <a-col :span='2'>
-        <div></div>
+
+    <a-row v-for="(item,index) in teamList" :key="item.id">
+      <a-row class="eveyTeam">
+        <a-col :span='3' class="imgColStyle">
+          <div>
+            <img class="matchImg" :src="item.img" alt="">
+          </div>
+        </a-col>
+        <a-col :span='4' class="infoClass">
+          <div class="teamStyle">{{ item.teamName }}</div>
+          <div class="placeStyle">
+            <div>{{ item.place }}</div>/
+            <div class="counyStyle">{{ item.couny }}</div><span @click="showDetail">
+              <InfoCircleFilled />
+            </span>
+          </div>
+          <div>{{ item.captain }}</div>
+        </a-col>
+        <a-col :span='3' class="vipBox">
+          <div>{{ vip }}</div>
+          <div>
+            <UserOutlined />{{ item.vipCount }}
+          </div>
+        </a-col>
+        <a-col :span='8' class="topBox">
+          <div>{{ topInfoTitle }}</div>
+          <div class="infoStyle">
+            <div>{{ `Rating  ${item.ranting}` }}</div>|
+            <div>{{ `PPD  ${item.PPD}` }}</div>|
+            <div>{{ `MPR  ${item.MPR}` }}</div>
+          </div>
+        </a-col>
+        <a-col :span='3' class="vipBox">
+          <div>{{ type }}</div>
+          <div>{{ item.count }}</div>
+        </a-col>
+        <a-col :span='2' class="iconFont">
+          <div v-if="item.record.length">
+            <div v-if="item.flag" @click="changeFlag(index)">
+              <DownCircleOutlined />
+            </div>
+            <div v-else @click="changeFlag(index)">
+              <UpCircleOutlined />
+            </div>
+          </div>
+        </a-col>
+      </a-row>
+      <transition enter-active-class="animate__animated animate__bounceInUp">
+        <a-row v-show="item.flag" class="recordBox">
+          <div class="matchTitle">{{ joinMatch }}</div>
+          <a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
+            <a-col :span='3' class="imgColStyle">
+              <div>
+                <img class="matchImg" :src="recordInfo.img" alt="">
+              </div>
+            </a-col>
+            <a-col :span='10' class="countBox">
+              <div class="recordInfoStyle">
+                <div class="recordInfoFont">{{ recordInfo.matchName }}</div>
+                <div>{{ recordInfo.date }}</div>
+                <div>{{ recordInfo.place }}</div>
+              </div>
+              <div class="btnBox">
+                <div v-for="disition in recordInfo.class" :key="disition.index">
+                  <a-button type="danger" size='small'>{{ disition.className }}</a-button>
+                </div>
+              </div>
+            </a-col>
+          </a-row>
+        </a-row>
+      </transition>
+    </a-row>
+
+    <a-row class="rowStyle">
+      <a-col class="pagination">
+        <a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="500" @showSizeChange="onShowSizeChange" />
       </a-col>
     </a-row>
   </div>
@@ -148,12 +192,17 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
+import { useRouter } from 'vue-router'
 import divTitle from "@/components/DividingLine.vue";
 import {
   SettingFilled,
   BankFilled,
   DownOutlined,
   SearchOutlined,
+  InfoCircleFilled,
+  UserOutlined,
+  DownCircleOutlined,
+  UpCircleOutlined,
 } from "@ant-design/icons-vue";
 export default defineComponent({
   name: "teamIndex",
@@ -163,8 +212,13 @@ export default defineComponent({
     DownOutlined,
     SearchOutlined,
     SettingFilled,
+    InfoCircleFilled,
+    UserOutlined,
+    DownCircleOutlined,
+    UpCircleOutlined,
   },
   setup() {
+    const Router = useRouter()
     const data = reactive({
       title: "队伍",
       msg: "最佳队伍 (League)",
@@ -172,6 +226,14 @@ export default defineComponent({
       currentState: "进行状态",
       matchName: "搜索标准",
       currentValue: 1,
+      vip: "会员",
+      value: 201,
+      type: "报名",
+      joinMatch: "参加比赛",
+      topInfoTitle: "Top 4 平均比赛等级",
+      current:1,
+      pageSize:1,
+      colSpan:4,
       monthList: [],
       stateList: [],
       teamList: [
@@ -186,11 +248,80 @@ export default defineComponent({
           ranting: 2.15,
           PPD: 25.0,
           MPR: 19.5,
+          count: 0,
           enroll: 10,
+          flag: false,
           record: [
             {
               matchName: "第三届DARTS WORLD（广州联赛）",
-              date: "2020-5-40",
+              img: require("@/assets/1.jpg"),
+              date: "2020-5-40 ~ 2020-6-10",
+              place: "广州",
+              class: [
+                { className: "class1" },
+                { className: "class2" },
+                { className: "class3" },
+              ],
+            },
+            {
+              matchName: "第三届DARTS WORLD（广州联赛）",
+              img: require("@/assets/1.jpg"),
+              date: "2020-5-40 ~ 2020-6-10",
+              place: "广州",
+              class: [
+                { className: "class1" },
+                { className: "class2" },
+                { className: "class3" },
+              ],
+            },
+          ],
+        },
+        {
+          id: 1,
+          img: require("@/assets/1.jpg"),
+          teamName: "上海队",
+          couny: "北京",
+          place: "汉庭会所",
+          captain: "刘半仙",
+          vipCount: 8,
+          ranting: 2.15,
+          PPD: 25.0,
+          MPR: 19.5,
+          count: 0,
+          enroll: 10,
+          flag: false,
+          record: [],
+        },
+        {
+          id: 1,
+          img: require("@/assets/1.jpg"),
+          teamName: "上海队",
+          couny: "北京",
+          place: "汉庭会所",
+          captain: "刘半仙",
+          vipCount: 8,
+          ranting: 2.15,
+          PPD: 25.0,
+          MPR: 19.5,
+          count: 0,
+          enroll: 10,
+          flag: false,
+          record: [
+            {
+              matchName: "第三届DARTS WORLD（广州联赛）",
+              img: require("@/assets/1.jpg"),
+              date: "2020-5-40 ~ 2020-6-10",
+              place: "广州",
+              class: [
+                { className: "class1" },
+                { className: "class2" },
+                { className: "class3" },
+              ],
+            },
+            {
+              matchName: "第三届DARTS WORLD（广州联赛）",
+              img: require("@/assets/1.jpg"),
+              date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
               class: [
                 { className: "class1" },
@@ -259,9 +390,21 @@ export default defineComponent({
         },
       ],
       getDate: () => "220-10-16",
-      showDetail: () => {
-        console.log("2");
+      showDetail: (value: number) => {
+        Router.push({
+          path: "/teamInfo",
+          query: { value },
+        })
       },
+      onSearch: () => {
+        console.log("11");
+      },
+      changeFlag: (index: number) => {
+        data.teamList[index].flag = !data.teamList[index].flag;
+      },
+      onShowSizeChange:() => {
+        console.log(1)
+      }
     });
     return {
       ...toRefs(data),
@@ -391,18 +534,104 @@ export default defineComponent({
   justify-content: space-around;
   flex-direction: column;
 }
-.matchImg{
+.matchImg {
   height: 60px;
 }
-.eveyTeam{
+.eveyTeam {
   height: 80px;
   margin: 15px 0;
   border: 1px solid #eee;
 }
-.imgColStyle{
+.imgColStyle {
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.placeStyle {
+  display: flex;
+  justify-content: flex-start;
+}
+.placeStyle span {
+  cursor: pointer;
+}
+.infoClass {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.counyStyle {
+  color: #999;
+  margin: 0 5px;
+}
+.teamStyle {
+  cursor: pointer;
+  font-weight: bold;
+}
+.teamStyle:hover {
+  text-decoration: underline;
+}
+.vipBox {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.topBox {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.infoStyle {
+  display: flex;
+  justify-content: space-around;
+}
+.iconFont {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 25px;
+  cursor: pointer;
+}
+.iconFont:hover {
+  color: #1890ff;
+}
+.btnBox {
+  display: flex;
+}
+.btnBox div {
+  margin-right: 15px;
+}
+.recordBox {
+  padding: 10px;
+}
+.matchTitle {
+  font-size: 20px;
+  border-bottom: 1px dashed #000;
+}
+.msgBox {
+  margin: 10px 0;
+  height: 80px;
+  box-sizing: border-box;
+}
+.recordInfoStyle {
+  display: flex;
+  justify-content: flex-start;
+}
+.countBox {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.recordInfoFont {
+  font-weight: bold;
+  cursor: pointer;
+}
+.recordInfoFont:hover {
+  text-decoration: underline;
 }
 </style>

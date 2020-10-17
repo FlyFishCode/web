@@ -1,8 +1,8 @@
 <template>
   <div>
     <a-row class="line">
-      <a-col :span='4' class="fontStyle">{{ msg }}</a-col>
-      <a-col v-if="lastDate" :span='8' class="timeStyle" :offset="12">{{ '最后更新：' + lastDate }}</a-col>
+      <a-col :span='span' class="fontStyle">{{ msg }}</a-col>
+      <a-col v-if="lastDate" :span='8' class="timeStyle" :offset="24-8-span">{{ '最后更新：' + lastDate }}</a-col>
     </a-row>
   </div>
 </template>
@@ -14,6 +14,7 @@ export default defineComponent({
   name: "HelloWorld",
   props: {
     msg: String,
+    span:Number,
     lastDate: String,
   },
 });

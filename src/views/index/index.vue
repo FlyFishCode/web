@@ -59,7 +59,7 @@
       </a-col>
     </a-row>
 
-    <divTitle :msg="title" :lastDate="getDate()" />
+    <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
 
     <a-row class="bg">
       <a-col :span='8'>
@@ -120,7 +120,7 @@
       </a-col>
     </a-row>
 
-    <divTitle :msg="matchTitle" :lastDate="getDate()" />
+    <divTitle :msg="matchTitle" :span="colSpan" :lastDate="getDate()" />
 
     <a-row class="rowStyle">
       <a-tabs class="tabsBox" type='card'>
@@ -275,6 +275,7 @@ export default defineComponent({
       title: "比赛",
       matchTitle: "排名",
       lastDate: new Date(),
+      colSpan:4,
       photoList: [
         { id: 1, img: 1, url: "/a" },
         { id: 2, img: 2, url: "/a" },

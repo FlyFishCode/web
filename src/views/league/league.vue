@@ -32,95 +32,145 @@
       </a-col>
     </a-row>
     <a-row class="centerStyle">
-      <a-tabs>
-        <a-tab-pane key="1" tab="Multi League" class="tab">
-          <a-row class="rowSearchBox">
-            <a-col :span='2'>
-              <BankFilled class="fontIcon" />{{ place }}
-            </a-col>
-            <a-col :span='2'>
-              <a-dropdown>
-                <template v-slot:overlay>fontIcon
-                  <a-menu>
-                    <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                      {{ item.value }}
-                    </a-menu-item>
-                  </a-menu>
-                </template>
-                <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-                  <DownOutlined />
-                </a-button>
-              </a-dropdown>
-            </a-col>
-            <a-col :span='3'>{{ currentState }}</a-col>
-            <a-col :span='2'>
-              <a-dropdown>
-                <template v-slot:overlay>
-                  <a-menu>
-                    <a-menu-item v-for="item in stateList" :key="item.id" @click="handleMenuClick(item.value)">
-                      {{ item.value }}
-                    </a-menu-item>
-                  </a-menu>
-                </template>
-                <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-                  <DownOutlined />
-                </a-button>
-              </a-dropdown>
-            </a-col>
-            <a-col :span='2' :offset="8">
-              <SearchOutlined class="fontIcon" />{{ matchName }}
-            </a-col>
-            <a-col :span='5'>
-              <a-input-search v-model:value="value" enter-button="Search" size="default" @search="onSearch" />
-            </a-col>
-          </a-row>
-          <a-row>
-            <a-col :span='4' class="centerFont">
-              <SettingFilled /> {{ matchTitle + '  ' +matchTotal }}
-            </a-col>
-          </a-row>
-          <a-row class="rowStyle">
-            <a-col :span='3' class="buttonBox">
-              <a-button type="primary">{{ all }}</a-button>
-            </a-col>
-            <a-col :span='3' class="buttonBox">
-              <a-button>{{ my }}</a-button>
-            </a-col>
-          </a-row>
-          <a-row v-for="item in matchList" :key="item.matchId" class="matchBox">
-            <a-col :span='14'>
-              <div>
-                <a-col :span='5' class="matchImgBox">
-                  <img class="matchImg" :src="item.img">
-                </a-col>
-                <a-col @click="showMore(item.state)" style="cursor:pointer" :span='10'>
-                  <div>
-                    <div>{{ item.title }}</div>
-                    <div>{{ item.tip }}</div>
-                  </div>
-                </a-col>
-              </div>
-            </a-col>
-            <a-col :span='2'>
-              <div class="fontDisplay">{{ '当前' }}</div>
-              <div>{{ item.area }}</div>
-            </a-col>
-            <a-col :span='8'>
-              <div class="rightStyle">
-                <div class="fontDisplay">{{ '比赛期间' }}</div>
-                <div class="matchState I" v-if="item.state === 1">{{ '比赛中' }}</div>
-                <div class="matchState R" v-if="item.state === 2">{{ '比赛结束' }}</div>
-                <div class="matchState F" v-if="item.state === 3">{{ '比赛结束' }}</div>
-              </div>
-              <div>{{ item.date }}</div>
-            </a-col>
-          </a-row>
-          <a-row type="flex" justify="start">
-            <a-pagination v-model:current="currentSize" :total="total" />
-          </a-row>
-        </a-tab-pane>
+      <!-- <a-tabs> -->
+      <!-- <a-tab-pane key="1" tab="Multi League" class="tab"> -->
+      <a-row class="rowSearchBox">
+        <a-col :span='2'>
+          <EnvironmentOutlined class="fontIcon" />{{ place }}
+        </a-col>
+        <a-col :span='2'>
+          <a-dropdown>
+            <template v-slot:overlay>fontIcon
+              <a-menu>
+                <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
+                  {{ item.value }}
+                </a-menu-item>
+              </a-menu>
+            </template>
+            <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
+              <DownOutlined />
+            </a-button>
+          </a-dropdown>
+        </a-col>
+        <a-col :span='2'>
+          <a-dropdown>
+            <template v-slot:overlay>fontIcon
+              <a-menu>
+                <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
+                  {{ item.value }}
+                </a-menu-item>
+              </a-menu>
+            </template>
+            <a-button class="btnStyle" style="margin-left: 8px">{{  }}
+              <DownOutlined />
+            </a-button>
+          </a-dropdown>
+        </a-col>
+        <a-col :span='2'>{{ currentState }}</a-col>
+        <a-col :span='2'>
+          <a-dropdown>
+            <template v-slot:overlay>
+              <a-menu>
+                <a-menu-item v-for="item in stateList" :key="item.id" @click="handleMenuClick(item.value)">
+                  {{ item.value }}
+                </a-menu-item>
+              </a-menu>
+            </template>
+            <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
+              <DownOutlined />
+            </a-button>
+          </a-dropdown>
+        </a-col>
+        <a-col :span='2' :offset="7">
+          <SearchOutlined class="fontIcon" />{{ matchName }}
+        </a-col>
+        <a-col :span='5'>
+          <a-input-search v-model:value="value" enter-button="Search" size="default" @search="onSearch" />
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span='5' class="centerFont">
+          <SettingFilled /> {{ matchTitle + '  ' + `(${matchTotal})` }}
+        </a-col>
+      </a-row>
+      <a-row class="rowStyle">
+        <a-col :span='3' class="buttonBox" @click="showALLleague">
+          <a-button :type="allLeague?'primary':''">{{ all }}</a-button>
+        </a-col>
+        <a-col :span='3' class="buttonBox" @click="showMyLengue">
+          <a-button :type="myLeague?'primary':''">{{ my }}</a-button>
+        </a-col>
+      </a-row>
+      <div v-show="allLeague">
+        <a-row v-for="item in allLeagueList" :key="item.matchId" class="matchBox">
+          <a-col :span='14'>
+            <div>
+              <a-col :span='5' class="matchImgBox">
+                <img class="matchImg" :src="item.img">
+              </a-col>
+              <a-col @click="showMore(item.state)" style="cursor:pointer" :span='10'>
+                <div>
+                  <div>{{ item.title }}</div>
+                  <div>{{ item.tip }}</div>
+                </div>
+              </a-col>
+            </div>
+          </a-col>
+          <a-col :span='2'>
+            <div class="fontDisplay">{{ '当前' }}</div>
+            <div>{{ item.area }}</div>
+          </a-col>
+          <a-col :span='8'>
+            <div class="rightStyle">
+              <div class="fontDisplay">{{ '比赛期间' }}</div>
+              <div class="matchState I" v-if="item.state === 1">{{ '比赛中' }}</div>
+              <div class="matchState R" v-if="item.state === 2">{{ '比赛结束' }}</div>
+              <div class="matchState F" v-if="item.state === 3">{{ '比赛结束' }}</div>
+            </div>
+            <div>{{ item.date }}</div>
+          </a-col>
+        </a-row>
+        <a-row type="flex" justify="start">
+          <a-pagination v-model:current="currentSize" :total="total" />
+        </a-row>
+      </div>
 
-        <a-tab-pane key="2" tab="The Champion" class="tab">
+      <div v-show="myLeague">
+        <a-row v-for="item in myLeagueList" :key="item.matchId" class="matchBox">
+          <a-col :span='14'>
+            <div>
+              <a-col :span='5' class="matchImgBox">
+                <img class="matchImg" :src="item.img">
+              </a-col>
+              <a-col @click="showMore(item.state)" style="cursor:pointer" :span='10'>
+                <div>
+                  <div>{{ item.title }}</div>
+                  <div>{{ item.tip }}</div>
+                </div>
+              </a-col>
+            </div>
+          </a-col>
+          <a-col :span='2'>
+            <div class="fontDisplay">{{ '当前' }}</div>
+            <div>{{ item.area }}</div>
+          </a-col>
+          <a-col :span='8'>
+            <div class="rightStyle">
+              <div class="fontDisplay">{{ '比赛期间' }}</div>
+              <div class="matchState I" v-if="item.state === 1">{{ '比赛中' }}</div>
+              <div class="matchState R" v-if="item.state === 2">{{ '比赛结束' }}</div>
+              <div class="matchState F" v-if="item.state === 3">{{ '比赛结束' }}</div>
+            </div>
+            <div>{{ item.date }}</div>
+          </a-col>
+        </a-row>
+        <a-row type="flex" justify="start">
+          <a-pagination v-model:current="currentSize" :total="total" />
+        </a-row>
+      </div>
+      <!-- </a-tab-pane> -->
+
+      <!-- <a-tab-pane key="2" tab="The Champion" class="tab">
           <a-row class="rowSearchBox">
             <a-col :span='2'>
               <BankFilled class="fontIcon" />{{ place }}
@@ -206,7 +256,7 @@
             <a-pagination v-model:current="currentSize" :total="total" />
           </a-row>
         </a-tab-pane>
-      </a-tabs>
+      </a-tabs> -->
     </a-row>
   </div>
 </template>
@@ -215,27 +265,34 @@ import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import {
   DownOutlined,
-  BankFilled,
   SearchOutlined,
   SettingFilled,
+  EnvironmentOutlined
 } from "@ant-design/icons-vue";
 interface HTMLInputEvent {
   value: HTMLInputElement & EventTarget;
 }
 interface DataProp {
-  monthList: { id: number; value: number }[];
+  monthList: { id: number; value: number | string }[];
   currentValue: string;
+  allLeague: boolean;
+  myLeague: boolean;
+  matchTotal: number;
+  allLeagueList: {key: string;value: number | string}[];
+  myLeagueList: {key: string;value: number | string}[];
+  showALLleague: () => void;
+  showMyLengue: () => void;
 }
 export default defineComponent({
   name: "hearder",
-  components: { DownOutlined, BankFilled, SearchOutlined, SettingFilled },
+  components: { DownOutlined, EnvironmentOutlined, SearchOutlined, SettingFilled },
   setup() {
     const Router = useRouter();
-    const data: DataProp = reactive({
-      title: "日程表/结果",
+    const data = reactive({
+      title: "时间表",
       currentValue: "新闻",
       matchName: "比赛名称",
-      matchTitle: "多联赛列表",
+      matchTitle: "Multi-league列表",
       champion: "The Champion 列表",
       all: "ALL",
       my: "MY",
@@ -243,6 +300,8 @@ export default defineComponent({
       currentSize: 1,
       total: 100,
       value: "",
+      allLeague: true,
+      myLeague: false,
       newsSearch: [
         { id: 1, value: "新闻" },
         { id: 2, value: "标题" },
@@ -253,7 +312,7 @@ export default defineComponent({
         { id: 2, value: "进行中" },
         { id: 3, value: "已结束" },
       ],
-      matchList: [
+      allLeagueList: [
         {
           matchId: 1,
           img: require("@/assets/1.jpg"),
@@ -282,9 +341,20 @@ export default defineComponent({
           state: 3,
         },
       ],
-      place: "地点",
+      myLeagueList:[
+        {
+          matchId: 1,
+          img: require("@/assets/1.jpg"),
+          title: "2022第三次比赛",
+          tip: "U-LEAGUE 兰州赛区季后赛",
+          area: "云南",
+          date: "2020-9-10",
+          state: 3,
+        }
+      ],
+      place: "当地",
       currentState: "当前状态",
-      monthList: [],
+      monthList: [{ id: 0, value: 0 }],
       handleMenuClick: (e: string) => {
         data.currentValue = e;
       },
@@ -296,6 +366,16 @@ export default defineComponent({
           path: "/calendar",
           query: { value },
         });
+      },
+      showALLleague: () => {
+        data.matchTotal = data.allLeagueList.length
+        data.allLeague = true;
+        data.myLeague = false;
+      },
+      showMyLengue: () => {
+        data.matchTotal = data.myLeagueList.length
+        data.myLeague = true;
+        data.allLeague = false;
       },
     });
     onMounted(() => {
@@ -368,6 +448,8 @@ export default defineComponent({
 }
 .matchState {
   width: 100px;
+  height: 25px;
+  line-height: 25px;
   color: #fff;
   border-radius: 10px;
 }

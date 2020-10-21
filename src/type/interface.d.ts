@@ -1,5 +1,5 @@
 interface DOM {
-  e:HTMLElement
+  e:HTMLElement | EventTarget
 }
 
 export { DOM }

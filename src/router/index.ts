@@ -16,12 +16,12 @@ const routes: Array<RouteRecordRaw> = [
   },
   // 日程表/结果
   {
-    path: '/result',
-    name: 'Result',
+    path: '/league',
+    name: 'league',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "result" */ '@/views/result/result.vue')
+    component: () => import(/* webpackChunkName: "league" */ '@/views/league/league.vue')
   },
   {
     path: '/calendar',
@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "calendar" */ '@/views/result/calendar/index.vue')
+    component: () => import(/* webpackChunkName: "calendar" */ '@/views/league/calendar/index.vue')
   },
   {
     path: '/ranking',
@@ -37,7 +37,7 @@ const routes: Array<RouteRecordRaw> = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "calendar" */ '@/views/result/calendar/ranking.vue')
+    component: () => import(/* webpackChunkName: "calendar" */ '@/views/league/calendar/ranking.vue')
   },
   {
     path: '/matchTeam',
@@ -45,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "matchTeam" */ '@/views/result/calendar/matchTeam.vue')
+    component: () => import(/* webpackChunkName: "matchTeam" */ '@/views/league/calendar/matchTeam.vue')
   },
   // 队伍模块
   {
@@ -63,6 +63,15 @@ const routes: Array<RouteRecordRaw> = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "teamInfo" */ '@/views/team/teamInfo.vue')
+  },
+  // 我的页面
+  {
+    path: '/myPage',
+    name: 'MyPage',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "myPage" */ '@/views/myPage/myPage.vue')
   }
 ]
 

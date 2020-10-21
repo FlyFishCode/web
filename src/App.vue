@@ -34,7 +34,7 @@ export default defineComponent({
 
 <style>
 /* // 下载模块animate.css  是ts类型文件 报错 所以改全局引入 */
-@import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css";
+/* @import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"; */
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

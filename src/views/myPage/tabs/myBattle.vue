@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <a-row>
-      <a-col :span='4' class="centerFont">
+      <a-col :span='3' class="centerFont">
         <SettingFilled /> {{ title }}
       </a-col>
     </a-row>
@@ -121,22 +121,17 @@
 
     <a-row v-show="isList">
       <a-table :columns="columns" :data-source="dataList" :pagination='false' bordered>
-        <template v-slot:homeTeam="{ record }">
-          <div class="btnClass">
-            <a-button type="link" size="small">{{ record.homeTeam }}</a-button>
-            <a-button type="link" size="small">{{ record.place }}</a-button>
-          </div>
+        <template v-slot:home="{ text }">
+          <a-button type="link" size="small">{{ text }}</a-button>
         </template>
-        <template v-slot:awayTeam="{ record }">
-          <div class="btnClass">
-            <a-button type="link" size="small">{{ record.awayTeam }}</a-button>
-            <a-button type="link" size="small">{{ record.place }}</a-button>
-          </div>
+        <template v-slot:away="{ text }">
+          <a-button type="link" size="small">{{ text }}</a-button>
         </template>
-        <template v-slot:type="{ text }">
-          <a-button v-if="text === 1" type="link" size="small">{{ '准备' }}</a-button>
-          <a-button v-if="text === 2" type="link" size="small">{{ '进行' }}</a-button>
-          <a-button v-if="text === 3" type="link" size="small">{{ '结束' }}</a-button>
+        <template v-slot:state="{ text }">
+          <div class="stateBox">
+            <div v-if="text === 1" class="inPlay" @click="goPlay">{{ '排阵' }}</div>
+            <div v-if="text === 2">{{ '准备' }}</div>
+          </div>
         </template>
       </a-table>
     </a-row>
@@ -175,12 +170,12 @@ export default defineComponent({
     CalendarOutlined,
     CloudDownloadOutlined,
     PrinterOutlined,
-    SettingFilled
+    SettingFilled,
   },
   setup() {
     const Router = useRouter();
     const data = reactive({
-      title: "比赛日程表/结果",
+      title: "我的对战",
       colSpan: 5,
       isList: true,
       isCalendar: false,
@@ -192,41 +187,44 @@ export default defineComponent({
           dataIndex: "key",
         },
         {
-          title: "比赛时间",
+          title: "对战类型",
           width: 100,
           dataIndex: "age",
         },
         {
-          title: "比赛类型",
+          title: "HOME TEAM",
+          children: [
+            {
+              title: "队名",
+              width: 100,
+              dataIndex: "awayTeam",
+              slots: { customRender: "home" },
+            },
+            { title: "Score", width: 10, dataIndex: "homeScore" },
+          ],
+        },
+        {
+          title: "AWAY TEAM",
+          children: [
+            { title: "Score", width: 10, dataIndex: "awayScore" },
+            {
+              title: "队名",
+              width: 100,
+              dataIndex: "awayTeam",
+              slots: { customRender: "away" },
+            },
+          ],
+        },
+        {
+          title: "状态",
+          width: 100,
+          dataIndex: "state",
+          slots: { customRender: "state" },
+        },
+        {
+          title: "移动",
           width: 100,
           dataIndex: "age",
-        },
-        {
-          title: "比赛队伍",
-          colSpan: 4,
-          dataIndex: "tel",
-          slots: { customRender: "homeTeam" },
-        },
-        {
-          colSpan: 0,
-          width: 50,
-          dataIndex: "age",
-        },
-        {
-          colSpan: 0,
-          width: 50,
-          dataIndex: "age",
-        },
-        {
-          colSpan: 0,
-          dataIndex: "tel",
-          slots: { customRender: "awayTeam" },
-        },
-        {
-          title: "进行状态",
-          width: 100,
-          dataIndex: "age",
-          slots: { customRender: "type" },
         },
       ],
       dataList: [
@@ -236,8 +234,11 @@ export default defineComponent({
           awayTeam: "撒打算呢队伍",
           place: "(Hea Darts（广州）)",
           age: 1,
+          state: 1,
           tel: "0571-22098909",
           phone: 18889898989,
+          homeScore: 10,
+          awayScore: 51,
         },
         {
           key: "2",
@@ -247,6 +248,9 @@ export default defineComponent({
           tel: "0571-22098333",
           phone: 18889898888,
           age: 2,
+          state: 2,
+          homeScore: 10,
+          awayScore: 51,
         },
         {
           key: "3",
@@ -254,8 +258,11 @@ export default defineComponent({
           awayTeam: "哦抗衡队伍",
           place: "(Hea Darts（广州）)",
           age: 3,
+          state: 2,
           tel: "0575-22098909",
           phone: 18900010002,
+          homeScore: 10,
+          awayScore: 51,
         },
         {
           key: "4",
@@ -263,6 +270,7 @@ export default defineComponent({
           awayTeam: "请问队伍",
           place: "(Hea Darts（广州）)",
           age: 3,
+          state: 1,
           tel: "0575-22098909",
           phone: 18900010002,
         },
@@ -290,6 +298,9 @@ export default defineComponent({
       Gohistory: () => {
         Router.push("/teamIndex");
       },
+      goPlay:() => {
+        Router.push("/teamIndex");
+      }
     });
     return {
       ...toRefs(data),
@@ -303,5 +314,14 @@ export default defineComponent({
   display: flex;
   justify-content: space-around;
   flex-direction: column;
+}
+.stateBox{
+  text-align: center;
+}
+.inPlay{
+  background: red;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
 }
 </style>

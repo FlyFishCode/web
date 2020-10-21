@@ -9,8 +9,12 @@
         <a-tab-pane key="1" tab="日程表/结果">
           <calendar />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="以前结果"></a-tab-pane>
-        <a-tab-pane key="3" tab="会员"></a-tab-pane>
+        <a-tab-pane key="2" tab="以前结果">
+          <beforeResult />
+        </a-tab-pane>
+        <a-tab-pane key="3" tab="会员">
+          <vip />
+        </a-tab-pane>
       </a-tabs>
     </a-row>
   </div>
@@ -22,12 +26,16 @@ import divTitle from "@/components/DividingLine.vue";
 import inTeamTopOne from "@/components/inTeamTopOne.vue";
 // tabs
 import calendar from './teamInfoTabs/calendar.vue'
+import beforeResult from './teamInfoTabs/beforeResult.vue'
+import vip from './teamInfoTabs/vip.vue'
 export default defineComponent({
   name: "templete",
   components: {
     divTitle,
     inTeamTopOne,
-    calendar
+    calendar,
+    beforeResult,
+    vip
   },
   setup() {
     const data = reactive({

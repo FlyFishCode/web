@@ -24,10 +24,10 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import { useRoute } from 'vue-router'
-import matchInfo from "@/views/result/calendar/matchInfo.vue";
-import calendar from "@/views/result/calendar/calendar.vue";
-import ranking from '@/views/result/calendar/ranking.vue'
-import matchTeam from '@/views/result/calendar/matchTeam.vue'
+import matchInfo from "@/views/league/calendar/matchInfo.vue";
+import calendar from "@/views/league/calendar/calendar.vue";
+import ranking from '@/views/league/calendar/ranking.vue'
+import matchTeam from '@/views/league/calendar/matchTeam.vue'
 export default defineComponent({
   name: "hearder",
   components: { matchInfo, calendar,matchTeam,ranking },

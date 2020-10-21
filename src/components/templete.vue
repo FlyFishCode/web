@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <a-row>
-      <divTitle :msg="title" :lastDate="getDate()" />
+      <divTitle :msg="title" :span='colSpan' :lastDate="getDate()" />
     </a-row>
   </div>
 </template>
@@ -17,6 +17,7 @@ export default defineComponent({
   setup() {
     const data = reactive({
       title: "队伍",
+      colSpan:5,
       getDate:() => {
         return '2020-10-17'
       }

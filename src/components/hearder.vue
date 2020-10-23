@@ -88,7 +88,7 @@
   </a-row>
   <a-row class="rowStyle">
     <a-col :span="8">
-      <div class="imgBox"><img :src="img" alt=""></div>
+      <div class="imgBox" @click="entryIndex"><img :src="img" alt=""></div>
     </a-col>
     <a-col :span="8" :offset="8">
       <a-col :span='6'>
@@ -109,10 +109,10 @@
     </a-col>
   </a-row>
   <a-row class="rowStyle boxBG">
-    <a-tabs class="tabsBox" type='card' @tabClick="tabClick">
-      <a-tab-pane key="/league" tab="League"></a-tab-pane>
+    <a-tabs class="tabsBox" type='card' @tabClick="tabClick" :defaultActiveKey='defaultKey'>
+      <a-tab-pane key="league" tab="League"></a-tab-pane>
       <!-- <a-tab-pane key="/result" tab=""></a-tab-pane> -->
-      <a-tab-pane key="/teamIndex" tab="Team"></a-tab-pane>
+      <a-tab-pane key="team" tab="Team"></a-tab-pane>
       <a-tab-pane key="4" tab="Players">
         Content of Tab Pane 3
       </a-tab-pane>
@@ -170,11 +170,11 @@ export default defineComponent({
       tip3: "我的页面",
       tip4: "国家",
       tip5: "语言",
+      defaultKey:'league',
       isLogin:true,
       currentLan: "中文",
       imputValue: "",
       visible: false,
-      
       myPage: "MY",
       showBox: false,
       autoLogin: false,
@@ -210,6 +210,9 @@ export default defineComponent({
       },
       onChange: (e: DOM) => {
         console.log(e);
+      },
+      entryIndex:() =>{
+        Router.push('/')
       },
       login:() =>{
         data.isLogin = false

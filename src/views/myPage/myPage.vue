@@ -17,8 +17,12 @@
         <a-tab-pane key="3" tab="消息">
           <message />
         </a-tab-pane>
-        <a-tab-pane key="4" tab="我的等级"></a-tab-pane>
-        <a-tab-pane key="5" tab="我的队伍"></a-tab-pane>
+        <a-tab-pane key="4" tab="我的等级">
+          <myLevel />
+        </a-tab-pane>
+        <a-tab-pane key="5" tab="我的队伍">
+          <myTeam />
+        </a-tab-pane>
       </a-tabs>
     </a-row>
   </div>
@@ -31,6 +35,8 @@ import myPageUI from "@/components/common/myPageUI.vue";
 import myMatchInfo from "@/views/myPage/tabs/myMatchInfo.vue";
 import myBattle from "@/views/myPage/tabs/myBattle.vue";
 import message from "@/views/myPage/tabs/message.vue";
+import myTeam from "@/views/myPage/tabs/myTeam.vue";
+import myLevel from "@/views/myPage/tabs/myLevel.vue";
 export default defineComponent({
   name: "myPage",
   components: {
@@ -38,7 +44,9 @@ export default defineComponent({
     myPageUI,
     myMatchInfo,
     myBattle,
-    message
+    message,
+    myTeam,
+    myLevel
   },
   setup() {
     const data = reactive({

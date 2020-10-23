@@ -49,12 +49,12 @@ const routes: Array<RouteRecordRaw> = [
   },
   // 队伍模块
   {
-    path: '/teamIndex',
-    name: 'teamIndex',
+    path: '/team',
+    name: 'team',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "teamIndex" */ '@/views/team/teamIndex.vue')
+    component: () => import(/* webpackChunkName: "team" */ '@/views/team/team.vue')
   },
   {
     path: '/teamInfo',

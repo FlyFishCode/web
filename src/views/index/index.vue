@@ -126,28 +126,28 @@
       <a-tabs class="tabsBox" type='card'>
         <a-tab-pane key="1" tab="队伍" class="teamBG">
           <a-col :span="7" class="colStyle">
-            <div class="gameStyle">01米老鼠</div>
+            <div class="gameStyle">01 Game</div>
             <div v-for="item in teamList" :key="item.id" class="teamBox">
               <div :class="{first:item.ppd,noFirst:!item.ppd}">
                 <div class="teamImgBox">
                   <img :src="item.img" alt="">
                 </div>
                 <div v-if="item.ppd" class="detailStyle">
-                  <div class="teamName">{{ item.teamName }}</div>
+                  <div class="teamName" @click="goToPage">{{ item.teamName }}</div>
                   <div class="name">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
-                    <span @click="showDetail">
-                      <InfoCircleFilled />
+                    <span @click="showDetail(item)">
+                      <EnvironmentOutlined />
                     </span>
                   </div>
                   <div class="current">{{ item.current }}</div>
                   <div class="number">{{ item.number }}</div>
                 </div>
                 <div v-else class="detailStyle">
-                  <div class="name">{{ item.name }}</div>
+                  <div class="name smallBox" @click="goToPage">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
-                    <span @click="showDetail">
-                      <InfoCircleFilled />
+                    <span @click="showDetail(item)">
+                      <EnvironmentOutlined />
                     </span>
                   </div>
                   <div class="current">
@@ -162,28 +162,28 @@
           </a-col>
 
           <a-col :span="7" class="colStyle">
-            <div class="gameStyle">01米老鼠</div>
+            <div class="gameStyle">Cricket</div>
             <div v-for="item in teamList" :key="item.id" class="teamBox">
               <div :class="{first:item.ppd,noFirst:!item.ppd}">
                 <div class="teamImgBox">
                   <img :src="item.img" alt="">
                 </div>
                 <div v-if="item.ppd" class="detailStyle">
-                  <div class="teamName">{{ item.teamName }}</div>
+                  <div class="teamName" @click="goToPage">{{ item.teamName }}</div>
                   <div class="name">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
-                    <span @click="showDetail">
-                      <InfoCircleFilled />
+                    <span @click="showDetail(item)">
+                      <EnvironmentOutlined />
                     </span>
                   </div>
                   <div class="current">{{ item.current }}</div>
                   <div class="number">{{ item.number }}</div>
                 </div>
                 <div v-else class="detailStyle">
-                  <div class="name">{{ item.name }}</div>
+                  <div class="name smallBox" @click="goToPage">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
-                    <span @click="showDetail">
-                      <InfoCircleFilled />
+                    <span @click="showDetail(item)">
+                      <EnvironmentOutlined />
                     </span>
                   </div>
                   <div class="current">
@@ -198,28 +198,28 @@
           </a-col>
 
           <a-col :span="7" class="colStyle">
-            <div class="gameStyle">01米老鼠</div>
+            <div class="gameStyle">对阵获胜数</div>
             <div v-for="item in teamList" :key="item.id" class="teamBox">
               <div :class="{first:item.ppd,noFirst:!item.ppd}">
                 <div class="teamImgBox">
                   <img :src="item.img" alt="">
                 </div>
                 <div v-if="item.ppd" class="detailStyle">
-                  <div class="teamName">{{ item.teamName }}</div>
+                  <div class="teamName" @click="goToPage">{{ item.teamName }}</div>
                   <div class="name">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
-                    <span @click="showDetail">
-                      <InfoCircleFilled />
+                    <span @click="showDetail(item)">
+                      <EnvironmentOutlined />
                     </span>
                   </div>
                   <div class="current">{{ item.current }}</div>
                   <div class="number">{{ item.number }}</div>
                 </div>
                 <div v-else class="detailStyle">
-                  <div class="name">{{ item.name }}</div>
+                  <div class="name smallBox" @click="goToPage">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
-                    <span @click="showDetail">
-                      <InfoCircleFilled />
+                    <span @click="showDetail(item)">
+                      <EnvironmentOutlined />
                     </span>
                   </div>
                   <div class="current">
@@ -232,13 +232,31 @@
               <div>MORE+</div>
             </div>
           </a-col>
-
         </a-tab-pane>
         <a-tab-pane key="2" tab="玩家">
           Content of Tab Pane 2
         </a-tab-pane>
       </a-tabs>
     </a-row>
+    <a-modal v-model:visible="visible" :title="dialogObj.title">
+      <template v-slot:footer>
+        <a-row class="rowStyle dialogBox">
+          <a-col :span='8'>
+            <div class="imgBox">
+              <img :src="dialogObj.img" alt="">
+            </div>
+          </a-col>
+          <a-col :span='16' class="dialog">
+            <div>{{ `Shop name：${dialogObj.shopName}` }}</div>
+            <div>{{ `电话号码：${dialogObj.phone}` }}</div>
+            <div>{{ `地址：${dialogObj.address}` }}</div>
+          </a-col>
+        </a-row>
+        <div class="dialogBtn">
+          <a-button type="primary" @click="handleOk">{{ '更多' }}</a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 <script lang="ts">
@@ -247,9 +265,9 @@ import {
   DownOutlined,
   BankFilled,
   SearchOutlined,
-  InfoCircleFilled,
   EyeOutlined,
   ScheduleOutlined,
+  EnvironmentOutlined,
 } from "@ant-design/icons-vue";
 import divTitle from "@/components/DividingLine.vue";
 import router from "@/router";
@@ -261,10 +279,10 @@ export default defineComponent({
     DownOutlined,
     BankFilled,
     SearchOutlined,
-    InfoCircleFilled,
     EyeOutlined,
     ScheduleOutlined,
     divTitle,
+    EnvironmentOutlined,
   },
   name: "index",
   setup() {
@@ -275,7 +293,15 @@ export default defineComponent({
       title: "比赛",
       matchTitle: "排名",
       lastDate: new Date(),
-      colSpan:4,
+      colSpan: 4,
+      visible: false,
+      dialogObj: {
+        title: "",
+        img: require('@/assets/3.jpg'),
+        shopName: "Joe's Billiards & Bar",
+        phone: "31881010",
+        address: "尖沙咀諾士佛台1號11-12樓",
+      },
       photoList: [
         { id: 1, img: 1, url: "/a" },
         { id: 2, img: 2, url: "/a" },
@@ -380,8 +406,16 @@ export default defineComponent({
       intoPhoto: (value: string) => {
         console.log(value);
       },
-      showDetail: () => {
-        console.log("1");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      showDetail: (item: any) => {
+        data.dialogObj.title = item.area;
+        data.visible = true;
+      },
+      handleOk: () => {
+        data.visible = false;
+      },
+      goToPage:() => {
+        router.push('/teamInfo')
       },
       showMore: (value: string) => {
         router.push({
@@ -538,11 +572,10 @@ export default defineComponent({
   align-items: center;
 }
 .more div {
-  color: #fff;
-  background: red;
   width: 60px;
-  border-radius: 10px;
   height: 22px;
+  border-radius: 10px;
+  border: 1px solid #000;
 }
 .teamBG {
   display: flex;
@@ -564,5 +597,36 @@ export default defineComponent({
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.dialogBtn {
+  text-align: center;
+}
+.dialogBox {
+  height: 100px;
+  color: #ff3202;
+  border: 1px solid #eee;
+}
+.dialog {
+  text-align: left;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.info {
+  width: 220px;
+  text-align: left;
+}
+.imgBox{
+  height: 100px;
+  width: 100px;
+  margin: 0 auto;
+}
+.imgBox img{
+  width: 100%;
+  height: 100%;
+}
+.teamName,.smallBox{
+  cursor: pointer;
 }
 </style>

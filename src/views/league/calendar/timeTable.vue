@@ -7,32 +7,14 @@
     </a-row>
     <a-row>
       <a-col :span='3' class="dropdown">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu @click="handleMenuClick">
-              <a-menu-item key="1">1st menu item</a-menu-item>
-              <a-menu-item key="2">2nd menu item</a-menu-item>
-              <a-menu-item key="3">3rd item</a-menu-item>
-            </a-menu>
-          </template>
-          <a-button style="margin-left: 8px"> Button
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
       <a-col :span='3' class="dropdown">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu @click="handleMenuClick">
-              <a-menu-item key="1">1st menu item</a-menu-item>
-              <a-menu-item key="2">2nd menu item</a-menu-item>
-              <a-menu-item key="3">3rd item</a-menu-item>
-            </a-menu>
-          </template>
-          <a-button style="margin-left: 8px"> Button
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
       <a-col :span='3' :offset="15">
         <a-button type="danger" @click="showMatchTable">{{ '查看对战表' }}</a-button>
@@ -48,7 +30,7 @@
         <!-- <div v-if="state === 1"> -->
         <a-tabs type="card">
           <a-tab-pane key="1" tab="比赛结果">
-            Content of Tab Pane 1
+            <matchResult />
           </a-tab-pane>
           <a-tab-pane key="2" tab="排阵">
             <matchTable />
@@ -78,50 +60,23 @@
           <PlusOutlined class="fontIcon" />{{ '选择队伍' }}
         </a-col>
         <a-col :span='2'>
-          <a-dropdown>
-            <template v-slot:overlay>
-              <a-menu>
-                <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                  {{ item.value }}
-                </a-menu-item>
-              </a-menu>
-            </template>
-            <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-              <DownOutlined />
-            </a-button>
-          </a-dropdown>
+          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+            <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+          </a-select>
         </a-col>
-        <a-col :span='3' class="titleStyle">{{ '对战状态' }}</a-col>
-        <a-col :span='2'>
-          <a-dropdown>
-            <template v-slot:overlay>
-              <a-menu>
-                <a-menu-item v-for="item in stateList" :key="item.id" @click="handleMenuClick(item.value)">
-                  {{ item.value }}
-                </a-menu-item>
-              </a-menu>
-            </template>
-            <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-              <DownOutlined />
-            </a-button>
-          </a-dropdown>
+        <a-col :span='2' class="titleStyle">{{ '对战状态' }}</a-col>
+        <a-col :span='3'>
+          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+            <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+          </a-select>
         </a-col>
         <a-col :span='2' class="titleStyle" :offset="5">
           <PlusOutlined class="fontIcon" />{{ '选择队伍' }}
         </a-col>
         <a-col :span='3' class="dropdown">
-          <a-dropdown>
-            <template v-slot:overlay>
-              <a-menu>
-                <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                  {{ item.value }}
-                </a-menu-item>
-              </a-menu>
-            </template>
-            <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-              <DownOutlined />
-            </a-button>
-          </a-dropdown>
+          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+            <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+          </a-select>
         </a-col>
         <a-col :span='5'>
           <a-input-search v-model:value="currentValue" enter-button="Search" size="default" @search="onSearch" />
@@ -129,7 +84,7 @@
       </a-row>
       <!-- 表格 -->
       <a-row>
-        <a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered>
+        <a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey='key' :customRow='customRow' :customHeaderRow='customHeaderRow'>
           <template v-slot:state="{ text }">
             <div class="tableState">
               <div v-if="text === 1" class="plan" @click="showPlan">{{ '排阵' }}</div>
@@ -151,24 +106,21 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
 // 排阵页面
-import matchTable from '@/views/league/matchTable/matchTable.vue'
+import matchTable from "@/views/league/matchTable/matchTable.vue";
+import matchResult from "@/views/league/matchResult/matchResult.vue";
 // import { DOM } from "@/type/interface.d.ts";
-import {
-  SettingFilled,
-  DownOutlined,
-  PlusOutlined,
-} from "@ant-design/icons-vue";
+import { SettingFilled, PlusOutlined } from "@ant-design/icons-vue";
 import lunboGundong from "@/components/inCalendar.vue";
 import inMatchTable from "@/components/inMatchTable.vue";
 export default defineComponent({
   name: "calendar",
   components: {
     SettingFilled,
-    DownOutlined,
     lunboGundong,
     PlusOutlined,
     inMatchTable,
-    matchTable
+    matchTable,
+    matchResult,
   },
   setup() {
     const data = reactive({
@@ -177,6 +129,26 @@ export default defineComponent({
       stateList: [],
       currentValue: "所有玩家",
       ismatchTablePage: false,
+      matchType: 2020,
+      matchTypeList: [{ value: 2020, label: "2020" }],
+      customRow: (record: any) => {
+        return {
+          click: () => {
+            debugger;
+            console.log(record);
+          },
+        };
+      },
+      customHeaderRow: (column: any) => {
+        return {
+          on: {
+            click: (event: any) => {
+              debugger;
+              console.log(event, column);
+            },
+          },
+        };
+      },
       gundongInfoList: [
         {
           matchId: 1,
@@ -342,7 +314,11 @@ export default defineComponent({
         },
       ],
       columns: [
-        { title: "日期", dataIndex: "data", key: "name" },
+        {
+          title: "日期",
+          dataIndex: "data",
+          key: "name",
+        },
         { title: "比赛时间", dataIndex: "data", key: "time" },
         { title: "比赛类型", dataIndex: "data", key: "type" },
         {
@@ -402,7 +378,31 @@ export default defineComponent({
           awayName: "李逍遥",
           awayScore: 5,
           key: 3,
-          disabled: true,
+          disabled: false,
+        },
+        {
+          data: "2020-10-3",
+          time: "17:25",
+          state: 3,
+          type: 1,
+          homaName: "张自然",
+          homeScore: 10,
+          awayName: "李逍遥",
+          awayScore: 5,
+          key: 4,
+          disabled: false,
+        },
+        {
+          data: "2020-10-3",
+          time: "17:25",
+          state: 3,
+          type: 1,
+          homaName: "张自然",
+          homeScore: 10,
+          awayName: "李逍遥",
+          awayScore: 5,
+          key: 5,
+          disabled: false,
         },
       ],
       showMatchTable: () => {
@@ -414,27 +414,37 @@ export default defineComponent({
       onSearch: () => {
         console.log("1");
       },
+      // changeDisabled:() =>{
+      //   return {
+      //     disabled
+      //   }
+      // },
       rowSelection: {
         columnWidth: 100,
         columnTitle: "对比",
         onChange: (selectedRowKeys: number[]) => {
-          data.tableList[1].disabled = true;
-          // if (selectedRowKeys.length === 2) {
-          //   data.tableList.forEach((i, index) => {
-          //     selectedRowKeys.forEach(j => {
-          //       if(index !== j-1){
-          //         i.disabled = true
-          //       }else{
-          //         return
-          //       }
-          //     })
-          //   });
-          // }
-          console.log(selectedRowKeys);
-          console.log(data.tableList);
+          if (selectedRowKeys.length == 2) {
+            selectedRowKeys.forEach((i) => {
+              const index = data.tableList.findIndex((j) => j.key === i);
+              data.tableList.forEach((k, kndex) => {
+                if (index !== kndex) {
+                  k.disabled = true;
+                } else {
+                  k.disabled = false;
+                }
+              });
+              const list = data.tableList;
+              data.tableList = [...list];
+            });
+          } else {
+            data.tableList.forEach((i) => {
+              i.disabled = false;
+            });
+            const list = data.tableList;
+            data.tableList = [...list];
+          }
         },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getCheckboxProps: (record: { disabled: any }) => ({
+        getCheckboxProps: (record: { disabled: boolean }) => ({
           disabled: record.disabled, // Column configuration not to be checked
         }),
       },
@@ -443,6 +453,9 @@ export default defineComponent({
       },
       Gohistory: () => {
         console.log("111");
+      },
+      matchTypeChange: (value: number) => {
+        console.log(value);
       },
     });
     return {

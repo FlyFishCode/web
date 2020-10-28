@@ -6,45 +6,15 @@
       </a-col>
     </a-row>
     <a-row class="rowStyle">
-      <a-col :span='3' class="dropdown">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu @click="handleMenuClick">
-              <a-menu-item key="1">
-                1st menu item
-              </a-menu-item>
-              <a-menu-item key="2">
-                2nd menu item
-              </a-menu-item>
-              <a-menu-item key="3">
-                3rd item
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button style="margin-left: 8px"> Button
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+      <a-col :span='2' class="dropdown">
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
       <a-col :span='3' class="dropdown">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu @click="handleMenuClick">
-              <a-menu-item key="1">
-                1st menu item
-              </a-menu-item>
-              <a-menu-item key="2">
-                2nd menu item
-              </a-menu-item>
-              <a-menu-item key="3">
-                3rd item
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button style="margin-left: 8px"> Button
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
     </a-row>
 
@@ -65,18 +35,19 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
-import { SettingFilled, DownOutlined } from "@ant-design/icons-vue";
+import { SettingFilled } from "@ant-design/icons-vue";
 import { useRouter } from "vue-router";
 export default defineComponent({
   name: "templete",
   components: {
     SettingFilled,
-    DownOutlined,
   },
   setup() {
     const Router = useRouter();
     const data = reactive({
       title: "以前结果",
+      matchType: 2020,
+      matchTypeList: [{ value: 2020, label: "2020" }],
       columns: [
         {
           title: "年",
@@ -173,6 +144,9 @@ export default defineComponent({
           params: { id },
         });
       },
+      matchTypeChange:(value: number) =>{
+        console.log(value)
+      }
     });
     return {
       ...toRefs(data),

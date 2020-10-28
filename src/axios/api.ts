@@ -1,11 +1,19 @@
-import Axios from 'axios'
+import axios from 'axios'
+import qs from 'qs'
 import { useRouter } from 'vue-router'
-const baseURL = ""
+
+import { login } from './index/index'
+
+const baseURL = "/aps"
 const Router = useRouter()
 const token = sessionStorage.getItem('token')
 
+const Axios = axios.create({
+	baseURL:baseURL,
+	timeout:1000
+})
 
-Axios.interceptors.request.use(config => {
+Axios.interceptors.request.use((config) => {
 	if(token){
 		config.headers.common['token'] = token
 	}
@@ -24,8 +32,14 @@ Axios.interceptors.response.use(response => {
 }, err => {
   return Promise.reject(err)
 })
-
-const login = (url:string,parmas:any) => {
-  Axios.get(url)
+// 判断是否为Form Data，如果是需要用qs转换
+const loginHttp = (json: boolean ,data: any) => {
+	let DATA = ''
+	if(json){
+		DATA = data
+	}else{
+		DATA = qs.stringify(data)
+	}
+	return Axios.post(login, DATA)
 }
-export {login}
+export { loginHttp }

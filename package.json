@@ -12,6 +12,7 @@
         "axios": "^0.20.0",
         "babel-plugin-import": "^1.13.1",
         "echarts": "^4.9.0",
+        "qs": "^6.9.4",
         "vue": "^3.0.0",
         "vue-i18n": "^8.22.0",
         "vue-router": "^4.0.0-0",

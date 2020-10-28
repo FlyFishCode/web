@@ -9,24 +9,16 @@
 /* eslint-disable quotes */
 /* eslint-disable indent */
 // vue.config.js
-const path = require("path");
-const CompressionWebpackPlugin = require("compression-webpack-plugin");
-
-const productionGzipExtensions = ["js", "css"];
-// 引入path模块
-function resolve(dir) {
-    return path.join(__dirname, dir); // path.join(__dirname)设置绝对路径
-}
 
 module.exports = {
-    publicPath: "/Fish",
+    publicPath: "./",
     outputDir: "Fish",
     devServer: {
         port: 8010,
         proxy: {
             "/aps": {
-                target: "http://192.168.2.105:9091/darts", // 后端
-                // target: "http://47.113.88.23:9091/darts", // 远程
+                target: "http://adartstest.adarts-cn.com:9090/web", // 后端
+                // target: "192.168.2.198:9090/web", // 本地
                 changeOrigin: true,
                 ws: true,
                 pathRewrite: {

@@ -1,4 +1,4 @@
-interface DOM {
+declare interface DOM {
   e:HTMLElement | EventTarget
 }
 

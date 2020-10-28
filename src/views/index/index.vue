@@ -1,85 +1,82 @@
 <template>
   <div>
     <a-row class="rowStyle" id="dots">
+      <h1>{{ '新闻' }}</h1>
       <a-carousel :autoplay='true' dotsClass="dots">
         <div class="carouselBox" v-for="item in photoList" :key="item.id" @click="intoPhoto(item.url)"><img :src="item.img" alt=""></div>
       </a-carousel>
     </a-row>
     <a-row class="rowStyle" type="flex" justify="space-between">
-      <a-col :span="7">
-        <div class="newBox">
-          <img :src="img" alt="">
+      <a-col :span="14">
+        <div class="newHeader">
+          <div class="newSstyle">{{ '新闻' }}</div>
+          <div>{{ `最后更新：${time}` }}</div>
+          <div class="moreStyle">{{ 'MORE' }}</div>
         </div>
-        <div class="newContentStyle">
-          <div class="newTitle">111111111111111111111111</div>
-          <div class="newContent">222222222222222</div>
-          <div class="newIcon">
-            <span style="margin:0 10px">
-              <EyeOutlined /> {{ 20 }}
-            </span>
-            <span>
-              <ScheduleOutlined /> {{ 20 }}
-            </span>
+        <div class="newsTable">
+          <div v-for="news in newsList" :key="news.index" class="newBg">
+            <div class="newBox">
+              <img :src="news.img" alt="">
+            </div>
+            <div class="newContentStyle">
+              <div class="newTitle">111111111111111111111111</div>
+              <div class="newContent">222222222222222</div>
+              <div class="newIcon">
+                <span>
+                  <ScheduleOutlined /> {{ news.date }}
+                </span>
+                <span>
+                  <EyeOutlined /> {{ news.count }}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </a-col>
-      <a-col :span="7">
+      <a-col :span="8">
+        <div class="newHeader">
+          <div class="newSstyle">{{ 'PROMOTION' }}</div>
+        </div>
         <div class="newBox">
           <img :src="img" alt="">
         </div>
-        <div class="newContentStyle">
-          <div class="newTitle">111111111111111111111111</div>
-          <div class="newContent">222222222222222</div>
-          <div class="newIcon">
-            <span style="margin:0 10px">
-              <EyeOutlined /> {{ 20 }}
-            </span>
-            <span>
-              <ScheduleOutlined /> {{ 20 }}
-            </span>
+        <div class="otherSrcBox">
+          <div>
+            <QqOutlined />
           </div>
-        </div>
-      </a-col>
-      <a-col :span="7">
-        <div class="newBox">
-          <img :src="img" alt="">
-        </div>
-        <div class="newContentStyle">
-          <div class="newTitle">111111111111111111111111</div>
-          <div class="newContent">222222222222222</div>
-          <div class="newIcon">
-            <span style="margin:0 10px">
-              <EyeOutlined /> {{ 20 }}
-            </span>
-            <span>
-              <ScheduleOutlined /> {{ 20 }}
-            </span>
+          <div>
+            <WechatOutlined />
+          </div>
+          <div>
+            <ZhihuOutlined />
+          </div>
+          <div>
+            <AppleOutlined />
           </div>
         </div>
       </a-col>
     </a-row>
 
-    <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
+    <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" :showMore="true" />
 
     <a-row class="bg">
       <a-col :span='8'>
         <a-col :span='3'>
-          <BankFilled style="fontSize:30px" />
+          <AimOutlined style="fontSize:30px" />
         </a-col>
-        <a-col :span='6' class="MlineStyle">{{ '当地' }}</a-col>
-        <a-col :span='10'>
-          <a-dropdown class="dropBox">
-            <template v-slot:overlay>
-              <a-menu>
-                <a-menu-item v-for="item in language" @click="languageChange(item.value)" :key="item.key">{{ item.value }}</a-menu-item>
-              </a-menu>
-            </template>
-            <a-button size='default'>{{ '所有' }}
-              <DownOutlined />
-            </a-button>
-          </a-dropdown>
+        <a-col :span='4' class="MlineStyle">{{ '当地' }}</a-col>
+        <a-col :span='6'>
+          <a-select v-model:value="area" @change="areaChange">
+            <a-select-option v-for="item in areaList" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
+          </a-select>
+        </a-col>
+        <a-col :span='5'>
+          <a-select v-model:value="city" @change="cityChange">
+            <a-select-option v-for="item in cityList" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
+          </a-select>
         </a-col>
       </a-col>
+      
       <a-col :span='8' :offset="8">
         <a-col :span='3'>
           <SearchOutlined style="fontSize:30px" />
@@ -98,9 +95,11 @@
             <img class="matchImg" :src="item.img">
           </a-col>
           <a-col :span='10'>
-            <div @click="showMore(item.state)" style="cursor:pointer">
+            <div @click="showMore(item.state)" class="divBg">
               <div>{{ item.title }}</div>
-              <div>{{ item.tip }}</div>
+              <div class="divisionBox">
+                <div v-for="div in item.divisiton" :key="div.index" class="divsision">{{ div.name }}</div>
+              </div>
             </div>
           </a-col>
         </div>
@@ -120,19 +119,19 @@
       </a-col>
     </a-row>
 
-    <divTitle :msg="matchTitle" :span="colSpan" :lastDate="getDate()" />
+    <divTitle :msg="matchTitle" :span="colSpan" :lastDate="getDate()" :showMore="true" />
 
     <a-row class="rowStyle">
       <a-tabs class="tabsBox" type='card'>
         <a-tab-pane key="1" tab="队伍" class="teamBG">
-          <a-col :span="7" class="colStyle">
-            <div class="gameStyle">01 Game</div>
-            <div v-for="item in teamList" :key="item.id" class="teamBox">
-              <div :class="{first:item.ppd,noFirst:!item.ppd}">
+          <a-col :span="7" class="colStyle" v-for="every in teamList" :key="every.index">
+            <div class="gameStyle">{{ every.title }}</div>
+            <div v-for="item in every.children" :key="item.id" class="teamBox">
+              <div :class="{first:item.id === 1,noFirst:item.id !== 1}">
                 <div class="teamImgBox">
                   <img :src="item.img" alt="">
                 </div>
-                <div v-if="item.ppd" class="detailStyle">
+                <div v-if="item.id === 1" class="detailStyle">
                   <div class="teamName" @click="goToPage">{{ item.teamName }}</div>
                   <div class="name">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
@@ -140,90 +139,18 @@
                       <EnvironmentOutlined />
                     </span>
                   </div>
-                  <div class="current">{{ item.current }}</div>
+                  <div class="current">{{ every.type }}</div>
                   <div class="number">{{ item.number }}</div>
                 </div>
                 <div v-else class="detailStyle">
-                  <div class="name smallBox" @click="goToPage">{{ item.name }}</div>
+                  <div class="name smallBox" @click="goToPage">{{ item.teamName }}</div>
                   <div class="area">{{ item.area }}
                     <span @click="showDetail(item)">
                       <EnvironmentOutlined />
                     </span>
                   </div>
                   <div class="current">
-                    <span>{{ item.current }}</span> <span>{{ item.number }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="more">
-              <div>MORE+</div>
-            </div>
-          </a-col>
-
-          <a-col :span="7" class="colStyle">
-            <div class="gameStyle">Cricket</div>
-            <div v-for="item in teamList" :key="item.id" class="teamBox">
-              <div :class="{first:item.ppd,noFirst:!item.ppd}">
-                <div class="teamImgBox">
-                  <img :src="item.img" alt="">
-                </div>
-                <div v-if="item.ppd" class="detailStyle">
-                  <div class="teamName" @click="goToPage">{{ item.teamName }}</div>
-                  <div class="name">{{ item.name }}</div>
-                  <div class="area">{{ item.area }}
-                    <span @click="showDetail(item)">
-                      <EnvironmentOutlined />
-                    </span>
-                  </div>
-                  <div class="current">{{ item.current }}</div>
-                  <div class="number">{{ item.number }}</div>
-                </div>
-                <div v-else class="detailStyle">
-                  <div class="name smallBox" @click="goToPage">{{ item.name }}</div>
-                  <div class="area">{{ item.area }}
-                    <span @click="showDetail(item)">
-                      <EnvironmentOutlined />
-                    </span>
-                  </div>
-                  <div class="current">
-                    <span>{{ item.current }}</span> <span>{{ item.number }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="more">
-              <div>MORE+</div>
-            </div>
-          </a-col>
-
-          <a-col :span="7" class="colStyle">
-            <div class="gameStyle">对阵获胜数</div>
-            <div v-for="item in teamList" :key="item.id" class="teamBox">
-              <div :class="{first:item.ppd,noFirst:!item.ppd}">
-                <div class="teamImgBox">
-                  <img :src="item.img" alt="">
-                </div>
-                <div v-if="item.ppd" class="detailStyle">
-                  <div class="teamName" @click="goToPage">{{ item.teamName }}</div>
-                  <div class="name">{{ item.name }}</div>
-                  <div class="area">{{ item.area }}
-                    <span @click="showDetail(item)">
-                      <EnvironmentOutlined />
-                    </span>
-                  </div>
-                  <div class="current">{{ item.current }}</div>
-                  <div class="number">{{ item.number }}</div>
-                </div>
-                <div v-else class="detailStyle">
-                  <div class="name smallBox" @click="goToPage">{{ item.name }}</div>
-                  <div class="area">{{ item.area }}
-                    <span @click="showDetail(item)">
-                      <EnvironmentOutlined />
-                    </span>
-                  </div>
-                  <div class="current">
-                    <span>{{ item.current }}</span> <span>{{ item.number }}</span>
+                    <span>{{ item.type }}</span> <span>{{ item.number }}</span>
                   </div>
                 </div>
               </div>
@@ -233,8 +160,42 @@
             </div>
           </a-col>
         </a-tab-pane>
-        <a-tab-pane key="2" tab="玩家">
-          Content of Tab Pane 2
+        <a-tab-pane key="2" tab="玩家" class="teamBG">
+          <a-col :span="7" class="colStyle" v-for="every in playerList" :key="every.index">
+            <div class="gameStyle">{{ every.title }}</div>
+            <div v-for="item in every.children" :key="item.id" class="teamBox">
+              <div :class="{first:item.ppd,noFirst:!item.ppd}">
+                <div class="teamImgBox">
+                  <img :src="item.img" alt="">
+                </div>
+                <div v-if="item.ppd" class="detailStyle">
+                  <div class="teamName" @click="goToPage">{{ item.teamName }}</div>
+                  <div class="name">{{ item.name }}</div>
+                  <div class="area">{{ item.area }}
+                    <span @click="showDetail(item)">
+                      <EnvironmentOutlined />
+                    </span>
+                  </div>
+                  <div class="current">{{ item.type }}</div>
+                  <div class="number">{{ item.number }}</div>
+                </div>
+                <div v-else class="detailStyle">
+                  <div class="name smallBox" @click="goToPage">{{ item.name }}</div>
+                  <div class="area">{{ item.area }}
+                    <span @click="showDetail(item)">
+                      <EnvironmentOutlined />
+                    </span>
+                  </div>
+                  <div class="current">
+                    <span>{{ item.type }}</span> <span>{{ item.number }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="more">
+              <div>MORE+</div>
+            </div>
+          </a-col>
         </a-tab-pane>
       </a-tabs>
     </a-row>
@@ -262,12 +223,15 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import {
-  DownOutlined,
-  BankFilled,
+  AimOutlined,
   SearchOutlined,
   EyeOutlined,
   ScheduleOutlined,
   EnvironmentOutlined,
+  QqOutlined,
+  WechatOutlined,
+  ZhihuOutlined,
+  AppleOutlined,
 } from "@ant-design/icons-vue";
 import divTitle from "@/components/DividingLine.vue";
 import router from "@/router";
@@ -276,13 +240,16 @@ interface DataProps {
 }
 export default defineComponent({
   components: {
-    DownOutlined,
-    BankFilled,
+    AimOutlined,
     SearchOutlined,
     EyeOutlined,
     ScheduleOutlined,
     divTitle,
     EnvironmentOutlined,
+    QqOutlined,
+    WechatOutlined,
+    ZhihuOutlined,
+    AppleOutlined,
   },
   name: "index",
   setup() {
@@ -293,15 +260,42 @@ export default defineComponent({
       title: "比赛",
       matchTitle: "排名",
       lastDate: new Date(),
+      time: "2020-5-41",
       colSpan: 4,
       visible: false,
       dialogObj: {
         title: "",
-        img: require('@/assets/3.jpg'),
-        shopName: "Joe's Billiards & Bar",
-        phone: "31881010",
-        address: "尖沙咀諾士佛台1號11-12樓",
+        img: require("@/assets/3.jpg"),
+        shopName: "",
+        phone: "",
+        address: "",
       },
+      area: 1,
+      city: 1,
+      newsList: [
+        {
+          id: 1,
+          img: require("@/assets/23.jpg"),
+          date: "2010-82-51",
+          count: 2054,
+        },
+        {
+          id: 1,
+          img: require("@/assets/23.jpg"),
+          date: "2010-82-51",
+          count: 2054,
+        },
+      ],
+      areaList: [
+        { key: 1, label: "湖北省" },
+        { key: 2, label: "广东省" },
+        { key: 3, label: "云南省" },
+      ],
+      cityList: [
+        { key: 1, label: "武汉" },
+        { key: 2, label: "深圳" },
+        { key: 3, label: "南京" },
+      ],
       photoList: [
         { id: 1, img: 1, url: "/a" },
         { id: 2, img: 2, url: "/a" },
@@ -312,7 +306,10 @@ export default defineComponent({
           matchId: 1,
           img: require("@/assets/1.jpg"),
           title: "2020第一次比赛",
-          tip: "U-LEAGUE 苏州赛区季后赛",
+          divisiton:[
+            { id:1,name:'张三' },
+            { id:2,name:'李四' }
+          ],
           area: "上海",
           date: "2020-9-10",
           state: 1,
@@ -321,7 +318,11 @@ export default defineComponent({
           matchId: 1,
           img: require("@/assets/1.jpg"),
           title: "2021第二次比赛",
-          tip: "U-LEAGUE 广州赛区季后赛",
+          divisiton:[
+            { id:1,name:'张三' },
+            { id:2,name:'李四' },
+            { id:3,name:'王五' }
+          ],
           area: "武汉",
           date: "2020-9-10",
           state: 2,
@@ -330,7 +331,9 @@ export default defineComponent({
           matchId: 1,
           img: require("@/assets/1.jpg"),
           title: "2022第三次比赛",
-          tip: "U-LEAGUE 兰州赛区季后赛",
+          divisiton:[
+            { id:1,name:'张三' },
+          ],
           area: "云南",
           date: "2020-9-10",
           state: 3,
@@ -339,53 +342,360 @@ export default defineComponent({
       teamList: [
         {
           id: 1,
-          img: require("@/assets/1.jpg"),
-          teamName: "2020第一次比赛",
-          name: "张自然",
-          area: "0981-广州",
-          current: "PPD",
-          number: "25.94",
-          ppd: true,
+          title: "01 Game",
+          type: "PPD",
+          children: [
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              number: "25.94",
+              shopName:'asdsadasd',
+              phoneNumber:'123456',
+              address:'123213213213',
+              first: true,
+            },
+            {
+              id: 2,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              number: "25.94",
+              shopName:'asdsadasd',
+              phoneNumber:'123456',
+              address:'123213213213',
+              first: false,
+            },
+            {
+              id: 3,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              first: false,
+            },
+            {
+              id: 4,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              first: false,
+            },
+            {
+              id: 5,
+              title: "01 Game",
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              first: false,
+            },
+          ],
         },
         {
           id: 2,
-          img: require("@/assets/1.jpg"),
-          teamName: "2021第二次比赛",
-          name: "李逍遥",
-          area: "0-08武汉",
-          current: "MPR",
-          number: "215.04",
-          ppd: false,
+          title: "Cricket",
+          type: "MPR",
+          children: [
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              number: "25.94",
+              shopName:'asdsadasd',
+              phoneNumber:'123456',
+              address:'123213213213',
+              first: true,
+            },
+            {
+              id: 2,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              number: "25.94",
+              shopName:'asdsadasd',
+              phoneNumber:'123456',
+              address:'123213213213',
+              first: false,
+            },
+            {
+              id: 3,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 4,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 5,
+              title: "01 Game",
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+          ],
         },
         {
           id: 3,
-          img: require("@/assets/1.jpg"),
-          teamName: "2022第三次比赛",
-          name: "王富贵",
-          area: "7192-2青岛",
-          current: "WIN",
-          number: "5.40",
-          ppd: false,
+          title: "对战获胜数",
+          type: "WIN",
+          children: [
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              number: "25.94",
+              shopName:'asdsadasd',
+              phoneNumber:'123456',
+              address:'123213213213',
+              ppd: true,
+            },
+            {
+              id: 2,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 3,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 4,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 5,
+              title: "01 Game",
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+          ],
+        },
+      ],
+      playerList: [
+        {
+          id: 1,
+          title: "01 Game",
+          children: [
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: true,
+            },
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 1,
+              title: "01 Game",
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+          ],
         },
         {
-          id: 4,
-          img: require("@/assets/1.jpg"),
-          teamName: "2022第三次比赛",
-          name: "王富贵",
-          area: "7192-2青岛",
-          current: "WIN",
-          number: "5.40",
-          ppd: false,
+          id: 1,
+          title: "Cricket",
+          children: [
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: true,
+            },
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 1,
+              title: "01 Game",
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+          ],
         },
         {
-          id: 5,
-          img: require("@/assets/1.jpg"),
-          teamName: "2022第三次比赛",
-          name: "王富贵",
-          area: "7192-2青岛",
-          current: "WIN",
-          number: "5.40",
-          ppd: false,
+          id: 1,
+          title: "设置获胜次数",
+          children: [
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: true,
+            },
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 1,
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+            {
+              id: 1,
+              title: "01 Game",
+              img: require("@/assets/1.jpg"),
+              teamName: "2020第一次比赛",
+              name: "张自然",
+              area: "0981-广州",
+              current: "PPD",
+              number: "25.94",
+              ppd: false,
+            },
+          ],
         },
       ],
       getDate: () => {
@@ -409,19 +719,28 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       showDetail: (item: any) => {
         data.dialogObj.title = item.area;
+        data.dialogObj.shopName = item.shopName;
+        data.dialogObj.phone = item.phoneNumber;
+        data.dialogObj.address = item.address;
         data.visible = true;
       },
       handleOk: () => {
         data.visible = false;
       },
-      goToPage:() => {
-        router.push('/teamInfo')
+      goToPage: () => {
+        router.push("/teamInfo");
       },
       showMore: (value: string) => {
         router.push({
           path: "/calendar",
           query: { value },
         });
+      },
+      areaChange: (value: number) => {
+        console.log(value);
+      },
+      cityChange: (value: number) => {
+        console.log(value);
       },
     });
     onMounted(() => {
@@ -448,11 +767,16 @@ export default defineComponent({
 .carouselBox img {
   height: 100%;
 }
+.newBg {
+  padding: 10px;
+}
 .newBox {
-  height: 205px;
+  height: 250px;
+  width: 100%;
 }
 .newBox img {
   height: 100%;
+  width: 100%;
 }
 .bg {
   border: 1px solid #e5e5e5;
@@ -535,7 +859,7 @@ export default defineComponent({
   font-weight: bold;
 }
 .colStyle {
-  border: 1px solid #000;
+  border: 1px solid #999;
 }
 .gameStyle {
   height: 30px;
@@ -574,7 +898,6 @@ export default defineComponent({
 .more div {
   width: 60px;
   height: 22px;
-  border-radius: 10px;
   border: 1px solid #000;
 }
 .teamBG {
@@ -617,16 +940,74 @@ export default defineComponent({
   width: 220px;
   text-align: left;
 }
-.imgBox{
+.imgBox {
   height: 100px;
   width: 100px;
   margin: 0 auto;
 }
-.imgBox img{
+.imgBox img {
   width: 100%;
   height: 100%;
 }
-.teamName,.smallBox{
+.teamName,
+.smallBox {
   cursor: pointer;
+}
+.teamName:hover,
+.smallBox:hover {
+  text-decoration: underline;
+}
+.newHeader {
+  display: flex;
+  height: 40px;
+  line-height: 40px;
+  color: #fff;
+  background: #2b2b2b;
+  margin: 15px 0;
+  font-size: 20px;
+  font-weight: bold;
+  justify-content: space-between;
+}
+.newSstyle {
+  background: red;
+  width: 150px;
+}
+.moreStyle {
+  width: 150px;
+  cursor: pointer;
+}
+.moreStyle:hover {
+  color: #1890ff;
+}
+.newsTable {
+  display: flex;
+  justify-content: space-around;
+}
+.newIcon {
+  display: flex;
+  justify-content: space-around;
+}
+.otherSrcBox {
+  display: flex;
+  justify-content: space-around;
+}
+.otherSrcBox div {
+  width: 80px;
+  height: 80px;
+  font-size: 50px;
+  cursor: pointer;
+}
+.divisionBox{
+  display: flex;
+}
+.divsision{
+  border: 1px solid #000;
+  padding: 0 2px;
+  margin: 0 4px;
+  text-decoration: underline;
+}
+.divBg{
+  cursor: pointer;
+  text-align: left;
 }
 </style>

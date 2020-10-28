@@ -3,32 +3,14 @@
     <a-row id="title-g">
       <a-col :span='4'>{{ title }}</a-col>
       <a-col :span='3' :offset="5" class="btnBox">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu>
-              <a-menu-item v-for="item in newsSearch" :key="item.id" @click="handleMenuClick(item.value)">
-                {{ item.value }}
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
       <a-col :span='3' class="btnBox">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu>
-              <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                {{ item.value }}
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
     </a-row>
     <a-row class="centerStyle">
@@ -38,50 +20,23 @@
         <a-col :span='2'>
           <EnvironmentOutlined class="fontIcon" />{{ place }}
         </a-col>
-        <a-col :span='2'>
-          <a-dropdown>
-            <template v-slot:overlay>fontIcon
-              <a-menu>
-                <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                  {{ item.value }}
-                </a-menu-item>
-              </a-menu>
-            </template>
-            <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-              <DownOutlined />
-            </a-button>
-          </a-dropdown>
+        <a-col :span='3'>
+          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
         </a-col>
         <a-col :span='2'>
-          <a-dropdown>
-            <template v-slot:overlay>fontIcon
-              <a-menu>
-                <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                  {{ item.value }}
-                </a-menu-item>
-              </a-menu>
-            </template>
-            <a-button class="btnStyle" style="margin-left: 8px">{{  }}
-              <DownOutlined />
-            </a-button>
-          </a-dropdown>
+          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
         </a-col>
         <a-col :span='2'>{{ currentState }}</a-col>
         <a-col :span='2'>
-          <a-dropdown>
-            <template v-slot:overlay>
-              <a-menu>
-                <a-menu-item v-for="item in stateList" :key="item.id" @click="handleMenuClick(item.value)">
-                  {{ item.value }}
-                </a-menu-item>
-              </a-menu>
-            </template>
-            <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-              <DownOutlined />
-            </a-button>
-          </a-dropdown>
+          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
         </a-col>
-        <a-col :span='2' :offset="7">
+        <a-col :span='2' :offset="6">
           <SearchOutlined class="fontIcon" />{{ matchName }}
         </a-col>
         <a-col :span='5'>
@@ -130,7 +85,7 @@
             <div>{{ item.date }}</div>
           </a-col>
         </a-row>
-        <a-row type="flex" justify="start">
+        <a-row type="flex" justify="end">
           <a-pagination v-model:current="currentSize" :total="total" />
         </a-row>
       </div>
@@ -164,7 +119,7 @@
             <div>{{ item.date }}</div>
           </a-col>
         </a-row>
-        <a-row type="flex" justify="start">
+        <a-row type="flex" justify="end">
           <a-pagination v-model:current="currentSize" :total="total" />
         </a-row>
       </div>
@@ -264,7 +219,6 @@
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import {
-  DownOutlined,
   SearchOutlined,
   SettingFilled,
   EnvironmentOutlined
@@ -285,7 +239,7 @@ interface DataProp {
 }
 export default defineComponent({
   name: "hearder",
-  components: { DownOutlined, EnvironmentOutlined, SearchOutlined, SettingFilled },
+  components: { EnvironmentOutlined, SearchOutlined, SettingFilled },
   setup() {
     const Router = useRouter();
     const data = reactive({
@@ -302,6 +256,10 @@ export default defineComponent({
       value: "",
       allLeague: true,
       myLeague: false,
+      matchType:2020,
+      matchTypeList:[
+        { value:2020,label:'2020' }
+      ],
       newsSearch: [
         { id: 1, value: "新闻" },
         { id: 2, value: "标题" },
@@ -377,6 +335,9 @@ export default defineComponent({
         data.myLeague = true;
         data.allLeague = false;
       },
+      matchTypeChange:(value: number) => {
+        console.log(value)
+      }
     });
     onMounted(() => {
       for (let i = 1; i < 13; i += 1) {

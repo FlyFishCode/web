@@ -8,49 +8,22 @@
 
     <a-row class="rowStyle rowSearchBox">
       <a-col :span='3' class="dropdown">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu>
-              <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                {{ item.value }}
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
       <a-col :span='3' class="dropdown">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu>
-              <a-menu-item v-for="item in stateList" :key="item.id" @click="handleMenuClick(item.value)">
-                {{ item.value }}
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
       <a-col :span='2' class="titleStyle" :offset="8">
         <SearchOutlined class="fontIcon" />{{ '选择队伍' }}
       </a-col>
       <a-col :span='3' class="dropdown">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu>
-              <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                {{ item.value }}
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
       <a-col :span='5'>
         <a-input-search v-model:value="currentValue" enter-button="Search" size="default" @search="onSearch" />
@@ -62,7 +35,7 @@
         <a-table-column key="lastName" title="队名" data-index="awayName">
           <template v-slot="{ record:row }">
             <img class="tableImg" :src="row.img" alt="">
-            <a @click="fastWay(row)" >{{ row.homaName }}</a>
+            <a @click="fastWay(row)">{{ row.homaName }}</a>
           </template>
         </a-table-column>
         <a-table-column key="lastName" title="对战地点" data-index="lastName" />
@@ -77,7 +50,7 @@
         <a-table-column key="lastName" title="Last Name" data-index="lastName" />
         <a-table-column key="lastName" title="比赛日程" data-index="awayName">
           <template v-slot="{ record:row }">
-            <a-button class="tableBtn" size="small" @click="fastWay(row)" >{{ '快捷方式' }}</a-button>
+            <a-button class="tableBtn" size="small" @click="fastWay(row)">{{ '快捷方式' }}</a-button>
           </template>
         </a-table-column>
       </a-table>
@@ -93,11 +66,10 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
 // import { rowType } from "@/type/interface.d.ts";
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 import {
   SearchOutlined,
   SettingFilled,
-  DownOutlined,
 } from "@ant-design/icons-vue";
 // eslint-disable-next-line @typescript-eslint/class-name-casing
 interface rowType {
@@ -108,15 +80,16 @@ export default defineComponent({
   components: {
     SearchOutlined,
     SettingFilled,
-    DownOutlined,
   },
   setup() {
-    const Router = useRouter()
+    const Router = useRouter();
     const data = reactive({
       msg: "参赛队伍列表",
       monthList: [],
       stateList: [],
       currentValue: "所有玩家",
+      matchType: 2020,
+      matchTypeList: [{ value: 2020, label: "2020" }],
       columns: [
         { title: "队名", dataIndex: "homaName", key: "homaName" },
         { title: "对战地点", dataIndex: "homaName", key: "homaName" },
@@ -141,7 +114,7 @@ export default defineComponent({
           homeScore: 10,
           awayName: "李逍遥",
           key: 1,
-          img:require('@/assets/1.jpg')
+          img: require("@/assets/1.jpg"),
         },
         {
           state: 1,
@@ -170,11 +143,14 @@ export default defineComponent({
         console.log("1");
       },
       Gohistory: () => {
-        Router.push('/result')
+        Router.push("/result");
       },
       fastWay: (row: rowType) => {
         console.log(row);
       },
+      matchTypeChange:(value: number) =>{
+        console.log(value)
+      }
     });
     return {
       ...toRefs(data),
@@ -184,11 +160,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.tableBtn{
+.tableBtn {
   border-color: red;
   border-radius: 15px;
 }
-.tableImg{
+.tableImg {
   width: 50px;
   margin: 0 10px 0 0;
 }

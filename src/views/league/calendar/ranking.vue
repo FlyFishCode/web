@@ -17,32 +17,14 @@
 
           <a-row>
             <a-col :span='3' class="dropdown">
-              <a-dropdown>
-                <template v-slot:overlay>
-                  <a-menu @click="handleMenuClick">
-                    <a-menu-item key="1">1st menu item</a-menu-item>
-                    <a-menu-item key="2">2nd menu item</a-menu-item>
-                    <a-menu-item key="3">3rd item</a-menu-item>
-                  </a-menu>
-                </template>
-                <a-button style="margin-left: 8px"> Button
-                  <DownOutlined />
-                </a-button>
-              </a-dropdown>
+              <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+                <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+              </a-select>
             </a-col>
             <a-col :span='3' class="dropdown">
-              <a-dropdown>
-                <template v-slot:overlay>
-                  <a-menu @click="handleMenuClick">
-                    <a-menu-item key="1">1st menu item</a-menu-item>
-                    <a-menu-item key="2">2nd menu item</a-menu-item>
-                    <a-menu-item key="3">3rd item</a-menu-item>
-                  </a-menu>
-                </template>
-                <a-button style="margin-left: 8px"> Button
-                  <DownOutlined />
-                </a-button>
-              </a-dropdown>
+              <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+                <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+              </a-select>
             </a-col>
             <a-col :span='3' :offset="15">
               <a-button type="danger" @click="showMatchTable">{{ '查看对阵表' }}</a-button>
@@ -140,49 +122,22 @@
           </a-row>
           <a-row>
             <a-col :span='3' class="dropdown">
-              <a-dropdown>
-                <template v-slot:overlay>
-                  <a-menu @click="handleMenuClick">
-                    <a-menu-item key="1">1st menu item</a-menu-item>
-                    <a-menu-item key="2">2nd menu item</a-menu-item>
-                    <a-menu-item key="3">3rd item</a-menu-item>
-                  </a-menu>
-                </template>
-                <a-button style="margin-left: 8px"> Button
-                  <DownOutlined />
-                </a-button>
-              </a-dropdown>
+              <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+                <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+              </a-select>
             </a-col>
             <a-col :span='3' class="dropdown">
-              <a-dropdown>
-                <template v-slot:overlay>
-                  <a-menu @click="handleMenuClick">
-                    <a-menu-item key="1">1st menu item</a-menu-item>
-                    <a-menu-item key="2">2nd menu item</a-menu-item>
-                    <a-menu-item key="3">3rd item</a-menu-item>
-                  </a-menu>
-                </template>
-                <a-button style="margin-left: 8px"> Button
-                  <DownOutlined />
-                </a-button>
-              </a-dropdown>
+              <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+                <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+              </a-select>
             </a-col>
             <a-col :span="2" :offset='4' class="titleStyle">
               <ClusterOutlined />{{ choseTeam }}
             </a-col>
             <a-col :span="3" class="dropdown">
-              <a-dropdown>
-                <template v-slot:overlay>
-                  <a-menu @click="handleMenuClick">
-                    <a-menu-item key="1">1st menu item</a-menu-item>
-                    <a-menu-item key="2">2nd menu item</a-menu-item>
-                    <a-menu-item key="3">3rd item</a-menu-item>
-                  </a-menu>
-                </template>
-                <a-button style="margin-left: 8px"> Button
-                  <DownOutlined />
-                </a-button>
-              </a-dropdown>
+              <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+                <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+              </a-select>
             </a-col>
             <a-col :span='3' :offset="6">
               <a-button type="danger" @click="showMatchTable">{{ '查看对阵表' }}</a-button>
@@ -234,11 +189,7 @@
 import { defineComponent, reactive, toRefs } from "vue";
 // import { rowType } from "@/type/interface.d.ts";
 import { useRouter } from "vue-router";
-import {
-  SettingFilled,
-  DownOutlined,
-  ClusterOutlined,
-} from "@ant-design/icons-vue";
+import { SettingFilled, ClusterOutlined } from "@ant-design/icons-vue";
 import showTeam from "@/components/showTeamTopOne.vue";
 import showPersonal from "@/components/showPersonalTopOne.vue";
 // eslint-disable-next-line @typescript-eslint/class-name-casing
@@ -249,19 +200,12 @@ export default defineComponent({
   name: "calendar",
   components: {
     SettingFilled,
-    DownOutlined,
     ClusterOutlined,
     showTeam,
     showPersonal,
   },
   setup() {
     const Router = useRouter();
-    const changePageSize = (pageSize: number, current: number) => {
-      console.log(pageSize, current);
-    };
-    const changePage = (current: number) => {
-      console.log(current);
-    };
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: false,
@@ -269,9 +213,12 @@ export default defineComponent({
       pageSize: 10,
       current: 1,
       total: 50,
-      onShowSizeChange: (current: number, pageSize: number) =>
-        changePageSize(pageSize, current),
-      onChange: (current: number) => changePage(current),
+      onShowSizeChange: (current: number, pageSize: number) => {
+        console.log(pageSize, current);
+      },
+      onChange: (current: number) => {
+        console.log(current);
+      },
     };
     const data = reactive({
       title: "排名/记录",
@@ -281,6 +228,8 @@ export default defineComponent({
       monthList: [],
       stateList: [],
       currentValue: "所有玩家",
+      matchType: 2020,
+      matchTypeList: [{ value: 2020, label: "2020" }],
       columns: [
         { title: "队名", dataIndex: "homaName", key: "homaName" },
         { title: "对战地点", dataIndex: "homaName", key: "homaName" },
@@ -373,6 +322,9 @@ export default defineComponent({
       fastWay: (row: rowType) => {
         console.log(row);
       },
+      matchTypeChange:(value: number) =>{
+        console.log(value)
+      }
     });
     return {
       ...toRefs(data),

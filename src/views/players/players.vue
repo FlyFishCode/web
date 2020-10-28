@@ -7,7 +7,7 @@
       </a-col>
     </a-row>
     <a-row class="winnerListStyle">
-      <a-col class="fourBox" v-for="item in bestTeam" :key="item.id">
+      <a-col class="fourBox" v-for="item in bestPlayers" :key="item.id">
         <div class="centerBox">
           <div class="title infoTitle">{{ item.title }}</div>
           <div class="title teamName">{{ item.teamName }}</div>
@@ -79,7 +79,7 @@
     </a-row>
     <a-row>
       <a-col :span='4' class="centerFont">
-        <SettingFilled /> {{ `队伍列表 (${teamList.length})` }}
+        <SettingFilled /> {{ `玩家清单 (${teamList.length})` }}
       </a-col>
     </a-row>
 
@@ -94,17 +94,14 @@
           <div class="teamStyle">{{ item.teamName }}</div>
           <div class="placeStyle">
             <div>{{ item.place }}</div>/
-            <div class="counyStyle">{{ item.couny }}</div><span @click="showDetail">
-              <InfoCircleFilled />
+            <div class="counyStyle">{{ item.couny }}</div><span @click="showDialog(item)">
+              <EnvironmentOutlined />
             </span>
           </div>
-          <div>{{ item.captain }}</div>
         </a-col>
         <a-col :span='3' class="vipBox">
-          <div>{{ vip }}</div>
-          <div>
-            <UserOutlined />{{ item.vipCount }}
-          </div>
+          <div>{{ teamName }}</div>
+          <div> {{ item.vipCount }} </div>
         </a-col>
         <a-col :span='8' class="topBox">
           <div>{{ topInfoTitle }}</div>
@@ -155,6 +152,26 @@
       </transition>
     </a-row>
 
+    <a-modal v-model:visible="visible" :title="dialogObj.title">
+      <template v-slot:footer>
+        <a-row class="rowStyle dialogBox">
+          <a-col :span='8'>
+            <div class="imgBox">
+              <img :src="dialogObj.img" alt="">
+            </div>
+          </a-col>
+          <a-col :span='16' class="dialog">
+            <div>{{ `Shop name：${dialogObj.shopName}` }}</div>
+            <div>{{ `电话号码：${dialogObj.phone}` }}</div>
+            <div>{{ `地址：${dialogObj.address}` }}</div>
+          </a-col>
+        </a-row>
+        <div class="dialogBtn">
+          <a-button type="primary" @click="handleOk">{{ '更多' }}</a-button>
+        </div>
+      </template>
+    </a-modal>
+
     <a-row class="rowStyle">
       <a-col class="pagination">
         <a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="500" @showSizeChange="onShowSizeChange" />
@@ -165,47 +182,53 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 import divTitle from "@/components/DividingLine.vue";
 import {
   SettingFilled,
   BankFilled,
   SearchOutlined,
-  InfoCircleFilled,
-  UserOutlined,
+  EnvironmentOutlined,
   DownCircleOutlined,
   UpCircleOutlined,
 } from "@ant-design/icons-vue";
 export default defineComponent({
-  name: "teamIndex",
+  name: "players",
   components: {
     divTitle,
     BankFilled,
     SearchOutlined,
     SettingFilled,
-    InfoCircleFilled,
-    UserOutlined,
+    EnvironmentOutlined,
     DownCircleOutlined,
     UpCircleOutlined,
   },
   setup() {
-    const Router = useRouter()
+    const Router = useRouter();
     const data = reactive({
-      title: "队伍",
-      msg: "最佳队伍 (League)",
+      title: "玩家",
+      msg: "最佳玩家 (League)",
       place: "当地",
       currentState: "进行状态",
       matchName: "搜索标准",
       currentValue: 1,
-      vip: "会员",
+      teamName: "队名",
       value: 201,
-      type: "报名",
-      joinMatch: "参加比赛",
-      topInfoTitle: "Top 4 平均比赛等级",
-      current:1,
-      pageSize:1,
-      colSpan:4,
+      type: "Entry",
+      joinMatch: "已参加比赛",
+      topInfoTitle: "Competition Rating",
+      current: 1,
+      pageSize: 1,
+      colSpan: 4,
       matchType: 2020,
+      visible:false,
+      dialogObj:{
+        title: "",
+        img: require("@/assets/3.jpg"),
+        shopName: "",
+        phone: "",
+        address: "",
+      },
       matchTypeList: [{ value: 2020, label: "2020" }],
       monthList: [],
       stateList: [],
@@ -216,7 +239,6 @@ export default defineComponent({
           teamName: "上海队",
           couny: "北京",
           place: "汉庭会所",
-          captain: "刘半仙",
           vipCount: 8,
           ranting: 2.15,
           PPD: 25.0,
@@ -255,7 +277,6 @@ export default defineComponent({
           teamName: "上海队",
           couny: "北京",
           place: "汉庭会所",
-          captain: "刘半仙",
           vipCount: 8,
           ranting: 2.15,
           PPD: 25.0,
@@ -271,7 +292,6 @@ export default defineComponent({
           teamName: "上海队",
           couny: "北京",
           place: "汉庭会所",
-          captain: "刘半仙",
           vipCount: 8,
           ranting: 2.15,
           PPD: 25.0,
@@ -305,7 +325,7 @@ export default defineComponent({
           ],
         },
       ],
-      bestTeam: [
+      bestPlayers: [
         {
           id: 1,
           title: "鲨鱼辣椒",
@@ -350,24 +370,20 @@ export default defineComponent({
           score: "15",
           top: "BEST WORLD",
         },
-        {
-          id: 5,
-          title: "奥特曼",
-          teamName: "奥特曼队",
-          couny: "ABSP(广州)",
-          itemScore: "71",
-          win: "PPD",
-          MPR: "MPR",
-          score: "15",
-          top: "BEST WORLD",
-        },
       ],
       getDate: () => "220-10-16",
       showDetail: (value: number) => {
         Router.push({
-          path: "/teamInfo",
+          path: "/playerInfo",
           query: { value },
-        })
+        });
+      },
+      showDialog:(item: any) =>{
+        data.dialogObj.title = item.place;
+        data.dialogObj.shopName = item.shopName;
+        data.dialogObj.phone = item.phoneNumber;
+        data.dialogObj.address = item.address;
+        data.visible = true;
       },
       onSearch: () => {
         console.log("11");
@@ -375,11 +391,14 @@ export default defineComponent({
       changeFlag: (index: number) => {
         data.teamList[index].flag = !data.teamList[index].flag;
       },
-      onShowSizeChange:() => {
-        console.log(1)
+      onShowSizeChange: () => {
+        console.log(1);
       },
-      matchTypeChange:(value: number) =>{
-        console.log(value)
+      matchTypeChange: (value: number) => {
+        console.log(value);
+      },
+      handleOk:() =>{
+        console.log(1)
       }
     });
     return {
@@ -532,10 +551,11 @@ export default defineComponent({
   cursor: pointer;
 }
 .infoClass {
+  height: 100%;
   text-align: left;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
 }
 .counyStyle {
   color: #999;
@@ -609,5 +629,29 @@ export default defineComponent({
 }
 .recordInfoFont:hover {
   text-decoration: underline;
+}
+.dialogBox {
+  height: 100px;
+  color: #ff3202;
+  border: 1px solid #eee;
+}
+.imgBox {
+  height: 100px;
+  width: 100px;
+  margin: 0 auto;
+}
+.imgBox img {
+  width: 100%;
+  height: 100%;
+}
+.dialog {
+  text-align: left;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.dialogBtn {
+  text-align: center;
 }
 </style>

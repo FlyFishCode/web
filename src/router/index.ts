@@ -72,6 +72,23 @@ const routes: Array<RouteRecordRaw> = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "myPage" */ '@/views/myPage/myPage.vue')
+  },
+  // 玩家
+  {
+    path: '/players',
+    name: 'Players',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "players" */ '@/views/players/players.vue')
+  },
+  {
+    path: '/playerInfo',
+    name: 'PlayerInfo',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "playerInfo" */ '@/views/players/playerInfo.vue')
   }
 ]
 

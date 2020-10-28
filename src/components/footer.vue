@@ -12,43 +12,40 @@
       <div>asdasdasdsadsadasdsadasdsadadsadsadsadas</div>
     </a-col>
     <a-col :span="4" class="btnBG">
-      <a-dropdown>
-        <template v-slot:overlay>
-          <a-menu @click="handleMenuClick">
-            <a-menu-item key="1">
-              <UserOutlined />1st menu item
-            </a-menu-item>
-            <a-menu-item key="2">
-              <UserOutlined />2nd menu item
-            </a-menu-item>
-            <a-menu-item key="3">
-              <UserOutlined />3rd item
-            </a-menu-item>
-          </a-menu>
-        </template>
-        <a-button style="margin-left: 8px"> Button
-          <DownOutlined />
-        </a-button>
-      </a-dropdown>
+      <a-select v-model:value="value" style="width: 120px" @change="valueChange">
+        <a-select-option :value="1">
+          Jack
+        </a-select-option>
+        <a-select-option :value="2">
+          Lucy
+        </a-select-option>
+        <a-select-option :value="3">
+          Disabled
+        </a-select-option>
+        <a-select-option :value="4">
+          yiminghe
+        </a-select-option>
+      </a-select>
     </a-col>
   </a-row>
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
-import { DownOutlined,UserOutlined  } from "@ant-design/icons-vue";
 
 export default defineComponent({
   name: "afooter",
-  components:{
-    DownOutlined,
-    UserOutlined 
+  components: {
   },
   setup() {
     const data = reactive({
       img: require("@/assets/logo.jpg"),
-      handleMenuClick:() => {
-        console.log('handleMenuClick')
-      }
+      value:1,
+      valueChange:(value: number) => {
+        console.log(value)
+      },
+      handleMenuClick: () => {
+        console.log("handleMenuClick");
+      },
     });
     return {
       ...toRefs(data),
@@ -83,13 +80,13 @@ export default defineComponent({
   flex-direction: column;
   height: 100%;
 }
-.btnBG{
+.btnBG {
   height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.btnBG button{
+.btnBG button {
   width: 100%;
 }
 </style>

@@ -62,12 +62,12 @@ export default defineComponent({
   font-weight: bold;
   color: red;
   margin: 5px 0;
+  text-align: left;
 }
 /* // 按钮宽度 */
 .buttonBox button {
   width: 100%;
 }
-/* 下拉框按钮宽度 */
 .dropdown button {
   width: 100%;
 }
@@ -85,8 +85,10 @@ export default defineComponent({
   background: #f3f3f3;
   padding: 12px 0;
 }
+/*  分页样式 */
 .pagination {
   display: flex;
+  justify-content: flex-end;
 }
 .content {
   margin: 5px;

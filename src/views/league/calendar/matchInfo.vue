@@ -11,38 +11,100 @@
       </a-col>
     </a-row>
     <a-row class="tableStyle">
-      <a-col :span='4' class="left">
-        <div>{{ '比赛名称' }}</div>
-        <div>{{ '比赛期间' }}</div>
-        <div>{{ '申请期间' }}</div>
-        <div>{{ '参赛资格' }}</div>
-        <div>{{ '奖励条件' }}</div>
-      </a-col>
-      <a-col :span='8' class="leftCentent">
-        <div>{{ matchName }}</div>
-        <div>{{ matchTime }}</div>
-        <div>{{ applyTime }}</div>
-        <div>{{ matchQualifications }}</div>
-        <div>{{ matchReward }}</div>
-      </a-col>
-      <a-col :span='4' class="right">
-        <div>{{ '主管代理' }}</div>
-        <div>{{ '举办区域' }}</div>
-        <div>{{ '举办店铺' }}</div>
-        <div>{{ '参加费' }}</div>
-        <div>{{ '标准等级' }}</div>
-        <div>{{ '玩家更换' }}</div>
-        <div>{{ '队伍玩家人数限制' }}</div>
-      </a-col>
-      <a-col :span='8' class="rightCentent">
-        <div>{{ matchName }}</div>
-        <div>{{ matchName }}</div>
-        <div>{{ matchName }}</div>
-        <div>{{ matchName }}</div>
-        <div>{{ matchName }}</div>
-        <div>{{ matchName }}</div>
-        <div>{{ matchName }}</div>
-      </a-col>
+      <a-row>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '比赛名称' }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '负责人' }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '比赛期间' }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '举办区域' }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '申请期间' }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '举办店铺' }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '标准评级' }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '报名费' }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '玩家更换' }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '队伍玩家人数限制' }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '参赛资格' }}</div>
+        </a-col>
+        <a-col :span='20' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '奖励条件' }}</div>
+        </a-col>
+        <a-col :span='20' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span='4' class="tableContent">
+          <div>{{ '游戏类型描述' }}</div>
+        </a-col>
+        <a-col :span='20' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+      </a-row>
     </a-row>
     <a-row class="rowStyle" type="flex" justify="space-around">
       <a-col :span='7' class="sencend">
@@ -231,31 +293,18 @@ export default defineComponent({
 }
 .tableStyle {
   border: 1px solid #333;
-  height: 210px;
 }
-.leftCentent div {
-  height: 42px;
-  line-height: 42px;
-  border: 1px solid #666;
-}
-.left div {
-  height: 42px;
-  line-height: 42px;
-  border: 1px solid #666;
+.tableContent div {
+  height: 40px;
+  line-height: 40px;
+  border: 1px solid #d5d5d5;
   background: #eee;
   color: #000;
 }
-.right div {
-  height: 30px;
-  line-height: 30px;
-  border: 1px solid #666;
-  color: #000;
-  background: #eee;
-}
-.rightCentent div {
-  height: 30px;
-  line-height: 30px;
-  border: 1px solid #666;
+.tableContentValue div {
+  height: 40px;
+  line-height: 40px;
+  border: 0.5px solid #d5d5d5;
 }
 .decision {
   display: flex;

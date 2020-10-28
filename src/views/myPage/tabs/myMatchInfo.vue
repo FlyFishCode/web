@@ -6,33 +6,15 @@
       </a-col>
     </a-row>
     <a-row class="rowSearchBox">
-      <a-col :span='2'>
-        <a-dropdown>
-          <template v-slot:overlay>fontIcon
-            <a-menu>
-              <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                {{ item.value }}
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button class="btnStyle" style="margin-left: 8px">{{ 'ALL' }}
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+      <a-col :span='3'>
+        <a-select v-model:value="year" @change="yearChange" style="width: 100px">
+          <a-select-option v-for="item in yearList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
-      <a-col :span='2'>
-        <a-dropdown>
-          <template v-slot:overlay>fontIcon
-            <a-menu>
-              <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                {{ item.value }}
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button class="btnStyle" style="margin-left: 8px">{{ 'ALL' }}
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+      <a-col :span='3'>
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
     </a-row>
 
@@ -113,19 +95,30 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
-import { DownOutlined, SettingFilled,DownCircleOutlined,UpCircleOutlined } from "@ant-design/icons-vue";
+import {
+  SettingFilled,
+  DownCircleOutlined,
+  UpCircleOutlined,
+} from "@ant-design/icons-vue";
 export default defineComponent({
   name: "templete",
   components: {
-    DownOutlined,
     SettingFilled,
     DownCircleOutlined,
-    UpCircleOutlined
+    UpCircleOutlined,
   },
   setup() {
     const data = reactive({
       title: "队伍",
       colSpan: 5,
+      year: 2020,
+      matchType: 2020,
+      yearList: [
+        { value:2020,label:'2020' }
+      ],
+      matchTypeList: [
+        { value:2020,label:'2020' }
+      ],
       teamList: [
         {
           id: 1,
@@ -141,22 +134,22 @@ export default defineComponent({
           count: 0,
           enroll: 10,
           flag: false,
-          state:1,
-          time:'2020-9-52',
+          state: 1,
+          time: "2020-9-52",
           record: [
             {
               matchName: "Demo_A_Team",
               img: require("@/assets/1.jpg"),
               date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
-              win:10
+              win: 10,
             },
             {
               matchName: "Demo_A_Team",
               img: require("@/assets/1.jpg"),
               date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
-              win:15
+              win: 15,
             },
           ],
         },
@@ -174,13 +167,19 @@ export default defineComponent({
           count: 0,
           enroll: 10,
           flag: false,
-          state:2,
+          state: 2,
           record: [],
         },
       ],
-      changeFlag:(index: number) => {
+      changeFlag: (index: number) => {
         data.teamList[index].flag = !data.teamList[index].flag;
-      }
+      },
+      yearChange: (value: number) => {
+        console.log(value);
+      },
+      matchTypeChange: (value: number) => {
+        console.log(value);
+      },
     });
     return {
       ...toRefs(data),
@@ -271,53 +270,53 @@ export default defineComponent({
   font-size: 20px;
   border-bottom: 1px dashed #000;
 }
-.title{
+.title {
   text-align: left;
   color: #999;
 }
-.teamName{
+.teamName {
   text-align: left;
   font-size: 20px;
   font-weight: bold;
 }
-.countBox{
+.countBox {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-.tableBox{
+.tableBox {
   display: flex;
   justify-content: space-between;
   text-align: center;
 }
-.tableBox div{
+.tableBox div {
   width: 75px;
   border: 1px solid #000;
 }
-.teamBox{
+.teamBox {
   display: flex;
   align-items: center;
 }
-.Header{
+.Header {
   background: #f1f0ed;
   color: #5a5a5a;
 }
-.stateClass{
+.stateClass {
   display: flex;
   justify-content: space-between;
 }
-.disableFont{
+.disableFont {
   color: #999;
 }
-.stateBox{
+.stateBox {
   border-radius: 10px;
   width: 70px;
 }
-.I{
+.I {
   background: red;
   color: #fff;
 }
-.F{
+.F {
   background: #d9d9d9;
   color: #797878;
 }

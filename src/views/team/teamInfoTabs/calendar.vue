@@ -7,64 +7,19 @@
     </a-row>
     <a-row class="rowStyle">
       <a-col :span='2' class="dropdown">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu @click="handleMenuClick">
-              <a-menu-item key="1">
-                1st menu item
-              </a-menu-item>
-              <a-menu-item key="2">
-                2nd menu item
-              </a-menu-item>
-              <a-menu-item key="3">
-                3rd item
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button style="margin-left: 8px"> Button
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
       <a-col :span='3' class="dropdown">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu @click="handleMenuClick">
-              <a-menu-item key="1">
-                1st menu item
-              </a-menu-item>
-              <a-menu-item key="2">
-                2nd menu item
-              </a-menu-item>
-              <a-menu-item key="3">
-                3rd item
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button style="margin-left: 8px"> Button
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
-      <a-col :span='4' class="dropdown">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu @click="handleMenuClick">
-              <a-menu-item key="1">
-                1st menu item
-              </a-menu-item>
-              <a-menu-item key="2">
-                2nd menu item
-              </a-menu-item>
-              <a-menu-item key="3">
-                3rd item
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button style="margin-left: 8px"> Button
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+      <a-col :span='2' class="dropdown">
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
     </a-row>
 
@@ -84,24 +39,9 @@
         </a-button>
       </a-col>
       <a-col :span='3' :offset='10'>
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu @click="handleMenuClick">
-              <a-menu-item key="1">
-                1st menu item
-              </a-menu-item>
-              <a-menu-item key="2">
-                2nd menu item
-              </a-menu-item>
-              <a-menu-item key="3">
-                3rd item
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button style="margin-left: 8px">{{ '所有' }}
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+        </a-select>
       </a-col>
       <a-col :span='3'>
         <a-button>
@@ -156,7 +96,6 @@
 import { defineComponent, reactive, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import {
-  DownOutlined,
   UnorderedListOutlined,
   CalendarOutlined,
   CloudDownloadOutlined,
@@ -170,7 +109,6 @@ import {
 export default defineComponent({
   name: "templete",
   components: {
-    DownOutlined,
     UnorderedListOutlined,
     CalendarOutlined,
     CloudDownloadOutlined,
@@ -185,6 +123,8 @@ export default defineComponent({
       isList: true,
       isCalendar: false,
       calendarValue: "",
+      matchType: 2020,
+      matchTypeList: [{ value: 2020, label: "2020" }],
       columns: [
         {
           title: "日期",
@@ -290,6 +230,9 @@ export default defineComponent({
       Gohistory: () => {
         Router.push("/teamIndex");
       },
+      matchTypeChange:(value: number) =>{
+        console.log(value)
+      }
     });
     return {
       ...toRefs(data),

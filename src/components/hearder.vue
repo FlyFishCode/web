@@ -57,14 +57,19 @@
       <a-col :span="3">
         <a-button type="link" size='small'>{{ tip3 }}</a-button>
       </a-col>
-      <a-col :span="3">{{ tip4 }}</a-col>
-      <a-col :span='4'>
-        <a-select v-model:value="country" style="width: 90px" size='small' @change="countryChange">
+      <a-col :span="2">{{ tip4 }}</a-col>
+      <a-col :span='3'>
+        <a-select v-model:value="country" size='small' @change="countryChange">
           <a-select-option v-for="item in countryList" :key="item.key" :value='item.key'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span="3">{{ tip5 }}</a-col>
-      <a-col :span='4'>
+      <a-col :span='3'>
+        <a-select v-model:value="country" size='small' @change="countryChange">
+          <a-select-option v-for="item in countryList" :key="item.key" :value='item.key'>{{ item.label }}</a-select-option>
+        </a-select>
+      </a-col>
+      <a-col :span="2">{{ tip5 }}</a-col>
+      <a-col :span='3'>
         <a-select v-model:value="language" style="width: 100px" size='small' @change="languageChange">
           <a-select-option v-for="item in languageList" :key="item.key" :value='item.key'>{{ item.label }}</a-select-option>
         </a-select>
@@ -156,7 +161,7 @@
   </a-row>
 </template>
 <script lang="ts">
-import { DOM } from "@/type/interface";
+// import { DOM } from "@/type/interface";
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import { loginHttp } from "@/axios/api";
 import { useRouter } from "vue-router";

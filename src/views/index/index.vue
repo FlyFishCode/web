@@ -66,12 +66,12 @@
         </a-col>
         <a-col :span='4' class="MlineStyle">{{ '当地' }}</a-col>
         <a-col :span='6'>
-          <a-select v-model:value="area" @change="areaChange">
+          <a-select v-model:value="areaId" @change="areaChange">
             <a-select-option v-for="item in areaList" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
         <a-col :span='5'>
-          <a-select v-model:value="city" @change="cityChange">
+          <a-select v-model:value="countryId" @change="cityChange">
             <a-select-option v-for="item in cityList" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
@@ -83,7 +83,7 @@
         </a-col>
         <a-col :span='6' class="MlineStyle">{{ '比赛名称' }}</a-col>
         <a-col :span='15'>
-          <a-input-search v-model:value="imputValue" enter-button="Search" @search="onSearch" />
+          <a-input-search v-model:value="leagueName" enter-button="Search" @search="onSearch" />
         </a-col>
       </a-col>
     </a-row>
@@ -95,17 +95,17 @@
             <img class="matchImg" :src="item.img">
           </a-col>
           <a-col :span='10'>
-            <div @click="showMore(item.state)" class="divBg">
+            <div @click="showLeagueInfo(item.leagueId)" class="divBg">
               <div>{{ item.title }}</div>
               <div class="divisionBox">
-                <div v-for="div in item.divisiton" :key="div.index" class="divsision">{{ div.name }}</div>
+                <div v-for="div in item.division" :key="div.index" class="divsision">{{ div.divName }}</div>
               </div>
             </div>
           </a-col>
         </div>
       </a-col>
       <a-col :span='2'>
-        <div class="fontDisplay">{{ '当前' }}</div>
+        <div class="fontDisplay">{{ '当地' }}</div>
         <div>{{ item.area }}</div>
       </a-col>
       <a-col :span='8'>
@@ -115,7 +115,7 @@
           <div class="matchState R" v-if="item.state === 2">{{ '比赛结束' }}</div>
           <div class="matchState F" v-if="item.state === 3">{{ '比赛结束' }}</div>
         </div>
-        <div>{{ item.date }}</div>
+        <div>{{ $filters.filterDate(item.endPeriod) }}</div>
       </a-col>
     </a-row>
 
@@ -235,6 +235,7 @@ import {
 } from "@ant-design/icons-vue";
 import divTitle from "@/components/DividingLine.vue";
 import router from "@/router";
+import { leagueListHttp }  from '@/axios/api'
 interface DataProps {
   click: () => void;
 }
@@ -256,7 +257,7 @@ export default defineComponent({
     const data = reactive({
       img: require("@/assets/logo.jpg"),
       currentLan: "中文",
-      imputValue: "",
+      leagueName: "",
       title: "比赛",
       matchTitle: "排名",
       lastDate: new Date(),
@@ -270,8 +271,8 @@ export default defineComponent({
         phone: "",
         address: "",
       },
-      area: 1,
-      city: 1,
+      areaId: 1,
+      countryId: 1,
       newsList: [
         {
           id: 1,
@@ -301,44 +302,7 @@ export default defineComponent({
         { id: 2, img: 2, url: "/a" },
         { id: 3, img: 3, url: "/a" },
       ],
-      matchList: [
-        {
-          matchId: 1,
-          img: require("@/assets/1.jpg"),
-          title: "2020第一次比赛",
-          divisiton:[
-            { id:1,name:'张三' },
-            { id:2,name:'李四' }
-          ],
-          area: "上海",
-          date: "2020-9-10",
-          state: 1,
-        },
-        {
-          matchId: 1,
-          img: require("@/assets/1.jpg"),
-          title: "2021第二次比赛",
-          divisiton:[
-            { id:1,name:'张三' },
-            { id:2,name:'李四' },
-            { id:3,name:'王五' }
-          ],
-          area: "武汉",
-          date: "2020-9-10",
-          state: 2,
-        },
-        {
-          matchId: 1,
-          img: require("@/assets/1.jpg"),
-          title: "2022第三次比赛",
-          divisiton:[
-            { id:1,name:'张三' },
-          ],
-          area: "云南",
-          date: "2020-9-10",
-          state: 3,
-        },
-      ],
+      matchList: [],
       teamList: [
         {
           id: 1,
@@ -710,8 +674,15 @@ export default defineComponent({
       countryChange: (value: number) => {
         console.log(value);
       },
-      onSearch: (value: number | string) => {
-        console.log(value);
+      onSearch: () => {
+        const obj = {
+          areaId:data.areaId,
+          countryId:data.areaId,
+          leagueName:data.leagueName
+        }
+        leagueListHttp(false,obj).then(res =>{
+          data.matchList = res.data.data
+        })
       },
       intoPhoto: (value: string) => {
         console.log(value);
@@ -730,10 +701,10 @@ export default defineComponent({
       goToPage: () => {
         router.push("/teamInfo");
       },
-      showMore: (value: string) => {
+      showLeagueInfo: (id: number) => {
         router.push({
           path: "/calendar",
-          query: { value },
+          query: { id },
         });
       },
       areaChange: (value: number) => {
@@ -744,7 +715,7 @@ export default defineComponent({
       },
     });
     onMounted(() => {
-      console.log("1111111");
+      data.onSearch()
     });
     return {
       ...toRefs(data),

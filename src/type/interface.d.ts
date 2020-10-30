@@ -2,4 +2,6 @@ declare interface DOM {
   e:HTMLElement | EventTarget
 }
 
-export { DOM }
+declare interface Window {
+  load:() => void
+}

@@ -93,4 +93,13 @@ export default defineComponent({
 .content {
   margin: 5px;
 }
+ /* 去掉高德水印 */
+.amap-logo {
+  display: none!important;
+  visibility: hidden!important;
+}
+.amap-copyright {
+  display: none!important;
+  visibility: hidden!important;
+}
 </style>

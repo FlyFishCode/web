@@ -12,9 +12,6 @@ import '@/assets/css/animate.min.css'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 
-// import Axios from 'axios'
-// app.config.globalProperties.$http = Axios
-
 // import vueI18n from 'vue-i18n'
 // const i18n = new vueI18n({
 //   locale:'zh',
@@ -23,9 +20,16 @@ import 'ant-design-vue/dist/antd.css'
 //     en:require('@/i18n/en-Lan')
 //   }
 // })
-
+app.config.globalProperties.$filters = {
+    // 添加全局时间过滤器
+    filterDate(value: string){
+        const [first ,center] = value.split('T')
+        const last = center.split('.')[0]
+        return `${first}  ${last}`
+    }
+}
 app.use(store)
 app.use(Antd)
-// app.use(i18n)
+    // app.use(i18n)
 app.use(router)
 app.mount('#app')

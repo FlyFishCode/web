@@ -29,7 +29,7 @@
           <div class="teamStyle">{{ item.teamName }}</div>
           <div class="placeStyle">
             <div>{{ item.place }}</div>
-            <div>{{ item.captain }}</div>
+            <div v-for="div in item.division" :key="div.id" class="divisiBox">{{ div.divisiName }}</div>
           </div>
         </a-col>
         <a-col :span='4' :offset='4' class="vipBox">
@@ -77,13 +77,13 @@
                 <div>{{ 'Set 败' }}</div>
               </div>
               <div class="tableBox Content">
-                <div>{{ recordInfo.win }}</div>
-                <div>{{ recordInfo.win }}</div>
-                <div>{{ recordInfo.win }}</div>
-                <div>{{ recordInfo.win }}</div>
-                <div>{{ recordInfo.win }}</div>
-                <div>{{ recordInfo.win }}</div>
-                <div>{{ recordInfo.win }}</div>
+                <div>{{ recordInfo.ranking }}</div>
+                <div>{{ recordInfo.Rating }}</div>
+                <div>{{ recordInfo.PPD }}</div>
+                <div>{{ recordInfo.MPR }}</div>
+                <div>{{ recordInfo.SetWin }}</div>
+                <div>{{ recordInfo.SetRraw }}</div>
+                <div>{{ recordInfo.SetLose }}</div>
               </div>
             </a-col>
           </a-row>
@@ -113,43 +113,48 @@ export default defineComponent({
       colSpan: 5,
       year: 2020,
       matchType: 2020,
-      yearList: [
-        { value:2020,label:'2020' }
-      ],
-      matchTypeList: [
-        { value:2020,label:'2020' }
-      ],
+      yearList: [{ value: 2020, label: "2020" }],
+      matchTypeList: [{ value: 2020, label: "2020" }],
       teamList: [
         {
           id: 1,
           img: require("@/assets/1.jpg"),
           teamName: "上海队",
           couny: "北京",
-          place: "汉庭会所",
-          captain: "刘半仙",
           vipCount: 8,
-          ranting: 2.15,
-          PPD: 25.0,
-          MPR: 19.5,
-          count: 0,
-          enroll: 10,
           flag: false,
           state: 1,
           time: "2020-9-52",
+          division: [
+            { id: 1, divisiName: "xxxx" },
+            { id: 2, divisiName: "xxxx" },
+          ],
           record: [
             {
               matchName: "Demo_A_Team",
               img: require("@/assets/1.jpg"),
               date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
-              win: 10,
+              ranking: 1,
+              Rating: 2,
+              PPD: 3,
+              MPR: 4,
+              SetWin: 5,
+              SetRraw: 6,
+              SetLose: 7,
             },
             {
               matchName: "Demo_A_Team",
               img: require("@/assets/1.jpg"),
               date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
-              win: 15,
+              ranking: 1,
+              Rating: 2,
+              PPD: 3,
+              MPR: 4,
+              SetWin: 5,
+              SetRraw: 6,
+              SetLose: 7,
             },
           ],
         },
@@ -158,16 +163,11 @@ export default defineComponent({
           img: require("@/assets/1.jpg"),
           teamName: "上海队",
           couny: "北京",
-          place: "汉庭会所",
-          captain: "刘半仙",
           vipCount: 8,
-          ranting: 2.15,
-          PPD: 25.0,
-          MPR: 19.5,
-          count: 0,
-          enroll: 10,
           flag: false,
           state: 2,
+          time: "2020-9-52",
+          division: [],
           record: [],
         },
       ],
@@ -208,7 +208,8 @@ export default defineComponent({
   text-align: left;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
+  height: 100%;
 }
 .teamStyle {
   cursor: pointer;
@@ -319,5 +320,10 @@ export default defineComponent({
 .F {
   background: #d9d9d9;
   color: #797878;
+}
+.divisiBox{
+  border: 1px solid #000;
+  padding: 5px;
+  margin: 4px 5px;
 }
 </style>

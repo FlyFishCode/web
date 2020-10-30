@@ -84,7 +84,7 @@
       </a-row>
       <!-- 表格 -->
       <a-row>
-        <a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey='key' :customRow='customRow' :customHeaderRow='customHeaderRow'>
+        <a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey='key' :customHeaderRow='customHeaderRow'>
           <template v-slot:state="{ text }">
             <div class="tableState">
               <div v-if="text === 1" class="plan" @click="showPlan">{{ '排阵' }}</div>
@@ -131,22 +131,22 @@ export default defineComponent({
       ismatchTablePage: false,
       matchType: 2020,
       matchTypeList: [{ value: 2020, label: "2020" }],
-      customRow: (record: any) => {
-        return {
-          click: () => {
-            debugger;
-            console.log(record);
-          },
-        };
-      },
+      // customRow: (record: any) => {
+      //   return {
+      //     click: () => {
+      //       debugger;
+      //       console.log(record);
+      //     },
+      //   };
+      // },
       customHeaderRow: (column: any) => {
         return {
-          on: {
+          // on: {
             click: (event: any) => {
               debugger;
               console.log(event, column);
             },
-          },
+          // },
         };
       },
       gundongInfoList: [

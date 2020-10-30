@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 import { useRouter } from 'vue-router'
 
-import { login } from './index/index'
+import { login,leagueList } from './index/index'
 
 const baseURL = "/aps"
 const Router = useRouter()
@@ -42,4 +42,14 @@ const loginHttp = (json: boolean ,data: any) => {
 	}
 	return Axios.post(login, DATA)
 }
-export { loginHttp }
+// 首页联赛列表
+const leagueListHttp = (json: boolean ,data: any) => {
+	let DATA = ''
+	if(json){
+		DATA = data
+	}else{
+		DATA = qs.stringify(data)
+	}
+	return Axios.post(leagueList, DATA)
+}
+export { loginHttp ,leagueListHttp}

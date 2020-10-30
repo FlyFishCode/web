@@ -68,8 +68,8 @@
                 <div>{{ recordInfo.place }}</div>
               </div>
               <div class="btnBox">
-                <div v-for="disition in recordInfo.class" :key="disition.index">
-                  <a-button type="danger" size='small'>{{ disition.className }}</a-button>
+                <div v-for="disition in recordInfo.divisiList" :key="disition.index">
+                  <a-button type="danger" size='small'>{{ disition.divisiName }}</a-button>
                 </div>
               </div>
             </a-col>
@@ -121,7 +121,6 @@ export default defineComponent({
           PPD: 25.0,
           MPR: 19.5,
           count: 0,
-          enroll: 10,
           flag: false,
           record: [
             {
@@ -129,10 +128,10 @@ export default defineComponent({
               img: require("@/assets/1.jpg"),
               date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
-              class: [
-                { className: "class1" },
-                { className: "class2" },
-                { className: "class3" },
+              divisiList: [
+                { id:1, divisiName: "class1" },
+                { id:2, divisiName: "class2" },
+                { id:3, divisiName: "class3" },
               ],
             },
             {
@@ -140,10 +139,10 @@ export default defineComponent({
               img: require("@/assets/1.jpg"),
               date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
-              class: [
-                { className: "class1" },
-                { className: "class2" },
-                { className: "class3" },
+              divisiList: [
+                { id:1, divisiName: "class1" },
+                { id:2, divisiName: "class2" },
+                { id:3, divisiName: "class3" },
               ],
             },
           ],
@@ -160,7 +159,6 @@ export default defineComponent({
           PPD: 25.0,
           MPR: 19.5,
           count: 0,
-          enroll: 10,
           flag: false,
           record: [],
         },
@@ -176,7 +174,6 @@ export default defineComponent({
           PPD: 25.0,
           MPR: 19.5,
           count: 0,
-          enroll: 10,
           flag: false,
           record: [
             {
@@ -184,10 +181,10 @@ export default defineComponent({
               img: require("@/assets/1.jpg"),
               date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
-              class: [
-                { className: "class1" },
-                { className: "class2" },
-                { className: "class3" },
+              divisiList: [
+                { id:1, divisiName: "class1" },
+                { id:2, divisiName: "class2" },
+                { id:3, divisiName: "class3" },
               ],
             },
             {
@@ -195,10 +192,10 @@ export default defineComponent({
               img: require("@/assets/1.jpg"),
               date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
-              class: [
-                { className: "class1" },
-                { className: "class2" },
-                { className: "class3" },
+              divisiList: [
+                { id:1, divisiName: "class1" },
+                { id:2, divisiName: "class2" },
+                { id:3, divisiName: "class3" },
               ],
             },
           ],

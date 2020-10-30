@@ -17,8 +17,8 @@ module.exports = {
         port: 8010,
         proxy: {
             "/aps": {
-                target: "http://adartstest.adarts-cn.com:9090/web", // 后端
-                // target: "192.168.2.198:9090/web", // 本地
+                // target: "http://adartstest.adarts-cn.com:9090/web", // 后端-曾
+                target: "http://192.168.2.105:9091/darts", // 后端-廖
                 changeOrigin: true,
                 ws: true,
                 pathRewrite: {

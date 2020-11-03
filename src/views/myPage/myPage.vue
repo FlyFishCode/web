@@ -8,19 +8,19 @@
     </a-row>
     <a-row>
       <a-tabs class="tabsBox" type="card">
-        <a-tab-pane key="1" tab="我的比赛信息">
+        <a-tab-pane key="1" :tab="$t('default.106')">
           <myMatchInfo />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="我的对战">
+        <a-tab-pane key="2" :tab="$t('default.107')">
           <myBattle />
         </a-tab-pane>
-        <a-tab-pane key="3" tab="消息">
+        <a-tab-pane key="3" :tab="$t('default.108')">
           <message />
         </a-tab-pane>
-        <a-tab-pane key="4" tab="我的等级">
+        <a-tab-pane key="4" :tab="$t('default.109')">
           <myLevel />
         </a-tab-pane>
-        <a-tab-pane key="5" tab="我的队伍">
+        <a-tab-pane key="5" :tab="$t('default.110')">
           <myTeam />
         </a-tab-pane>
       </a-tabs>
@@ -50,7 +50,7 @@ export default defineComponent({
   },
   setup() {
     const data = reactive({
-      title: "我的页面",
+      title: "default.2",
       colSpan: 4,
       getDate: () => {
         return "2020-10-17";

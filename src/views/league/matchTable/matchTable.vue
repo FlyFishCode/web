@@ -1,42 +1,42 @@
 <template>
   <div class="content">
     <a-row>
-      <a-col :span='2'>
+      <a-col :span='2' class="smallTitle">
         <SettingFilled /> {{ title }}
       </a-col>
       <a-col :span='3' :offset='14'>
-        <a-button>{{ '复制上一次排阵' }}</a-button>
+        <a-button>{{ $t('default.118') }}</a-button>
       </a-col>
       <a-col :span='3'>
-        <a-button>{{ '储存为草稿' }}</a-button>
+        <a-button>{{ $t('default.143') }}</a-button>
       </a-col>
       <a-col :span='2'>
-        <a-button type="primary">{{ '排阵提交' }}</a-button>
+        <a-button type="primary">{{ $t('default.144') }}</a-button>
       </a-col>
     </a-row>
     <a-row class="timeBox">
-      <a-col :span='6'>{{ `排陣截止日期：${matchTable.date}` }}</a-col>
+      <a-col :span='6'>{{ `${$t('default.145')}：${matchTable.date}` }}</a-col>
       <a-col :span='6' :offset='2'>
         <div class="surplusBox">
-          <div>{{ '剩余时间：' }}</div>
+          <div>{{ $t('default.146') }}</div>
           <div class="timeStyle">{{ matchTable.day }}</div>
-          <div>{{ '天' }}</div>
+          <div>{{ $t('default.147') }}</div>
           <div class="timeStyle">{{ matchTable.hours }}</div>:
           <div class="timeStyle">{{ matchTable.minute }}</div>:
           <div class="timeStyle">{{ matchTable.second }}</div>
         </div>
       </a-col>
-      <a-col :span='7' :offset='3'>{{ `输入最大Set数：${matchTable.maxSet} / Entry Max Mode Count：${matchTable.maxMode}` }}</a-col>
+      <a-col :span='7' :offset='3'>{{ `${$t('default.148')}：${matchTable.maxSet} / ${$t('default.149')}：${matchTable.maxMode}` }}</a-col>
     </a-row>
     <a-row class="rowStyle">
       <div v-for="(item,index) in matchTable.matchTableList" :key="index">
         <div class="modeType">
           <div class="modeStyle">{{ `Set${index+1} / ${item.type}` }}</div>
           <div v-if="item.male" class="sexStyle"><i class="male ">&#xe793;</i>
-            <div>{{ `more than ${ item.male }` }}</div>
+            <div>{{ `${$t('default.150')} ${ item.male }` }}</div>
           </div>
           <div v-if="item.female" class="sexStyle"><i class="female">&#xe793;</i>
-            <div>{{ `more than ${ item.female }` }}</div>
+            <div>{{ `${$t('default.150')} ${ item.female }` }}</div>
           </div>
         </div>
         <div class="setStyle">

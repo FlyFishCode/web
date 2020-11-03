@@ -2,8 +2,8 @@
   <a-row type="flex" justify="end">
     <a-col :span="11" class="lineStyle">
       <a-col :span="3" v-show="!isLogin">
-        <a-button type="link" size='small' @click="showLoginBox">{{ tip1 }}</a-button>
-        <a-modal id="loginBox" v-model:visible="visible" title="登录" centered>
+        <a-button type="link" size='small' @click="showLoginBox">{{ $t('default.0') }}</a-button>
+        <a-modal id="loginBox" v-model:visible="visible" :title="$t('default.0')" centered>
           <div>
             <a-input v-model:value="userId">
               <template v-slot:prefix>
@@ -19,28 +19,28 @@
             </a-input>
             <br />
             <br />
-            <a-checkbox v-model="autoLogin" @change="onChange">{{ '自动登录' }}</a-checkbox>
+            <a-checkbox v-model="autoLogin" @change="onChange">{{ $t('default.5') }}</a-checkbox>
           </div>
           <template v-slot:footer>
             <a-row class="rowStyle">
               <a-col :span='24' class="buttonBox">
-                <a-button type="primary" @click="login">{{ '登录' }}</a-button>
+                <a-button type="primary" @click="login">{{ $t('default.0') }}</a-button>
               </a-col>
             </a-row>
             <a-row class="loginMore">
               <a-col :span='4'>
                 <a-button type="link">
-                  {{"注册会员"}}
+                  {{ $t('default.1') }}
                 </a-button>
               </a-col>|
               <a-col :span='4'>
                 <a-button type="link">
-                  {{"查找ID"}}
+                  {{ $t('default.6') }}
                 </a-button>
               </a-col>|
               <a-col :span='4'>
                 <a-button type="link">
-                  {{"查找密码"}}
+                  {{ $t('default.7') }}
                 </a-button>
               </a-col>
             </a-row>
@@ -48,30 +48,25 @@
         </a-modal>
       </a-col>
       <a-col :span="3" v-show="!isLogin">
-        <a-button type="link" size='small'>{{ tip2 }}</a-button>
+        <a-button type="link" size='small'>{{ $t('default.1') }}</a-button>
       </a-col>
       <a-col :span='3' v-show="isLogin">{{ userName }}</a-col>
       <a-col :span='3' v-show="isLogin" @click="loginOut">
-        <a-button type="link" size='small'>{{ '退出' }}</a-button>
+        <a-button type="link" size='small'>{{ $t('default.126') }}</a-button>
       </a-col>
       <a-col :span="3">
-        <a-button type="link" size='small'>{{ tip3 }}</a-button>
+        <a-button type="link" size='small'>{{ $t('default.2') }}</a-button>
       </a-col>
-      <a-col :span="2">{{ tip4 }}</a-col>
+      <a-col :span="3">{{ $t('default.3') }}</a-col>
       <a-col :span='3'>
-        <a-select v-model:value="country" size='small' @change="countryChange">
+        <a-select v-model:value="country" style="width: 70px" size='small' @change="countryChange">
           <a-select-option v-for="item in countryList" :key="item.key" :value='item.key'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='3'>
-        <a-select v-model:value="country" size='small' @change="countryChange">
-          <a-select-option v-for="item in countryList" :key="item.key" :value='item.key'>{{ item.label }}</a-select-option>
-        </a-select>
-      </a-col>
-      <a-col :span="2">{{ tip5 }}</a-col>
-      <a-col :span='3'>
-        <a-select v-model:value="language" style="width: 100px" size='small' @change="languageChange">
-          <a-select-option v-for="item in languageList" :key="item.key" :value='item.key'>{{ item.label }}</a-select-option>
+      <a-col :span="4">{{ $t('default.4') }}</a-col>
+      <a-col :span='4'>
+        <a-select v-model:value="$i18n.locale" style="width: 100px" size='small'>
+          <a-select-option v-for="item in languageList" :key="item.key" :value='item.key'>{{ $t(item.label) }}</a-select-option>
         </a-select>
       </a-col>
     </a-col>
@@ -83,7 +78,7 @@
     <a-col :span="8" :offset="8">
       <a-col :span='6'>
         <a-select v-model:value="type" style="width: 100px" @change="typeChange">
-          <a-select-option v-for="item in typeList" :key="item.key" :value='item.key'>{{ item.label }}</a-select-option>
+          <a-select-option v-for="item in typeList" :key="item.key" :value='item.key'>{{ $t(item.label) }}</a-select-option>
         </a-select>
       </a-col>
       <a-col :span='18'>
@@ -93,16 +88,15 @@
   </a-row>
   <a-row class="rowStyle boxBG">
     <a-tabs class="tabsBox" type='card' @tabClick="tabClick" :defaultActiveKey='defaultKey'>
-      <a-tab-pane key="league" tab="League"></a-tab-pane>
-      <!-- <a-tab-pane key="/result" tab=""></a-tab-pane> -->
-      <a-tab-pane key="team" tab="Team"></a-tab-pane>
-      <a-tab-pane key="players" tab="Players"></a-tab-pane>
-      <a-tab-pane key="shop" tab="Shop"></a-tab-pane>
-      <a-tab-pane key="6" tab="Ranking/Statistics">
+      <a-tab-pane key="league" :tab="$t('default.8')"></a-tab-pane>
+      <a-tab-pane key="team" :tab="$t('default.9')"></a-tab-pane>
+      <a-tab-pane key="players" :tab="$t('default.10')"></a-tab-pane>
+      <a-tab-pane key="shop" :tab="$t('default.127')"></a-tab-pane>
+      <a-tab-pane key="6" :tab="$t('default.26')">
         Content of Tab Pane 3
       </a-tab-pane>
       <template v-slot:tabBarExtraContent>
-        <a-button @click="interMypage">{{ myPage }}</a-button>
+        <a-button @click="interMypage">{{ $t('default.2') }}</a-button>
         <a-button @click="showPersonBox">
           <template v-slot:icon>
             <ProfileTwoTone />
@@ -112,7 +106,7 @@
     </a-tabs>
     <div v-show="showBox" class="showBox animate__animated animate__fadeInRight animate__faster">
       <div class="hearder">
-        <div>{{ playerMsg }}</div>
+        <div>{{ $t('default.128') }}</div>
         <div class="closeStyle" @click="closeBox">
           <CloseOutlined />
         </div>
@@ -132,8 +126,8 @@
         </div>
         <div id="myMsgCard">
           <div class="Mytabs">
-            <a-button :type="isMyMatch?'primary':''" @click="myMatchClick">{{ '我的比赛' }}</a-button>
-            <a-button :type="isMyMatch?'':'primary'" @click="matchTableClick">{{ '对战时间表' }}</a-button>
+            <a-button :type="isMyMatch?'primary':''" @click="myMatchClick">{{ $t('default.129') }}</a-button>
+            <a-button :type="isMyMatch?'':'primary'" @click="matchTableClick">{{ $t('default.79') }}</a-button>
           </div>
           <div v-if="isMyMatch">
             <div v-for="item in myInfo.myMatch" :key="item.index" class="match">
@@ -146,13 +140,13 @@
               </div>
             </div>
             <div class="moreStyle" @click="entryMaPage">
-              <PlusCircleOutlined twoToneColor="#ff5122" /> {{ 'MORE' }}
+              <PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}
             </div>
           </div>
           <div v-else>
             <!-- <div v-if="item in myInfo.matchTimeTable" :key="item.index"></div> -->
             <div class="moreStyle">
-              <PlusCircleOutlined twoToneColor="#ff5122" /> {{ 'MORE' }}
+              <PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}
             </div>
           </div>
         </div>
@@ -161,7 +155,6 @@
   </a-row>
 </template>
 <script lang="ts">
-// import { DOM } from "@/type/interface";
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import { loginHttp } from "@/axios/api";
 import { useRouter } from "vue-router";
@@ -185,26 +178,17 @@ export default defineComponent({
   setup() {
     const Router = useRouter();
     const data = reactive({
-      tip1: "登录",
-      tip2: "注册会员",
-      tip3: "我的页面",
-      tip4: "国家",
-      tip5: "语言",
       defaultKey: "league",
       isLogin: false,
-      currentLan: "中文",
       imputValue: "",
       visible: false,
-      myPage: "MY",
       showBox: false,
       autoLogin: false,
       userId: "",
       passWord: "",
-      playerMsg: "玩家信息",
       userName: "",
       country: 1,
       img: require("@/assets/logo.jpg"),
-      language: 1,
       type: 1,
       isMyMatch: true,
       myInfo: {
@@ -258,22 +242,18 @@ export default defineComponent({
         { key: 3, label: "英国" },
       ],
       languageList: [
-        { key: 1, label: "简体中文" },
-        { key: 2, label: "繁体中文" },
-        { key: 3, label: "英文" },
+        { key: 'zh-cn', label: "default.130" },
+        { key: 'zh-tw', label: "default.131" },
+        { key: 'en-us', label: "default.132" },
       ],
       typeList: [
-        { key: 1, label: "League" },
-        { key: 2, label: "队伍" },
-        { key: 3, label: "玩家" },
-        { key: 4, label: "店铺" },
+        { key: 1, label: "default.8" },
+        { key: 2, label: "default.9" },
+        { key: 3, label: "default.10" },
+        { key: 4, label: "default.127" },
       ],
       typeChange: (value: number) => {
         console.log(value);
-      },
-      languageChange: (value: string) => {
-        console.log(value);
-        // data.currentLan = value;
       },
       onSearch: () => {
         console.log("onSearch");

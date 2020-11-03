@@ -2,7 +2,7 @@
   <div>
     <a-row>
       <a-col :span='2' class="centerFont">
-        <SettingFilled /> {{ msg }}
+        <SettingFilled /> {{ $t('default.13') }}
       </a-col>
     </a-row>
     <a-row>
@@ -17,7 +17,7 @@
         </a-select>
       </a-col>
       <a-col :span='3' :offset="15">
-        <a-button type="danger" @click="showMatchTable">{{ '查看对战表' }}</a-button>
+        <a-button type="danger" @click="showMatchTable">{{ $t('default.51') }}</a-button>
       </a-col>
     </a-row>
     <!-- 对战表 排阵-->
@@ -29,10 +29,10 @@
       <a-row class="rowStyle">
         <!-- <div v-if="state === 1"> -->
         <a-tabs type="card">
-          <a-tab-pane key="1" tab="比赛结果">
+          <a-tab-pane key="1" :tab="$t('default.62')">
             <matchResult />
           </a-tab-pane>
-          <a-tab-pane key="2" tab="排阵">
+          <a-tab-pane key="2" :tab="$t('default.41')">
             <matchTable />
           </a-tab-pane>
         </a-tabs>
@@ -57,21 +57,21 @@
 
       <a-row>
         <a-col :span='2' class="titleStyle">
-          <PlusOutlined class="fontIcon" />{{ '选择队伍' }}
+          <PlusOutlined class="fontIcon" />{{ $t('default.140') }}
         </a-col>
         <a-col :span='2'>
           <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='2' class="titleStyle">{{ '对战状态' }}</a-col>
+        <a-col :span='2' class="titleStyle">{{ $t('default.141') }}</a-col>
         <a-col :span='3'>
           <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
         <a-col :span='2' class="titleStyle" :offset="5">
-          <PlusOutlined class="fontIcon" />{{ '选择队伍' }}
+          <PlusOutlined class="fontIcon" />{{ $t('default.140') }}
         </a-col>
         <a-col :span='3' class="dropdown">
           <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
@@ -79,15 +79,45 @@
           </a-select>
         </a-col>
         <a-col :span='5'>
-          <a-input-search v-model:value="currentValue" enter-button="Search" size="default" @search="onSearch" />
+          <a-input-search v-model:value="currentValue" :enter-button="$t('default.16')" size="default" @search="onSearch" />
         </a-col>
       </a-row>
       <!-- 表格 -->
       <a-row>
         <a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey='key' :customHeaderRow='customHeaderRow'>
+          <template v-slot:date>
+            <div>{{ $t('default.52') }}</div>
+          </template>
+          <template v-slot:time>
+            <div>{{ $t('default.152') }}</div>
+          </template>
+          <template v-slot:type>
+            <div>{{ $t('default.119') }}</div>
+          </template>
+          <template v-slot:homeTeam>
+            <div>{{ $t('default.56') }}</div>
+          </template>
+          <template v-slot:homeTeamName>
+            <div>{{ $t('default.55') }}</div>
+          </template>
+          <template v-slot:homeScore>
+            <div>{{ $t('default.58') }}</div>
+          </template>
+          <template v-slot:awayScore>
+            <div>{{ $t('default.58') }}</div>
+          </template>
+          <template v-slot:awayTeamName>
+            <div>{{ $t('default.55') }}</div>
+          </template>
+          <template v-slot:awayTeam>
+            <div>{{ $t('default.57') }}</div>
+          </template>
+          <template v-slot:inState>
+            <div>{{ $t('default.59') }}</div>
+          </template>
           <template v-slot:state="{ text }">
             <div class="tableState">
-              <div v-if="text === 1" class="plan" @click="showPlan">{{ '排阵' }}</div>
+              <div v-if="text === 1" class="plan" @click="showPlan">{{ $t('default.41') }}</div>
               <div v-if="text === 2">{{ 'Ready' }}</div>
               <div v-if="text === 3">{{ 'Finished' }}</div>
             </div>
@@ -97,7 +127,7 @@
     </div>
     <a-row class="rowStyle">
       <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="Gohistory">{{ '列表' }}</a-button>
+        <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
       </a-col>
     </a-row>
   </div>
@@ -124,10 +154,9 @@ export default defineComponent({
   },
   setup() {
     const data = reactive({
-      msg: "时间表",
       monthList: [],
       stateList: [],
-      currentValue: "所有玩家",
+      currentValue: "",
       ismatchTablePage: false,
       matchType: 2020,
       matchTypeList: [{ value: 2020, label: "2020" }],
@@ -142,10 +171,10 @@ export default defineComponent({
       customHeaderRow: (column: any) => {
         return {
           // on: {
-            click: (event: any) => {
-              debugger;
-              console.log(event, column);
-            },
+          click: (event: any) => {
+            debugger;
+            console.log(event, column);
+          },
           // },
         };
       },
@@ -315,33 +344,47 @@ export default defineComponent({
       ],
       columns: [
         {
-          title: "日期",
           dataIndex: "data",
           key: "name",
+          slots: { title: "date" },
         },
-        { title: "比赛时间", dataIndex: "data", key: "time" },
-        { title: "比赛类型", dataIndex: "data", key: "type" },
+        { dataIndex: "data", key: "time", slots: { title: "time" } },
+        { dataIndex: "data", key: "type", slots: { title: "type" } },
         {
-          title: "主队",
           children: [
-            { title: "队名", dataIndex: "homaName", key: "homaName" },
-            { title: "得分", dataIndex: "homeScore", key: "homeScore" },
+            {
+              dataIndex: "homaName",
+              key: "homaName",
+              slots: { title: "homeTeamName" },
+            },
+            {
+              dataIndex: "homeScore",
+              key: "homeScore",
+              slots: { title: "homeScore" },
+            },
           ],
+          slots: { title: "homeTeam" },
         },
         {
-          title: "客队",
           children: [
-            { title: "得分", dataIndex: "awayScore", key: "awayScore" },
-            { title: "队名", dataIndex: "awayName", key: "awayName" },
+            {
+              dataIndex: "awayScore",
+              key: "awayScore",
+              slots: { title: "awayScore" },
+            },
+            {
+              dataIndex: "awayName",
+              key: "awayName",
+              slots: { title: "awayTeamName" },
+            },
           ],
+          slots: { title: "awayTeam" },
         },
         {
-          title: "进行状态",
           dataIndex: "state",
           key: "state",
-          slots: { customRender: "state" },
+          slots: { title: 'inState', customRender: "state" },
         },
-        { title: "Name", dataIndex: "data", key: "name" },
       ],
       tableList: [
         {

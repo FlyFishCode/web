@@ -3,7 +3,7 @@
     <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
     <a-row class="rowStyle">
       <a-col :span='5' class="centerFont">
-        <SettingFilled /> {{ msg }}
+        <SettingFilled /> {{ `${$t('default.163')}(${$t('default.8')})` }}
       </a-col>
     </a-row>
     <a-row class="winnerListStyle">
@@ -29,15 +29,15 @@
             <div v-else>
               <div class="winBox">
                 <div>
-                  <div>{{ '胜' }}</div>
+                  <div>{{ $t('default.46') }}</div>
                   <div>{{ item.win }}</div>
                 </div>
                 <div class="winBg">
-                  <div>{{ '败' }}</div>
+                  <div>{{ $t('default.47') }}</div>
                   <div>{{ item.win }}</div>
                 </div>
                 <div>
-                  <div>{{ '和' }}</div>
+                  <div>{{ $t('default.48') }}</div>
                   <div>{{ item.win }}</div>
                 </div>
               </div>
@@ -52,21 +52,21 @@
 
     <a-row class="rowStyle rowSearchBox">
       <a-col :span='2' class="titleStyle">
-        <BankFilled class="fontIcon" />{{ place }}
+        <BankFilled class="fontIcon" />{{ $t('default.27') }}
       </a-col>
       <a-col :span='2' class="dropdown">
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='2' class="titleStyle">{{ currentState }}</a-col>
+      <a-col :span='2' class="titleStyle">{{ $t('default.164') }}</a-col>
       <a-col :span='2' class="dropdown">
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
       <a-col :span='2' :offset="7" class="titleStyle">
-        <SearchOutlined class="fontIcon" />{{ matchName }}
+        <SearchOutlined class="fontIcon" />{{ $t('default.165') }}
       </a-col>
       <a-col :span='3' class="dropdown">
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
@@ -74,12 +74,12 @@
         </a-select>
       </a-col>
       <a-col :span='4'>
-        <a-input-search v-model:value="value" enter-button="Search" size="default" @search="onSearch" />
+        <a-input-search v-model:value="value" :enter-button="$t('default.16')" size="default" @search="onSearch" />
       </a-col>
     </a-row>
     <a-row>
       <a-col :span='4' class="centerFont">
-        <SettingFilled /> {{ `玩家清单 (${teamList.length})` }}
+        <SettingFilled /> {{ `${$t('default.92')} (${teamList.length})` }}
       </a-col>
     </a-row>
 
@@ -100,7 +100,7 @@
           </div>
         </a-col>
         <a-col :span='3' class="vipBox">
-          <div>{{ teamName }}</div>
+          <div>{{ $t('default.55') }}</div>
           <div> {{ item.vipCount }} </div>
         </a-col>
         <a-col :span='8' class="topBox">
@@ -128,7 +128,7 @@
       </a-row>
       <transition enter-active-class="animate__animated animate__bounceInUp">
         <a-row v-show="item.flag" class="recordBox">
-          <div class="matchTitle">{{ joinMatch }}</div>
+          <div class="matchTitle">{{ $t('default.83') }}</div>
           <a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
             <a-col :span='3' class="imgColStyle">
               <div>
@@ -161,13 +161,13 @@
             </div>
           </a-col>
           <a-col :span='16' class="dialog">
-            <div>{{ `Shop name：${dialogObj.shopName}` }}</div>
-            <div>{{ `电话号码：${dialogObj.phone}` }}</div>
-            <div>{{ `地址：${dialogObj.address}` }}</div>
+            <div>{{ `${$t('default.28')}：${dialogObj.shopName}` }}</div>
+            <div>{{ `${$t('default.89')}：${dialogObj.phone}` }}</div>
+            <div>{{ `${$t('default.125')}：${dialogObj.address}` }}</div>
           </a-col>
         </a-row>
         <div class="dialogBtn">
-          <a-button type="primary" @click="handleOk">{{ '更多' }}</a-button>
+          <a-button type="primary" @click="handleOk">{{ $t('default.25') }}</a-button>
         </div>
       </template>
     </a-modal>
@@ -206,16 +206,10 @@ export default defineComponent({
   setup() {
     const Router = useRouter();
     const data = reactive({
-      title: "玩家",
-      msg: "最佳玩家 (League)",
-      place: "当地",
-      currentState: "进行状态",
-      matchName: "搜索标准",
+      title: "default.10",
       currentValue: 1,
-      teamName: "队名",
       value: 201,
       type: "Entry",
-      joinMatch: "已参加比赛",
       topInfoTitle: "Competition Rating",
       current: 1,
       pageSize: 1,

@@ -1,8 +1,8 @@
 <template>
   <div class="content">
-    <a-row class="rowStyle">
-      <a-col :span='2'>
-        <SettingFilled /> {{ title }}
+    <a-row>
+      <a-col :span='4' class="smallTitle">
+        <SettingFilled /> {{ $t('default.62') }}
       </a-col>
     </a-row>
     <a-row v-for="(set,setIndex) in tableList" :key="setIndex">
@@ -22,15 +22,15 @@
       </a-row>
       <a-row v-for="(leg,legIndex) in set.LEG" :key="legIndex">
         <a-row class="legBox">
-          <a-col :span='4'>{{ '玩家' }}</a-col>
+          <a-col :span='4'>{{ $t('default.10') }}</a-col>
           <a-col :span='3'>{{ 'PPD' }}</a-col>
-          <a-col :span='3'>{{ 'Scores' }}</a-col>
+          <a-col :span='3'>{{ $t('default.58') }}</a-col>
           <a-col :span='4'>
             <div>{{ `LEG ${legIndex +1} ${getGameMode(leg.mode)}` }}</div>
           </a-col>
-          <a-col :span='3'>{{ 'Scores' }}</a-col>
+          <a-col :span='3'>{{ $t('default.58') }}</a-col>
           <a-col :span='3'>{{ 'PPD' }}</a-col>
-          <a-col :span='4'>{{ '玩家' }}</a-col>
+          <a-col :span='4'>{{ $t('default.10') }}</a-col>
         </a-row>
         <a-row v-for="(player,playerIndex) in leg.playerList" :key="playerIndex" class="playerBox">
           <a-col :span='4'>
@@ -74,7 +74,6 @@ export default defineComponent({
   },
   setup() {
     const data = reactive({
-      title: "比赛结果",
       tableList: [
         {
           id: 1,

@@ -2,7 +2,7 @@
   <div class="content">
     <a-row>
       <a-col :span='4' class="centerFont">
-        <SettingFilled /> {{ '我的比赛信息' }}
+        <SettingFilled /> {{ $t('default.106') }}
       </a-col>
     </a-row>
     <a-row class="rowSearchBox">
@@ -33,14 +33,14 @@
           </div>
         </a-col>
         <a-col :span='4' :offset='4' class="vipBox">
-          <div class="disableFont">{{ '当地' }}</div>
+          <div class="disableFont">{{ $t('default.27') }}</div>
           <div>-{{ item.vipCount }}</div>
         </a-col>
         <a-col :span='5' :offset='1' class="topBox">
           <div class="stateClass">
-            <div class="disableFont">{{ '比赛期间' }}</div>
-            <div v-if="item.state === 1" class="stateBox I">{{ '进行中' }}</div>
-            <div v-if="item.state === 2" class="stateBox F">{{ '比赛结束' }}</div>
+            <div class="disableFont">{{ $t('default.17') }}</div>
+            <div v-if="item.state === 1" class="stateBox I">{{ $t('default.104') }}</div>
+            <div v-if="item.state === 2" class="stateBox F">{{ $t('default.105') }}</div>
             <div v-if="item.state === 3" class="stateBox">{{ '准备中' }}</div>
           </div>
           <div class="infoStyle">{{ item.time }}</div>
@@ -59,8 +59,8 @@
       <transition enter-active-class="animate__animated animate__bounceInUp">
         <a-row v-show="item.flag" class="recordBox">
           <a-row class="title">
-            <a-col :span=12>{{ '参赛队伍' }}</a-col>
-            <a-col :span=12>{{ '比赛记录' }}</a-col>
+            <a-col :span=12>{{ $t('default.156') }}</a-col>
+            <a-col :span=12>{{ $t('default.157') }}</a-col>
           </a-row>
           <a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
             <a-col :span='12' class="teamBox">
@@ -68,7 +68,7 @@
             </a-col>
             <a-col :span='12' class="countBox">
               <div class="tableBox Header">
-                <div>{{ '排行' }}</div>
+                <div>{{ $t('default.70') }}</div>
                 <div>{{ 'Rating' }}</div>
                 <div>{{ 'PPD' }}</div>
                 <div>{{ 'MPR' }}</div>

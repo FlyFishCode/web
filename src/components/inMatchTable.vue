@@ -3,8 +3,8 @@
     <a-row v-for="item in matchTeamInfo" :key="item.index" class="matchTeamBox">
       <a-col :span='8' class="matchTeamLeftBox">
         <div class="matchTeamState">
-          <div v-if="item.homeTeamState === 1" class="teamStateStyle">{{ '未提交' }}</div>
-          <div v-if="item.homeTeamState === 2" class="teamStateStyle">{{ '已提交' }}</div>
+          <div v-if="item.homeTeamState === 1" class="teamStateStyle">{{ $t('default.60') }}</div>
+          <div v-if="item.homeTeamState === 2" class="teamStateStyle">{{ $t('default.61') }}</div>
         </div>
         <div class="matchImgBox">
           <img :src="item.homeTeamImg" alt="">
@@ -30,8 +30,8 @@
         <div class="centerTime">
           <div>{{ item.time }}</div>
           <div class="typeStyle">
-            <div v-if="item.type === 1">{{ 'Local' }}</div>
-            <div v-else>{{ 'onlian' }}</div>
+            <div v-if="item.type === 1">{{ $t('default.63') }}</div>
+            <div v-else>{{ $t('default.142') }}</div>
           </div>
         </div>
         <div class="teamMsg">
@@ -49,13 +49,13 @@
           <div class="homeScoreStyle">{{ item.homeScore }}</div>
           <div>{{ item.awayScore }}</div>
         </div>
-        <div class="bottomIndex">{{ '排行' }}</div>
-        <div>{{ '对手成绩' }}</div>
+        <div class="bottomIndex">{{ $t('default.70') }}</div>
+        <div>{{ $t('default.66') }}</div>
       </a-col>
       <a-col :span='8' class="matchTeamLeftBox">
         <div class="awayTeamState">
-          <div v-if="item.awayTeamState === 1" class="teamStateStyle">{{ '未提交' }}</div>
-          <div v-if="item.awayTeamState === 2" class="teamStateStyle">{{ '已提交' }}</div>
+          <div v-if="item.awayTeamState === 1" class="teamStateStyle">{{ $t('default.60') }}</div>
+          <div v-if="item.awayTeamState === 2" class="teamStateStyle">{{ $t('default.61') }}</div>
         </div>
         <div class="matchImgBox">
           <img :src="item.awayTeamImg" alt="">

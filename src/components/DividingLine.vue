@@ -1,10 +1,10 @@
 <template>
   <div>
     <a-row class="line">
-      <a-col :span='span' class="fontStyle">{{ msg }}</a-col>
-      <a-col v-if="lastDate" :span='8' class="timeStyle" :offset="24-10-span">{{ '最后更新：' + lastDate }}</a-col>
+      <a-col :span='span' class="fontStyle">{{ $t(msg) }}</a-col>
+      <a-col v-if="lastDate" :span='8' class="timeStyle" :offset="24-10-span">{{ `${$t('default.19')} :${lastDate}` }}</a-col>
       <a-col v-if="showMore" :span='2' class="shwoMoreBox">
-        <div class="showMore">{{ '查看更多' }}</div>
+        <div class="showMore">{{ $t('default.133') }}</div>
       </a-col>
     </a-row>
   </div>

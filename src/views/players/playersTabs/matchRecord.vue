@@ -2,7 +2,7 @@
   <div class="content">
     <a-row>
       <a-col :span='5' class="smallTitle">
-        <SettingFilled /> {{ `${title}` }}
+        <SettingFilled /> {{ $t('default.102') }}
       </a-col>
     </a-row>
     <a-row v-for="(item,index) in matchList" :key="index">
@@ -23,12 +23,12 @@
           </div>
         </a-col>
         <a-col :span='2'>
-          <div class="fontDisplay">{{ '当前' }}</div>
+          <div class="fontDisplay">{{ $t('default.167') }}</div>
           <div>{{ item.area }}</div>
         </a-col>
         <a-col :span='6'>
           <div class="rightStyle">
-            <div class="fontDisplay">{{ '比赛期间' }}</div>
+            <div class="fontDisplay">{{ $t('default.17') }}</div>
             <div class="matchState I" v-if="item.state === 1">{{ '比赛中' }}</div>
             <div class="matchState R" v-if="item.state === 2">{{ '比赛结束' }}</div>
             <div class="matchState F" v-if="item.state === 3">{{ '比赛结束' }}</div>
@@ -106,7 +106,6 @@ export default defineComponent({
   setup() {
     const Router = useRouter()
     const data = reactive({
-      title: "比赛报名记录",
       matchList: [
         {
           matchId: 1,
@@ -179,11 +178,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.smallTitle {
-  text-align: left;
-  font-size: 18px;
-  margin: 5px 0;
-}
 .matchBox {
   height: 80px;
   border: 1px solid #d4d4d4;

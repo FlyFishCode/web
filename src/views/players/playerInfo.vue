@@ -9,10 +9,10 @@
         <a-tab-pane key="1" tab="Rating">
           <rating />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="比赛报名记录">
+        <a-tab-pane key="2" :tab="$t('default.102')">
           <matchRecord />
         </a-tab-pane>
-        <a-tab-pane key="3" tab="玩家奖励">
+        <a-tab-pane key="3" :tab="$t('default.103')">
           <playerReward />
         </a-tab-pane>
       </a-tabs>
@@ -39,7 +39,7 @@ export default defineComponent({
   },
   setup() {
     const data = reactive({
-      title: "玩家",
+      title: "default.10",
       colSpan:4,
     });
     return {

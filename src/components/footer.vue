@@ -5,9 +5,9 @@
     </a-col>
     <a-col :span="16" class="center">
       <div class="other">
-        <div class="firstBox">服务条款</div>|
-        <div class="textBox">隐私声明</div>|
-        <div class="textBox">公司介绍</div>
+        <div class="firstBox">{{ $t('default.162') }}</div>|
+        <div class="textBox">{{ $t('default.22') }}</div>|
+        <div class="textBox">{{ $t('default.22') }}</div>
       </div>
       <div>asdasdasdsadsadasdsadasdsadadsadsadsadas</div>
     </a-col>

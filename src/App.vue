@@ -64,6 +64,12 @@ export default defineComponent({
   margin: 5px 0;
   text-align: left;
 }
+/* 小标题 */
+.smallTitle {
+  text-align: left;
+  font-size: 18px;
+  margin: 5px 0;
+}
 /* // 按钮宽度 */
 .buttonBox button {
   width: 100%;

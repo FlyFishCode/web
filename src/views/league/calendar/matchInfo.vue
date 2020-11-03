@@ -2,38 +2,24 @@
   <div>
     <a-row>
       <a-col :span='3' class="centerFont">
-        <SettingFilled /> {{ msg}}
+        <SettingFilled /> {{ $t('default.24') }}
       </a-col>
     </a-row>
     <a-row>
-      <a-col :span='3' class="sencend">
-        <SettingFilled /> {{ sencend }}
+      <a-col :span='3' class="smallTitle">
+        <SettingFilled /> {{ $t('default.135') }}
       </a-col>
     </a-row>
     <a-row class="tableStyle">
       <a-row>
         <a-col :span='4' class="tableContent">
-          <div>{{ '比赛名称' }}</div>
+          <div>{{ $t('default.15') }}</div>
         </a-col>
         <a-col :span='8' class="tableContentValue">
           <div>{{ matchName }}</div>
         </a-col>
         <a-col :span='4' class="tableContent">
-          <div>{{ '负责人' }}</div>
-        </a-col>
-        <a-col :span='8' class="tableContentValue">
-          <div>{{ matchName }}</div>
-        </a-col>
-      </a-row>
-      <a-row>
-        <a-col :span='4' class="tableContent">
-          <div>{{ '比赛期间' }}</div>
-        </a-col>
-        <a-col :span='8' class="tableContentValue">
-          <div>{{ matchName }}</div>
-        </a-col>
-        <a-col :span='4' class="tableContent">
-          <div>{{ '举办区域' }}</div>
+          <div>{{ $t('default.39') }}</div>
         </a-col>
         <a-col :span='8' class="tableContentValue">
           <div>{{ matchName }}</div>
@@ -41,27 +27,13 @@
       </a-row>
       <a-row>
         <a-col :span='4' class="tableContent">
-          <div>{{ '申请期间' }}</div>
+          <div>{{ $t('default.17') }}</div>
         </a-col>
         <a-col :span='8' class="tableContentValue">
           <div>{{ matchName }}</div>
         </a-col>
         <a-col :span='4' class="tableContent">
-          <div>{{ '举办店铺' }}</div>
-        </a-col>
-        <a-col :span='8' class="tableContentValue">
-          <div>{{ matchName }}</div>
-        </a-col>
-      </a-row>
-      <a-row>
-        <a-col :span='4' class="tableContent">
-          <div>{{ '标准评级' }}</div>
-        </a-col>
-        <a-col :span='8' class="tableContentValue">
-          <div>{{ matchName }}</div>
-        </a-col>
-        <a-col :span='4' class="tableContent">
-          <div>{{ '报名费' }}</div>
+          <div>{{ $t('default.30') }}</div>
         </a-col>
         <a-col :span='8' class="tableContentValue">
           <div>{{ matchName }}</div>
@@ -69,13 +41,13 @@
       </a-row>
       <a-row>
         <a-col :span='4' class="tableContent">
-          <div>{{ '玩家更换' }}</div>
+          <div>{{ $t('default.29') }}</div>
         </a-col>
         <a-col :span='8' class="tableContentValue">
           <div>{{ matchName }}</div>
         </a-col>
         <a-col :span='4' class="tableContent">
-          <div>{{ '队伍玩家人数限制' }}</div>
+          <div>{{ $t('default.31') }}</div>
         </a-col>
         <a-col :span='8' class="tableContentValue">
           <div>{{ matchName }}</div>
@@ -83,7 +55,35 @@
       </a-row>
       <a-row>
         <a-col :span='4' class="tableContent">
-          <div>{{ '参赛资格' }}</div>
+          <div>{{ $t('default.38') }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+        <a-col :span='4' class="tableContent">
+          <div>{{ $t('default.32') }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span='4' class="tableContent">
+          <div>{{ $t('default.33') }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+        <a-col :span='4' class="tableContent">
+          <div>{{ $t('default.34') }}</div>
+        </a-col>
+        <a-col :span='8' class="tableContentValue">
+          <div>{{ matchName }}</div>
+        </a-col>
+      </a-row>
+      <a-row>
+        <a-col :span='4' class="tableContent">
+          <div>{{ $t('default.35') }}</div>
         </a-col>
         <a-col :span='20' class="tableContentValue">
           <div>{{ matchName }}</div>
@@ -91,7 +91,7 @@
       </a-row>
       <a-row>
         <a-col :span='4' class="tableContent">
-          <div>{{ '奖励条件' }}</div>
+          <div>{{ $t('default.36') }}</div>
         </a-col>
         <a-col :span='20' class="tableContentValue">
           <div>{{ matchName }}</div>
@@ -99,7 +99,7 @@
       </a-row>
       <a-row>
         <a-col :span='4' class="tableContent">
-          <div>{{ '游戏类型描述' }}</div>
+          <div>{{ $t('default.37') }}</div>
         </a-col>
         <a-col :span='20' class="tableContentValue">
           <div>{{ matchName }}</div>
@@ -109,14 +109,14 @@
     <a-row class="rowStyle" type="flex" justify="space-around">
       <a-col :span='7' class="sencend">
         <div>
-          <SettingFilled /> {{ '排名决定' }}
+          <SettingFilled /> {{ $t('default.40') }}
         </div>
         <div class="decision">
           <div class="decisionBox">
-            <div>{{ '方法' }}</div>
-            <div>{{ '胜' }}</div>
-            <div>{{ '和' }}</div>
-            <div>{{ '败' }}</div>
+            <div>{{ $t('default.43') }}</div>
+            <div>{{ $t('default.46') }}</div>
+            <div>{{ $t('default.47') }}</div>
+            <div>{{ $t('default.48') }}</div>
           </div>
           <div class="decisionBox">
             <div>{{ matchName }}</div>
@@ -128,12 +128,12 @@
       </a-col>
       <a-col :span='7' class="sencend">
         <div>
-          <SettingFilled /> {{ '排阵' }}
+          <SettingFilled /> {{ $t('default.41') }}
         </div>
         <div class="decision">
           <div class="decisionBox">
-            <div>{{ '排队方法' }}</div>
-            <div>{{ '截止日期' }}</div>
+            <div>{{ $t('default.136') }}</div>
+            <div>{{ $t('default.45') }}</div>
           </div>
           <div class="decisionBox">
             <div>{{ matchName }}</div>
@@ -143,12 +143,12 @@
       </a-col>
       <a-col :span='7' class="sencend">
         <div>
-          <SettingFilled /> {{ '先攻' }}
+          <SettingFilled /> {{ $t('default.42') }}
         </div>
         <div class="decision">
           <div class="decisionBox">
-            <div>{{ 'SET' }}</div>
-            <div>{{ 'LEG' }}</div>
+            <div>{{ $t('default.137') }}</div>
+            <div>{{ $t('default.138') }}</div>
           </div>
           <div class="decisionBox">
             <div>{{ matchName }}</div>
@@ -172,7 +172,7 @@
     </a-row>
     <a-row class="rowStyle">
       <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="Gohistory">{{ '列表' }}</a-button>
+        <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
       </a-col>
     </a-row>
   </div>
@@ -190,8 +190,6 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const data = reactive({
-      msg: "比赛信息",
-      sencend: "概述",
       matchName: "1",
       matchTime: "2",
       applyTime: "3",

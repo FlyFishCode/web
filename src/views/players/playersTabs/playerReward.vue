@@ -165,9 +165,4 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.smallTitle {
-  text-align: left;
-  font-size: 18px;
-  margin: 5px 0;
-}
 </style>

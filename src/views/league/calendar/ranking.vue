@@ -2,16 +2,16 @@
   <div>
     <a-row>
       <a-col :span='3' class="centerFont">
-        <SettingFilled /> {{ title }}
+        <SettingFilled /> {{ $t('default.26') }}
       </a-col>
     </a-row>
 
     <a-row>
       <a-tabs type="card" class="tabsBox">
-        <a-tab-pane key="1" :tab="teamRaking">
+        <a-tab-pane key="1" :tab="$t('default.67')">
           <a-row>
-            <a-col :span='2' class="secondFont">
-              <SettingFilled /> {{ teamRaking }}
+            <a-col :span='4' class="smallTitle">
+              <SettingFilled /> {{ $t('default.67') }}
             </a-col>
           </a-row>
 
@@ -27,7 +27,7 @@
               </a-select>
             </a-col>
             <a-col :span='3' :offset="15">
-              <a-button type="danger" @click="showMatchTable">{{ '查看对阵表' }}</a-button>
+              <a-button type="danger" @click="showMatchTable">{{ $t('default.151') }}</a-button>
             </a-col>
           </a-row>
 
@@ -37,10 +37,10 @@
 
           <a-row class="rowStyle">
             <a-col :span='2'>
-              <div><span class="iconRound"></span>{{ '联赛排名' }}</div>
+              <div><span class="iconRound"></span>{{ $t('default.73') }}</div>
             </a-col>
             <a-col :span='2' :offset="20">
-              <a-button type="primary" size='small'>{{ '打印' }}</a-button>
+              <a-button type="primary" size='small'>{{ $t('default.69') }}</a-button>
             </a-col>
           </a-row>
           <a-row>
@@ -79,7 +79,7 @@
 
           <a-row class="rowStyle">
             <a-col :span='2'>
-              <div><span class="iconRound"></span>{{ '奖励记录' }}</div>
+              <div><span class="iconRound"></span>{{ $t('default.74') }}</div>
             </a-col>
           </a-row>
           <a-row>
@@ -109,15 +109,15 @@
           </a-row>
           <a-row class="rowStyle">
             <a-col :span='2' :offset="22">
-              <a-button type="danger" size="small" @click="Gohistory">{{ '列表' }}</a-button>
+              <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
             </a-col>
           </a-row>
         </a-tab-pane>
         <!-- // 玩家排名 -->
-        <a-tab-pane key="2" :tab="gameRaking">
+        <a-tab-pane key="2" :tab="$t('default.68')">
           <a-row>
-            <a-col :span='2' class="secondFont">
-              <SettingFilled /> {{ gameRaking }}
+            <a-col :span='4' class="smallTitle">
+              <SettingFilled /> {{ $t('default.68') }}
             </a-col>
           </a-row>
           <a-row>
@@ -132,7 +132,7 @@
               </a-select>
             </a-col>
             <a-col :span="2" :offset='4' class="titleStyle">
-              <ClusterOutlined />{{ choseTeam }}
+              <ClusterOutlined />{{ $t('default.140') }}
             </a-col>
             <a-col :span="3" class="dropdown">
               <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
@@ -140,7 +140,7 @@
               </a-select>
             </a-col>
             <a-col :span='3' :offset="6">
-              <a-button type="danger" @click="showMatchTable">{{ '查看对阵表' }}</a-button>
+              <a-button type="danger" @click="showMatchTable">{{ $t('default.151') }}</a-button>
             </a-col>
           </a-row>
           <!-- 第一名展示信息 -->
@@ -149,10 +149,10 @@
           </a-row>
           <a-row class="rowStyle">
             <a-col :span='2'>
-              <div><span class="iconRound"></span>{{ '玩家排名' }}</div>
+              <div><span class="iconRound"></span>{{ $t('default.68') }}</div>
             </a-col>
             <a-col :span='2' :offset="20">
-              <a-button type="primary" size='small'>{{ '打印' }}</a-button>
+              <a-button type="primary" size='small'>{{ $t('default.69') }}</a-button>
             </a-col>
           </a-row>
 
@@ -176,7 +176,7 @@
           </a-row>
           <a-row class="rowStyle">
             <a-col :span='2' :offset="22">
-              <a-button type="danger" size="small" @click="Gohistory">{{ '列表' }}</a-button>
+              <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
             </a-col>
           </a-row>
         </a-tab-pane>
@@ -221,13 +221,8 @@ export default defineComponent({
       },
     };
     const data = reactive({
-      title: "排名/记录",
-      teamRaking: "队伍排名",
-      gameRaking: "玩家排名",
-      choseTeam: "选择队伍",
       monthList: [],
       stateList: [],
-      currentValue: "所有玩家",
       matchType: 2020,
       matchTypeList: [{ value: 2020, label: "2020" }],
       columns: [

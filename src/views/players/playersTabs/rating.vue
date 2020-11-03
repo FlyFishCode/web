@@ -7,14 +7,14 @@
     </a-row>
     <a-row>
       <a-col :span='5' class="smallTitle">
-        <SettingFilled /> {{ `${smallTitle}` }}
+        <SettingFilled /> {{ $t('default.95') }}
       </a-col>
     </a-row>
     <a-row>
       <a-table :columns="columns" :data-source="tableList" :pagination='false' bordered>
         <template v-slot:level="{ record }">
           <div class="btnBox">
-            <a-button type="danger" size='small' @click="showInfo(record.key)">{{ '查看' }}</a-button>
+            <a-button type="danger" size='small' @click="showInfo(record.key)">{{ $t('default.166') }}</a-button>
           </div>
         </template>
       </a-table>
@@ -22,7 +22,7 @@
 
     <a-row>
       <a-col :span='5' class="smallTitle">
-        <SettingFilled /> {{ `${levelTitle}` }}
+        <SettingFilled /> {{ $t('default.96') }}
       </a-col>
     </a-row>
     <a-row class="rowStyle">
@@ -41,7 +41,7 @@
       <a-table :columns="levelColumns" :data-source="levelTableList" :pagination='false' bordered>
         <template v-slot:level="{ record }">
           <div class="btnBox">
-            <a-button type="danger" size='small' @click="showInfo(record.key)">{{ '查看' }}</a-button>
+            <a-button type="danger" size='small' @click="showInfo(record.key)">{{ $t('default.166') }}</a-button>
           </div>
         </template>
       </a-table>
@@ -53,7 +53,7 @@
 
     <a-row class="rowStyle">
       <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="goHistory">{{ '列表' }}</a-button>
+        <a-button type="danger" size="small" @click="goHistory">{{ $t('default.139') }}</a-button>
       </a-col>
     </a-row>
   </div>
@@ -115,8 +115,6 @@ export default defineComponent({
     };
     const data = reactive({
       title: "Rating",
-      smallTitle: "每场比赛的等级",
-      levelTitle: "根据周期评定之等级",
       year: 2000,
       yearLiat: [
         { value: 1998, label: 1998 },
@@ -279,10 +277,5 @@ export default defineComponent({
 }
 #myEchars {
   height: 300px;
-}
-.smallTitle {
-  text-align: left;
-  font-size: 18px;
-  margin: 5px 0;
 }
 </style>

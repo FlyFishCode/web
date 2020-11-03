@@ -5,16 +5,16 @@
     </a-row>
     <a-row>
       <a-tabs class="tabsBox" :defaultActiveKey='defaultKey'>
-        <a-tab-pane key="1" tab="比赛信息">
+        <a-tab-pane key="1" :tab="$t('default.24')">
           <matchInfo />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="时间表">
+        <a-tab-pane key="2" :tab="$t('default.13')">
           <timeTable />
         </a-tab-pane>
-        <a-tab-pane key="3" tab="排名/记录">
+        <a-tab-pane key="3" :tab="$t('default.26')">
           <ranking />
         </a-tab-pane>
-        <a-tab-pane key="4" tab="队伍">
+        <a-tab-pane key="4" :tab="$t('default.9')">
           <matchTeam />
         </a-tab-pane>
       </a-tabs>
@@ -35,8 +35,6 @@ export default defineComponent({
     const route = useRoute()
     const data = reactive({
       img: require("@/assets/21.jpg"),
-      place: "地点",
-      currentState: "当前状态",
       defaultKey:'2'
     });
     onMounted(() => {

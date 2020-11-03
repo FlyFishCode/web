@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-row class="rowStyle" id="dots">
-      <h1>{{ '新闻' }}</h1>
+      <h1>{{ $t('default.12') }}</h1>
       <a-carousel :autoplay='true' dotsClass="dots">
         <div class="carouselBox" v-for="item in photoList" :key="item.id" @click="intoPhoto(item.url)"><img :src="item.img" alt=""></div>
       </a-carousel>
@@ -9,9 +9,9 @@
     <a-row class="rowStyle" type="flex" justify="space-between">
       <a-col :span="14">
         <div class="newHeader">
-          <div class="newSstyle">{{ '新闻' }}</div>
-          <div>{{ `最后更新：${time}` }}</div>
-          <div class="moreStyle">{{ 'MORE' }}</div>
+          <div class="newSstyle">{{ $t('default.12') }}</div>
+          <div>{{ `${$t('default.19')}：${time}` }}</div>
+          <div class="moreStyle">{{ $t('default.25') }}</div>
         </div>
         <div class="newsTable">
           <div v-for="news in newsList" :key="news.index" class="newBg">
@@ -64,7 +64,7 @@
         <a-col :span='3'>
           <AimOutlined style="fontSize:30px" />
         </a-col>
-        <a-col :span='4' class="MlineStyle">{{ '当地' }}</a-col>
+        <a-col :span='4' class="MlineStyle">{{ $t('default.27') }}</a-col>
         <a-col :span='6'>
           <a-select v-model:value="areaId" @change="areaChange">
             <a-select-option v-for="item in areaList" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
@@ -76,14 +76,14 @@
           </a-select>
         </a-col>
       </a-col>
-      
+
       <a-col :span='8' :offset="8">
         <a-col :span='3'>
           <SearchOutlined style="fontSize:30px" />
         </a-col>
-        <a-col :span='6' class="MlineStyle">{{ '比赛名称' }}</a-col>
+        <a-col :span='6' class="MlineStyle">{{ $t('default.15') }}</a-col>
         <a-col :span='15'>
-          <a-input-search v-model:value="leagueName" enter-button="Search" @search="onSearch" />
+          <a-input-search v-model:value="leagueName" :enter-button="$t('default.16')" @search="onSearch" />
         </a-col>
       </a-col>
     </a-row>
@@ -105,14 +105,14 @@
         </div>
       </a-col>
       <a-col :span='2'>
-        <div class="fontDisplay">{{ '当地' }}</div>
+        <div class="fontDisplay">{{ $t('default.27') }}</div>
         <div>{{ item.area }}</div>
       </a-col>
       <a-col :span='8'>
         <div class="rightStyle">
-          <div class="fontDisplay">{{ '比赛期间' }}</div>
-          <div class="matchState I" v-if="item.state === 1">{{ '比赛中' }}</div>
-          <div class="matchState R" v-if="item.state === 2">{{ '比赛结束' }}</div>
+          <div class="fontDisplay">{{ $t('default.17') }}</div>
+          <div class="matchState I" v-if="item.state === 1">{{ $t('default.104') }}</div>
+          <div class="matchState R" v-if="item.state === 2">{{ $t('default.105') }}</div>
           <div class="matchState F" v-if="item.state === 3">{{ '比赛结束' }}</div>
         </div>
         <div>{{ $filters.filterDate(item.endPeriod) }}</div>
@@ -123,15 +123,15 @@
 
     <a-row class="rowStyle">
       <a-tabs class="tabsBox" type='card'>
-        <a-tab-pane key="1" tab="队伍" class="teamBG">
+        <a-tab-pane key="1" :tab="$t('default.9')" class="teamBG">
           <a-col :span="7" class="colStyle" v-for="every in teamList" :key="every.index">
             <div class="gameStyle">{{ every.title }}</div>
-            <div v-for="item in every.children" :key="item.id" class="teamBox">
-              <div :class="{first:item.id === 1,noFirst:item.id !== 1}">
+            <div v-for="(item,index) in every.children" :key="index" class="teamBox">
+              <div :class="{first:!index,noFirst:index}">
                 <div class="teamImgBox">
                   <img :src="item.img" alt="">
                 </div>
-                <div v-if="item.id === 1" class="detailStyle">
+                <div v-if="!index" class="detailStyle">
                   <div class="teamName" @click="goToPage">{{ item.teamName }}</div>
                   <div class="name">{{ item.name }}</div>
                   <div class="area">{{ item.area }}
@@ -156,27 +156,27 @@
               </div>
             </div>
             <div class="more">
-              <div>MORE+</div>
+              <div>{{ `${$t('default.25')} +` }}</div>
             </div>
           </a-col>
         </a-tab-pane>
-        <a-tab-pane key="2" tab="玩家" class="teamBG">
+        <a-tab-pane key="2" :tab="$t('default.10')" class="teamBG">
           <a-col :span="7" class="colStyle" v-for="every in playerList" :key="every.index">
             <div class="gameStyle">{{ every.title }}</div>
-            <div v-for="item in every.children" :key="item.id" class="teamBox">
-              <div :class="{first:item.ppd,noFirst:!item.ppd}">
+            <div v-for="(item,index) in every.children" :key="index" class="teamBox">
+              <div :class="{first:!index,noFirst:index}">
                 <div class="teamImgBox">
                   <img :src="item.img" alt="">
                 </div>
-                <div v-if="item.ppd" class="detailStyle">
-                  <div class="teamName" @click="goToPage">{{ item.teamName }}</div>
+                <div v-if="!index" class="detailStyle">
+                  <div class="teamName" @click="goToPage">{{ item.playerName }}</div>
                   <div class="name">{{ item.name }}</div>
-                  <div class="area">{{ item.area }}
+                  <div class="area">{{ item.address }}
                     <span @click="showDetail(item)">
                       <EnvironmentOutlined />
                     </span>
                   </div>
-                  <div class="current">{{ item.type }}</div>
+                  <div class="current">{{ every.type }}</div>
                   <div class="number">{{ item.number }}</div>
                 </div>
                 <div v-else class="detailStyle">
@@ -193,7 +193,7 @@
               </div>
             </div>
             <div class="more">
-              <div>MORE+</div>
+              <div>{{ `${$t('default.25')} +` }}</div>
             </div>
           </a-col>
         </a-tab-pane>
@@ -208,13 +208,13 @@
             </div>
           </a-col>
           <a-col :span='16' class="dialog">
-            <div>{{ `Shop name：${dialogObj.shopName}` }}</div>
-            <div>{{ `电话号码：${dialogObj.phone}` }}</div>
-            <div>{{ `地址：${dialogObj.address}` }}</div>
+            <div>{{ `${$t('default.28')}：${dialogObj.shopName}` }}</div>
+            <div>{{ `${$t('default.89')}：${dialogObj.phone}` }}</div>
+            <div>{{ `${$t('default.125')}：${dialogObj.address}` }}</div>
           </a-col>
         </a-row>
         <div class="dialogBtn">
-          <a-button type="primary" @click="handleOk">{{ '更多' }}</a-button>
+          <a-button type="primary" @click="handleOk">{{ $t('default.25') }}</a-button>
         </div>
       </template>
     </a-modal>
@@ -235,7 +235,7 @@ import {
 } from "@ant-design/icons-vue";
 import divTitle from "@/components/DividingLine.vue";
 import router from "@/router";
-import { leagueListHttp }  from '@/axios/api'
+import { leagueListHttp, indexTeamHttp, indexPlayerHttp } from "@/axios/api";
 interface DataProps {
   click: () => void;
 }
@@ -256,10 +256,9 @@ export default defineComponent({
   setup() {
     const data = reactive({
       img: require("@/assets/logo.jpg"),
-      currentLan: "中文",
       leagueName: "",
-      title: "比赛",
-      matchTitle: "排名",
+      title: "default.134",
+      matchTitle: "default.18",
       lastDate: new Date(),
       time: "2020-5-41",
       colSpan: 4,
@@ -303,365 +302,8 @@ export default defineComponent({
         { id: 3, img: 3, url: "/a" },
       ],
       matchList: [],
-      teamList: [
-        {
-          id: 1,
-          title: "01 Game",
-          type: "PPD",
-          children: [
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              number: "25.94",
-              shopName:'asdsadasd',
-              phoneNumber:'123456',
-              address:'123213213213',
-              first: true,
-            },
-            {
-              id: 2,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              number: "25.94",
-              shopName:'asdsadasd',
-              phoneNumber:'123456',
-              address:'123213213213',
-              first: false,
-            },
-            {
-              id: 3,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              first: false,
-            },
-            {
-              id: 4,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              first: false,
-            },
-            {
-              id: 5,
-              title: "01 Game",
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              first: false,
-            },
-          ],
-        },
-        {
-          id: 2,
-          title: "Cricket",
-          type: "MPR",
-          children: [
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              number: "25.94",
-              shopName:'asdsadasd',
-              phoneNumber:'123456',
-              address:'123213213213',
-              first: true,
-            },
-            {
-              id: 2,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              number: "25.94",
-              shopName:'asdsadasd',
-              phoneNumber:'123456',
-              address:'123213213213',
-              first: false,
-            },
-            {
-              id: 3,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 4,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 5,
-              title: "01 Game",
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-          ],
-        },
-        {
-          id: 3,
-          title: "对战获胜数",
-          type: "WIN",
-          children: [
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              number: "25.94",
-              shopName:'asdsadasd',
-              phoneNumber:'123456',
-              address:'123213213213',
-              ppd: true,
-            },
-            {
-              id: 2,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 3,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 4,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 5,
-              title: "01 Game",
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-          ],
-        },
-      ],
-      playerList: [
-        {
-          id: 1,
-          title: "01 Game",
-          children: [
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: true,
-            },
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 1,
-              title: "01 Game",
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-          ],
-        },
-        {
-          id: 1,
-          title: "Cricket",
-          children: [
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: true,
-            },
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 1,
-              title: "01 Game",
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-          ],
-        },
-        {
-          id: 1,
-          title: "设置获胜次数",
-          children: [
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: true,
-            },
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 1,
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-            {
-              id: 1,
-              title: "01 Game",
-              img: require("@/assets/1.jpg"),
-              teamName: "2020第一次比赛",
-              name: "张自然",
-              area: "0981-广州",
-              current: "PPD",
-              number: "25.94",
-              ppd: false,
-            },
-          ],
-        },
-      ],
+      teamList: [],
+      playerList: [],
       getDate: () => {
         const year = new Date().getFullYear();
         const month = new Date().getMonth() + 1;
@@ -676,13 +318,13 @@ export default defineComponent({
       },
       onSearch: () => {
         const obj = {
-          areaId:data.areaId,
-          countryId:data.areaId,
-          leagueName:data.leagueName
-        }
-        leagueListHttp(false,obj).then(res =>{
-          data.matchList = res.data.data
-        })
+          areaId: data.areaId,
+          countryId: data.areaId,
+          leagueName: data.leagueName,
+        };
+        leagueListHttp(false, obj).then((res) => {
+          data.matchList = res.data.data;
+        });
       },
       intoPhoto: (value: string) => {
         console.log(value);
@@ -714,8 +356,29 @@ export default defineComponent({
         console.log(value);
       },
     });
+    // 不需要页面点击触发，不写在reactive内
+    const getTeamList = () => {
+      const obj = {
+        areaId: data.areaId,
+        countryId: data.areaId,
+      };
+      indexTeamHttp(false, obj).then((res) => {
+        data.teamList = res.data.data
+      });
+    };
+    const getPlayerList = () => {
+      const obj = {
+        areaId: data.areaId,
+        countryId: data.areaId,
+      };
+      indexPlayerHttp(false, obj).then((res) => {
+        data.playerList = res.data.data
+      });
+    };
     onMounted(() => {
-      data.onSearch()
+      data.onSearch();
+      getTeamList();
+      getPlayerList();
     });
     return {
       ...toRefs(data),
@@ -968,16 +631,20 @@ export default defineComponent({
   font-size: 50px;
   cursor: pointer;
 }
-.divisionBox{
+.divisionBox {
   display: flex;
+  height: 25px;
+  line-height: 25px;
+  border: 1px solid #000;
+  margin-right: 3px;
 }
-.divsision{
+.divsision {
   border: 1px solid #000;
   padding: 0 2px;
   margin: 0 4px;
   text-decoration: underline;
 }
-.divBg{
+.divBg {
   cursor: pointer;
   text-align: left;
 }

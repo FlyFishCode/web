@@ -6,9 +6,9 @@
         <div id="container"></div>
       </a-col>
       <a-col :span='12' class="mapSearch">
-        <div class="shopTitle">{{ '搜索店铺' }}</div>
+        <div class="shopTitle">{{ $t('default.158') }}</div>
         <div class="center">
-          <div>{{ '当地' }}</div>
+          <div>{{ $t('default.27') }}</div>
           <div class="selectBox">
             <a-select v-model:value="area">
               <a-select-option v-for="area in areaList" :key="area.value" :value='area.value'>
@@ -28,13 +28,13 @@
           </div>
         </div>
         <div class="center">
-          <div>{{ '店铺名称' }}</div>
+          <div>{{ $t('default.28') }}</div>
           <div>
-            <a-input v-model:value="shopName" placeholder="输入关键字搜索" id='input_id' allowClear />
+            <a-input v-model:value="shopName" :placeholder="$t('default.160')" id='input_id' allowClear />
           </div>
         </div>
         <div class="center">
-          <div>{{ '机台' }}</div>
+          <div>{{ $t('default.159') }}</div>
           <div>
             <a-checkbox v-model:checked="vsp">{{ 'vsp' }}</a-checkbox>
             <a-checkbox v-model:checked="vss">{{ 'vss' }}</a-checkbox>
@@ -43,19 +43,19 @@
           </div>
         </div>
         <div class="center">
-          <div>{{ '比赛类型' }}</div>
+          <div>{{ $t('default.119') }}</div>
           <div>
-            <a-checkbox v-model:checked="league">{{ 'league' }}</a-checkbox>
+            <a-checkbox v-model:checked="league">{{ $t('default.8') }}</a-checkbox>
           </div>
         </div>
         <div class="btnBox">
-          <a-button type="danger" @click="search">{{ '搜索' }}</a-button>
+          <a-button type="danger" @click="search">{{ $t('default.16') }}</a-button>
         </div>
       </a-col>
     </a-row>
     <a-row class="shopRow">
       <a-col :span='5' class="centerFont">
-        <SettingFilled /> {{ `${shopTitle}(${shopList.length})` }}
+        <SettingFilled /> {{ `${$t('default.161')}(${shopList.length})` }}
       </a-col>
     </a-row>
     <a-row>
@@ -67,7 +67,7 @@
             </div>
           </a-col>
           <a-col :span='4' class="infoClass">
-            <div class="teamStyle">{{ item.teamName }}</div>
+            <div class="teamStyle" @click="showShopInfo">{{ item.teamName }}</div>
             <div class="placeStyle">
               <div>{{ item.place }}</div>/
               <div class="counyStyle">{{ item.couny }}</div><span @click="showDetail">
@@ -76,13 +76,13 @@
             </div>
           </a-col>
           <a-col :span='3' class="vipBox" :offset='3'>
-            <div>{{ '电话号码' }}</div>
+            <div>{{ $t('default.89') }}</div>
             <div>
               <PhoneOutlined />   {{ item.vipCount }}
             </div>
           </a-col>
           <a-col :span='8' class="vipBox" :offset='1'>
-            <div>{{ '机台' }}</div>
+            <div>{{ $t('default.159') }}</div>
             <div class="infoStyle">
               <div>{{ `Rating  ${item.ranting}` }}</div>
             </div>
@@ -132,6 +132,7 @@ import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import divTitle from "@/components/DividingLine.vue";
 import { message } from 'ant-design-vue'
 import { SettingFilled,InfoCircleFilled ,PhoneOutlined,DownCircleOutlined,UpCircleOutlined } from "@ant-design/icons-vue";
+import { useRouter } from 'vue-router';
 export default defineComponent({
   name: "shop",
   components: {
@@ -143,6 +144,7 @@ export default defineComponent({
     UpCircleOutlined 
   },
   setup () {
+    const Router = useRouter()
     const loadMap = () => {
       const url =
         "https://webapi.amap.com/maps?v=1.4.15&key=4288b5f8c829eba5d80f4664f7e40dcf&callback=load";
@@ -204,8 +206,7 @@ export default defineComponent({
       }
     };
     const data = reactive({
-      title: "店铺",
-      shopTitle: '店铺列表',
+      title: "default.127",
       colSpan: 4,
       area: 1,
       country: 1,
@@ -280,6 +281,9 @@ export default defineComponent({
       changeFlag: (index) => {
         data.shopList[index].flag = !data.shopList[index].flag;
       },
+      showShopInfo:() =>{
+        Router.push('/shopAddress')
+      }
     });
     onMounted(() => {
       loadMap();
@@ -310,9 +314,6 @@ export default defineComponent({
 .shopTitle {
   font-size: 20px;
   font-weight: bold;
-}
-.btnBox {
-  text-align: center;
 }
 .center {
   margin: 10px 0;
@@ -409,6 +410,7 @@ export default defineComponent({
 }
 .btnBox {
   display: flex;
+  justify-content: center;
 }
 .btnBox div {
   margin-right: 15px;

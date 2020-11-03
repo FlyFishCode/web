@@ -11,14 +11,15 @@
 // vue.config.js
 
 module.exports = {
-    publicPath: "./",
-    outputDir: "Fish",
+    publicPath: "/leaguefront/",
+    outputDir: "leaguefront",
     devServer: {
-        port: 8010,
+        port: 8011,
         proxy: {
             "/aps": {
                 // target: "http://adartstest.adarts-cn.com:9090/web", // 后端-曾
                 target: "http://192.168.2.105:9091/darts", // 后端-廖
+                // target: "http://127.0.0.1:9091/darts", // 部署地址
                 changeOrigin: true,
                 ws: true,
                 pathRewrite: {
@@ -26,5 +27,12 @@ module.exports = {
                 }
             }
         }
+    },
+    chainWebpack: config => {
+        config.plugin('html')
+            .tap(args => {
+                args[0].title = "标题";
+                return args;
+            })
     },
 };

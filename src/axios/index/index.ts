@@ -7,11 +7,11 @@ const leagueList = '/multiLeague'
 
 
 // 首页队伍列表
-const indexTeam = '/getTeamRanking'
+const indexTeam = '/teamranking'
 
 
 // 首页玩家列表
-const indexPlayer = '/getPlayerRanking'
+const indexPlayer = '/playerranking'
 
 
 

@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-row class="rowStyle">
-      <a-col :span='6' class="allBox">
+      <a-col :span='8' class="allBox">
         <a-col :span='12' class="firstClass">
           <img class="imgBg" :src="infoData.img" alt="">
         </a-col>
@@ -16,14 +16,16 @@
           <div class="disabledClass">{{ infoData.country }}</div>
         </a-col>
       </a-col>
-      <a-col :span='4' class="allBox">
-        <div class="secondClass">
-          <div class="bigFont">{{ infoData.allScore }}</div>
-          <div class="score">{{ infoData.scoreNumber }}</div>
-        </div>
+      <a-col :span='4' class="progressBox">
+        <div class="title">{{ $t('default.184') }}</div>
+        <a-progress type="circle" class="myYuan" :percent="75" />
+      </a-col>
+      <a-col :span='4' class="progressBox">
+        <div class="title">{{ $t('default.185') }}</div>
+        <a-progress type="circle" class="myYuan" :percent="75" />
       </a-col>
       <!-- // 左侧按钮 -->
-      <a-col :span='7' class="carousel">
+      <a-col :span='8' class="carousel">
         <a-col :span='2' class="iconFont leftIcon">
           <LeftCircleOutlined @click="leftClick" />
         </a-col>
@@ -63,24 +65,6 @@
         <!-- 展示条 -->
         <div class="showIndex">
           <div v-for="(item,index) in infoData.resultList" :key="item.index" class='otherBox' :class="{isActived:index === currentIndex}"></div>
-        </div>
-      </a-col>
-      <a-col :span='7'>
-        <div class="title">{{ $t('default.183') }}</div>
-        <a-progress type="circle" class="myYuan" :percent="75" />
-        <div class="myProgress">
-          <div class="myProgressBox">
-            <div>
-              <a-progress :percent="infoData.ppdNumber" strokeColor='red' />
-            </div>
-            <div>{{ `PPD    ${infoData.ppdNumber}` }}</div>
-          </div>
-          <div class="myProgressBox">
-            <div>
-              <a-progress :percent="infoData.mprNumber" strokeColor='red' />
-            </div>
-            <div>{{ `MPR    ${infoData.mprNumber}` }}</div>
-          </div>
         </div>
       </a-col>
     </a-row>
@@ -152,7 +136,7 @@ export default {
         if (currentPosition === 0) {
           currentPosition = 0;
         } else {
-          currentPosition += 320;
+          currentPosition += 340;
         }
         box.style.left = `${currentPosition}px`;
       },
@@ -165,11 +149,11 @@ export default {
         }
         if (
           Math.abs(currentPosition) ===
-          (data.infoData.resultList.length - 1) * 320
+          (data.infoData.resultList.length - 1) * 340
         ) {
-          currentPosition = -(data.infoData.resultList.length - 1) * 320;
+          currentPosition = -(data.infoData.resultList.length - 1) * 340;
         } else {
-          currentPosition -= 320;
+          currentPosition -= 340;
         }
         box.style.left = `${currentPosition}px`;
       },
@@ -193,7 +177,8 @@ export default {
   box-sizing: border-box;
 }
 .imgBg {
-  width: 100%;
+  width: 80%;
+  margin: 0 auto;
 }
 .allBox {
   height: 100%;
@@ -203,7 +188,7 @@ export default {
   border-right: 1px solid #fff;
 }
 .carousel {
-  border-right: 1px solid #fff;
+  border-left: 1px solid #fff;
   display: flex;
   height: 180px;
   position: relative;
@@ -232,15 +217,6 @@ export default {
 .icon {
   position: relative;
   top: 1px;
-}
-.secondClass .bigFont {
-  font-size: 25px;
-  color: #fff;
-  height: 100%;
-}
-.score {
-  color: red;
-  font-size: 50px;
 }
 .title {
   font-size: 20px;
@@ -293,8 +269,8 @@ export default {
   top: calc(50% - 10px);
 }
 .centerBox {
-  width: 280px;
-  margin: 0 20px;
+  width: 300px;
+  margin: 0 25px;
 }
 .animate__backOutRight {
   transition: all 1s ease;
@@ -303,15 +279,11 @@ export default {
   width: 100px !important;
   height: 100px !important;
 }
-.myProgress {
+.progressBox {
+  height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
-}
-.myProgressBox {
-  width: 40%;
-}
-.myProgressBox >>> .ant-progress-text {
-  display: none;
 }
 .showIndex{
   display: flex;

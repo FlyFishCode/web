@@ -107,6 +107,15 @@ const routes: Array<RouteRecordRaw> = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "shopAddress" */ '@/views/shop/shopAddress.vue')
   },
+  // 排名/统计资料
+  {
+    path: '/ranking',
+    name: 'Ranking',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "ranking" */ '@/views/ranking/ranking.vue')
+  },
 ]
 
 const router = createRouter({

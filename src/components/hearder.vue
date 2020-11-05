@@ -92,9 +92,7 @@
       <a-tab-pane key="team" :tab="$t('default.9')"></a-tab-pane>
       <a-tab-pane key="players" :tab="$t('default.10')"></a-tab-pane>
       <a-tab-pane key="shop" :tab="$t('default.127')"></a-tab-pane>
-      <a-tab-pane key="6" :tab="$t('default.26')">
-        Content of Tab Pane 3
-      </a-tab-pane>
+      <a-tab-pane key="ranking" :tab="$t('default.26')"></a-tab-pane>
       <template v-slot:tabBarExtraContent>
         <a-button @click="interMypage">{{ $t('default.2') }}</a-button>
         <a-button @click="showPersonBox">

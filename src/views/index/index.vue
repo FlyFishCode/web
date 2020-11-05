@@ -36,6 +36,7 @@
       <a-col :span="8">
         <div class="newHeader">
           <div class="newSstyle">{{ 'PROMOTION' }}</div>
+          <div class="moreStyle">{{ $t('default.25') }}</div>
         </div>
         <div class="newBox">
           <img :src="img" alt="">
@@ -126,31 +127,31 @@
         <a-tab-pane key="1" :tab="$t('default.9')" class="teamBG">
           <a-col :span="7" class="colStyle" v-for="every in teamList" :key="every.index">
             <div class="gameStyle">{{ every.title }}</div>
-            <div v-for="(item,index) in every.children" :key="index" class="teamBox">
+            <div v-for="(item,index) in every.list" :key="index" class="teamBox">
               <div :class="{first:!index,noFirst:index}">
                 <div class="teamImgBox">
-                  <img :src="item.img" alt="">
+                  <img :src="item.teamImg" alt="">
                 </div>
                 <div v-if="!index" class="detailStyle">
                   <div class="teamName" @click="goToPage">{{ item.teamName }}</div>
-                  <div class="name">{{ item.name }}</div>
-                  <div class="area">{{ item.area }}
+                  <div class="name">{{ item.captainName }}</div>
+                  <div class="area">{{ item.shopAddress }}
                     <span @click="showDetail(item)">
                       <EnvironmentOutlined />
                     </span>
                   </div>
                   <div class="current">{{ every.type }}</div>
-                  <div class="number">{{ item.number }}</div>
+                  <div class="number">{{ item.teamScore }}</div>
                 </div>
                 <div v-else class="detailStyle">
                   <div class="name smallBox" @click="goToPage">{{ item.teamName }}</div>
-                  <div class="area">{{ item.area }}
+                  <div class="area">{{ item.shopAddress }}
                     <span @click="showDetail(item)">
                       <EnvironmentOutlined />
                     </span>
                   </div>
                   <div class="current">
-                    <span>{{ item.type }}</span> <span>{{ item.number }}</span>
+                    <span>{{ every.type }}</span> <span>{{ item.teamScore }}</span>
                   </div>
                 </div>
               </div>
@@ -163,31 +164,31 @@
         <a-tab-pane key="2" :tab="$t('default.10')" class="teamBG">
           <a-col :span="7" class="colStyle" v-for="every in playerList" :key="every.index">
             <div class="gameStyle">{{ every.title }}</div>
-            <div v-for="(item,index) in every.children" :key="index" class="teamBox">
+            <div v-for="(item,index) in every.list" :key="index" class="teamBox">
               <div :class="{first:!index,noFirst:index}">
                 <div class="teamImgBox">
-                  <img :src="item.img" alt="">
+                  <img :src="item.playerImg" alt="">
                 </div>
                 <div v-if="!index" class="detailStyle">
                   <div class="teamName" @click="goToPage">{{ item.playerName }}</div>
                   <div class="name">{{ item.name }}</div>
-                  <div class="area">{{ item.address }}
+                  <div class="area">{{ item.shopAddress }}
                     <span @click="showDetail(item)">
                       <EnvironmentOutlined />
                     </span>
                   </div>
                   <div class="current">{{ every.type }}</div>
-                  <div class="number">{{ item.number }}</div>
+                  <div class="number">{{ item.playerScore }}</div>
                 </div>
                 <div v-else class="detailStyle">
-                  <div class="name smallBox" @click="goToPage">{{ item.name }}</div>
-                  <div class="area">{{ item.area }}
+                  <div class="name smallBox" @click="goToPage">{{ item.playerName }}</div>
+                  <div class="area">{{ item.shopAddress }}
                     <span @click="showDetail(item)">
                       <EnvironmentOutlined />
                     </span>
                   </div>
                   <div class="current">
-                    <span>{{ item.type }}</span> <span>{{ item.number }}</span>
+                    <span>{{ every.type }}</span> <span>{{ item.playerScore }}</span>
                   </div>
                 </div>
               </div>
@@ -235,7 +236,7 @@ import {
 } from "@ant-design/icons-vue";
 import divTitle from "@/components/DividingLine.vue";
 import router from "@/router";
-import { leagueListHttp, indexTeamHttp, indexPlayerHttp } from "@/axios/api";
+import { indexTeamHttp, indexPlayerHttp } from "@/axios/api";
 interface DataProps {
   click: () => void;
 }
@@ -317,24 +318,23 @@ export default defineComponent({
         console.log(value);
       },
       onSearch: () => {
-        const obj = {
-          areaId: data.areaId,
-          countryId: data.areaId,
-          leagueName: data.leagueName,
-        };
-        leagueListHttp(false, obj).then((res) => {
-          data.matchList = res.data.data;
-        });
+        // const obj = {
+        //   areaId: data.areaId,
+        //   countryId: data.areaId,
+        //   leagueName: data.leagueName,
+        // };
+        // leagueListHttp(false, obj).then((res) => {
+        //   data.matchList = res.data.data;
+        // });
       },
       intoPhoto: (value: string) => {
         console.log(value);
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       showDetail: (item: any) => {
-        data.dialogObj.title = item.area;
+        data.dialogObj.title = item.shopAddress;
         data.dialogObj.shopName = item.shopName;
-        data.dialogObj.phone = item.phoneNumber;
-        data.dialogObj.address = item.address;
+        data.dialogObj.phone = item.shopPhone;
+        data.dialogObj.address = item.shopAddress;
         data.visible = true;
       },
       handleOk: () => {
@@ -358,20 +358,20 @@ export default defineComponent({
     });
     // 不需要页面点击触发，不写在reactive内
     const getTeamList = () => {
-      const obj = {
-        areaId: data.areaId,
-        countryId: data.areaId,
-      };
-      indexTeamHttp(false, obj).then((res) => {
+      // const obj = {
+      //   areaId: data.areaId,
+      //   countryId: data.areaId,
+      // };
+      indexTeamHttp().then((res) => {
         data.teamList = res.data.data
       });
     };
     const getPlayerList = () => {
-      const obj = {
-        areaId: data.areaId,
-        countryId: data.areaId,
-      };
-      indexPlayerHttp(false, obj).then((res) => {
+      // const obj = {
+      //   areaId: data.areaId,
+      //   countryId: data.areaId,
+      // };
+      indexPlayerHttp().then((res) => {
         data.playerList = res.data.data
       });
     };

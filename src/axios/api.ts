@@ -32,6 +32,15 @@ Axios.interceptors.response.use(response => {
 }, err => {
   return Promise.reject(err)
 })
+
+// const getNewUrl = (url:string ,data:any) =>  {
+// 	let src = url
+// 	for(const [key,value] of Object.entries(data)){
+// 			src += `?${key}=${value}&`
+// 		}
+// 		return src
+// }
+
 // 判断是否为Form Data，如果是需要用qs转换
 const loginHttp = (json: boolean ,data: any) => {
 	let DATA = ''
@@ -43,33 +52,33 @@ const loginHttp = (json: boolean ,data: any) => {
 	return Axios.post(login, DATA)
 }
 // 首页联赛列表
-const leagueListHttp = (json: boolean ,data: any) => {
-	let DATA = ''
-	if(json){
-		DATA = data
-	}else{
-		DATA = qs.stringify(data)
+const leagueListHttp = (data: any) => {
+	let url = leagueList
+	if(data){
+		for(const [key,value] of Object.entries(data)){
+			url += `?${key}=${value}&`
+		}
 	}
-	return Axios.post(leagueList, DATA)
+	return Axios.get(url)
 }
 // 首页联赛列表
-const indexTeamHttp = (json: boolean ,data: any) => {
-	let DATA = ''
-	if(json){
-		DATA = data
-	}else{
-		DATA = qs.stringify(data)
+const indexTeamHttp = (data: any = null) => {
+	let url = indexTeam
+	if(data){
+		for(const [key,value] of Object.entries(data)){
+			url += `?${key}=${value}&`
+		}
 	}
-	return Axios.post(indexTeam, DATA)
+	return Axios.get(url)
 }
 // 首页玩家列表
-const indexPlayerHttp = (json: boolean ,data: any) => {
-	let DATA = ''
-	if(json){
-		DATA = data
-	}else{
-		DATA = qs.stringify(data)
+const indexPlayerHttp = (data: any = null) => {
+	let url = indexPlayer
+	if(data){
+		for(const [key,value] of Object.entries(data)){
+			url += `?${key}=${value}&`
+		}
 	}
-	return Axios.post(indexPlayer, DATA)
+	return Axios.get(url)
 }
 export { loginHttp ,leagueListHttp,indexTeamHttp,indexPlayerHttp}

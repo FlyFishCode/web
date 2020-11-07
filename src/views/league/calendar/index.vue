@@ -29,7 +29,7 @@ import timeTable from "@/views/league/calendar/timeTable.vue";
 import ranking from '@/views/league/calendar/ranking.vue'
 import matchTeam from '@/views/league/calendar/matchTeam.vue'
 export default defineComponent({
-  name: "hearder",
+  name: "LeagueIndex",
   components: { matchInfo, timeTable,matchTeam,ranking },
   setup() {
     const route = useRoute()

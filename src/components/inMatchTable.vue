@@ -87,7 +87,7 @@ import { defineComponent, reactive, toRefs, onMounted } from 'vue'
 //   detailList: string;
 // }
 export default defineComponent({
-  name: 'inCalendar',
+  name: 'inMatchTable',
   components: {
   },
   setup () {

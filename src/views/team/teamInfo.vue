@@ -6,13 +6,13 @@
     <inTeamTopOne />
     <a-row>
       <a-tabs type="card" class="tabsBox">
-        <a-tab-pane key="1" tab="日程表/结果">
+        <a-tab-pane key="1" :tab="$t('default.230')">
           <calendar />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="以前结果">
+        <a-tab-pane key="2" :tab="$t('default.231')">
           <beforeResult />
         </a-tab-pane>
-        <a-tab-pane key="3" tab="会员">
+        <a-tab-pane key="3" :tab="$t('default.227')">
           <vip />
         </a-tab-pane>
       </a-tabs>
@@ -29,7 +29,7 @@ import calendar from './teamInfoTabs/calendar.vue'
 import beforeResult from './teamInfoTabs/beforeResult.vue'
 import vip from './teamInfoTabs/vip.vue'
 export default defineComponent({
-  name: "templete",
+  name: "teamInfo",
   components: {
     divTitle,
     inTeamTopOne,

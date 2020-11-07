@@ -2,7 +2,7 @@
   <div class="content">
     <a-row>
       <a-col :span='4' class="centerFont">
-        <SettingFilled /> {{ `我的队伍 (${teamList.length})` }}
+        <SettingFilled /> {{ `${$t('default.110')} (${teamList.length})` }}
       </a-col>
     </a-row>
 
@@ -17,14 +17,14 @@
           <div class="teamStyle">{{ item.teamName }}</div>
           <div class="placeStyle">
             <div>{{ item.place }}</div>/
-            <div class="counyStyle">{{ item.couny }}</div><span @click="showDetail">
+            <div class="counyStyle">{{ item.couny }}</div><span @click="showDetail(item)">
               <EnvironmentOutlined />
             </span>
           </div>
           <div>{{ item.captain }}</div>
         </a-col>
         <a-col :span='3' class="vipBox">
-          <div>{{ vip }}</div>
+          <div>{{ $t('default.85') }}</div>
           <div class="showVipInfo" @click="entryVipPage">
             <UserOutlined />{{ item.vipCount }}
           </div>
@@ -38,7 +38,7 @@
           </div>
         </a-col>
         <a-col :span='3' class="vipBox">
-          <div>{{ type }}</div>
+          <div>{{ 'Entry' }}</div>
           <div>{{ item.count }}</div>
         </a-col>
         <a-col :span='2' class="iconFont">
@@ -54,7 +54,7 @@
       </a-row>
       <transition enter-active-class="animate__animated animate__bounceInUp">
         <a-row v-show="item.flag" class="recordBox">
-          <div class="matchTitle">{{ joinMatch }}</div>
+          <div class="matchTitle">{{ $t('default.83') }}</div>
           <a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
             <a-col :span='3' class="imgColStyle">
               <div>
@@ -77,37 +77,60 @@
         </a-row>
       </transition>
     </a-row>
+    <a-modal v-model:visible="visible" :title="dialogObj.title">
+      <template v-slot:footer>
+        <a-row class="rowStyle dialogBox">
+          <a-col :span='8'>
+            <div class="imgBox">
+              <img :src="dialogObj.img" alt="">
+            </div>
+          </a-col>
+          <a-col :span='16' class="dialog">
+            <div>{{ `${$t('default.28')}：${dialogObj.shopName}` }}</div>
+            <div>{{ `${$t('default.89')}：${dialogObj.phone}` }}</div>
+            <div>{{ `${$t('default.125')}：${dialogObj.address}` }}</div>
+          </a-col>
+        </a-row>
+        <div class="dialogBtn">
+          <a-button type="primary" @click="handleOk">{{ $t('default.25') }}</a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 import {
   SettingFilled,
   EnvironmentOutlined,
   UserOutlined,
   UpCircleOutlined,
-  DownCircleOutlined
+  DownCircleOutlined,
 } from "@ant-design/icons-vue";
 export default defineComponent({
-  name: "templete",
+  name: "myTeam",
   components: {
     SettingFilled,
     EnvironmentOutlined,
     UserOutlined,
     UpCircleOutlined,
-    DownCircleOutlined
+    DownCircleOutlined,
   },
   setup() {
-    const Router = useRouter()
+    const Router = useRouter();
     const data = reactive({
-      title: "队伍",
+      visible: false,
+      dialogObj: {
+        title: "",
+        img: require("@/assets/3.jpg"),
+        shopName: "",
+        phone: "",
+        address: "",
+      },
       colSpan: 5,
-      topInfoTitle: "Top 4 平均Competition Rating",
-      joinMatch: "已参加比赛",
-      type: "Entry",
-      vip: "会员信息",
+      topInfoTitle: "Top 4 平均 Competition Rating",
       teamList: [
         {
           id: 1,
@@ -129,9 +152,9 @@ export default defineComponent({
               date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
               divisiList: [
-                { id:1, divisiName: "class1" },
-                { id:2, divisiName: "class2" },
-                { id:3, divisiName: "class3" },
+                { id: 1, divisiName: "class1" },
+                { id: 2, divisiName: "class2" },
+                { id: 3, divisiName: "class3" },
               ],
             },
             {
@@ -140,9 +163,9 @@ export default defineComponent({
               date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
               divisiList: [
-                { id:1, divisiName: "class1" },
-                { id:2, divisiName: "class2" },
-                { id:3, divisiName: "class3" },
+                { id: 1, divisiName: "class1" },
+                { id: 2, divisiName: "class2" },
+                { id: 3, divisiName: "class3" },
               ],
             },
           ],
@@ -182,9 +205,9 @@ export default defineComponent({
               date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
               divisiList: [
-                { id:1, divisiName: "class1" },
-                { id:2, divisiName: "class2" },
-                { id:3, divisiName: "class3" },
+                { id: 1, divisiName: "class1" },
+                { id: 2, divisiName: "class2" },
+                { id: 3, divisiName: "class3" },
               ],
             },
             {
@@ -193,20 +216,30 @@ export default defineComponent({
               date: "2020-5-40 ~ 2020-6-10",
               place: "广州",
               divisiList: [
-                { id:1, divisiName: "class1" },
-                { id:2, divisiName: "class2" },
-                { id:3, divisiName: "class3" },
+                { id: 1, divisiName: "class1" },
+                { id: 2, divisiName: "class2" },
+                { id: 3, divisiName: "class3" },
               ],
             },
           ],
         },
       ],
+      showDetail: (item: any) => {
+        data.dialogObj.title = item.shopAddress;
+        data.dialogObj.shopName = item.shopName;
+        data.dialogObj.phone = item.shopPhone;
+        data.dialogObj.address = item.shopAddress;
+        data.visible = true;
+      },
       changeFlag: (index: number) => {
         data.teamList[index].flag = !data.teamList[index].flag;
       },
-      entryVipPage:() => {
-        Router.push('/')
-      }
+      handleOk:() =>{
+        console.log(1)
+      },
+      entryVipPage: () => {
+        Router.push("/");
+      },
     });
     return {
       ...toRefs(data),
@@ -311,7 +344,31 @@ export default defineComponent({
 .recordBox {
   padding: 10px;
 }
-.showVipInfo{
+.showVipInfo {
   cursor: pointer;
+}
+.dialogBox {
+  height: 100px;
+  color: #ff3202;
+  border: 1px solid #eee;
+}
+.dialog {
+  text-align: left;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.dialogBtn {
+  text-align: center;
+}
+.imgBox {
+  height: 100px;
+  width: 100px;
+  margin: 0 auto;
+}
+.imgBox img {
+  width: 100%;
+  height: 100%;
 }
 </style>

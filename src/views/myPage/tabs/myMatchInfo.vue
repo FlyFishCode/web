@@ -11,46 +11,41 @@
           <a-select-option v-for="item in yearList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='3'>
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
-          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
-        </a-select>
-      </a-col>
     </a-row>
 
     <a-row v-for="(item,index) in teamList" :key="item.id">
       <a-row class="eveyTeam">
         <a-col :span='3' class="imgColStyle">
           <div>
-            <img class="matchImg" :src="item.img" alt="">
+            <img class="matchImg" :src="item.competitionImg">
           </div>
         </a-col>
         <a-col :span='4' class="infoClass">
-          <div class="teamStyle">{{ item.teamName }}</div>
+          <div class="teamStyle" @click="showInfo">{{ item.competitionName }}</div>
           <div class="placeStyle">
             <div>{{ item.place }}</div>
-            <div v-for="div in item.division" :key="div.id" class="divisiBox">{{ div.divisiName }}</div>
+            <div v-for="div in item.divisionList" :key="div.id" class="divisiBox">{{ div.divisionName }}</div>
           </div>
         </a-col>
         <a-col :span='4' :offset='4' class="vipBox">
           <div class="disableFont">{{ $t('default.27') }}</div>
-          <div>-{{ item.vipCount }}</div>
+          <div>-{{ item.areaName }}</div>
         </a-col>
         <a-col :span='5' :offset='1' class="topBox">
           <div class="stateClass">
             <div class="disableFont">{{ $t('default.17') }}</div>
-            <div v-if="item.state === 1" class="stateBox I">{{ $t('default.104') }}</div>
-            <div v-if="item.state === 2" class="stateBox F">{{ $t('default.105') }}</div>
-            <div v-if="item.state === 3" class="stateBox">{{ '准备中' }}</div>
+            <div v-if="item.status === 1" class="stateBox N">{{ $t('default.243') }}</div>
+            <div v-if="item.status === 2" class="stateBox I">{{ $t('default.104') }}</div>
+            <div v-if="item.status === 3" class="stateBox F">{{ $t('default.244') }}</div>
           </div>
-          <div class="infoStyle">{{ item.time }}</div>
+          <div class="infoStyle">{{ item.date }}</div>
         </a-col>
         <a-col :span='2' :offset='1' class="iconFont">
-          <div v-if="item.record.length">
-            <div v-if="item.flag" @click="changeFlag(index)">
+          <div v-if="item.record">
+            <div v-if="item.flag" @click="changeFlag(0,index)">
               <DownCircleOutlined />
             </div>
-            <div v-else @click="changeFlag(index)">
+            <div v-else @click="changeFlag(item.competitionId,index)">
               <UpCircleOutlined />
             </div>
           </div>
@@ -64,7 +59,7 @@
           </a-row>
           <a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
             <a-col :span='12' class="teamBox">
-              <div class="teamName">{{ recordInfo.matchName }}</div>
+              <div class="teamName">{{ recordInfo.teamName }}</div>
             </a-col>
             <a-col :span='12' class="countBox">
               <div class="tableBox Header">
@@ -78,108 +73,109 @@
               </div>
               <div class="tableBox Content">
                 <div>{{ recordInfo.ranking }}</div>
-                <div>{{ recordInfo.Rating }}</div>
-                <div>{{ recordInfo.PPD }}</div>
-                <div>{{ recordInfo.MPR }}</div>
-                <div>{{ recordInfo.SetWin }}</div>
-                <div>{{ recordInfo.SetRraw }}</div>
-                <div>{{ recordInfo.SetLose }}</div>
+                <div>{{ recordInfo.rating }}</div>
+                <div>{{ recordInfo.ppd }}</div>
+                <div>{{ recordInfo.mpr }}</div>
+                <div>{{ recordInfo.winCount }}</div>
+                <div>{{ recordInfo.drawCount }}</div>
+                <div>{{ recordInfo.loseCount }}</div>
               </div>
             </a-col>
           </a-row>
         </a-row>
       </transition>
     </a-row>
+    <div class="pagination">
+      <a-pagination v-model:current="currentPage" v-model:pageSize="pageSize" :total="total" @change='pageChange' @showSizeChange="onShowSizeChange" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import {
   SettingFilled,
   DownCircleOutlined,
   UpCircleOutlined,
 } from "@ant-design/icons-vue";
+import { myMatchInfoHttp, myMatchMoreHttp } from "@/axios/api";
+import { useRouter } from 'vue-router';
 export default defineComponent({
-  name: "templete",
+  name: "myMatchInfo",
   components: {
     SettingFilled,
     DownCircleOutlined,
     UpCircleOutlined,
   },
   setup() {
-    const data = reactive({
-      title: "队伍",
+    const Router = useRouter();
+    const userId = sessionStorage.getItem("userId");
+    const data: any = reactive({
       colSpan: 5,
       year: 2020,
-      matchType: 2020,
-      yearList: [{ value: 2020, label: "2020" }],
-      matchTypeList: [{ value: 2020, label: "2020" }],
-      teamList: [
-        {
-          id: 1,
-          img: require("@/assets/1.jpg"),
-          teamName: "上海队",
-          couny: "北京",
-          vipCount: 8,
-          flag: false,
-          state: 1,
-          time: "2020-9-52",
-          division: [
-            { id: 1, divisiName: "xxxx" },
-            { id: 2, divisiName: "xxxx" },
-          ],
-          record: [
-            {
-              matchName: "Demo_A_Team",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              ranking: 1,
-              Rating: 2,
-              PPD: 3,
-              MPR: 4,
-              SetWin: 5,
-              SetRraw: 6,
-              SetLose: 7,
-            },
-            {
-              matchName: "Demo_A_Team",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              ranking: 1,
-              Rating: 2,
-              PPD: 3,
-              MPR: 4,
-              SetWin: 5,
-              SetRraw: 6,
-              SetLose: 7,
-            },
-          ],
-        },
-        {
-          id: 1,
-          img: require("@/assets/1.jpg"),
-          teamName: "上海队",
-          couny: "北京",
-          vipCount: 8,
-          flag: false,
-          state: 2,
-          time: "2020-9-52",
-          division: [],
-          record: [],
-        },
+      currentPage: 1,
+      pageSize: 10,
+      total: 1,
+      yearList: [
+        { value: 2020, label: 2020 },
+        { value: 2019, label: 2019 },
+        { value: 2018, label: 2018 },
       ],
-      changeFlag: (index: number) => {
+      teamList: [{ flag: false, record: [] }],
+      changeFlag: (matchId = 0, index: number) => {
+        console.log(matchId);
+        // if (matchId) {
+        const obj = {
+          memberId: Number(userId),
+          competitionId: 148,
+        };
+        myMatchMoreHttp(obj).then((res) => {
+          data.teamList[index].record = res.data.data;
+        });
+        // }
         data.teamList[index].flag = !data.teamList[index].flag;
       },
+      getMatchList: (
+        year = data.year,
+        currentPage = data.currentPage,
+        pageSize = data.pageSize
+      ) => {
+        // 年份，当前页数，显示页码
+        const obj = {
+          // memberId: Number(userId),
+          memberId: 22703,
+          countryId: 617,
+          sort: 1,
+          date: year,
+          pageIndex: currentPage,
+          pageSize: pageSize,
+        };
+        myMatchInfoHttp(obj).then((res) => {
+          if (res.data.data) {
+            res.data.data.list.forEach((i: any) => {
+              i.flag = false;
+              i.record = [];
+            });
+            data.teamList = res.data.data.list;
+            data.total = res.data.data.totalCount;
+          }
+        });
+      },
+      showInfo:() => {
+        Router.push('/')
+      },
       yearChange: (value: number) => {
-        console.log(value);
+        data.getMatchList(value, undefined, undefined);
       },
-      matchTypeChange: (value: number) => {
-        console.log(value);
+      onShowSizeChange: (current: number, size: number) => {
+        data.getMatchList(undefined, undefined, size);
       },
+      pageChange: (page: number) => {
+        data.getMatchList(undefined, page, undefined);
+      },
+    });
+    onMounted(() => {
+      data.getMatchList();
     });
     return {
       ...toRefs(data),
@@ -214,6 +210,9 @@ export default defineComponent({
 .teamStyle {
   cursor: pointer;
   font-weight: bold;
+}
+.teamStyle:hover {
+  text-decoration: underline;
 }
 .placeStyle {
   display: flex;
@@ -321,9 +320,9 @@ export default defineComponent({
   background: #d9d9d9;
   color: #797878;
 }
-.divisiBox{
+.divisiBox {
   border: 1px solid #000;
-  padding: 5px;
+  padding: 0 5px;
   margin: 4px 5px;
 }
 </style>

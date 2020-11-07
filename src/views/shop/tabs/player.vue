@@ -52,7 +52,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons-vue";
 export default defineComponent({
-  name: "teamIndex",
+  name: "player",
   components: {
     SettingFilled,
     UserOutlined,
@@ -62,7 +62,6 @@ export default defineComponent({
     const data = reactive({
       currentPage: 1,
       value: 201,
-      type: "报名",
       current: 1,
       pageSize: 1,
       colSpan: 4,

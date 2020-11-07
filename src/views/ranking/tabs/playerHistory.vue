@@ -125,7 +125,7 @@
               </a-progress>
             </div>
           </div>
-          <div class="plainList">
+          <!-- <div class="plainList">
             <div>
               <a-progress type="circle" status="exception" :percent="item.plainRating">
                 <template v-slot:format="percent">
@@ -184,14 +184,14 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div v-else class="addBox">
           <a-button type="dashed" ghost @click="showDialog(index)">{{ $t('default.222') }}</a-button>
         </div>
       </a-col>
     </a-row>
-    <a-modal v-model:visible="visible" centered width='900px' :footer="null" :title="$t('default.200')">
+    <a-modal v-model:visible="visible" centered width='900px' :footer="null" :title="$t('default.223')">
       <a-row class="rowSearchBox">
         <a-col :span='3'>
           <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
@@ -242,7 +242,7 @@ import {
   PlusOutlined,
 } from "@ant-design/icons-vue";
 export default defineComponent({
-  name: "teamHistory",
+  name: "playerHistory",
   components: {
     SettingFilled,
     CloseCircleFilled,
@@ -295,8 +295,8 @@ export default defineComponent({
         { id: 5, title: "default.188" },
         { id: 6, title: "default.219" },
         { id: 7, title: "default.185" },
-        { id: 8, title: "default.220" },
-        { id: 9, title: "default.221" },
+        // { id: 8, title: "default.220" },
+        // { id: 9, title: "default.221" },
       ],
       teamList: [
         { flag: false },

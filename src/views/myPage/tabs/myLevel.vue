@@ -2,14 +2,14 @@
   <div class="content">
     <a-row>
       <a-col :span='3' class="centerFont">
-        <SettingFilled /> {{ `${title}` }}
+        <SettingFilled /> {{ $t('default.109') }}
       </a-col>
     </a-row>
     <a-row>
       <a-table :columns="columns" :data-source="tableList" :pagination='false' bordered>
         <template v-slot:level="{ record }">
           <div class="btnBox">
-            <a-button type="danger" size='small' @click="showInfo(record.key)">{{ '查看' }}</a-button>
+            <a-button type="danger" size='small' @click="showInfo(record.key)">{{ $t('default.166') }}</a-button>
           </div>
         </template>
       </a-table>
@@ -17,56 +17,26 @@
 
     <a-row>
       <a-col :span='5' class="centerFont">
-        <SettingFilled /> {{ `${levelTitle}` }}
+        <SettingFilled /> {{ $t('default.96') }}
       </a-col>
     </a-row>
     <a-row class="rowStyle">
-      <a-col :span='2' class="dropdown">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu @click="handleMenuClick">
-              <a-menu-item key="1">
-                1st menu item
-              </a-menu-item>
-              <a-menu-item key="2">
-                2nd menu item
-              </a-menu-item>
-              <a-menu-item key="3">
-                3rd item
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button style="margin-left: 8px"> Button
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+      <a-col :span='3'>
+        <a-select v-model:value="year" style="width: 120px" @change="handleChange">
+          <a-select-option v-for="year in yearList" :key="year.value" :value="year.value">{{ year.label }}</a-select-option>
+        </a-select>
       </a-col>
-      <a-col :span='3' class="dropdown">
-        <a-dropdown>
-          <template v-slot:overlay>
-            <a-menu @click="handleMenuClick">
-              <a-menu-item key="1">
-                1st menu item
-              </a-menu-item>
-              <a-menu-item key="2">
-                2nd menu item
-              </a-menu-item>
-              <a-menu-item key="3">
-                3rd item
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button style="margin-left: 8px"> Button
-            <DownOutlined />
-          </a-button>
-        </a-dropdown>
+      <a-col :span='3'>
+        <a-select v-model:value="league" style="width: 120px" @change="handleChange">
+          <a-select-option v-for="league in leagueList" :key="league.value" :value="league.value">{{ $t(league.label) }}</a-select-option>
+        </a-select>
       </a-col>
     </a-row>
     <a-row>
       <a-table :columns="levelColumns" :data-source="levelTableList" :pagination='false' bordered>
         <template v-slot:level="{ record }">
           <div class="btnBox">
-            <a-button type="danger" size='small' @click="showInfo(record.key)">{{ '查看' }}</a-button>
+            <a-button type="danger" size='small' @click="showInfo(record.key)">{{ $t('default.166') }}</a-button>
           </div>
         </template>
       </a-table>
@@ -80,13 +50,12 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
-import { SettingFilled, DownOutlined } from "@ant-design/icons-vue";
-import Axios from 'axios'
+import { SettingFilled } from "@ant-design/icons-vue";
+import Axios from "axios";
 export default defineComponent({
-  name: "templete",
+  name: "myLevel",
   components: {
     SettingFilled,
-    DownOutlined,
   },
   setup() {
     const echarsInit = (obj: { [key: string]: number[] }) => {
@@ -132,8 +101,15 @@ export default defineComponent({
       });
     };
     const data = reactive({
-      title: "我的等级",
-      levelTitle: "根据周期评定之等级",
+      year:2020,
+      league:1,
+      yearList:[
+        { value:2020 , label:2020 },
+        { value:2019 , label:2019 }
+      ],
+      leagueList:[
+        { value:1 , label:'default.8' }
+      ],
       echarsList: {
         addUp: [1, 35, 5, 64, 23, 76, 23, 98, 123, 56, 121, 21],
         cycle: [23, 43, 54, 56, 78, 12, 98, 45, 27, 84, 15, 63],
@@ -254,11 +230,14 @@ export default defineComponent({
           address: "Sidney No. 1 Lake Park",
         },
       ],
+      handleChange:() =>{
+        console.log()
+      }
     });
     onMounted(() => {
-      const list: {[key: string]: string } = {
-        type: "a"
-      }
+      const list: { [key: string]: string } = {
+        type: "a",
+      };
       Axios.post("/abs", list).then((res) => {
         console.log(res);
       });

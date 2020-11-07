@@ -2,35 +2,35 @@
   <div class="content">
     <a-row>
       <a-col :span='2' class="centerFont">
-        <SettingFilled /> {{ title }}
+        <SettingFilled /> {{ $t('default.108') }}
       </a-col>
     </a-row>
     <a-row class="rowSearchBox">
       <a-col :span='3' class="buttonBox">
         <a-button @click="deleteMsg">
-          {{ '选择删除' }}
+          {{ $t('default.112') }}
         </a-button>
       </a-col>
       <a-col :span='3' class="buttonBox">
         <a-button @click="deleteAll" type='danger'>
-          {{ '全部删除' }}
+          {{ $t('default.113') }}
         </a-button>
       </a-col>
       <a-col :span='3' class="buttonBox">
         <div class="titleStyle setting" @click="showDlalog">
-          <SettingFilled /> {{ '消息接收设置' }}
+          <SettingFilled /> {{ $t('default.114') }}
         </div>
       </a-col>
-      <a-col :span='2' :offset='8' class="titleStyle">
-        {{ '比賽類型' }}
+      <a-col :span='2' :offset='9' class="titleStyle">
+        {{ $t('default.119') }}
       </a-col>
       <a-col :span='2' class="dropdown">
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 90px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='3' class="dropdown">
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+      <a-col :span='2' class="dropdown">
+        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 90px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
@@ -40,23 +40,23 @@
         <template v-slot:title="{ text }">
           <a>{{ text }}</a>
         </template>
-        <template v-slot:state="{  }">
-          <a-button size='small' type="danger" class="tableBtn">{{ '删除' }}</a-button>
+        <template v-slot:state>
+          <a-button size='small' type="danger" class="tableBtn">{{ $t('default.123') }}</a-button>
         </template>
       </a-table>
     </a-row>
     <a-row class="rowStyle">
       <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="Gohistory">{{ '列表' }}</a-button>
+        <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
       </a-col>
     </a-row>
-    <a-modal v-model:visible="visible" title="消息接收設置" centered @ok="handleOk">
+    <a-modal v-model:visible="visible" :title="$t('default.240')" centered @ok="handleOk">
       <a-row>
-        <a-col style="textAlign:center">{{ '本功能表提供比賽服務相關的重要活動通知' }}</a-col>
+        <a-col style="textAlign:center">{{ $t('default.241') }}</a-col>
       </a-row>
       <a-row class="rowStyle">
         <a-row type="flex" justify="space-around">
-          <a-col :span='10'>{{ '参赛批准' }}</a-col>
+          <a-col :span='10'>{{ $t('default.115') }}</a-col>
           <a-col :span='3'>
             <a-switch v-model:checked="checked">
               <template v-slot:checkedChildren>
@@ -69,7 +69,7 @@
           </a-col>
         </a-row>
         <a-row type="flex" justify="space-around" class="rowStyle">
-          <a-col :span='10'>{{ '已确认比赛排阵' }}</a-col>
+          <a-col :span='10'>{{ $t('default.116') }}</a-col>
           <a-col :span='3'>
             <a-switch v-model:checked="checked">
               <template v-slot:checkedChildren>
@@ -82,7 +82,7 @@
           </a-col>
         </a-row>
         <a-row type="flex" justify="space-around">
-          <a-col :span='10'>{{ '更改比赛时间/对阵地点' }}</a-col>
+          <a-col :span='10'>{{ $t('default.117') }}</a-col>
           <a-col :span='3'>
             <a-switch v-model:checked="checked">
               <template v-slot:checkedChildren>
@@ -95,7 +95,7 @@
           </a-col>
         </a-row>
         <a-row type="flex" justify="space-around" class="rowStyle">
-          <a-col :span='10'>{{ '比赛结果' }}</a-col>
+          <a-col :span='10'>{{ $t('default.62') }}</a-col>
           <a-col :span='3'>
             <a-switch v-model:checked="checked">
               <template v-slot:checkedChildren>
@@ -110,7 +110,7 @@
       </a-row>
       <template v-slot:footer>
         <div class="footerBox">
-          <a-button type="primary" @click="save">{{ '确定' }}</a-button>
+          <a-button type="primary" @click="save" size="small">{{ $t('default.242') }}</a-button>
         </div>
       </template>
     </a-modal>
@@ -130,7 +130,7 @@ import {
 //   index: number;
 // }
 export default defineComponent({
-  name: "templete",
+  name: "message",
   components: {
     SettingFilled,
     CheckOutlined,
@@ -139,7 +139,6 @@ export default defineComponent({
   setup() {
     const Router = useRouter();
     const data = reactive({
-      title: "消息",
       colSpan: 5,
       total: 100,
       visible: false,

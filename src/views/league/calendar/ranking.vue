@@ -197,7 +197,7 @@ interface rowType {
   [x: string]: string | number;
 }
 export default defineComponent({
-  name: "calendar",
+  name: "ranking",
   components: {
     SettingFilled,
     ClusterOutlined,

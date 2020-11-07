@@ -36,7 +36,7 @@
       <a-col :span="8">
         <div class="newHeader">
           <div class="newSstyle">{{ 'PROMOTION' }}</div>
-          <div class="moreStyle">{{ $t('default.25') }}</div>
+          <div class="moreStyle" @click="infoNews">{{ $t('default.25') }}</div>
         </div>
         <div class="newBox">
           <img :src="img" alt="">
@@ -235,8 +235,8 @@ import {
   AppleOutlined,
 } from "@ant-design/icons-vue";
 import divTitle from "@/components/DividingLine.vue";
-import router from "@/router";
 import { indexTeamHttp, indexPlayerHttp } from "@/axios/api";
+import { useRouter } from 'vue-router';
 interface DataProps {
   click: () => void;
 }
@@ -255,6 +255,7 @@ export default defineComponent({
   },
   name: "index",
   setup() {
+    const Router = useRouter()
     const data = reactive({
       img: require("@/assets/logo.jpg"),
       leagueName: "",
@@ -327,6 +328,9 @@ export default defineComponent({
         //   data.matchList = res.data.data;
         // });
       },
+      infoNews:() =>{
+        Router.push('/news')
+      },
       intoPhoto: (value: string) => {
         console.log(value);
       },
@@ -341,10 +345,10 @@ export default defineComponent({
         data.visible = false;
       },
       goToPage: () => {
-        router.push("/teamInfo");
+        Router.push("/teamInfo");
       },
       showLeagueInfo: (id: number) => {
-        router.push({
+        Router.push({
           path: "/calendar",
           query: { id },
         });

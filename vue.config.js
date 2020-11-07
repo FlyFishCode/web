@@ -31,7 +31,7 @@ module.exports = {
     chainWebpack: config => {
         config.plugin('html')
             .tap(args => {
-                args[0].title = "标题";
+                args[0].title = "A-League";
                 return args;
             })
     },

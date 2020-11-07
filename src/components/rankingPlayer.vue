@@ -84,7 +84,7 @@ import {
   RightCircleOutlined,
 } from "@ant-design/icons-vue";
 export default {
-  name: "showTeamTopOne",
+  name: "rankingPlayer",
   components: {
     InfoCircleFilled,
     LeftCircleOutlined,

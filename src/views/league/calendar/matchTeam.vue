@@ -75,7 +75,7 @@ interface rowType {
   [x: string]: string | number;
 }
 export default defineComponent({
-  name: "calendar",
+  name: "matchTeam",
   components: {
     SearchOutlined,
     SettingFilled,

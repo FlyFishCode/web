@@ -2,7 +2,7 @@
   <div class="content">
     <a-row>
       <a-col :span='4' class="centerFont">
-        <SettingFilled /> {{ title }}
+        <SettingFilled /> {{ $t('default.229') }}
       </a-col>
     </a-row>
     <a-row class="rowStyle">
@@ -28,14 +28,14 @@
         <a-button @click="showList">
           <template v-slot:icon>
             <UnorderedListOutlined />
-          </template>{{ '查看列表' }}
+          </template>{{ $t('default.87') }}
         </a-button>
       </a-col>
       <a-col :span='3'>
         <a-button @click="showCalendar">
           <template v-slot:icon>
             <CalendarOutlined />
-          </template>{{ '查看日历' }}
+          </template>{{ $t('default.228') }}
         </a-button>
       </a-col>
       <a-col :span='3' :offset='10'>
@@ -47,14 +47,14 @@
         <a-button>
           <template v-slot:icon>
             <CloudDownloadOutlined />
-          </template>{{ 'CSV下载' }}
+          </template>{{ $t('default.111') }}
         </a-button>
       </a-col>
       <a-col :span='2'>
         <a-button>
           <template v-slot:icon>
             <PrinterOutlined />
-          </template>{{ '打印' }}
+          </template>{{ $t('default.69') }}
         </a-button>
       </a-col>
     </a-row>
@@ -86,7 +86,7 @@
     </a-row>
     <a-row class="rowStyle">
       <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="Gohistory">{{ '列表' }}</a-button>
+        <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
       </a-col>
     </a-row>
   </div>
@@ -107,7 +107,7 @@ import {
 //   index: number;
 // }
 export default defineComponent({
-  name: "templete",
+  name: "calendar",
   components: {
     UnorderedListOutlined,
     CalendarOutlined,
@@ -118,7 +118,6 @@ export default defineComponent({
   setup() {
     const Router = useRouter();
     const data = reactive({
-      title: "比赛日程表/结果",
       colSpan: 5,
       isList: true,
       isCalendar: false,

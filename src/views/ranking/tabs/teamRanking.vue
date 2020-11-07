@@ -16,7 +16,7 @@
           <a-select-option v-for="item in list" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='2' :offset="7" class="titleStyle">
+      <a-col :span='2' :offset="2" class="titleStyle">
         <AimOutlined class="fontIcon" />{{ $t('default.27') }}
       </a-col>
       <a-col :span='2'>

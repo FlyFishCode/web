@@ -2,7 +2,7 @@
   <div class="content">
     <a-row>
       <a-col :span='3' class="centerFont">
-        <SettingFilled /> {{ title }}
+        <SettingFilled /> {{ $t('default.231') }}
       </a-col>
     </a-row>
     <a-row class="rowStyle">
@@ -19,7 +19,7 @@
     </a-row>
 
     <a-row>
-      <a-table :columns="columns" :data-source="tableList" :pagination='false' bordered :scroll="{ x: 1300 }">
+      <a-table :columns="columns" :data-source="tableList" :pagination='false' bordered >
         <template #action="{ text,record }">
           <u class="tableMatch" @click="showMatchInfo(record.age)">{{ text }}</u>
         </template>
@@ -27,7 +27,7 @@
     </a-row>
     <a-row class="rowStyle">
       <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="Gohistory">{{ '列表' }}</a-button>
+        <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
       </a-col>
     </a-row>
   </div>
@@ -38,84 +38,83 @@ import { defineComponent, reactive, toRefs } from "vue";
 import { SettingFilled } from "@ant-design/icons-vue";
 import { useRouter } from "vue-router";
 export default defineComponent({
-  name: "templete",
+  name: "beforeResult",
   components: {
     SettingFilled,
   },
   setup() {
     const Router = useRouter();
     const data = reactive({
-      title: "以前结果",
       matchType: 2020,
       matchTypeList: [{ value: 2020, label: "2020" }],
       columns: [
         {
           title: "年",
-          width: 10,
+          width: 50,
           dataIndex: "name",
-          key: "name",
-          fixed: "left",
+          key: 1,
+          // fixed: "left",
         },
         {
           title: "比赛",
           dataIndex: "address",
-          width: 90,
-          key: "1",
+          width: 100,
+          key: 2,
           slots: { customRender: "action" },
-          fixed: "left",
+          // fixed: "left",
         },
         {
           title: "排行",
           dataIndex: "address",
-          key: "2",
-          fixed: "left",
-          width: 10,
+          key: 3,
+          // fixed: "left",
+          width: 60,
         },
         {
           title: "队伍",
           dataIndex: "address",
-          key: "3",
-          fixed: "left",
+          key: 4,
+          // fixed: "left",
           children: [
-            { title: "Rating", dataIndex: "address", key: "2", width: 60 },
-            { title: "PPD", dataIndex: "address", key: "2", width: 50 },
-            { title: "MPR", dataIndex: "address", key: "2", width: 50 },
+            { title: "Rating", dataIndex: "address", key: 9, width: 70 },
+            { title: "PPD", dataIndex: "address", key: 10, width: 60 },
+            { title: "MPR", dataIndex: "address", key: 11, width: 60 },
           ],
         },
         {
           title: "总积分",
           dataIndex: "address",
-          key: "4",
-          fixed: "left",
-          width: 20,
+          key: 5,
+          // fixed: "left",
+          width: 80,
         },
         {
           title: "Match",
           dataIndex: "address",
-          key: "5",
+          key: 6,
           children: [
-            { title: "胜", dataIndex: "address", key: "2", width: 30 },
-            { title: "败", dataIndex: "address", key: "2", width: 30 },
-            { title: "和", dataIndex: "address", key: "2", width: 30 },
-            { title: "胜率", dataIndex: "address", key: "2", width: 40 },
+            { title: "胜", dataIndex: "address", key: 12, width: 60 },
+            { title: "败", dataIndex: "address", key: 13, width: 60 },
+            { title: "和", dataIndex: "address", key: 14, width: 60 },
+            { title: "胜率", dataIndex: "address", key: 15, width: 60 },
           ],
         },
         {
           title: "Set",
           dataIndex: "address",
-          key: "6",
+          key: 7,
           children: [
-            { title: "胜", dataIndex: "address", key: "2", width: 40 },
-            { title: "败", dataIndex: "address", key: "2", width: 40 },
-            { title: "和", dataIndex: "address", key: "2", width: 40 },
-            { title: "胜率", dataIndex: "address", key: "2", width: 40 },
+            { title: "胜", dataIndex: "address", key: "2", width: 60 },
+            { title: "败", dataIndex: "address", key: "2", width: 60 },
+            { title: "和", dataIndex: "address", key: "2", width: 60 },
+            { title: "胜率", dataIndex: "address", key: "2", width: 60 },
           ],
         },
         {
           title: "罚分",
           dataIndex: "address",
-          key: "7",
-          width: 40,
+          key: 8,
+          width: 60,
         },
       ],
       tableList: [

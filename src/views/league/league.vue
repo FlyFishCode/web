@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <a-row id="title-g">
-      <a-col :span='4'>{{ title }}</a-col>
+      <a-col :span='4'>{{ $t('default.13') }}</a-col>
       <a-col :span='3' :offset="5" class="btnBox">
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
@@ -18,7 +18,7 @@
       <!-- <a-tab-pane key="1" tab="Multi League" class="tab"> -->
       <a-row class="rowSearchBox">
         <a-col :span='2'>
-          <EnvironmentOutlined class="fontIcon" />{{ place }}
+          <EnvironmentOutlined class="fontIcon" />{{ $t('default.27') }}
         </a-col>
         <a-col :span='3'>
           <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
@@ -37,7 +37,7 @@
         </a-select>
         </a-col>
         <a-col :span='2' :offset="6">
-          <SearchOutlined class="fontIcon" />{{ matchName }}
+          <SearchOutlined class="fontIcon" />{{ $t('default.15') }}
         </a-col>
         <a-col :span='5'>
           <a-input-search v-model:value="value" enter-button="Search" size="default" @search="onSearch" />
@@ -45,7 +45,7 @@
       </a-row>
       <a-row>
         <a-col :span='5' class="centerFont">
-          <SettingFilled /> {{ matchTitle + '  ' + `(${matchTotal})` }}
+          <SettingFilled /> {{ $t('default.224') + `(${matchTotal})` }}
         </a-col>
       </a-row>
       <a-row class="rowStyle">
@@ -238,15 +238,12 @@ interface DataProp {
   showMyLengue: () => void;
 }
 export default defineComponent({
-  name: "hearder",
+  name: "league",
   components: { EnvironmentOutlined, SearchOutlined, SettingFilled },
   setup() {
     const Router = useRouter();
     const data = reactive({
-      title: "时间表",
       currentValue: "新闻",
-      matchName: "比赛名称",
-      matchTitle: "Multi-league列表",
       champion: "The Champion 列表",
       all: "ALL",
       my: "MY",
@@ -310,7 +307,6 @@ export default defineComponent({
           state: 3,
         }
       ],
-      place: "当地",
       currentState: "当前状态",
       monthList: [{ id: 0, value: 0 }],
       handleMenuClick: (e: string) => {

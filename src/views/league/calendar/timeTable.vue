@@ -143,7 +143,7 @@ import { SettingFilled, PlusOutlined } from "@ant-design/icons-vue";
 import lunboGundong from "@/components/inCalendar.vue";
 import inMatchTable from "@/components/inMatchTable.vue";
 export default defineComponent({
-  name: "calendar",
+  name: "timeTable",
   components: {
     SettingFilled,
     lunboGundong,

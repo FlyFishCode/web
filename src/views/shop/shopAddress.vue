@@ -26,7 +26,7 @@ import historyMatch from "@/views/shop/tabs/historyMatch.vue";
 import team from "@/views/shop/tabs/team.vue";
 import player from "@/views/shop/tabs/player.vue";
 export default defineComponent({
-  name: "templete",
+  name: "shopAddress",
   components: {
     inShopInfo,
     historyMatch,

@@ -33,7 +33,7 @@ import {
   EnvironmentOutlined,
 } from "@ant-design/icons-vue";
 export default {
-  name: "showTeamTopOne",
+  name: "inPlayerTopOne",
   components: {
     EnvironmentOutlined,
   },

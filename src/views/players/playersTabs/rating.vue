@@ -65,7 +65,7 @@ import { SettingFilled } from "@ant-design/icons-vue";
 import Axios from "axios";
 import { useRouter } from 'vue-router';
 export default defineComponent({
-  name: "templete",
+  name: "rating",
   components: {
     SettingFilled,
   },

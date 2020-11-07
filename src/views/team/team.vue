@@ -3,7 +3,7 @@
     <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
     <a-row class="rowStyle">
       <a-col :span='5' class="centerFont">
-        <SettingFilled /> {{ msg }}
+        <SettingFilled /> {{ `${$t('default.80')}(${$t('default.8')})` }}
       </a-col>
     </a-row>
     <a-row class="winnerListStyle">
@@ -29,15 +29,15 @@
             <div v-else>
               <div class="winBox">
                 <div>
-                  <div>{{ '胜' }}</div>
+                  <div>{{ $t('default.46') }}</div>
                   <div>{{ item.win }}</div>
                 </div>
                 <div class="winBg">
-                  <div>{{ '败' }}</div>
+                  <div>{{ $t('default.48') }}</div>
                   <div>{{ item.win }}</div>
                 </div>
                 <div>
-                  <div>{{ '和' }}</div>
+                  <div>{{ $t('default.47') }}</div>
                   <div>{{ item.win }}</div>
                 </div>
               </div>
@@ -52,21 +52,21 @@
 
     <a-row class="rowStyle rowSearchBox">
       <a-col :span='2' class="titleStyle">
-        <BankFilled class="fontIcon" />{{ place }}
+        <BankFilled class="fontIcon" />{{ $t('default.27') }}
       </a-col>
       <a-col :span='2' class="dropdown">
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='2' class="titleStyle">{{ currentState }}</a-col>
+      <a-col :span='2' class="titleStyle">{{ $t('default.164') }}</a-col>
       <a-col :span='2' class="dropdown">
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
       <a-col :span='2' :offset="7" class="titleStyle">
-        <SearchOutlined class="fontIcon" />{{ matchName }}
+        <SearchOutlined class="fontIcon" />{{ $t('default.165') }}
       </a-col>
       <a-col :span='3' class="dropdown">
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
@@ -79,7 +79,7 @@
     </a-row>
     <a-row>
       <a-col :span='4' class="centerFont">
-        <SettingFilled /> {{ `队伍列表 (${teamList.length})` }}
+        <SettingFilled /> {{ `${$t('default.82')} (${teamList.length})` }}
       </a-col>
     </a-row>
 
@@ -101,13 +101,13 @@
           <div>{{ item.captain }}</div>
         </a-col>
         <a-col :span='3' class="vipBox">
-          <div>{{ vip }}</div>
+          <div>{{ $t('default.227') }}</div>
           <div>
             <UserOutlined />{{ item.vipCount }}
           </div>
         </a-col>
         <a-col :span='8' class="topBox">
-          <div>{{ topInfoTitle }}</div>
+          <div>{{ $t('default.178') }}</div>
           <div class="infoStyle">
             <div>{{ `Rating  ${item.ranting}` }}</div>|
             <div>{{ `PPD  ${item.PPD}` }}</div>|
@@ -115,7 +115,7 @@
           </div>
         </a-col>
         <a-col :span='3' class="vipBox">
-          <div>{{ type }}</div>
+          <div>{{ $t('default.226') }}</div>
           <div>{{ item.count }}</div>
         </a-col>
         <a-col :span='2' class="iconFont">
@@ -131,7 +131,7 @@
       </a-row>
       <transition enter-active-class="animate__animated animate__bounceInUp">
         <a-row v-show="item.flag" class="recordBox">
-          <div class="matchTitle">{{ joinMatch }}</div>
+          <div class="matchTitle">{{ $t('default.225') }}</div>
           <a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
             <a-col :span='3' class="imgColStyle">
               <div>
@@ -177,7 +177,7 @@ import {
   UpCircleOutlined,
 } from "@ant-design/icons-vue";
 export default defineComponent({
-  name: "teamIndex",
+  name: "team",
   components: {
     divTitle,
     BankFilled,
@@ -191,17 +191,9 @@ export default defineComponent({
   setup() {
     const Router = useRouter()
     const data = reactive({
-      title: "队伍",
-      msg: "最佳队伍 (League)",
-      place: "当地",
-      currentState: "进行状态",
-      matchName: "搜索标准",
+      title: "default.9",
       currentValue: 1,
-      vip: "会员",
       value: 201,
-      type: "报名",
-      joinMatch: "参加比赛",
-      topInfoTitle: "Top 4 平均比赛等级",
       current:1,
       pageSize:1,
       colSpan:4,

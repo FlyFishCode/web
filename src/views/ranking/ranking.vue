@@ -28,7 +28,7 @@ import teamHistory from "@/views/ranking/tabs/teamHistory.vue";
 import plyaerRanking from "@/views/ranking/tabs/plyaerRanking.vue";
 import playerHistory from "@/views/ranking/tabs/playerHistory.vue";
 export default defineComponent({
-  name: "templete",
+  name: "ranking",
   components: {
     divTitle,
     teamRanking,

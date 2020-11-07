@@ -82,7 +82,7 @@
     </a-row>
     <a-row class="rowStyle">
       <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="goHistory">{{ '列表' }}</a-button>
+        <a-button type="danger" size="small" @click="goHistory">{{ $t('default.139') }}</a-button>
       </a-col>
     </a-row>
   </div>

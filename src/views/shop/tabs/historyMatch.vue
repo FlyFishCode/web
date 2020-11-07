@@ -72,7 +72,7 @@ interface DataProp {
   showMyLengue: () => void;
 }
 export default defineComponent({
-  name: "hearder",
+  name: "historyMatch",
   components: { SettingFilled },
   setup() {
     // const Router = useRouter();

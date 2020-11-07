@@ -2,8 +2,11 @@ import axios from 'axios'
 import qs from 'qs'
 import { useRouter } from 'vue-router'
 
+// 首页
 import { login,leagueList ,indexTeam,indexPlayer} from './index/index'
 
+// 我的页面
+import { myPageInfo,myMatchInfo,myMatchInfoMore } from './myPage/index'
 const baseURL = "/aps"
 const Router = useRouter()
 const token = sessionStorage.getItem('token')
@@ -15,7 +18,7 @@ const Axios = axios.create({
 
 Axios.interceptors.request.use((config) => {
 	if(token){
-		config.headers.common['token'] = token
+		config.headers.common['Authorization'] = token
 	}
 	return config
 }, err => {
@@ -81,4 +84,32 @@ const indexPlayerHttp = (data: any = null) => {
 	}
 	return Axios.get(url)
 }
-export { loginHttp ,leagueListHttp,indexTeamHttp,indexPlayerHttp}
+
+//  我的页面 会员信息
+const myPageInfoHttp = (data: any = null) =>{
+	let url = myPageInfo
+	if(data){
+		url += '?'
+		for(const [key,value] of Object.entries(data)){
+			url += `${key}=${value}&`
+		}
+	}
+	return Axios.get(url)
+}
+
+//  我的页面 我的比赛信息
+const myMatchInfoHttp = (data: any = null) =>{
+	return Axios.post(myMatchInfo,data)
+}
+//  我的页面 我的比赛信息下拉请求
+const myMatchMoreHttp = (data: any = null) =>{
+	let url = myMatchInfoMore
+	if(data){
+		url += '?'
+		for(const [key,value] of Object.entries(data)){
+			url += `${key}=${value}&`
+		}
+	}
+	return Axios.get(url)
+}
+export { loginHttp ,leagueListHttp,indexTeamHttp,indexPlayerHttp,myPageInfoHttp,myMatchInfoHttp,myMatchMoreHttp}

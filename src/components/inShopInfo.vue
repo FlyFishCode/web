@@ -62,7 +62,7 @@ import { useRoute } from "vue-router";
 import { reactive, toRefs, onMounted, ref } from "vue";
 import { EnvironmentOutlined } from "@ant-design/icons-vue";
 export default {
-  name: "showTeamTopOne",
+  name: "inShopInfo",
   components: {
     EnvironmentOutlined,
   },

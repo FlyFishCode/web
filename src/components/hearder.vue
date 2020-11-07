@@ -71,7 +71,7 @@
       </a-col>
     </a-col>
   </a-row>
-  <a-row class="rowStyle">
+  <a-row class="lineBox">
     <a-col :span="8">
       <div class="imgBox" @click="entryIndex"><img :src="img" alt=""></div>
     </a-col>
@@ -240,9 +240,9 @@ export default defineComponent({
         { key: 3, label: "英国" },
       ],
       languageList: [
-        { key: 'zh-cn', label: "default.130" },
-        { key: 'zh-tw', label: "default.131" },
-        { key: 'en-us', label: "default.132" },
+        { key: "zh-cn", label: "default.130" },
+        { key: "zh-tw", label: "default.131" },
+        { key: "en-us", label: "default.132" },
       ],
       typeList: [
         { key: 1, label: "default.8" },
@@ -444,5 +444,9 @@ export default defineComponent({
 .myMatchName:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+.lineBox {
+  padding: 15px 0;
+  border-bottom: 2px solid #4b4b4b;
 }
 </style>

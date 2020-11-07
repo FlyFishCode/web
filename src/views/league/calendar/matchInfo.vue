@@ -185,7 +185,7 @@ interface HTMLInputEvent {
   e: HTMLInputElement & EventTarget;
 }
 export default defineComponent({
-  name: "hearder",
+  name: "matchInfo",
   components: { SettingFilled },
   setup() {
     const router = useRouter()

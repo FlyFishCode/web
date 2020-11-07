@@ -2,7 +2,7 @@
   <div class="content">
     <a-row>
       <a-col :span='2' class="centerFont">
-        <SettingFilled /> {{ title }}
+        <SettingFilled /> {{ $t('default.227') }}
       </a-col>
     </a-row>
     <a-row>
@@ -14,7 +14,7 @@
     </a-row>
     <a-row class="rowStyle">
       <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="Gohistory">{{ '列表' }}</a-button>
+        <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
       </a-col>
     </a-row>
   </div>
@@ -25,7 +25,7 @@ import { defineComponent, reactive, toRefs } from "vue";
 import { SettingFilled } from "@ant-design/icons-vue";
 import { useRouter } from "vue-router";
 export default defineComponent({
-  name: "templete",
+  name: "vip",
   components: {
     SettingFilled,
     // DownOutlined,
@@ -33,7 +33,6 @@ export default defineComponent({
   setup() {
     const Router = useRouter();
     const data = reactive({
-      title: "会员",
       columns: [
         {
           title: "玩家",

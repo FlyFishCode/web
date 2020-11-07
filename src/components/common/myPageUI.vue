@@ -3,52 +3,57 @@
     <a-row class="rowStyle">
       <a-col :span='10' class="allBox">
         <a-col :span='12' class="firstClass">
-          <img :src="infoData.img" alt="">
+          <img :src="infoData.memberImg" alt="">
         </a-col>
         <a-col :span='12' class="firstClass FONT">
-          <div class="teamName" @click="showTeamInfo">{{ infoData.teamName }}</div>
-          <div class="disabledClass">{{ infoData.captainName }}</div>
+          <div class="teamIcon"><img :src="infoData.countryIcon" alt=""></div>
+          <div class="teamName" @click="showTeamInfo">{{ infoData.memberName }}</div>
+          <div class="disabledClass">
+            <a-select v-model:value="selectTeamName" style="width: 120px" size="small" @change="handleChange">
+              <a-select-option v-for="item in infoData.teamList" :key="item.teamId" :value='item.teamId'>{{ item.teamName }}</a-select-option>
+            </a-select>
+          </div>
           <div class="disabledClass">{{ infoData.place }}
             <span @click="showDetail" class="icon">
               <InfoCircleFilled />
             </span>
           </div>
-          <div class="disabledClass">{{ infoData.country }}</div>
+          <div class="disabledClass">{{ `${infoData.countryName}>${infoData.areaName}` }}</div>
         </a-col>
       </a-col>
       <a-col :span='7'>
-        <div class="title">{{ 'General Rating' }}</div>
-        <a-progress type="circle" class="myYuan" :percent="75" />
+        <div class="title">{{ $t('default.238') }}</div>
+        <a-progress type="circle" class="myYuan" :percent="infoData.competitionRating || 0" />
         <div class="myProgress">
           <div class="myProgressBox">
             <div>
-              <a-progress :percent="infoData.ppdNumber" strokeColor='red' />
+              <a-progress :percent="infoData.ppd" strokeColor='red' />
             </div>
-            <div>{{ `PPD    ${infoData.ppdNumber}` }}</div>
+            <div class="typeBox"><span>{{ 'PPD' }}</span><span>{{ `${infoData.ppd}` }}</span></div>
           </div>
           <div class="myProgressBox">
             <div>
-              <a-progress :percent="infoData.mprNumber" strokeColor='red' />
+              <a-progress :percent="infoData.mpr" strokeColor='red' />
             </div>
-            <div>{{ `MPR    ${infoData.mprNumber}` }}</div>
+            <div class="typeBox"><span>{{ 'MPR' }}</span><span>{{ `${infoData.mpr}` }}</span></div>
           </div>
         </div>
       </a-col>
       <a-col :span='7'>
-        <div class="title">{{ 'Competition Rating' }}</div>
+        <div class="title">{{ $t('default.239') }}</div>
         <a-progress type="circle" class="myYuan" :percent="75" />
         <div class="myProgress">
           <div class="myProgressBox">
             <div>
-              <a-progress :percent="infoData.ppdNumber" strokeColor='red' />
+              <a-progress :percent="infoData.ppd" strokeColor='red' />
             </div>
-            <div>{{ `PPD    ${infoData.ppdNumber}` }}</div>
+            <div class="typeBox"><span>{{ 'PPD' }}</span><span>{{ `${infoData.ppd}` }}</span></div>
           </div>
           <div class="myProgressBox">
             <div>
-              <a-progress :percent="infoData.mprNumber" strokeColor='red' />
+              <a-progress :percent="infoData.ppd" strokeColor='red' />
             </div>
-            <div>{{ `MPR    ${infoData.mprNumber}` }}</div>
+            <div class="typeBox"><span>{{ 'PPD' }}</span><span>{{ `${infoData.ppd}` }}</span></div>
           </div>
         </div>
       </a-col>
@@ -57,22 +62,22 @@
 </template>
 
 <script lang='ts'>
-import { useRoute } from "vue-router";
+// import { useRoute } from "vue-router";
 import { reactive, toRefs, onMounted } from "vue";
-import {
-  InfoCircleFilled,
-} from "@ant-design/icons-vue";
+import { InfoCircleFilled } from "@ant-design/icons-vue";
+import { myPageInfoHttp } from "@/axios/api";
 export default {
-  name: "showTeamTopOne",
+  name: "myPageUI",
   components: {
     InfoCircleFilled,
   },
   setup() {
-    const route = useRoute();
+    // const Router = useRoute();
     const data = reactive({
+      selectTeamName: "",
       infoData: {
-        img: require("@/assets/1.jpg"),
-        teamName: "上海市消防总队黄埔支队嵩山中队",
+        memberImg: require("@/assets/1.jpg"),
+        memberName: "上海市消防总队黄埔支队嵩山中队",
         captainName: "李逍遥",
         place: "李逍遥",
         country: "山东",
@@ -105,9 +110,20 @@ export default {
       showDetail: () => {
         console.log("222");
       },
+      handleChange: () => {
+        console.log(1);
+      },
     });
+    const getPlayerInfo = () => {
+      const obj = {
+        memberId: sessionStorage.getItem("userId"),
+      };
+      myPageInfoHttp(obj).then((res) => {
+        data.infoData = res.data.data;
+      });
+    };
     onMounted(() => {
-      console.log(route.query);
+      getPlayerInfo();
     });
     return {
       ...toRefs(data),
@@ -123,7 +139,7 @@ export default {
   background: #555;
   box-sizing: border-box;
 }
-.firstClass img{
+.firstClass img {
   height: 100%;
 }
 .allBox {
@@ -239,7 +255,7 @@ export default {
 .myProgressBox >>> .ant-progress-text {
   display: none;
 }
-.showIndex{
+.showIndex {
   display: flex;
   width: 100%;
   bottom: 5px;
@@ -247,13 +263,25 @@ export default {
   justify-content: center;
   position: absolute;
 }
-.otherBox{
+.otherBox {
   width: 20px;
   height: 5px;
   margin: 0 3px;
   background: #fff;
 }
-.isActived{
+.isActived {
   background: red;
+}
+.teamIcon {
+  height: 30px;
+  display: flex;
+  justify-content: flex-end;
+}
+.icon img {
+  width: 100%;
+}
+.typeBox{
+  display: flex;
+  justify-content: space-around;
 }
 </style>

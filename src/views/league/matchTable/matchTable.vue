@@ -2,7 +2,7 @@
   <div class="content">
     <a-row>
       <a-col :span='2' class="smallTitle">
-        <SettingFilled /> {{ title }}
+        <SettingFilled /> {{ $t('default.41') }}
       </a-col>
       <a-col :span='3' :offset='14'>
         <a-button>{{ $t('default.118') }}</a-button>
@@ -81,7 +81,6 @@ export default defineComponent({
   },
   setup() {
     const data = reactive({
-      title: "排陣",
       matchTable: {
         date: "2020-8-9",
         day: 10,

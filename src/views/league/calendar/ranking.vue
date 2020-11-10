@@ -107,11 +107,6 @@
               <a-table-column key="lastName" title="WH" data-index="lastName" />
             </a-table>
           </a-row>
-          <a-row class="rowStyle">
-            <a-col :span='2' :offset="22">
-              <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
-            </a-col>
-          </a-row>
         </a-tab-pane>
         <!-- // 玩家排名 -->
         <a-tab-pane key="2" :tab="$t('default.68')">
@@ -174,13 +169,9 @@
               </template>
             </a-table>
           </a-row>
-          <a-row class="rowStyle">
-            <a-col :span='2' :offset="22">
-              <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
-            </a-col>
-          </a-row>
         </a-tab-pane>
       </a-tabs>
+      <entryList :entryPath='entryPath' />
     </a-row>
   </div>
 </template>
@@ -192,6 +183,7 @@ import { useRouter } from "vue-router";
 import { SettingFilled, ClusterOutlined } from "@ant-design/icons-vue";
 import showTeam from "@/components/showTeamTopOne.vue";
 import showPersonal from "@/components/showPersonalTopOne.vue";
+import entryList from '@/components/common/entryList.vue';
 // eslint-disable-next-line @typescript-eslint/class-name-casing
 interface rowType {
   [x: string]: string | number;
@@ -203,6 +195,7 @@ export default defineComponent({
     ClusterOutlined,
     showTeam,
     showPersonal,
+    entryList
   },
   setup() {
     const Router = useRouter();
@@ -221,6 +214,7 @@ export default defineComponent({
       },
     };
     const data = reactive({
+      entryPath:'/league',
       monthList: [],
       stateList: [],
       matchType: 2020,

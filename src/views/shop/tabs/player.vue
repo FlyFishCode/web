@@ -36,16 +36,13 @@
     <a-row type="flex" justify="end">
       <a-pagination show-size-changer v-model:current="currentPage" :pageSize="10" :total="500" @showSizeChange="onShowSizeChange" />
     </a-row>
-    <a-row class="rowStyle">
-      <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="goHistory">{{ $t('default.139') }}</a-button>
-      </a-col>
-    </a-row>
+    <entryList :entryPath='entryPath' />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
+import entryList from '@/components/common/entryList.vue';
 import { useRouter } from "vue-router";
 import {
   SettingFilled,
@@ -56,10 +53,12 @@ export default defineComponent({
   components: {
     SettingFilled,
     UserOutlined,
+    entryList
   },
   setup() {
     const Router = useRouter();
     const data = reactive({
+      entryPath:'/shop',
       currentPage: 1,
       value: 201,
       current: 1,

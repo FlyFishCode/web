@@ -1,7 +1,7 @@
 <template>
   <a-row type="flex" justify="end">
-    <a-col :span="11" class="lineStyle">
-      <a-col :span="3" v-show="!isLogin">
+    <a-col :lg="11" class="lineStyle">
+      <a-col :lg="3" v-show="!isLogin">
         <a-button type="link" size='small' @click="showLoginBox">{{ $t('default.0') }}</a-button>
         <a-modal id="loginBox" v-model:visible="visible" :title="$t('default.0')" centered>
           <div>
@@ -22,7 +22,7 @@
             <a-checkbox v-model="autoLogin" @change="onChange">{{ $t('default.5') }}</a-checkbox>
           </div>
           <template v-slot:footer>
-            <a-row class="rowStyle">
+            <a-row>
               <a-col :span='24' class="buttonBox">
                 <a-button type="primary" @click="login">{{ $t('default.0') }}</a-button>
               </a-col>
@@ -47,24 +47,24 @@
           </template>
         </a-modal>
       </a-col>
-      <a-col :span="3" v-show="!isLogin">
+      <a-col :lg="3" v-show="!isLogin">
         <a-button type="link" size='small'>{{ $t('default.1') }}</a-button>
       </a-col>
-      <a-col :span='3' v-show="isLogin">{{ userName }}</a-col>
-      <a-col :span='3' v-show="isLogin" @click="loginOut">
+      <a-col :lg='3' v-show="isLogin">{{ userName }}</a-col>
+      <a-col :lg='3' v-show="isLogin" @click="loginOut">
         <a-button type="link" size='small'>{{ $t('default.126') }}</a-button>
       </a-col>
-      <a-col :span="3">
+      <a-col :lg="3">
         <a-button type="link" size='small'>{{ $t('default.2') }}</a-button>
       </a-col>
-      <a-col :span="3">{{ $t('default.3') }}</a-col>
-      <a-col :span='3'>
+      <a-col :lg="3">{{ $t('default.3') }}</a-col>
+      <a-col :lg='3'>
         <a-select v-model:value="country" style="width: 70px" size='small' @change="countryChange">
           <a-select-option v-for="item in countryList" :key="item.key" :value='item.key'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span="4">{{ $t('default.4') }}</a-col>
-      <a-col :span='4'>
+      <a-col :lg="4">{{ $t('default.4') }}</a-col>
+      <a-col :lg='4'>
         <a-select v-model:value="$i18n.locale" style="width: 100px" size='small'>
           <a-select-option v-for="item in languageList" :key="item.key" :value='item.key'>{{ $t(item.label) }}</a-select-option>
         </a-select>

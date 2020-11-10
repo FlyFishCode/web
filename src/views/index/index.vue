@@ -2,8 +2,18 @@
   <div>
     <a-row class="rowStyle" id="dots">
       <h1>{{ $t('default.12') }}</h1>
-      <a-carousel :autoplay='true' dotsClass="dots">
-        <div class="carouselBox" v-for="item in photoList" :key="item.id" @click="intoPhoto(item.url)"><img :src="item.img" alt=""></div>
+      <a-carousel arrows :autoplay='true' dotsClass="dots">
+        <template #prevArrow>
+          <div class="custom-slick-arrow" style="left: 10px;zIndex: 1">
+            <LeftCircleOutlined />
+          </div>
+        </template>
+        <template #nextArrow>
+          <div class="custom-slick-arrow" style="right: 10px">
+            <RightCircleOutlined />
+          </div>
+        </template>
+        <div v-for="item in photoList" :key="item.id" @click="intoPhoto(item.url)"><img :src="item.img" alt=""></div>
       </a-carousel>
     </a-row>
     <a-row class="rowStyle" type="flex" justify="space-between">
@@ -39,7 +49,19 @@
           <div class="moreStyle" @click="infoNews">{{ $t('default.25') }}</div>
         </div>
         <div class="newBox">
-          <img :src="img" alt="">
+          <a-carousel arrows :autoplay='true' dotsClass="dots">
+            <template #prevArrow>
+              <div class="custom-slick-arrow" style="left: 10px;zIndex: 1">
+                <LeftCircleOutlined />
+              </div>
+            </template>
+            <template #nextArrow>
+              <div class="custom-slick-arrow" style="right: 10px">
+                <RightCircleOutlined />
+              </div>
+            </template>
+            <div v-for="item in photoList" :key="item.id" @click="intoPhoto(item.url)"><img :src="item.img"></div>
+          </a-carousel>
         </div>
         <div class="otherSrcBox">
           <div>
@@ -233,10 +255,12 @@ import {
   WechatOutlined,
   ZhihuOutlined,
   AppleOutlined,
+  LeftCircleOutlined,
+  RightCircleOutlined,
 } from "@ant-design/icons-vue";
 import divTitle from "@/components/DividingLine.vue";
 import { indexTeamHttp, indexPlayerHttp } from "@/axios/api";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 interface DataProps {
   click: () => void;
 }
@@ -252,10 +276,12 @@ export default defineComponent({
     WechatOutlined,
     ZhihuOutlined,
     AppleOutlined,
+    LeftCircleOutlined,
+    RightCircleOutlined,
   },
   name: "index",
   setup() {
-    const Router = useRouter()
+    const Router = useRouter();
     const data = reactive({
       img: require("@/assets/logo.jpg"),
       leagueName: "",
@@ -299,9 +325,9 @@ export default defineComponent({
         { key: 3, label: "南京" },
       ],
       photoList: [
-        { id: 1, img: 1, url: "/a" },
-        { id: 2, img: 2, url: "/a" },
-        { id: 3, img: 3, url: "/a" },
+        { id: 1, img: require("@/assets/23.jpg"), url: "/a" },
+        { id: 2, img: require("@/assets/23.jpg"), url: "/a" },
+        { id: 3, img: require("@/assets/23.jpg"), url: "/a" },
       ],
       matchList: [],
       teamList: [],
@@ -328,8 +354,8 @@ export default defineComponent({
         //   data.matchList = res.data.data;
         // });
       },
-      infoNews:() =>{
-        Router.push('/news')
+      infoNews: () => {
+        Router.push("/news");
       },
       intoPhoto: (value: string) => {
         console.log(value);
@@ -367,7 +393,7 @@ export default defineComponent({
       //   countryId: data.areaId,
       // };
       indexTeamHttp().then((res) => {
-        data.teamList = res.data.data
+        data.teamList = res.data.data;
       });
     };
     const getPlayerList = () => {
@@ -376,7 +402,7 @@ export default defineComponent({
       //   countryId: data.areaId,
       // };
       indexPlayerHttp().then((res) => {
-        data.playerList = res.data.data
+        data.playerList = res.data.data;
       });
     };
     onMounted(() => {
@@ -399,14 +425,8 @@ export default defineComponent({
   line-height: 32px;
   height: 32px;
 }
-.carouselBox {
-  height: 315px;
-}
-.carouselBox img {
-  height: 100%;
-}
 .newBg {
-  padding: 10px;
+  padding: 0 1px;
 }
 .newBox {
   height: 250px;
@@ -537,6 +557,11 @@ export default defineComponent({
   width: 60px;
   height: 22px;
   border: 1px solid #000;
+  margin: 0 5px;
+  cursor: pointer;
+}
+.more div:hover{
+  opacity: 0.5;
 }
 .teamBG {
   display: flex;
@@ -634,6 +659,9 @@ export default defineComponent({
   height: 80px;
   font-size: 50px;
   cursor: pointer;
+  background: #eee;
+  border-radius: 10px;
+  margin-top: 5px;
 }
 .divisionBox {
   display: flex;
@@ -651,5 +679,31 @@ export default defineComponent({
 .divBg {
   cursor: pointer;
   text-align: left;
+}
+.ant-carousel ::v-deep(.slick-slide) {
+  text-align: center;
+  height: 250px;
+  line-height: 250px;
+  background: #364d79;
+  overflow: hidden;
+}
+
+.ant-carousel ::v-deep(.slick-arrow.custom-slick-arrow) {
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
+  color: #fff;
+  background-color: rgba(31, 45, 61, 0.11);
+  opacity: 0.3;
+}
+.ant-carousel ::v-deep(.custom-slick-arrow:before) {
+  display: none;
+}
+.ant-carousel ::v-deep(.custom-slick-arrow:hover) {
+  opacity: 0.5;
+}
+
+.ant-carousel ::v-deep(.slick-slide h3) {
+  color: #fff;
 }
 </style>

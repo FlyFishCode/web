@@ -51,16 +51,13 @@
       <div id="myEchars"></div>
     </a-row>
 
-    <a-row class="rowStyle">
-      <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="goHistory">{{ $t('default.139') }}</a-button>
-      </a-col>
-    </a-row>
+    <entryList :entryPath='entryPath' />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
+import entryList from '@/components/common/entryList.vue';
 import { SettingFilled } from "@ant-design/icons-vue";
 import Axios from "axios";
 import { useRouter } from 'vue-router';
@@ -68,6 +65,7 @@ export default defineComponent({
   name: "rating",
   components: {
     SettingFilled,
+    entryList
   },
   setup() {
     const Router = useRouter()
@@ -114,6 +112,7 @@ export default defineComponent({
       });
     };
     const data = reactive({
+      entryPath:'/players',
       title: "Rating",
       year: 2000,
       yearLiat: [
@@ -259,7 +258,7 @@ export default defineComponent({
       const list: { [key: string]: string } = {
         type: "a",
       };
-      Axios.post("/abs", list).then((res) => {
+      Axios.post("/aaaaaaaaaaaaaaaaaaaaa", list).then((res) => {
         console.log(res);
       });
       echarsInit(data.echarsList);

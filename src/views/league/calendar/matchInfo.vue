@@ -170,15 +170,12 @@
         </template>
       </a-table>
     </a-row>
-    <a-row class="rowStyle">
-      <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
-      </a-col>
-    </a-row>
+    <entryList :entryPath='entryPath' />
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
+import entryList from '@/components/common/entryList.vue';
 import {useRouter} from 'vue-router'
 import { SettingFilled } from "@ant-design/icons-vue";
 interface HTMLInputEvent {
@@ -186,10 +183,11 @@ interface HTMLInputEvent {
 }
 export default defineComponent({
   name: "matchInfo",
-  components: { SettingFilled },
+  components: { SettingFilled,entryList },
   setup() {
     const router = useRouter()
     const data = reactive({
+      entryPath:'/league',
       matchName: "1",
       matchTime: "2",
       applyTime: "3",

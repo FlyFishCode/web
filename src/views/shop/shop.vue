@@ -322,7 +322,7 @@ export default defineComponent({
   width: 33.3%;
 }
 #container {
-  height: 440px;
+  height: 436px;
 }
 .shopRow {
   margin: 15px 0;

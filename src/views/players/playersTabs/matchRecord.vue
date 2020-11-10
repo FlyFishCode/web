@@ -80,16 +80,13 @@
         </a-row>
       </transition>
     </a-row>
-    <a-row class="rowStyle">
-      <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="goHistory">{{ $t('default.139') }}</a-button>
-      </a-col>
-    </a-row>
+    <entryList :entryPath='entryPath' />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
+import entryList from '@/components/common/entryList.vue';
 import {
   SettingFilled,
   DownCircleOutlined,
@@ -102,10 +99,12 @@ export default defineComponent({
     SettingFilled,
     DownCircleOutlined,
     UpCircleOutlined,
+    entryList
   },
   setup() {
     const Router = useRouter()
     const data = reactive({
+      entryPath:'/players',
       matchList: [
         {
           matchId: 1,

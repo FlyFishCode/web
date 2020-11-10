@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="pagination">
-          <a-pagination show-size-changer v-model:current="current" v-model:pageSize="pageSize" :total="500" @showSizeChange="sizeChange" />
+          <a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="500" @showSizeChange="sizeChange" />
         </div>
       </a-col>
       <a-col class="colStyle" :span='5'>

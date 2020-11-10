@@ -50,15 +50,12 @@
     <a-row type="flex" justify="end">
       <a-pagination show-size-changer v-model:current="currentPage" :pageSize="10" :total="500" @showSizeChange="onShowSizeChange" />
     </a-row>
-    <a-row class="rowStyle">
-      <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="goHistory">{{ $t('default.139') }}</a-button>
-      </a-col>
-    </a-row>
+    <entryList :entryPath='entryPath' />
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
+import entryList from '@/components/common/entryList.vue';
 // import { useRouter } from "vue-router";
 import { SettingFilled } from "@ant-design/icons-vue";
 interface HTMLInputEvent {
@@ -73,10 +70,11 @@ interface DataProp {
 }
 export default defineComponent({
   name: "historyMatch",
-  components: { SettingFilled },
+  components: { SettingFilled ,entryList},
   setup() {
     // const Router = useRouter();
     const data = reactive({
+      entryPath:'/shop',
       currentPage: 1,
       matchTotal: 0,
       value: "",

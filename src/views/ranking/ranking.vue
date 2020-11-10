@@ -1,8 +1,6 @@
 <template>
   <div class="content">
-    <a-row>
-      <divTitle :msg="title" :span='colSpan' :lastDate="getDate()" />
-    </a-row>
+    <divTitle :msg="title" :span='colSpan' :lastDate="getDate()" />
     <a-tabs type="card" class="tabsBox">
       <a-tab-pane key="1" :tab="$t('default.67')">
         <teamRanking />
@@ -34,7 +32,7 @@ export default defineComponent({
     teamRanking,
     teamHistory,
     plyaerRanking,
-    playerHistory
+    playerHistory,
   },
   setup() {
     const data = reactive({

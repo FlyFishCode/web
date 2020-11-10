@@ -45,11 +45,7 @@
         </template>
       </a-table>
     </a-row>
-    <a-row class="rowStyle">
-      <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
-      </a-col>
-    </a-row>
+    <entryList :entryPath='entryPath' />
     <a-modal v-model:visible="visible" :title="$t('default.240')" centered @ok="handleOk">
       <a-row>
         <a-col style="textAlign:center">{{ $t('default.241') }}</a-col>
@@ -119,6 +115,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
+import entryList from '@/components/common/entryList.vue';
 import { useRouter } from "vue-router";
 import {
   SettingFilled,
@@ -135,10 +132,12 @@ export default defineComponent({
     SettingFilled,
     CheckOutlined,
     CloseOutlined,
+    entryList
   },
   setup() {
     const Router = useRouter();
     const data = reactive({
+      entryPath:'/myPage',
       colSpan: 5,
       total: 100,
       visible: false,

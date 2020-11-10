@@ -79,16 +79,13 @@
     <a-row v-show="isCalendar">
       <a-calendar v-model:value="calendarValue" @panelChange="calendarlChange" @select="onSelect" />
     </a-row>
-    <a-row class="rowStyle">
-      <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
-      </a-col>
-    </a-row>
+    <entryList :entryPath='entryPath' />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
+import entryList from '@/components/common/entryList.vue';
 import { useRouter } from "vue-router";
 import {
   UnorderedListOutlined,
@@ -109,10 +106,12 @@ export default defineComponent({
     CloudDownloadOutlined,
     PrinterOutlined,
     SettingFilled,
+    entryList
   },
   setup() {
     const Router = useRouter();
     const data = reactive({
+      entryPath:'/myPage',
       colSpan: 5,
       isList: true,
       isCalendar: false,

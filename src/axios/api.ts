@@ -7,7 +7,7 @@ import { login,leagueList ,indexTeam,indexPlayer} from './index/index'
 
 // 我的页面
 import { myPageInfo,myMatchInfo,myMatchInfoMore } from './myPage/index'
-const baseURL = "/aps"
+const baseURL = "/apw"
 const Router = useRouter()
 const token = sessionStorage.getItem('token')
 

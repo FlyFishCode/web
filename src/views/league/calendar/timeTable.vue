@@ -125,11 +125,7 @@
         </a-table>
       </a-row>
     </div>
-    <a-row class="rowStyle">
-      <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
-      </a-col>
-    </a-row>
+    <entryList :entryPath='entryPath' />
   </div>
 </template>
 
@@ -142,6 +138,7 @@ import matchResult from "@/views/league/matchResult/matchResult.vue";
 import { SettingFilled, PlusOutlined } from "@ant-design/icons-vue";
 import lunboGundong from "@/components/inCalendar.vue";
 import inMatchTable from "@/components/inMatchTable.vue";
+import entryList from '@/components/common/entryList.vue';
 export default defineComponent({
   name: "timeTable",
   components: {
@@ -151,9 +148,11 @@ export default defineComponent({
     inMatchTable,
     matchTable,
     matchResult,
+    entryList
   },
   setup() {
     const data = reactive({
+      entryPath:'/league',
       monthList: [],
       stateList: [],
       currentValue: "",

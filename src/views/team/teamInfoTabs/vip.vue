@@ -12,27 +12,25 @@
         </template>
       </a-table>
     </a-row>
-    <a-row class="rowStyle">
-      <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
-      </a-col>
-    </a-row>
+    <entryList :entryPath='entryPath' />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
+import entryList from '@/components/common/entryList.vue';
 import { SettingFilled } from "@ant-design/icons-vue";
 import { useRouter } from "vue-router";
 export default defineComponent({
   name: "vip",
   components: {
     SettingFilled,
-    // DownOutlined,
+    entryList,
   },
   setup() {
     const Router = useRouter();
     const data = reactive({
+      entryPath:'/team',
       columns: [
         {
           title: "玩家",

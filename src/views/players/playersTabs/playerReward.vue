@@ -22,26 +22,25 @@
         <div>{{ `${index + 1 }` }}</div>
       </template>
     </a-table>
-    <a-row class="rowStyle">
-      <a-col :span='2' :offset="22">
-        <a-button type="danger" size="small" @click="goHistory">{{ $t('default.139') }}</a-button>
-      </a-col>
-    </a-row>
+    <entryList :entryPath='entryPath' />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
+import entryList from '@/components/common/entryList.vue';
 import { SettingFilled } from "@ant-design/icons-vue";
 import { useRouter } from 'vue-router';
 export default defineComponent({
   name: "playerReward",
   components: {
     SettingFilled,
+    entryList
   },
   setup() {
     const Router = useRouter()
     const data = reactive({
+      entryPath:'/players',
       title: "玩家奖励",
       year: 2020,
       matchType: 2020,

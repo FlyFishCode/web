@@ -54,13 +54,13 @@
       <a-col :span='2' class="titleStyle">
         <BankFilled class="fontIcon" />{{ $t('default.27') }}
       </a-col>
-      <a-col :span='2' class="dropdown">
+      <a-col :span='2'>
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
       <a-col :span='2' class="titleStyle">{{ $t('default.164') }}</a-col>
-      <a-col :span='2' class="dropdown">
+      <a-col :span='2'>
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
@@ -68,7 +68,7 @@
       <a-col :span='2' :offset="7" class="titleStyle">
         <SearchOutlined class="fontIcon" />{{ $t('default.165') }}
       </a-col>
-      <a-col :span='3' class="dropdown">
+      <a-col :span='3'>
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
@@ -174,7 +174,7 @@
 
     <a-row class="rowStyle">
       <a-col class="pagination">
-        <a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="500" @showSizeChange="onShowSizeChange" />
+        <a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="total" />
       </a-col>
     </a-row>
   </div>
@@ -213,6 +213,7 @@ export default defineComponent({
       topInfoTitle: "Competition Rating",
       current: 1,
       pageSize: 1,
+      total:1,
       colSpan: 4,
       matchType: 2020,
       visible:false,
@@ -384,9 +385,6 @@ export default defineComponent({
       },
       changeFlag: (index: number) => {
         data.teamList[index].flag = !data.teamList[index].flag;
-      },
-      onShowSizeChange: () => {
-        console.log(1);
       },
       matchTypeChange: (value: number) => {
         console.log(value);

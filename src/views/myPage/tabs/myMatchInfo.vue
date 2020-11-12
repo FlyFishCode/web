@@ -130,7 +130,9 @@ export default defineComponent({
           competitionId: 148,
         };
         myMatchMoreHttp(obj).then((res) => {
-          data.teamList[index].record = res.data.data;
+          if(res.data.data){
+            data.teamList[index].record = res.data.data;
+          }
         });
         // }
         data.teamList[index].flag = !data.teamList[index].flag;

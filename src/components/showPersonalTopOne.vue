@@ -17,7 +17,7 @@
         </a-col>
       </a-col>
       <a-col :span='9'>
-        <div class="title">{{ '队伍等级' }}</div>
+        <div class="title">{{ $t('default.183') }}</div>
         <a-progress type="circle" class="myYuan" :percent="75" />
         <div class="myProgress">
           <div class="myProgressBox">

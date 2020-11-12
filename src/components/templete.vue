@@ -19,7 +19,7 @@ export default defineComponent({
   },
   setup() {
     const data = reactive({
-      title: "队伍",
+      title: "default.9",
       colSpan:5,
       getDate:() => {
         return '2020-10-17'

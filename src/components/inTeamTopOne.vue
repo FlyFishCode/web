@@ -24,7 +24,7 @@
         <a-col class="center animate__backOutRight" id="Box">
           <div v-for="item in infoData.resultList" :key="item.id" class="centerBox">
             <div class="progressStyle">
-              <div class="title">{{ '队伍等级' }}</div>
+              <div class="title">{{ $t('default.183') }}</div>
               <a-progress type="circle" class="myYuan" :percent="75" />
             </div>
             <div class="matchBox">

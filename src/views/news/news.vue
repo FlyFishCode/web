@@ -6,11 +6,11 @@
     <a-row>
       <a-col :span='3'>
         <a-select v-model:value="type" style="width: 100%">
-          <a-select-option v-for="item in selectList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+          <a-select-option v-for="item in selectList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
         </a-select>
       </a-col>
       <a-col :span='10'>
-        <a-input-search v-model:value="value" :enter-button="$t('default.16')" allow-clear @search="onSearch" />
+        <a-input-search v-model:value="typeValue" :enter-button="$t('default.16')" allow-clear @search="onSearch" />
       </a-col>
       <a-col :span='5' :offset='6' class="newTitle">
         {{ $t('default.233') }}
@@ -18,20 +18,21 @@
     </a-row>
     <a-row class="rowStyle" type="flex" justify="space-between">
       <a-col class="colStyle" :span='18'>
-        <div v-for="news in newsList" :key="news.id" class="contentBox">
+        <div v-for="news in newsList" :key="news.id" class="contentBox" @click="entryNewsInfo(news.id)">
           <div class="newsImgBox">
             <img :src="news.img" alt="">
           </div>
           <div class="typeContentBox">
             <div class="typeTime">
-              <div class="newsTypeBox">{{ news.type }}</div>
-              <div>{{ news.time }}</div>
+              <div class="newsTypeBox">{{ $t(getNewsType(news.category)) }}</div>
+              <div>{{ news.date }}</div>
             </div>
-            <div>{{ news.content }}</div>
+            <div class="newsTitle">{{ news.title }}</div>
+            <div class="newsContent">{{ news.contents }}</div>
           </div>
         </div>
-        <div class="pagination">
-          <a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="500" @showSizeChange="sizeChange" />
+        <div v-if="total" class="pagination">
+          <a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="total" :show-total="total => `Total ${total} items`" @change="pageChange" />
         </div>
       </a-col>
       <a-col class="colStyle" :span='5'>
@@ -54,7 +55,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, toRefs, onMounted } from "vue";
+import { newsHttp } from "@/axios/api";
+import { useRouter } from 'vue-router';
 // import { DownOutlined } from "@ant-design/icons-vue";
 interface HTMLInputEvent {
   value: HTMLInputElement & EventTarget;
@@ -63,15 +66,19 @@ export default defineComponent({
   name: "news",
   components: {},
   setup() {
+    const Router = useRouter()
     const data = reactive({
       type: 1,
-      value: "",
+      year: null,
+      month: null,
+      typeValue: "",
       current: 1,
       pageSize: 10,
+      total: 1,
       selectList: [
-        { value: 1, label: "新闻" },
-        { value: 2, label: "标题" },
-        { value: 3, label: "新闻+标题" },
+        { value: 1, label: "default.12" },
+        { value: 2, label: "default.124" },
+        { value: 3, label: "default.120" },
       ],
       typeList: [
         { value: 1, title: "default.235" },
@@ -95,42 +102,82 @@ export default defineComponent({
           ],
         },
       ],
-      newsList: [
-        {
-          id: 1,
-          img: require("@/assets/1.jpg"),
-          type: "公告",
-          time: "2020-10-5",
-          content: "今晚打老虎",
-        },
-        {
-          id: 2,
-          img: require("@/assets/1.jpg"),
-          type: 1,
-          time: "2020-10-5",
-          content: "今晚打老虎",
-        },
-        {
-          id: 3,
-          img: require("@/assets/1.jpg"),
-          type: 1,
-          time: "2020-10-5",
-          content: "今晚打老虎",
-        },
-      ],
+      newsList: [],
       showTypeNews: (value: number) => {
-        console.log(value);
+        newsHttp({ category: value }).then((res) => {
+          data.newsList = res.data.data.list;
+          data.total = res.data.data.totalCount;
+        });
       },
       handleClick: (e: any) => {
-        const [month, year] = e.keyPath;
-        console.log(year, month);
+        [data.month, data.year] = e.keyPath;
+        const obj = {
+          year: data.year,
+          month: data.month,
+        };
+        newsHttp(obj).then((res) => {
+          data.newsList = res.data.data.list;
+          data.total = res.data.data.totalCount;
+        });
+      },
+      getNewsType: (type: number) => {
+        let str = "";
+        switch (type) {
+          case 1:
+            str = "default.235";
+            break;
+          case 2:
+            str = "default.236";
+            break;
+          case 3:
+            str = "default.237";
+            break;
+          case 4:
+            str = "default.134";
+            break;
+          default:
+            str = "default.8";
+            break;
+        }
+        return str;
       },
       onSearch: () => {
-        console.log(data.value);
+        let str = "";
+        switch (data.type) {
+          case 1:
+            str = "contents";
+            break;
+          case 2:
+            str = "titleKeyword";
+            break;
+          default:
+            str = "allKeyword";
+            break;
+        }
+        newsHttp({ [str]: data.typeValue }).then((res) => {
+          if (res.data.data.list.length) {
+            data.newsList = res.data.data.list;
+            data.total = res.data.data.totalCount;
+          }
+        });
       },
-      sizeChange: () => {
+      entryNewsInfo: (id: number) => {
+        Router.push({
+          path: "/newsInfo",
+          query: { value: id },
+        });
+      },
+      pageChange: () => {
         console.log(1);
       },
+    });
+    onMounted(() => {
+      newsHttp({}).then((res) => {
+        if (res.data.data.list.length) {
+          data.newsList = res.data.data.list;
+          data.total = res.data.data.totalCount;
+        }
+      });
     });
     return {
       ...toRefs(data),
@@ -206,8 +253,13 @@ export default defineComponent({
   margin: 10px;
   background: #eee;
   display: flex;
+  cursor: pointer;
+}
+.contentBox:hover {
+  opacity: 0.8;
 }
 .typeContentBox {
+  width: 100%;
   display: flex;
   flex-direction: column;
   padding-left: 20px;
@@ -215,8 +267,8 @@ export default defineComponent({
 }
 .typeTime {
   display: flex;
-  font-size: 20px;
-  font-weight: bold;
+  justify-content: space-between;
+  color: #999;
 }
 .typeTime div {
   margin: 10px 20px 10px 0;
@@ -225,5 +277,9 @@ export default defineComponent({
   background: #666;
   padding: 0 10px;
   color: #ffffff;
+}
+.newsTitle {
+  font-size: 20px;
+  font-weight: bold;
 }
 </style>

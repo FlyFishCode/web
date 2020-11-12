@@ -6,12 +6,12 @@
       </a-col>
     </a-row>
     <a-row>
-      <a-col :span='3' class="dropdown">
+      <a-col :span='3'>
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='3' class="dropdown">
+      <a-col :span='3'>
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
@@ -59,7 +59,7 @@
         <a-col :span='2' class="titleStyle">
           <PlusOutlined class="fontIcon" />{{ $t('default.140') }}
         </a-col>
-        <a-col :span='2'>
+        <a-col :span='3'>
           <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
@@ -73,12 +73,12 @@
         <a-col :span='2' class="titleStyle" :offset="5">
           <PlusOutlined class="fontIcon" />{{ $t('default.140') }}
         </a-col>
-        <a-col :span='3' class="dropdown">
+        <a-col :span='3'>
           <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='5'>
+        <a-col :span='4'>
           <a-input-search v-model:value="currentValue" :enter-button="$t('default.16')" size="default" @search="onSearch" />
         </a-col>
       </a-row>
@@ -126,6 +126,22 @@
       </a-row>
     </div>
     <entryList :entryPath='entryPath' />
+    <div>
+      <a-modal v-model:visible="visible" centered width='800px' :footer='null' :title="$t('default.157')">
+        <a-row>
+          <a-col :span='3'>
+            <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+              <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+            </a-select>
+          </a-col>
+          <a-col :span='3'>
+            <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+              <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+            </a-select>
+          </a-col>
+        </a-row>
+      </a-modal>
+    </div>
   </div>
 </template>
 
@@ -138,7 +154,7 @@ import matchResult from "@/views/league/matchResult/matchResult.vue";
 import { SettingFilled, PlusOutlined } from "@ant-design/icons-vue";
 import lunboGundong from "@/components/inCalendar.vue";
 import inMatchTable from "@/components/inMatchTable.vue";
-import entryList from '@/components/common/entryList.vue';
+import entryList from "@/components/common/entryList.vue";
 export default defineComponent({
   name: "timeTable",
   components: {
@@ -148,11 +164,12 @@ export default defineComponent({
     inMatchTable,
     matchTable,
     matchResult,
-    entryList
+    entryList,
   },
   setup() {
     const data = reactive({
-      entryPath:'/league',
+      entryPath: "/league",
+      visible: false,
       monthList: [],
       stateList: [],
       currentValue: "",
@@ -382,7 +399,7 @@ export default defineComponent({
         {
           dataIndex: "state",
           key: "state",
-          slots: { title: 'inState', customRender: "state" },
+          slots: { title: "inState", customRender: "state" },
         },
       ],
       tableList: [
@@ -448,7 +465,7 @@ export default defineComponent({
         },
       ],
       showMatchTable: () => {
-        console.log("1111");
+        data.visible = true;
       },
       handleMenuClick: () => {
         console.log("1");

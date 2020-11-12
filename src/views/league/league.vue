@@ -14,32 +14,30 @@
       </a-col>
     </a-row>
     <a-row class="centerStyle">
-      <!-- <a-tabs> -->
-      <!-- <a-tab-pane key="1" tab="Multi League" class="tab"> -->
       <a-row class="rowSearchBox">
         <a-col :span='2'>
           <EnvironmentOutlined class="fontIcon" />{{ $t('default.27') }}
         </a-col>
         <a-col :span='3'>
-          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
-          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
-        </a-select>
+          <a-select v-model:value="areaId" @change="areaChange" style="width: 120px">
+            <a-select-option v-for="item in areaList" :key="item.countryId" :value='item.countryId'>{{ item.countryName }}</a-select-option>
+          </a-select>
         </a-col>
+        <a-col :span='3'>
+          <a-select v-model:value="cityId" @change="cityChange" style="width: 120px">
+            <a-select-option v-for="item in cityList" :key="item.areaId" :value='item.areaId'>{{ item.areaName }}</a-select-option>
+          </a-select>
+        </a-col>
+        <a-col :span='2'>{{ $t('default.14') }}</a-col>
         <a-col :span='2'>
-          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
-          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
-        </a-select>
+          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 90px">
+            <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
+          </a-select>
         </a-col>
-        <a-col :span='2'>{{ currentState }}</a-col>
-        <a-col :span='2'>
-          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
-          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
-        </a-select>
-        </a-col>
-        <a-col :span='2' :offset="6">
+        <a-col :span='2' :offset="4">
           <SearchOutlined class="fontIcon" />{{ $t('default.15') }}
         </a-col>
-        <a-col :span='5'>
+        <a-col :span='6'>
           <a-input-search v-model:value="value" enter-button="Search" size="default" @search="onSearch" />
         </a-col>
       </a-row>
@@ -123,105 +121,17 @@
           <a-pagination v-model:current="currentSize" :total="total" />
         </a-row>
       </div>
-      <!-- </a-tab-pane> -->
-
-      <!-- <a-tab-pane key="2" tab="The Champion" class="tab">
-          <a-row class="rowSearchBox">
-            <a-col :span='2'>
-              <BankFilled class="fontIcon" />{{ place }}
-            </a-col>
-            <a-col :span='2'>
-              <a-dropdown>
-                <template v-slot:overlay>
-                  <a-menu>
-                    <a-menu-item v-for="item in monthList" :key="item.id" @click="handleMenuClick(item.value)">
-                      {{ item.value }}
-                    </a-menu-item>
-                  </a-menu>
-                </template>
-                <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-                  <DownOutlined />
-                </a-button>
-              </a-dropdown>
-            </a-col>
-            <a-col :span='3'>{{ currentState }}</a-col>
-            <a-col :span='2'>
-              <a-dropdown>
-                <template v-slot:overlay>
-                  <a-menu>
-                    <a-menu-item v-for="item in stateList" :key="item.id" @click="handleMenuClick(item.value)">
-                      {{ item.value }}
-                    </a-menu-item>
-                  </a-menu>
-                </template>
-                <a-button class="btnStyle" style="margin-left: 8px">{{ currentValue }}
-                  <DownOutlined />
-                </a-button>
-              </a-dropdown>
-            </a-col>
-            <a-col :span='2' :offset="8">
-              <SearchOutlined class="fontIcon" />{{ matchName }}
-            </a-col>
-            <a-col :span='5'>
-              <a-input-search v-model:value="value" enter-button="Search" size="default" @search="onSearch" />
-            </a-col>
-          </a-row>
-          <a-row>
-            <a-col :span='6' class="centerFont">
-              <SettingFilled /> {{ champion + '  ' +matchTotal }}
-            </a-col>
-          </a-row>
-          <a-row class="rowStyle">
-            <a-col :span='3' class="buttonBox">
-              <a-button type="primary">{{ all }}</a-button>
-            </a-col>
-            <a-col :span='3' class="buttonBox">
-              <a-button>{{ my }}</a-button>
-            </a-col>
-          </a-row>
-          <a-row v-for="item in matchList" :key="item.matchId" class="matchBox">
-            <a-col :span='14'>
-              <div>
-                <a-col :span='5' class="matchImgBox">
-                  <img class="matchImg" :src="item.img">
-                </a-col>
-                <a-col @click="showMore(item.state)" style="cursor:pointer" :span='10'>
-                  <div>
-                    <div>{{ '高分赛' }}</div>
-                    <div>{{ item.tip }}</div>
-                  </div>
-                </a-col>
-              </div>
-            </a-col>
-            <a-col :span='2'>
-              <div class="fontDisplay">{{ '当前' }}</div>
-              <div>{{ item.area }}</div>
-            </a-col>
-            <a-col :span='8'>
-              <div class="rightStyle">
-                <div class="fontDisplay">{{ '比赛期间' }}</div>
-                <div class="matchState I" v-if="item.state === 1">{{ '比赛中' }}</div>
-                <div class="matchState R" v-if="item.state === 2">{{ '比赛结束' }}</div>
-                <div class="matchState F" v-if="item.state === 3">{{ '比赛结束' }}</div>
-              </div>
-              <div>{{ item.date }}</div>
-            </a-col>
-          </a-row>
-          <a-row type="flex" justify="start">
-            <a-pagination v-model:current="currentSize" :total="total" />
-          </a-row>
-        </a-tab-pane>
-      </a-tabs> -->
     </a-row>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
+import { indexCountryHttp, indexCityHttp } from "@/axios/api";
 import { useRouter } from "vue-router";
 import {
   SearchOutlined,
   SettingFilled,
-  EnvironmentOutlined
+  EnvironmentOutlined,
 } from "@ant-design/icons-vue";
 interface HTMLInputEvent {
   value: HTMLInputElement & EventTarget;
@@ -232,8 +142,8 @@ interface DataProp {
   allLeague: boolean;
   myLeague: boolean;
   matchTotal: number;
-  allLeagueList: {key: string;value: number | string}[];
-  myLeagueList: {key: string;value: number | string}[];
+  allLeagueList: { key: string; value: number | string }[];
+  myLeagueList: { key: string; value: number | string }[];
   showALLleague: () => void;
   showMyLengue: () => void;
 }
@@ -253,10 +163,12 @@ export default defineComponent({
       value: "",
       allLeague: true,
       myLeague: false,
-      matchType:2020,
-      matchTypeList:[
-        { value:2020,label:'2020' }
-      ],
+      matchType: 2020,
+      areaId: null,
+      cityId: null,
+      areaList: [],
+      cityList: [],
+      matchTypeList: [{ value: 2020, label: "2020" }],
       newsSearch: [
         { id: 1, value: "新闻" },
         { id: 2, value: "标题" },
@@ -296,7 +208,7 @@ export default defineComponent({
           state: 3,
         },
       ],
-      myLeagueList:[
+      myLeagueList: [
         {
           matchId: 1,
           img: require("@/assets/1.jpg"),
@@ -305,9 +217,8 @@ export default defineComponent({
           area: "云南",
           date: "2020-9-10",
           state: 3,
-        }
+        },
       ],
-      currentState: "当前状态",
       monthList: [{ id: 0, value: 0 }],
       handleMenuClick: (e: string) => {
         data.currentValue = e;
@@ -322,23 +233,46 @@ export default defineComponent({
         });
       },
       showALLleague: () => {
-        data.matchTotal = data.allLeagueList.length
+        data.matchTotal = data.allLeagueList.length;
         data.allLeague = true;
         data.myLeague = false;
       },
       showMyLengue: () => {
-        data.matchTotal = data.myLeagueList.length
+        data.matchTotal = data.myLeagueList.length;
         data.myLeague = true;
         data.allLeague = false;
       },
-      matchTypeChange:(value: number) => {
-        console.log(value)
-      }
+      matchTypeChange: (value: number) => {
+        console.log(value);
+      },
+      areaChange: (value: number) => {
+        indexCityHttp({ countryId: value }).then((res) => {
+          data.cityList = res.data.data;
+          if (data.cityList.length) {
+            data.cityId = data.cityList[0]["areaId"];
+          } else {
+            data.cityId = null;
+          }
+        });
+      },
+      cityChange: (value: number) => {
+        console.log(value);
+      },
     });
+    const getCountryList = () => {
+      indexCountryHttp().then((res) => {
+        if (res.data.data.length) {
+          data.areaList = res.data.data;
+          data.areaId = data.areaList[0]["countryId"];
+          data.areaChange(data.areaList[0]["countryId"]);
+        }
+      });
+    };
     onMounted(() => {
       for (let i = 1; i < 13; i += 1) {
         data.monthList.push({ id: i, value: i });
       }
+      getCountryList();
     });
     return {
       ...toRefs(data),

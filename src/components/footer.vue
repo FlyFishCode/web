@@ -27,7 +27,7 @@ export default defineComponent({
   },
   setup() {
     const data = reactive({
-      img: require("@/assets/logo.jpg"),
+      img: require("@/assets/logo.png"),
       value:1,
       selectList:[
         { value:1 , label: 1 },

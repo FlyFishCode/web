@@ -24,12 +24,12 @@
       <a-col :span='2' :offset='9' class="titleStyle">
         {{ $t('default.119') }}
       </a-col>
-      <a-col :span='2' class="dropdown">
+      <a-col :span='2'>
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 90px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='2' class="dropdown">
+      <a-col :span='2'>
         <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 90px">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>

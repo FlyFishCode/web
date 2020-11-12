@@ -21,22 +21,22 @@
         <div class="newHeader">
           <div class="newSstyle">{{ $t('default.12') }}</div>
           <div>{{ `${$t('default.19')}：${time}` }}</div>
-          <div class="moreStyle">{{ $t('default.25') }}</div>
+          <div class="moreStyle" @click="infoNews">{{ $t('default.25') }}</div>
         </div>
         <div class="newsTable">
-          <div v-for="news in newsList" :key="news.index" class="newBg">
+          <div v-for="news in newsList" :key="news.id" class="newBg" @click="entryInfo(news.id)">
             <div class="newBox">
               <img :src="news.img" alt="">
             </div>
             <div class="newContentStyle">
-              <div class="newTitle">111111111111111111111111</div>
-              <div class="newContent">222222222222222</div>
+              <div class="newTitle">{{ news.title }}</div>
+              <div class="newContent">{{ news.contents }}</div>
               <div class="newIcon">
                 <span>
                   <ScheduleOutlined /> {{ news.date }}
                 </span>
                 <span>
-                  <EyeOutlined /> {{ news.count }}
+                  <EyeOutlined /> {{ news.visitCount }}
                 </span>
               </div>
             </div>
@@ -46,7 +46,6 @@
       <a-col :span="8">
         <div class="newHeader">
           <div class="newSstyle">{{ 'PROMOTION' }}</div>
-          <div class="moreStyle" @click="infoNews">{{ $t('default.25') }}</div>
         </div>
         <div class="newBox">
           <a-carousel arrows :autoplay='true' dotsClass="dots">
@@ -83,26 +82,26 @@
     <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" :showMore="true" />
 
     <a-row class="bg">
-      <a-col :span='8'>
-        <a-col :span='3'>
-          <AimOutlined style="fontSize:30px" />
+      <a-col :span='9'>
+        <a-col :span='2' class="titleStyle">
+          <AimOutlined style="fontSize:20px" />
         </a-col>
         <a-col :span='4' class="MlineStyle">{{ $t('default.27') }}</a-col>
         <a-col :span='6'>
-          <a-select v-model:value="areaId" @change="areaChange">
-            <a-select-option v-for="item in areaList" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
+          <a-select v-model:value="areaId" @change="areaChange" style="width: 100px">
+            <a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='5'>
-          <a-select v-model:value="countryId" @change="cityChange">
-            <a-select-option v-for="item in cityList" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
+        <a-col :span='6'>
+          <a-select v-model:value="cityId" style="width: 100px">
+            <a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
           </a-select>
         </a-col>
       </a-col>
 
-      <a-col :span='8' :offset="8">
-        <a-col :span='3'>
-          <SearchOutlined style="fontSize:30px" />
+      <a-col :span='8' :offset="7">
+        <a-col :span='3' class="titleStyle">
+          <SearchOutlined style="fontSize:20px" />
         </a-col>
         <a-col :span='6' class="MlineStyle">{{ $t('default.15') }}</a-col>
         <a-col :span='15'>
@@ -259,7 +258,13 @@ import {
   RightCircleOutlined,
 } from "@ant-design/icons-vue";
 import divTitle from "@/components/DividingLine.vue";
-import { indexTeamHttp, indexPlayerHttp } from "@/axios/api";
+import {
+  indexTeamHttp,
+  indexPlayerHttp,
+  indexCountryHttp,
+  indexCityHttp,
+  indexNewsHttp,
+} from "@/axios/api";
 import { useRouter } from "vue-router";
 interface DataProps {
   click: () => void;
@@ -283,7 +288,7 @@ export default defineComponent({
   setup() {
     const Router = useRouter();
     const data = reactive({
-      img: require("@/assets/logo.jpg"),
+      img: require("@/assets/logo.png"),
       leagueName: "",
       title: "default.134",
       matchTitle: "default.18",
@@ -298,32 +303,11 @@ export default defineComponent({
         phone: "",
         address: "",
       },
-      areaId: 1,
-      countryId: 1,
-      newsList: [
-        {
-          id: 1,
-          img: require("@/assets/23.jpg"),
-          date: "2010-82-51",
-          count: 2054,
-        },
-        {
-          id: 1,
-          img: require("@/assets/23.jpg"),
-          date: "2010-82-51",
-          count: 2054,
-        },
-      ],
-      areaList: [
-        { key: 1, label: "湖北省" },
-        { key: 2, label: "广东省" },
-        { key: 3, label: "云南省" },
-      ],
-      cityList: [
-        { key: 1, label: "武汉" },
-        { key: 2, label: "深圳" },
-        { key: 3, label: "南京" },
-      ],
+      areaId: null,
+      cityId: null,
+      newsList: [],
+      areaList: [],
+      cityList: [],
       photoList: [
         { id: 1, img: require("@/assets/23.jpg"), url: "/a" },
         { id: 2, img: require("@/assets/23.jpg"), url: "/a" },
@@ -357,6 +341,12 @@ export default defineComponent({
       infoNews: () => {
         Router.push("/news");
       },
+      entryInfo: (id: number) => {
+        Router.push({
+          path: "/newsInfo",
+          query: { value: id },
+        });
+      },
       intoPhoto: (value: string) => {
         console.log(value);
       },
@@ -380,13 +370,16 @@ export default defineComponent({
         });
       },
       areaChange: (value: number) => {
-        console.log(value);
-      },
-      cityChange: (value: number) => {
-        console.log(value);
+        indexCityHttp({ countryId: value }).then((res) => {
+          data.cityList = res.data.data;
+          if (data.cityList.length) {
+            data.cityId = data.cityList[0]["areaId"];
+          } else {
+            data.cityId = null;
+          }
+        });
       },
     });
-    // 不需要页面点击触发，不写在reactive内
     const getTeamList = () => {
       // const obj = {
       //   areaId: data.areaId,
@@ -405,10 +398,23 @@ export default defineComponent({
         data.playerList = res.data.data;
       });
     };
+    const getNewsList = () => {
+      indexNewsHttp().then((res) => {
+        data.newsList = res.data.data;
+      });
+    };
     onMounted(() => {
       data.onSearch();
       getTeamList();
       getPlayerList();
+      getNewsList();
+      indexCountryHttp().then((res) => {
+        if (res.data.data.length) {
+          data.areaList = res.data.data;
+          data.areaId = data.areaList[0]["countryId"];
+          data.areaChange(data.areaList[0]["countryId"]);
+        }
+      });
     });
     return {
       ...toRefs(data),
@@ -427,6 +433,7 @@ export default defineComponent({
 }
 .newBg {
   padding: 0 1px;
+  cursor: pointer;
 }
 .newBox {
   height: 250px;
@@ -560,7 +567,7 @@ export default defineComponent({
   margin: 0 5px;
   cursor: pointer;
 }
-.more div:hover{
+.more div:hover {
   opacity: 0.5;
 }
 .teamBG {
@@ -705,5 +712,10 @@ export default defineComponent({
 
 .ant-carousel ::v-deep(.slick-slide h3) {
   color: #fff;
+}
+.titleStyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

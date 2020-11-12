@@ -1,7 +1,7 @@
 <template>
   <a-row type="flex" justify="end">
-    <a-col :lg="11" class="lineStyle">
-      <a-col :lg="3" v-show="!isLogin">
+    <a-col :lg="12" :xs="24"  class="lineStyle">
+      <a-col :lg="3" :xs="3" v-show="!isLogin">
         <a-button type="link" size='small' @click="showLoginBox">{{ $t('default.0') }}</a-button>
         <a-modal id="loginBox" v-model:visible="visible" :title="$t('default.0')" centered>
           <div>
@@ -47,25 +47,25 @@
           </template>
         </a-modal>
       </a-col>
-      <a-col :lg="3" v-show="!isLogin">
+      <a-col :lg="3" :xs="3" v-show="!isLogin">
         <a-button type="link" size='small'>{{ $t('default.1') }}</a-button>
       </a-col>
-      <a-col :lg='3' v-show="isLogin">{{ userName }}</a-col>
-      <a-col :lg='3' v-show="isLogin" @click="loginOut">
-        <a-button type="link" size='small'>{{ $t('default.126') }}</a-button>
+      <a-col :lg='3' :xs="3" v-show="isLogin">{{ userName }}</a-col>
+      <a-col :lg='3' :xs="3" v-show="isLogin">
+        <a-button type="link" size='small' @click="loginOut">{{ $t('default.126') }}</a-button>
       </a-col>
-      <a-col :lg="3">
+      <a-col :lg="3" :xs="3">
         <a-button type="link" size='small'>{{ $t('default.2') }}</a-button>
       </a-col>
-      <a-col :lg="3">{{ $t('default.3') }}</a-col>
-      <a-col :lg='3'>
-        <a-select v-model:value="country" style="width: 70px" size='small' @change="countryChange">
-          <a-select-option v-for="item in countryList" :key="item.key" :value='item.key'>{{ item.label }}</a-select-option>
+      <a-col :lg="3" :xs="2">{{ $t('default.3') }}</a-col>
+      <a-col :lg='4' :xs="4">
+        <a-select v-model:value="country" style="width: 100px" size='small' @change="countryChange">
+          <a-select-option v-for="item in countryList" :key="item.countryId" :value='item.countryId'>{{ item.countryName }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :lg="4">{{ $t('default.4') }}</a-col>
-      <a-col :lg='4'>
-        <a-select v-model:value="$i18n.locale" style="width: 100px" size='small'>
+      <a-col :lg="4" :xs="4">{{ $t('default.4') }}</a-col>
+      <a-col :lg='4' :xs="4">
+        <a-select v-model:value="$i18n.locale" style="width: 90px" size='small'>
           <a-select-option v-for="item in languageList" :key="item.key" :value='item.key'>{{ $t(item.label) }}</a-select-option>
         </a-select>
       </a-col>
@@ -75,7 +75,7 @@
     <a-col :span="8">
       <div class="imgBox" @click="entryIndex"><img :src="img" alt=""></div>
     </a-col>
-    <a-col :span="8" :offset="8">
+    <a-col :xs="{ span: 12, offset: 4 }" :lg="{ span: 8, offset: 8 }">
       <a-col :span='6'>
         <a-select v-model:value="type" style="width: 100px" @change="typeChange">
           <a-select-option v-for="item in typeList" :key="item.key" :value='item.key'>{{ $t(item.label) }}</a-select-option>
@@ -154,7 +154,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
-import { loginHttp } from "@/axios/api";
+import { loginHttp,indexCountryHttp } from "@/axios/api";
 import { useRouter } from "vue-router";
 import {
   ProfileTwoTone,
@@ -185,8 +185,8 @@ export default defineComponent({
       userId: "",
       passWord: "",
       userName: "",
-      country: 1,
-      img: require("@/assets/logo.jpg"),
+      country: 208,
+      img: require("@/assets/logo.png"),
       type: 1,
       isMyMatch: true,
       myInfo: {
@@ -234,11 +234,7 @@ export default defineComponent({
           },
         ],
       },
-      countryList: [
-        { key: 1, label: "中国" },
-        { key: 2, label: "美国" },
-        { key: 3, label: "英国" },
-      ],
+      countryList: [],
       languageList: [
         { key: "zh-cn", label: "default.130" },
         { key: "zh-tw", label: "default.131" },
@@ -302,6 +298,7 @@ export default defineComponent({
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("userId");
         sessionStorage.removeItem("userName");
+        Router.push("/");
       },
       interMypage: () => {
         Router.push("myPage");
@@ -325,6 +322,9 @@ export default defineComponent({
         data.isLogin = true;
         data.userName = sessionStorage.getItem("userName") as string;
       }
+      indexCountryHttp().then(res =>{
+        data.countryList = res.data.data
+      })
     });
     return {
       ...toRefs(data),

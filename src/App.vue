@@ -74,7 +74,7 @@ export default defineComponent({
 .buttonBox button {
   width: 100%;
 }
-.dropdown button {
+.dropdown div {
   width: 100%;
 }
 .fontIcon {

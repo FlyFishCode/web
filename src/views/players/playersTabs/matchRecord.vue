@@ -49,8 +49,8 @@
       <transition enter-active-class="animate__animated animate__bounceInUp">
         <a-row v-show="item.flag" class="recordBox">
           <a-row class="title">
-            <a-col :span=12>{{ '参赛队伍' }}</a-col>
-            <a-col :span=12>{{ '比赛记录' }}</a-col>
+            <a-col :span=12>{{ $t('default.156') }}</a-col>
+            <a-col :span=12>{{ $t('default.157') }}</a-col>
           </a-row>
           <a-row v-for="history in item.matchHistory" :key="history.index" class="msgBox">
             <a-col :span='12' class="teamBox">

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-row class="rowStyle">
+    <a-row class="rowStyle myPageUI">
       <a-col :span='10' class="allBox">
         <a-col :span='12' class="firstClass">
           <img :src="infoData.memberImg" alt="">
@@ -119,7 +119,9 @@ export default {
         memberId: sessionStorage.getItem("userId"),
       };
       myPageInfoHttp(obj).then((res) => {
-        data.infoData = res.data.data;
+        if(res.data.data){
+          data.infoData = res.data.data;
+        }
       });
     };
     onMounted(() => {
@@ -132,11 +134,12 @@ export default {
 };
 </script>
 <style scoped>
+.myPageUI{
+  background: #555;
+}
 .rowStyle {
-  height: 190px;
   margin: 10px 0;
   padding: 5px;
-  background: #555;
   box-sizing: border-box;
 }
 .firstClass img {
@@ -175,11 +178,11 @@ export default {
 }
 .disabledClass {
   color: #eee;
-  cursor: pointer;
 }
 .icon {
   position: relative;
   top: 1px;
+  cursor: pointer;
 }
 .title {
   font-size: 20px;

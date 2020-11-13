@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-row class="rowStyle" id="dots">
+    <div class="carouselBox">
       <h1>{{ $t('default.12') }}</h1>
       <a-carousel arrows :autoplay='true' dotsClass="dots">
         <template #prevArrow>
@@ -13,9 +13,9 @@
             <RightCircleOutlined />
           </div>
         </template>
-        <div v-for="item in photoList" :key="item.id" @click="intoPhoto(item.url)"><img :src="item.img" alt=""></div>
+        <div v-for="item in mainList" :key="item.id" @click="intoPhoto(item.link)" class="photoLink"><img :src="item.image"></div>
       </a-carousel>
-    </a-row>
+    </div>
     <a-row class="rowStyle" type="flex" justify="space-between">
       <a-col :span="14">
         <div class="newHeader">
@@ -47,7 +47,7 @@
         <div class="newHeader">
           <div class="newSstyle">{{ 'PROMOTION' }}</div>
         </div>
-        <div class="newBox">
+        <div class="carouselBox">
           <a-carousel arrows :autoplay='true' dotsClass="dots">
             <template #prevArrow>
               <div class="custom-slick-arrow" style="left: 10px;zIndex: 1">
@@ -59,7 +59,7 @@
                 <RightCircleOutlined />
               </div>
             </template>
-            <div v-for="item in photoList" :key="item.id" @click="intoPhoto(item.url)"><img :src="item.img"></div>
+            <div v-for="item in viceList" :key="item.id" @click="intoPhoto(item.link)" class="photoLink"><img :src="item.image"></div>
           </a-carousel>
         </div>
         <div class="otherSrcBox">
@@ -88,12 +88,12 @@
         </a-col>
         <a-col :span='4' class="MlineStyle">{{ $t('default.27') }}</a-col>
         <a-col :span='6'>
-          <a-select v-model:value="areaId" @change="areaChange" style="width: 100px">
+          <a-select v-model:value="areaId" @change="areaChange" class="selectBox">
             <a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
           </a-select>
         </a-col>
         <a-col :span='6'>
-          <a-select v-model:value="cityId" style="width: 100px">
+          <a-select v-model:value="cityId" class="selectBox">
             <a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
           </a-select>
         </a-col>
@@ -264,8 +264,10 @@ import {
   indexCountryHttp,
   indexCityHttp,
   indexNewsHttp,
+  indexCarouselHttp,
 } from "@/axios/api";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 interface DataProps {
   click: () => void;
 }
@@ -287,6 +289,7 @@ export default defineComponent({
   name: "index",
   setup() {
     const Router = useRouter();
+    const Store = useStore();
     const data = reactive({
       img: require("@/assets/logo.png"),
       leagueName: "",
@@ -308,11 +311,8 @@ export default defineComponent({
       newsList: [],
       areaList: [],
       cityList: [],
-      photoList: [
-        { id: 1, img: require("@/assets/23.jpg"), url: "/a" },
-        { id: 2, img: require("@/assets/23.jpg"), url: "/a" },
-        { id: 3, img: require("@/assets/23.jpg"), url: "/a" },
-      ],
+      mainList:[],
+      viceList: [],
       matchList: [],
       teamList: [],
       playerList: [],
@@ -380,6 +380,11 @@ export default defineComponent({
         });
       },
     });
+    const getCarouselList = () => {
+      indexCarouselHttp({ countryId: Store.state.countryid }).then((res) => {
+        [data.mainList, data.viceList] = [res.data.data.main,res.data.data.vice]
+      });
+    };
     const getTeamList = () => {
       // const obj = {
       //   areaId: data.areaId,
@@ -408,6 +413,7 @@ export default defineComponent({
       getTeamList();
       getPlayerList();
       getNewsList();
+      getCarouselList();
       indexCountryHttp().then((res) => {
         if (res.data.data.length) {
           data.areaList = res.data.data;
@@ -450,7 +456,6 @@ export default defineComponent({
   background: #f3f3f3;
   display: flex;
   align-items: center;
-  margin: 10px;
 }
 .dropBox {
   width: 100%;
@@ -576,9 +581,6 @@ export default defineComponent({
 }
 .tabsBox >>> .ant-tabs-nav-scroll {
   display: flex;
-}
-#dots >>> .dots li {
-  background: red;
 }
 .newContentStyle {
   text-align: left;
@@ -717,5 +719,12 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.carouselBox img{
+  height: 100%;
+  width: 100%;
+}
+.photoLink{
+  cursor: pointer;
 }
 </style>

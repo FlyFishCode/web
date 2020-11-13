@@ -27,12 +27,12 @@
     </a-row>
     <a-row class="rowStyle">
       <a-col :span='3' class="dropdown">
-        <a-select v-model:value="year" style="width: 120px" @change="yearChange">
+        <a-select v-model:value="year" class="selectBox" @change="yearChange">
           <a-select-option v-for="yaer in yearLiat" :key="yaer.value" :value="yaer.value">{{ yaer.label }}</a-select-option>
         </a-select>
       </a-col>
       <a-col :span='3' class="dropdown">
-        <a-select v-model:value="year" style="width: 120px" @change="leagueChange">
+        <a-select v-model:value="year" class="selectBox" @change="leagueChange">
           <a-select-option v-for="yaer in yearLiat" :key="yaer.value" :value="yaer.value">{{ yaer.label }}</a-select-option>
         </a-select>
       </a-col>

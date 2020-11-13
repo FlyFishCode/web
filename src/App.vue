@@ -1,6 +1,6 @@
 <template>
   <a-row type="flex" justify="center">
-    <a-col :span="14" class="bg">
+    <a-col class="bg">
       <!-- <a-config-provider :locale="locale"> -->
         <hearder />
         <router-view />
@@ -44,6 +44,9 @@ export default defineComponent({
 }
 .bg {
   border: 1px solid #eee;
+  width: 100%;
+  max-width: 1000px;
+  overflow: hidden;
 }
 .rowStyle {
   margin: 15px 0;
@@ -74,7 +77,7 @@ export default defineComponent({
 .buttonBox button {
   width: 100%;
 }
-.dropdown div {
+.selectBox {
   width: 100%;
 }
 .fontIcon {

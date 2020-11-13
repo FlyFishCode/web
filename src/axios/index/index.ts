@@ -26,4 +26,7 @@ const indexNewslist = '/homenews'
 const newslist = '/newslist'
 // 首页 新闻详细内容
 const newsInfo = '/newsdetails'
-export {login,leagueList,indexTeam,indexPlayer,indexCountrylist,indexCitylist,indexNewslist,newslist,newsInfo}
+
+// 首页 首页轮播图
+const indexCarousel = '/bannerlist'
+export {login,leagueList,indexTeam,indexPlayer,indexCountrylist,indexCitylist,indexNewslist,newslist,newsInfo,indexCarousel}

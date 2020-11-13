@@ -6,18 +6,18 @@
       </a-col>
     </a-row>
     <a-row class="rowStyle">
-      <a-col :span='2'>
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+      <a-col :span='3'>
+        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
       <a-col :span='3'>
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='2'>
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+      <a-col :span='3'>
+        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
@@ -39,7 +39,7 @@
         </a-button>
       </a-col>
       <a-col :span='3' :offset='10'>
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>

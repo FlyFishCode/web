@@ -9,7 +9,7 @@
           <div class="teamIcon"><img :src="infoData.countryIcon" alt=""></div>
           <div class="teamName" @click="showTeamInfo">{{ infoData.memberName }}</div>
           <div class="disabledClass">
-            <a-select v-model:value="selectTeamName" style="width: 120px" size="small" @change="handleChange">
+            <a-select v-model:value="selectTeamName" class="selectBox" size="small" @change="handleChange">
               <a-select-option v-for="item in infoData.teamList" :key="item.teamId" :value='item.teamId'>{{ item.teamName }}</a-select-option>
             </a-select>
           </div>

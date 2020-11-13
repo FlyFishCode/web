@@ -120,17 +120,18 @@
     <a-modal v-model:visible="visible" centered width='900px' :footer="null" :title="$t('default.200')">
       <a-row class="rowSearchBox">
         <a-col :span='3'>
-          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='2'>
-          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+        <a-col :span='3'>
+          <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='4' :offset='13'>
-          <a-input-search v-model:value="dialogValue" style="width: 200px" :enter-button="$t('default.16')" size="default" @search="onSearch" />
+        <a-col :span='1' :offset='11'></a-col>
+        <a-col :span='6'>
+          <a-input-search v-model:value="dialogValue" class="selectBox" :enter-button="$t('default.16')" size="default" @search="onSearch" />
         </a-col>
       </a-row>
       <a-row class="rowStyle">

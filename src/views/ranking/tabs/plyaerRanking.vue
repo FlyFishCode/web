@@ -7,34 +7,34 @@
     </a-row>
     <a-row class="rowStyle rowSearchBox">
       <a-col :span='3'>
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in list" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='2'>
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+      <a-col :span='3'>
+        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in list" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
       <a-col :span='2' :offset='2' class="titleStyle">
         <AimOutlined class="fontIcon" />{{ $t('default.27') }}
       </a-col>
-      <a-col :span='2'>
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 90px">
+      <a-col :span='3'>
+        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in list" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
       <a-col :span='3'>
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 90px">
+        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in list" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='2'>
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 90px">
+      <a-col :span='3'>
+        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in list" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='2' :offset='2' class="titleStyle">
+      <a-col :span='2' class="titleStyle">
         {{ $t('default.90') }}
       </a-col>
       <a-col :span='2'>

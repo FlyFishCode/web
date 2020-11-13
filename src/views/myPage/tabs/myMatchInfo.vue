@@ -7,7 +7,7 @@
     </a-row>
     <a-row class="rowSearchBox">
       <a-col :span='3'>
-        <a-select v-model:value="year" @change="yearChange" style="width: 100px">
+        <a-select v-model:value="year" @change="yearChange" class="selectBox">
           <a-select-option v-for="item in yearList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>

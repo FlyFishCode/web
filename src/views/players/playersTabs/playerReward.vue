@@ -7,12 +7,12 @@
     </a-row>
     <a-row>
       <a-col :span='3'>
-        <a-select v-model:value="year" @change="yearChange" style="width: 120px">
+        <a-select v-model:value="year" @change="yearChange" class="selectBox">
           <a-select-option v-for="item in yearList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
       <a-col :span='3'>
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 120px">
+        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>

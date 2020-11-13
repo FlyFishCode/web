@@ -8,12 +8,12 @@
     <a-row class="centerStyle">
       <a-row>
         <a-col :span='3'>
-          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+          <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='2'>
-          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+        <a-col :span='3'>
+          <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
@@ -48,7 +48,7 @@
       </div>
     </a-row>
     <a-row type="flex" justify="end">
-      <a-pagination show-size-changer v-model:current="currentPage" :pageSize="10" :total="500" @showSizeChange="onShowSizeChange" />
+      <a-pagination v-model:current="currentPage" :pageSize="10" :total="500" @showSizeChange="onShowSizeChange" />
     </a-row>
     <entryList :entryPath='entryPath' />
   </div>

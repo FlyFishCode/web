@@ -16,12 +16,12 @@
           </a-row>
           <a-row>
             <a-col :span='3'>
-              <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+              <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
                 <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
               </a-select>
             </a-col>
             <a-col :span='3'>
-              <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+              <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
                 <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
               </a-select>
             </a-col>
@@ -116,12 +116,12 @@
           </a-row>
           <a-row>
             <a-col :span='3'>
-              <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+              <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
                 <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
               </a-select>
             </a-col>
             <a-col :span='3'>
-              <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+              <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
                 <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
               </a-select>
             </a-col>
@@ -129,7 +129,7 @@
               <ClusterOutlined />{{ $t('default.140') }}
             </a-col>
             <a-col :span="3">
-              <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+              <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
                 <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
               </a-select>
             </a-col>

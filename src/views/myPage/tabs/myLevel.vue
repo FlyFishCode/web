@@ -22,12 +22,12 @@
     </a-row>
     <a-row class="rowStyle">
       <a-col :span='3'>
-        <a-select v-model:value="year" style="width: 120px" @change="handleChange">
+        <a-select v-model:value="year" class="selectBox" @change="handleChange">
           <a-select-option v-for="year in yearList" :key="year.value" :value="year.value">{{ year.label }}</a-select-option>
         </a-select>
       </a-col>
       <a-col :span='3'>
-        <a-select v-model:value="league" style="width: 120px" @change="handleChange">
+        <a-select v-model:value="league" class="selectBox" @change="handleChange">
           <a-select-option v-for="league in leagueList" :key="league.value" :value="league.value">{{ $t(league.label) }}</a-select-option>
         </a-select>
       </a-col>

@@ -6,7 +6,7 @@ import qs from 'qs'
 // import { useRouter } from 'vue-router'
 
 // 首页
-import { login,leagueList ,indexTeam,indexPlayer,indexCountrylist,indexCitylist,indexNewslist,newslist,newsInfo} from './index/index'
+import { login,leagueList ,indexTeam,indexPlayer,indexCountrylist,indexCitylist,indexNewslist,newslist,newsInfo,indexCarousel} from './index/index'
 
 // 我的页面
 import { myPageInfo,myMatchInfo,myMatchInfoMore } from './myPage/index'
@@ -78,6 +78,10 @@ const newsHttp = (data: any) =>{
 const newsInfoHttp = (data: any) =>{
 	return Axios.get(getNewUrl(newsInfo,data))
 }
+// 首页轮播图
+const indexCarouselHttp = (data: any) =>{
+	return Axios.get(getNewUrl(indexCarousel,data) )
+}
 // 首页联赛列表
 const leagueListHttp = (data: any) => {
 	let url = leagueList
@@ -136,4 +140,4 @@ const myMatchMoreHttp = (data: any = null) =>{
 	}
 	return Axios.get(url)
 }
-export { loginHttp ,leagueListHttp,indexTeamHttp,indexPlayerHttp,myPageInfoHttp,myMatchInfoHttp,myMatchMoreHttp,indexCountryHttp,indexCityHttp,indexNewsHttp,newsHttp,newsInfoHttp}
+export { loginHttp ,leagueListHttp,indexTeamHttp,indexPlayerHttp,myPageInfoHttp,myMatchInfoHttp,myMatchMoreHttp,indexCountryHttp,indexCityHttp,indexNewsHttp,newsHttp,newsInfoHttp,indexCarouselHttp}

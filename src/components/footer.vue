@@ -12,7 +12,7 @@
       <div>asdasdasdsadsadasdsadasdsadadsadsadsadas</div>
     </a-col>
     <a-col :span="3" class="btnBG">
-      <a-select v-model:value="value" style="width: 120px" @change="valueChange">
+      <a-select v-model:value="value" class="selectBox" @change="valueChange">
         <a-select-option v-for="item in selectList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
       </a-select>
     </a-col>

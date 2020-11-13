@@ -17,6 +17,8 @@ const i18n = createI18n({
 
 // 动画本地引入
 import '@/assets/css/animate.min.css'
+// 移动端样式引入
+import '@/assets/css/inPhone.css'
 
 // 引入antd组件
 import Antd from 'ant-design-vue'

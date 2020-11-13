@@ -1,14 +1,14 @@
 <template>
   <div class="content">
     <a-row id="title-g">
-      <a-col :span='4'>{{ $t('default.13') }}</a-col>
-      <a-col :span='3' :offset="5" class="btnBox">
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+      <a-col :lg='4' :xs="4">{{ $t('default.13') }}</a-col>
+      <a-col :lg="{ span: 3, offset: 5 }" :xs="{ span: 6, offset: 3 }" class="btnBox">
+        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='3' class="btnBox">
-        <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 100px">
+      <a-col :lg='3' :xs="6" class="btnBox">
+        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
@@ -19,18 +19,18 @@
           <EnvironmentOutlined class="fontIcon" />{{ $t('default.27') }}
         </a-col>
         <a-col :span='3'>
-          <a-select v-model:value="areaId" @change="areaChange" style="width: 120px">
+          <a-select v-model:value="areaId" @change="areaChange" class="selectBox">
             <a-select-option v-for="item in areaList" :key="item.countryId" :value='item.countryId'>{{ item.countryName }}</a-select-option>
           </a-select>
         </a-col>
         <a-col :span='3'>
-          <a-select v-model:value="cityId" @change="cityChange" style="width: 120px">
+          <a-select v-model:value="cityId" @change="cityChange" class="selectBox">
             <a-select-option v-for="item in cityList" :key="item.areaId" :value='item.areaId'>{{ item.areaName }}</a-select-option>
           </a-select>
         </a-col>
         <a-col :span='2'>{{ $t('default.14') }}</a-col>
         <a-col :span='2'>
-          <a-select v-model:value="matchType" @change="matchTypeChange" style="width: 90px">
+          <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
@@ -38,7 +38,7 @@
           <SearchOutlined class="fontIcon" />{{ $t('default.15') }}
         </a-col>
         <a-col :span='6'>
-          <a-input-search v-model:value="value" enter-button="Search" size="default" @search="onSearch" />
+          <a-input-search v-model:value="value" :enter-button="$t('default.16')" size="default" @search="onSearch" />
         </a-col>
       </a-row>
       <a-row>

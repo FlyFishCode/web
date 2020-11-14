@@ -8,11 +8,9 @@
       </a-col>
       <a-col :span="22" class="centerBox">
         <div class="center">
-          <div v-for="(item, index) in topList" :key="index">
-            <div class="centerDiv" :class="{ currentDiv: current === index }" @click="changeDate(item)">
-              {{ item.date }}
-              <span v-if="item.match" class="divAfter">{{ item.match && item.match.length }}</span>
-            </div>
+          <div v-for="(item, index) in topList" :key="index" class="DIV" :class="{ currentDiv: current === index }" @click="changeDate(item)">
+            {{ item.date }}
+            <span v-if="item.match" class="divAfter">{{ item.match && item.match.length }}</span>
           </div>
         </div>
       </a-col>
@@ -61,25 +59,26 @@
     </a-row>
   </div>
 </template>
-<script>
-import { defineComponent, reactive, toRefs, onMounted } from 'vue'
+<script lang='ts'>
+import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 // interface DataProps {
 //   detailList: string;
 // }
 export default defineComponent({
-  name: 'inCalendar',
+  name: "inCalendar",
   props: {
     topList: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   components: {
     LeftOutlined,
-    RightOutlined
+    RightOutlined,
   },
-  setup (props) {
+  emits: ["show-match"],
+  setup(props: any, ctx) {
     const data = reactive({
       direction: false,
       hasData: false,
@@ -89,78 +88,96 @@ export default defineComponent({
       currentDiv: 0,
       detailList: props.topList,
       init: () => {
-        data.detailList = data.detailList[0].match
+        data.detailList = data.detailList[0].match;
         if (data.detailList && data.detailList.length > 3) {
-          data.hasData = true
+          data.hasData = true;
         } else {
-          data.hasData = false
+          data.hasData = false;
         }
       },
-      leftClick () {
-        const div = document.getElementsByClassName('center')[0]
-        data.currentDiv--
+      leftClick() {
+        const div = document.getElementsByClassName("center")[0] as HTMLElement;
+        data.currentDiv--;
         if (data.currentDiv === -1) {
-          data.currentDiv = 0
+          data.currentDiv = 0;
         }
-        if (div.style.left && div.style.left !== '0px') {
-          data.position += 170
-          div.style.left = data.position + 'px'
+        if (div.style.left && div.style.left !== "0px") {
+          data.position += 180;
+          div.style.left = data.position + "px";
         }
       },
-      rightClick () {
-        const div = document.getElementsByClassName('center')[0]
-        data.currentDiv++
-        const ohterDiv = data.detailList.length - 6
-        if (div.style.left < `-${ohterDiv * 142}px` || div.style.left === '0px') {
-          data.position -= 170
-          div.style.left = this.position + 'px'
+      rightClick() {
+        const div = document.getElementsByClassName("center")[0] as HTMLElement;
+        data.currentDiv++;
+        const ohterDiv = data.detailList.length - 6;
+        if (
+          div.style.left < `-${ohterDiv * 142}px` ||
+          div.style.left === "0px"
+        ) {
+          data.position -= 180;
+          div.style.left = this.position + "px";
         }
         if (this.currentDiv === data.detailList.length) {
-          this.currentDiv = data.detailList.length - 1
+          this.currentDiv = data.detailList.length - 1;
         }
       },
-      directionLeftClick () {
-        const div = document.getElementsByClassName('directionCenterBox')[0]
-        if (div.style.left && div.style.left !== '0px') {
-          this.buttomPositon += 335
-          div.style.left = this.buttomPositon + 'px'
+      directionLeftClick() {
+        const div = document.getElementsByClassName(
+          "directionCenterBox"
+        )[0] as HTMLElement;
+        if (div.style.left && div.style.left !== "0px") {
+          this.buttomPositon += 305;
+          div.style.left = this.buttomPositon + "px";
         }
       },
-      directionRightClick () {
-        const div = document.getElementsByClassName('directionCenterBox')[0]
-        const ohterDiv = this.detailList.length - 3
-        if (Number(Math.abs(parseInt(div.style.left))) < Number(`${ohterDiv * 338}`) || div.style.left === '0px' || !div.style.left) {
-          this.buttomPositon -= 335
-          div.style.left = this.buttomPositon + 'px'
+      directionRightClick() {
+        const div = document.getElementsByClassName(
+          "directionCenterBox"
+        )[0] as HTMLElement;
+        const ohterDiv = this.detailList.length - 3;
+        if (
+          Number(Math.abs(parseInt(div.style.left))) <
+            Number(`${ohterDiv * 338}`) ||
+          div.style.left === "0px" ||
+          !div.style.left
+        ) {
+          this.buttomPositon -= 305;
+          div.style.left = this.buttomPositon + "px";
         }
       },
-      changeDate (item) {
-        const div = document.getElementsByClassName('directionCenterBox')[0]
-        data.buttomPositon = 0
-        div.style.left = '0px'
-        data.current = props.topList.findIndex(i => i.matchId === item.matchId)
-        data.detailList = props.topList.find(i => i.matchId === item.matchId).match || []
+      changeDate(item: any) {
+        const div = document.getElementsByClassName(
+          "directionCenterBox"
+        )[0] as HTMLElement;
+        data.buttomPositon = 0;
+        div.style.left = "0px";
+        data.current = props.topList.findIndex(
+          (i: any) => i.matchId === item.matchId
+        );
+        data.detailList =
+          props.topList.find((i: any) => i.matchId === item.matchId).match ||
+          [];
         if (data.detailList && data.detailList.length > 3) {
-          data.hasData = true
+          data.hasData = true;
         } else {
-          data.hasData = false
+          data.hasData = false;
         }
       },
-      info:(value) => {
-        console.log(value)
-      }
+      info: (value: any) => {
+        ctx.emit("show-match", value.homeTeamName);
+      },
     });
     onMounted(() => {
       if (data.detailList.length > 6) {
-        data.direction = true
+        data.direction = true;
       }
-      data.init()
+      data.init();
     });
     return {
-      ...toRefs(data)
-    }
-  }
-})
+      ...toRefs(data),
+    };
+  },
+});
 </script>
 <style scoped>
 .top {
@@ -204,15 +221,15 @@ export default defineComponent({
   justify-content: space-between;
   position: absolute;
 }
-.centerDiv {
+.DIV {
   height: 30px;
-  width: 130px;
+  width: 140px;
   border-radius: 20px;
   text-align: center;
   line-height: 30px;
   cursor: pointer;
   position: relative;
-  margin: 0 19px;
+  margin: 0 20px;
 }
 .currentDiv {
   background: #e31d24;
@@ -244,8 +261,8 @@ export default defineComponent({
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  width: 278px;
-  margin: 0 30px;
+  width: 265px;
+  margin: 0 20px;
 }
 .stateStyle {
   position: absolute;

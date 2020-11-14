@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <a-row>
-      <a-col :span='4' class="centerFont">
+      <a-col :span='6' class="centerFont">
         <SettingFilled /> {{ $t('default.106') }}
       </a-col>
     </a-row>

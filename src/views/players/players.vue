@@ -2,7 +2,7 @@
   <div class="content">
     <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
     <a-row class="rowStyle">
-      <a-col :span='5' class="centerFont">
+      <a-col :span='6' class="centerFont">
         <SettingFilled /> {{ `${$t('default.163')}(${$t('default.8')})` }}
       </a-col>
     </a-row>
@@ -91,7 +91,7 @@
           </div>
         </a-col>
         <a-col :span='4' class="infoClass">
-          <div class="teamStyle">{{ item.teamName }}</div>
+          <div class="teamStyle" @click="entryPage">{{ item.teamName }}</div>
           <div class="placeStyle">
             <div>{{ item.place }}</div>/
             <div class="counyStyle">{{ item.couny }}</div><span @click="showDialog(item)">
@@ -388,6 +388,9 @@ export default defineComponent({
       },
       matchTypeChange: (value: number) => {
         console.log(value);
+      },
+      entryPage:() =>{
+        Router.push('playerInfo');
       },
       handleOk:() =>{
         console.log(1)

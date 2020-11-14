@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-row>
-      <a-col :span='2' class="centerFont">
+      <a-col :span='6' class="centerFont">
         <SettingFilled /> {{ $t('default.13') }}
       </a-col>
     </a-row>
@@ -52,7 +52,7 @@
     <!-- 对战表列表 -->
     <div v-else>
       <a-row>
-        <lunboGundong :topList="gundongInfoList" />
+        <lunboGundong :topList="gundongInfoList" @show-match="showMatch"/>
       </a-row>
 
       <a-row>
@@ -73,12 +73,12 @@
         <a-col :span='2' class="titleStyle" :offset="5">
           <PlusOutlined class="fontIcon" />{{ $t('default.140') }}
         </a-col>
-        <a-col :span='3'>
+        <a-col :span='2'>
           <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='4'>
+        <a-col :span='5'>
           <a-input-search v-model:value="currentValue" :enter-button="$t('default.16')" size="default" @search="onSearch" />
         </a-col>
       </a-row>
@@ -357,6 +357,40 @@ export default defineComponent({
             },
           ],
         },
+        {
+          matchId: 7,
+          date: "2020-10-14",
+          match: [
+            {
+              img: require("@/assets/1.jpg"),
+              homeTeamName: "上海队",
+              awayTeamName: "武汉队",
+              homeMatch: 3,
+              awayMatch: "4",
+            },
+            {
+              img: require("@/assets/1.jpg"),
+              homeTeamName: "广州队",
+              awayTeamName: "香港队",
+              homeMatch: 3,
+              awayMatch: "4",
+            },
+            {
+              img: require("@/assets/1.jpg"),
+              homeTeamName: "青岛队",
+              awayTeamName: "周口队",
+              homeMatch: 3,
+              awayMatch: "4",
+            },
+            {
+              img: require("@/assets/1.jpg"),
+              homeTeamName: "重庆队",
+              awayTeamName: "天津队",
+              homeMatch: 3,
+              awayMatch: "4",
+            },
+          ],
+        },
       ],
       columns: [
         {
@@ -506,6 +540,10 @@ export default defineComponent({
         getCheckboxProps: (record: { disabled: boolean }) => ({
           disabled: record.disabled, // Column configuration not to be checked
         }),
+      },
+      showMatch:(value: any) =>{
+        console.log(value)
+        data.ismatchTablePage = true;
       },
       showPlan: () => {
         data.ismatchTablePage = true;

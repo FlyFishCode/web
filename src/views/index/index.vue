@@ -79,7 +79,7 @@
       </a-col>
     </a-row>
 
-    <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" :showMore="true" />
+    <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" :showMore="true" :path='leaguePath' />
 
     <a-row class="bg">
       <a-col :span='9'>
@@ -141,7 +141,7 @@
       </a-col>
     </a-row>
 
-    <divTitle :msg="matchTitle" :span="colSpan" :lastDate="getDate()" :showMore="true" />
+    <divTitle :msg="matchTitle" :span="colSpan" :lastDate="getDate()" :showMore="true" :path='rankingPath' />
 
     <a-row class="rowStyle">
       <a-tabs class="tabsBox" type='card'>
@@ -178,7 +178,7 @@
               </div>
             </div>
             <div class="more">
-              <div>{{ `${$t('default.25')} +` }}</div>
+              <div @click="entryRanking('ranking','1')">{{ `${$t('default.25')} +` }}</div>
             </div>
           </a-col>
         </a-tab-pane>
@@ -215,7 +215,7 @@
               </div>
             </div>
             <div class="more">
-              <div>{{ `${$t('default.25')} +` }}</div>
+              <div @click="entryRanking('ranking','3')">{{ `${$t('default.25')} +` }}</div>
             </div>
           </a-col>
         </a-tab-pane>
@@ -291,6 +291,8 @@ export default defineComponent({
     const Router = useRouter();
     const Store = useStore();
     const data = reactive({
+      leaguePath: "league",
+      rankingPath: "ranking",
       img: require("@/assets/logo.png"),
       leagueName: "",
       title: "default.134",
@@ -311,7 +313,7 @@ export default defineComponent({
       newsList: [],
       areaList: [],
       cityList: [],
-      mainList:[],
+      mainList: [],
       viceList: [],
       matchList: [],
       teamList: [],
@@ -327,6 +329,12 @@ export default defineComponent({
       },
       countryChange: (value: number) => {
         console.log(value);
+      },
+      entryRanking: (path: string, value: string) => {
+        Router.push({
+          path,
+          query: { value },
+        });
       },
       onSearch: () => {
         // const obj = {
@@ -382,7 +390,10 @@ export default defineComponent({
     });
     const getCarouselList = () => {
       indexCarouselHttp({ countryId: Store.state.countryid }).then((res) => {
-        [data.mainList, data.viceList] = [res.data.data.main,res.data.data.vice]
+        [data.mainList, data.viceList] = [
+          res.data.data.main,
+          res.data.data.vice,
+        ];
       });
     };
     const getTeamList = () => {
@@ -720,11 +731,11 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
 }
-.carouselBox img{
+.carouselBox img {
   height: 100%;
   width: 100%;
 }
-.photoLink{
+.photoLink {
   cursor: pointer;
 }
 </style>

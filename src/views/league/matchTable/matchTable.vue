@@ -29,8 +29,8 @@
       <a-col :span='7' :offset='3'>{{ `${$t('default.148')}：${matchTable.maxSet} / ${$t('default.149')}：${matchTable.maxMode}` }}</a-col>
     </a-row>
     <a-row class="rowStyle">
-      <div v-for="(item,index) in matchTable.matchTableList" :key="index">
-        <div class="modeType">
+      <a-row v-for="(item,index) in matchTable.matchTableList" :key="index">
+        <a-row class="modeType">
           <div class="modeStyle">{{ `Set${index+1} / ${item.type}` }}</div>
           <div v-if="item.male" class="sexStyle"><i class="male ">&#xe793;</i>
             <div>{{ `${$t('default.150')} ${ item.male }` }}</div>
@@ -38,30 +38,30 @@
           <div v-if="item.female" class="sexStyle"><i class="female">&#xe793;</i>
             <div>{{ `${$t('default.150')} ${ item.female }` }}</div>
           </div>
-        </div>
-        <div class="setStyle">
-          <div class="setTitle">
-            <div>{{ `Set ${index+1}` }}</div>
-            <div>{{ 'player 1' }}</div>
-            <div>{{ 'player 2' }}</div>
-            <div>{{ 'player 3' }}</div>
-            <div>{{ 'player 4' }}</div>
-          </div>
-          <div v-for="(leg,index) in item.legList" :key="index" class="setBox">
-            <div class="legStyle">
+        </a-row>
+        <a-row class="setStyle">
+          <a-row class="setTitle">
+            <a-col :span='4'>{{ `Set ${index+1}` }}</a-col>
+            <a-col :span='5'>{{ 'player 1' }}</a-col>
+            <a-col :span='5'>{{ 'player 2' }}</a-col>
+            <a-col :span='5'>{{ 'player 3' }}</a-col>
+            <a-col :span='5'>{{ 'player 4' }}</a-col>
+          </a-row>
+          <a-row v-for="(leg,index) in item.legList" :key="index" class="setBox">
+            <a-col :span='4' class="legStyle">
               <div class="legBox">
                 <div class="legIndexBox">{{ index+1 }}</div>
               </div>
               <div class="legBox">{{ leg.type }}</div>
-            </div>
-            <div class="playerStyle" v-for="playerBox in new Array(leg.maxPlayer).fill(leg.maxPlayer)" :key="playerBox.index">
+            </a-col>
+            <a-col :span='5' class="playerStyle" v-for="playerBox in new Array(leg.maxPlayer).fill(leg.maxPlayer)" :key="playerBox.index">
               <a-select v-model:value="leg.playerId">
-                <a-select-option v-for="player in matchTable.homePlayerList" :key="player.id" :value="player.id">{{ `[${player.male?'M':'F'}]  ${player.name}` }}</a-select-option>
+                <a-select-option v-for="player in matchTable.homePlayerList" :key="player.id" :value="player.id">{{ `[${player.male?$t('default.203'):$t('default.204')}]  ${player.name}` }}</a-select-option>
               </a-select>
-            </div>
-          </div>
-        </div>
-      </div>
+            </a-col>
+          </a-row>
+        </a-row>
+      </a-row>
     </a-row>
   </div>
 </template>
@@ -233,19 +233,16 @@ export default defineComponent({
   background: #f1f0ed;
 }
 .setTitle div {
-  width: 216px;
   background: #f1f0ed;
   border: 1px solid #5a5a5a;
 }
 .legStyle {
-  width: 216px;
   height: 80px;
   display: flex;
   text-align: center;
   border: 1px solid #5a5a5a;
 }
 .playerStyle {
-  width: 216px;
   height: 80px;
   text-align: center;
   border: 1px solid #5a5a5a;

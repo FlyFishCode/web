@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <divTitle :msg="title" :span='colSpan' :lastDate="getDate()" />
-    <a-tabs type="card" class="tabsBox">
+    <a-tabs type="card" :activeKey='activeKey' class="tabsBox">
       <a-tab-pane key="1" :tab="$t('default.67')">
         <teamRanking />
       </a-tab-pane>
@@ -19,12 +19,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, toRefs,onMounted } from "vue";
 import divTitle from "@/components/DividingLine.vue";
 import teamRanking from "@/views/ranking/tabs/teamRanking.vue";
 import teamHistory from "@/views/ranking/tabs/teamHistory.vue";
 import plyaerRanking from "@/views/ranking/tabs/plyaerRanking.vue";
 import playerHistory from "@/views/ranking/tabs/playerHistory.vue";
+import { useRoute } from 'vue-router';
 export default defineComponent({
   name: "ranking",
   components: {
@@ -35,13 +36,18 @@ export default defineComponent({
     playerHistory,
   },
   setup() {
+    const Route = useRoute()
     const data = reactive({
+      activeKey:'1',
       title: "default.180",
       colSpan: 5,
       getDate: () => {
         return "2020-10-17";
       },
     });
+    onMounted(() =>{
+      data.activeKey = Route.query.value as string
+    })
     return {
       ...toRefs(data),
     };

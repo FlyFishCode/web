@@ -136,7 +136,7 @@ export default {
         if (currentPosition === 0) {
           currentPosition = 0;
         } else {
-          currentPosition += 340;
+          currentPosition += 320;
         }
         box.style.left = `${currentPosition}px`;
       },
@@ -149,11 +149,11 @@ export default {
         }
         if (
           Math.abs(currentPosition) ===
-          (data.infoData.resultList.length - 1) * 340
+          (data.infoData.resultList.length - 1) * 320
         ) {
-          currentPosition = -(data.infoData.resultList.length - 1) * 340;
+          currentPosition = -(data.infoData.resultList.length - 1) * 320;
         } else {
-          currentPosition -= 340;
+          currentPosition -= 320;
         }
         box.style.left = `${currentPosition}px`;
       },
@@ -269,7 +269,7 @@ export default {
   top: calc(50% - 10px);
 }
 .centerBox {
-  width: 300px;
+  width: 270px;
   margin: 0 25px;
 }
 .animate__backOutRight {

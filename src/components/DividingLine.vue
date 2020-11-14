@@ -4,7 +4,7 @@
       <a-col :span='span' class="fontStyle">{{ $t(msg) }}</a-col>
       <a-col v-if="lastDate" :span='8' class="timeStyle" :offset="24-10-span">{{ `${$t('default.19')} :${lastDate}` }}</a-col>
       <a-col v-if="showMore" :span='2' class="shwoMoreBox">
-        <div class="showMore">{{ $t('default.133') }}</div>
+        <div class="showMore" @click="entryPage">{{ $t('default.133') }}</div>
       </a-col>
     </a-row>
   </div>
@@ -12,6 +12,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: "DividingLine",
@@ -19,8 +20,18 @@ export default defineComponent({
     msg: String,
     span:Number,
     lastDate: String,
-    showMore:Boolean
+    showMore:Boolean,
+    path:String
   },
+  setup(props){
+    const Router = useRouter()
+    const entryPage = () =>{
+      Router.push(props.path as string)
+    }
+    return {
+      entryPage
+    }
+  }
 });
 </script>
 

@@ -6,7 +6,7 @@ import { createI18n } from 'vue-i18n'
 
 
 const i18n = createI18n({
-    legacy: false,
+    legacy: true,
     locale: 'zh-cn',
     messages: {
       'zh-cn':require('@/i18n/zh-cn'),

@@ -74,9 +74,9 @@
           </div>
         </template>
         <template v-slot:type="{ text }">
-          <a-button v-if="text === 1" type="link" size="small">{{ '准备' }}</a-button>
-          <a-button v-if="text === 2" type="link" size="small">{{ '进行' }}</a-button>
-          <a-button v-if="text === 3" type="link" size="small">{{ '结束' }}</a-button>
+          <div v-if="text === 1">{{ '准备' }}</div>
+          <a-button v-if="text === 2" type="link" size="small">{{ $t('default.104') }}</a-button>
+          <a-button v-if="text === 3" type="link" size="small">{{ $t('default.244') }}</a-button>
         </template>
       </a-table>
     </a-row>
@@ -90,14 +90,14 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
-import entryList from '@/components/common/entryList.vue';
+import entryList from "@/components/common/entryList.vue";
 import { useRouter } from "vue-router";
 import {
   UnorderedListOutlined,
   CalendarOutlined,
   CloudDownloadOutlined,
   PrinterOutlined,
-  SettingFilled,
+  SettingFilled
 } from "@ant-design/icons-vue";
 // interface TableRenderProps {
 //   text: string;
@@ -116,7 +116,7 @@ export default defineComponent({
   setup() {
     const Router = useRouter();
     const data = reactive({
-      entryPath:'/team',
+      entryPath: "/team",
       colSpan: 5,
       isList: true,
       isCalendar: false,
@@ -127,45 +127,45 @@ export default defineComponent({
         {
           title: "日期",
           width: 100,
-          dataIndex: "key",
+          dataIndex: "key"
         },
         {
           title: "比赛时间",
           width: 100,
-          dataIndex: "age",
+          dataIndex: "age"
         },
         {
           title: "比赛类型",
           width: 100,
-          dataIndex: "age",
+          dataIndex: "age"
         },
         {
           title: "比赛队伍",
           colSpan: 4,
           dataIndex: "tel",
-          slots: { customRender: "homeTeam" },
+          slots: { customRender: "homeTeam" }
         },
         {
           colSpan: 0,
           width: 50,
-          dataIndex: "age",
+          dataIndex: "age"
         },
         {
           colSpan: 0,
           width: 50,
-          dataIndex: "age",
+          dataIndex: "age"
         },
         {
           colSpan: 0,
           dataIndex: "tel",
-          slots: { customRender: "awayTeam" },
+          slots: { customRender: "awayTeam" }
         },
         {
           title: "进行状态",
           width: 100,
           dataIndex: "age",
-          slots: { customRender: "type" },
-        },
+          slots: { customRender: "type" }
+        }
       ],
       dataList: [
         {
@@ -175,7 +175,7 @@ export default defineComponent({
           place: "(Hea Darts（广州）)",
           age: 1,
           tel: "0571-22098909",
-          phone: 18889898989,
+          phone: 18889898989
         },
         {
           key: "2",
@@ -184,7 +184,7 @@ export default defineComponent({
           place: "(Hea Darts（广州）)",
           tel: "0571-22098333",
           phone: 18889898888,
-          age: 2,
+          age: 2
         },
         {
           key: "3",
@@ -193,7 +193,7 @@ export default defineComponent({
           place: "(Hea Darts（广州）)",
           age: 3,
           tel: "0575-22098909",
-          phone: 18900010002,
+          phone: 18900010002
         },
         {
           key: "4",
@@ -202,8 +202,8 @@ export default defineComponent({
           place: "(Hea Darts（广州）)",
           age: 3,
           tel: "0575-22098909",
-          phone: 18900010002,
-        },
+          phone: 18900010002
+        }
       ],
       getDate: () => {
         return "2020-10-17";
@@ -226,16 +226,19 @@ export default defineComponent({
         console.log(value);
       },
       Gohistory: () => {
-        Router.push("/teamIndex");
+        Router.push({
+          path: "teamIndex",
+          query: { ismatchTablePage: 1 }
+        });
       },
-      matchTypeChange:(value: number) =>{
-        console.log(value)
+      matchTypeChange: (value: number) => {
+        console.log(value);
       }
     });
     return {
-      ...toRefs(data),
+      ...toRefs(data)
     };
-  },
+  }
 });
 </script>
 

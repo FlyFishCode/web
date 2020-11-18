@@ -3,7 +3,7 @@ const login = '/login'
 
 
 // 首页联赛列表
-const leagueList = '/multiLeague'
+const leagueList = '/multileague'
 
 
 // 首页队伍列表

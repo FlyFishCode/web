@@ -70,10 +70,10 @@
       </a-col>
     </a-row>
     <a-row class="lineBox">
-      <a-col :span="8">
+      <a-col :lg="{ span: 8, offset: 0 }" :xs="{ span: 8, offset: 4  }">
         <div class="imgBox" @click="entryIndex"><img :src="img" alt=""></div>
       </a-col>
-      <a-col :xs="{ span: 12, offset: 4 }" :lg="{ span: 8, offset: 8 }">
+      <a-col :lg="{ span: 8, offset: 8 }" :xs="{ span: 12}">
         <a-col :lg='6' :xs="10">
           <a-select v-model:value="type" style="width: 100%" @change="typeChange">
             <a-select-option v-for="item in typeList" :key="item.key" :value='item.key'>{{ $t(item.label) }}</a-select-option>
@@ -158,7 +158,7 @@
         </div>
       </transition>
       <div class="phoneButton">
-        <a-button type="primary" @click="toggleCollapsed" style="margin-bottom: 16px">
+        <a-button type="primary" @click="toggleCollapsed">
           <MenuUnfoldOutlined v-if="collapsed" />
           <MenuFoldOutlined v-else />
         </a-button>
@@ -168,7 +168,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
-import { useStore } from "vuex";
+// import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { loginHttp, indexCountryHttp } from "@/axios/api";
 import {
@@ -194,7 +194,7 @@ export default defineComponent({
   },
   setup() {
     const Router = useRouter();
-    const Store = useStore();
+    // const Store = useStore();
     const data = reactive({
       showPhoneTabs:false,
       collapsed: true,
@@ -207,7 +207,7 @@ export default defineComponent({
       userId: "",
       passWord: "",
       userName: "",
-      country: null,
+      country: '',
       img: require("@/assets/logo.png"),
       type: 1,
       isMyMatch: true,
@@ -318,6 +318,8 @@ export default defineComponent({
             sessionStorage.setItem("token", res.data.data.token);
             sessionStorage.setItem("userId", res.data.data.memberId);
             sessionStorage.setItem("userName", res.data.data.username);
+            // 保存玩家id至vuex
+            // Store.dispatch("changeMemberId", res.data.data.memberId);
             data.userName = res.data.data.username;
             data.isLogin = true;
             data.visible = false;
@@ -357,7 +359,9 @@ export default defineComponent({
       indexCountryHttp().then((res) => {
         data.countryList = res.data.data;
         data.country = res.data.data[0]["countryId"];
-        Store.dispatch("chanageCountry", data.country);
+        // 保存玩家国家id至vuex
+        // Store.dispatch("chanageCountry", data.country);
+        sessionStorage.setItem('countryId',data.country)
       });
     });
     return {
@@ -511,6 +515,7 @@ export default defineComponent({
   display: flex;
   position: absolute;
   z-index: 10;
+  top: 38px;
   display: none;
 }
 </style>

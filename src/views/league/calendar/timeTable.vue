@@ -146,7 +146,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, toRefs ,onMounted} from "vue";
 // 排阵页面
 import matchTable from "@/views/league/matchTable/matchTable.vue";
 import matchResult from "@/views/league/matchResult/matchResult.vue";
@@ -155,6 +155,7 @@ import { SettingFilled, PlusOutlined } from "@ant-design/icons-vue";
 import lunboGundong from "@/components/inCalendar.vue";
 import inMatchTable from "@/components/inMatchTable.vue";
 import entryList from "@/components/common/entryList.vue";
+import { useRoute } from 'vue-router';
 export default defineComponent({
   name: "timeTable",
   components: {
@@ -167,6 +168,7 @@ export default defineComponent({
     entryList,
   },
   setup() {
+    const ROUTE = useRoute()
     const data = reactive({
       entryPath: "/league",
       visible: false,
@@ -555,6 +557,11 @@ export default defineComponent({
         console.log(value);
       },
     });
+    onMounted(() =>{
+      if(ROUTE.query.ismatchTablePage){
+        data.ismatchTablePage = true
+      }
+    })
     return {
       ...toRefs(data),
     };

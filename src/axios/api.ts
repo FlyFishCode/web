@@ -9,7 +9,8 @@ import qs from 'qs'
 import { login,leagueList ,indexTeam,indexPlayer,indexCountrylist,indexCitylist,indexNewslist,newslist,newsInfo,indexCarousel} from './index/index'
 
 // 我的页面
-import { myPageInfo,myMatchInfo,myMatchInfoMore } from './myPage/index'
+import { myPageInfo,myMatchInfo,myMatchInfoMore,myBattleSelectList,myBattleDataList,
+myBattleDateList} from './myPage/index'
 const baseURL = "/apw"
 // const Router = useRouter()
 
@@ -40,12 +41,15 @@ Axios.interceptors.response.use(response => {
   return Promise.reject(err)
 })
 
-const getNewUrl = (url: string ,data: any) =>  {
-	let src = url
-	for(const [key,value] of Object.entries(data)){
-			src += `?${key}=${value}&`
+const getNewUrl = (url: string ,data: any = null) =>  {
+	if(data){
+		let src = url + '?'
+		for(const [key,value] of Object.entries(data)){
+			src += `${key}=${value}&`
 		}
 		return src
+	}
+	return url
 }
 
 // 判断是否为Form Data，如果是需要用qs转换
@@ -80,49 +84,24 @@ const newsInfoHttp = (data: any) =>{
 }
 // 首页轮播图
 const indexCarouselHttp = (data: any) =>{
-	return Axios.get(getNewUrl(indexCarousel,data) )
+	return Axios.get(getNewUrl(indexCarousel,data))
 }
 // 首页联赛列表
 const leagueListHttp = (data: any) => {
-	let url = leagueList
-	if(data){
-		for(const [key,value] of Object.entries(data)){
-			url += `?${key}=${value}&`
-		}
-	}
-	return Axios.get(url)
+	return Axios.get(getNewUrl(leagueList,data))
 }
 // 首页队伍列表
 const indexTeamHttp = (data: any = null) => {
-	let url = indexTeam
-	if(data){
-		for(const [key,value] of Object.entries(data)){
-			url += `?${key}=${value}&`
-		}
-	}
-	return Axios.get(url)
+	return Axios.get(getNewUrl(indexTeam))
 }
 // 首页玩家列表
 const indexPlayerHttp = (data: any = null) => {
-	let url = indexPlayer
-	if(data){
-		for(const [key,value] of Object.entries(data)){
-			url += `?${key}=${value}&`
-		}
-	}
-	return Axios.get(url)
+	return Axios.get(getNewUrl(indexPlayer,data))
 }
 
 //  我的页面 会员信息
 const myPageInfoHttp = async (data: any = null) =>{
-	let url = myPageInfo
-	if(data){
-		url += '?'
-		for(const [key,value] of Object.entries(data)){
-			url += `${key}=${value}&`
-		}
-	}
-	return await Axios.get(url)
+	return Axios.get(getNewUrl(myPageInfo,data))
 }
 
 //  我的页面 我的比赛信息
@@ -131,13 +110,35 @@ const myMatchInfoHttp = (data: any = null) =>{
 }
 //  我的页面 我的比赛信息下拉请求
 const myMatchMoreHttp = (data: any = null) =>{
-	let url = myMatchInfoMore
-	if(data){
-		url += '?'
-		for(const [key,value] of Object.entries(data)){
-			url += `${key}=${value}&`
-		}
-	}
-	return Axios.get(url)
+	return Axios.get(getNewUrl(myMatchInfoMore,data))
 }
-export { loginHttp ,leagueListHttp,indexTeamHttp,indexPlayerHttp,myPageInfoHttp,myMatchInfoHttp,myMatchMoreHttp,indexCountryHttp,indexCityHttp,indexNewsHttp,newsHttp,newsInfoHttp,indexCarouselHttp}
+//  我的页面 我的对战下拉列表
+const myBattleSelectHttp = (data: any = null) =>{
+	return Axios.get(getNewUrl(myBattleSelectList,data))
+}
+//  我的页面 我的对战列表数据
+const myBattleDataListHttp = (data: any = null) =>{
+	return Axios.post(myBattleDataList,data)
+}
+//  我的页面 我的对战日历数据
+const myBattleDateListHttp = (data: any = null) =>{
+	return Axios.post(myBattleDateList,data)
+}
+export {
+	loginHttp ,
+	leagueListHttp,
+	indexTeamHttp,
+	indexPlayerHttp,
+	myPageInfoHttp,
+	myMatchInfoHttp,
+	myMatchMoreHttp,
+	indexCountryHttp,
+	indexCityHttp,
+	indexNewsHttp,
+	newsHttp,
+	newsInfoHttp,
+	indexCarouselHttp,
+	myBattleSelectHttp,
+	myBattleDataListHttp,
+	myBattleDateListHttp
+}

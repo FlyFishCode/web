@@ -48,6 +48,9 @@ export default defineComponent({
   max-width: 1000px;
   overflow: hidden;
 }
+.titleCol{
+  margin: 5px 0;
+}
 .rowStyle {
   margin: 15px 0;
 }
@@ -110,5 +113,14 @@ export default defineComponent({
 .amap-copyright {
   display: none!important;
   visibility: hidden!important;
+}
+/*  修改日历样式 */
+.ant-fullcalendar-date{
+  height: 200px!important;
+  overflow-y: auto;
+  padding: 0;
+}
+.ant-fullcalendar-fullscreen .ant-fullcalendar-content{
+  height: auto!important;
 }
 </style>

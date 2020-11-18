@@ -17,13 +17,13 @@
       </a-carousel>
     </div>
     <a-row class="rowStyle" type="flex" justify="space-between">
-      <a-col :span="14">
-        <div class="newHeader">
-          <div class="newSstyle">{{ $t('default.12') }}</div>
-          <div>{{ `${$t('default.19')}：${time}` }}</div>
-          <div class="moreStyle" @click="infoNews">{{ $t('default.25') }}</div>
-        </div>
-        <div class="newsTable">
+      <a-col :lg="14" :xs="24">
+        <a-col class="newHeader">
+          <a-col :lg="6" :xs="6" class="newSstyle">{{ $t('default.12') }}</a-col>
+          <a-col :lg="12" :xs="12">{{ `${$t('default.19')}：${time}` }}</a-col>
+          <a-col :lg="6" :xs="6" class="moreStyle" @click="infoNews">{{ $t('default.25') }}</a-col>
+        </a-col>
+        <a-col class="newsTable">
           <div v-for="news in newsList" :key="news.id" class="newBg" @click="entryInfo(news.id)">
             <div class="newBox">
               <img :src="news.img" alt="">
@@ -41,9 +41,9 @@
               </div>
             </div>
           </div>
-        </div>
+        </a-col>
       </a-col>
-      <a-col :span="8">
+      <a-col :lg="8" :xs="24">
         <div class="newHeader">
           <div class="newSstyle">{{ 'PROMOTION' }}</div>
         </div>
@@ -82,62 +82,61 @@
     <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" :showMore="true" :path='leaguePath' />
 
     <a-row class="bg">
-      <a-col :span='9'>
-        <a-col :span='2' class="titleStyle">
+      <a-col :lg="8" :xs="24" class="titleCol">
+        <a-col :lg='2' :xs="3" class="titleStyle">
           <AimOutlined style="fontSize:20px" />
         </a-col>
-        <a-col :span='4' class="MlineStyle">{{ $t('default.27') }}</a-col>
-        <a-col :span='6'>
-          <a-select v-model:value="areaId" @change="areaChange" class="selectBox">
+        <a-col :lg='4' :xs="4" class="MlineStyle">{{ $t('default.27') }}</a-col>
+        <a-col :lg='6' :xs="8">
+          <a-select v-model:value="countryId" @change="areaChange" class="selectBox">
             <a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='6'>
-          <a-select v-model:value="cityId" class="selectBox">
+        <a-col :lg='6' :xs="8">
+          <a-select v-model:value="areaId" class="selectBox">
             <a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
           </a-select>
         </a-col>
       </a-col>
 
-      <a-col :span='8' :offset="7">
-        <a-col :span='3' class="titleStyle">
+      <a-col :lg="{ span:8, offset:7 }" :xs="24" class="titleCol">
+        <a-col :lg='3' :xs="3" class="titleStyle">
           <SearchOutlined style="fontSize:20px" />
         </a-col>
-        <a-col :span='6' class="MlineStyle">{{ $t('default.15') }}</a-col>
-        <a-col :span='15'>
-          <a-input-search v-model:value="leagueName" :enter-button="$t('default.16')" @search="onSearch" />
+        <a-col :lg='6' :xs="4" class="MlineStyle">{{ $t('default.15') }}</a-col>
+        <a-col :lg='15' :xs="16">
+          <a-input-search v-model:value="leagueName" :enter-button="$t('default.16')" allowClear @search="onSearch" />
         </a-col>
       </a-col>
     </a-row>
 
     <a-row v-for="item in matchList" :key="item.matchId" class="matchBox">
-      <a-col :span='14'>
-        <div>
-          <a-col :span='5'>
-            <img class="matchImg" :src="item.img">
-          </a-col>
-          <a-col :span='10'>
-            <div @click="showLeagueInfo(item.leagueId)" class="divBg">
-              <div>{{ item.title }}</div>
-              <div class="divisionBox">
-                <div v-for="div in item.division" :key="div.index" class="divsision">{{ div.divName }}</div>
-              </div>
+      <a-col :lg='14' :xs="8">
+        <a-col :span='4'>
+          <img class="matchImg" :src="item.competitionImg">
+        </a-col>
+        <a-col :span='20'>
+          <div @click="showLeagueInfo(item.leagueId)" class="divBg">
+            <div>{{ item.competitionName }}</div>
+            <div class="divisionBox">
+              <div v-for="div in item.divisionList" :key="div.divisionId" class="divsision">{{ div.divisionName }}</div>
             </div>
-          </a-col>
-        </div>
+          </div>
+        </a-col>
       </a-col>
-      <a-col :span='2'>
+      <a-col :lg='2' :xs="6">
         <div class="fontDisplay">{{ $t('default.27') }}</div>
-        <div>{{ item.area }}</div>
+        <div>{{ item.areaName }}</div>
       </a-col>
-      <a-col :span='8'>
-        <div class="rightStyle">
-          <div class="fontDisplay">{{ $t('default.17') }}</div>
-          <div class="matchState I" v-if="item.state === 1">{{ $t('default.104') }}</div>
-          <div class="matchState R" v-if="item.state === 2">{{ $t('default.105') }}</div>
-          <div class="matchState F" v-if="item.state === 3">{{ '比赛结束' }}</div>
-        </div>
-        <div>{{ $filters.filterDate(item.endPeriod) }}</div>
+      <a-col :lg='8' :xs="10">
+        <a-col class="rightStyle">
+          <a-col :lg='20' :xs="16" class="fontDisplay">{{ $t('default.17') }}</a-col>
+          <a-col :lg='4' :xs="8" class="matchState I" v-if="item.status === 1">{{ $t('default.243') }}</a-col>
+          <a-col :lg='4' :xs="8" class="matchState R" v-if="item.status === 2">{{ $t('default.104') }}</a-col>
+          <a-col :lg='4' :xs="8" class="matchState F" v-if="item.status === 3">{{ $t('default.244') }}</a-col>
+        </a-col>
+        <!-- <div>{{ $filters.filterDate(item.endPeriod) }}</div> -->
+        <a-col>{{ item.date }}</a-col>
       </a-col>
     </a-row>
 
@@ -151,7 +150,7 @@
             <div v-for="(item,index) in every.list" :key="index" class="teamBox">
               <div :class="{first:!index,noFirst:index}">
                 <div class="teamImgBox">
-                  <img :src="item.teamImg" alt="">
+                  <img :src="item.teamImg">
                 </div>
                 <div v-if="!index" class="detailStyle">
                   <div class="teamName" @click="goToPage">{{ item.teamName }}</div>
@@ -255,7 +254,7 @@ import {
   ZhihuOutlined,
   AppleOutlined,
   LeftCircleOutlined,
-  RightCircleOutlined,
+  RightCircleOutlined
 } from "@ant-design/icons-vue";
 import divTitle from "@/components/DividingLine.vue";
 import {
@@ -265,9 +264,9 @@ import {
   indexCityHttp,
   indexNewsHttp,
   indexCarouselHttp,
+  leagueListHttp
 } from "@/axios/api";
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
 interface DataProps {
   click: () => void;
 }
@@ -284,12 +283,11 @@ export default defineComponent({
     ZhihuOutlined,
     AppleOutlined,
     LeftCircleOutlined,
-    RightCircleOutlined,
+    RightCircleOutlined
   },
   name: "index",
   setup() {
     const Router = useRouter();
-    const Store = useStore();
     const data = reactive({
       leaguePath: "league",
       rankingPath: "ranking",
@@ -306,10 +304,10 @@ export default defineComponent({
         img: require("@/assets/3.jpg"),
         shopName: "",
         phone: "",
-        address: "",
+        address: ""
       },
+      countryId: null,
       areaId: null,
-      cityId: null,
       newsList: [],
       areaList: [],
       cityList: [],
@@ -322,10 +320,7 @@ export default defineComponent({
         const year = new Date().getFullYear();
         const month = new Date().getMonth() + 1;
         const day = new Date().getDay();
-        const hous = new Date().getHours();
-        const minutes = new Date().getMinutes();
-        const seconds = new Date().getSeconds();
-        return `${year}-${month}-${day} ${hous}:${minutes}:${seconds}`;
+        return `${year}-${month}-${day}`;
       },
       countryChange: (value: number) => {
         console.log(value);
@@ -333,18 +328,19 @@ export default defineComponent({
       entryRanking: (path: string, value: string) => {
         Router.push({
           path,
-          query: { value },
+          query: { value }
         });
       },
       onSearch: () => {
-        // const obj = {
-        //   areaId: data.areaId,
-        //   countryId: data.areaId,
-        //   leagueName: data.leagueName,
-        // };
-        // leagueListHttp(false, obj).then((res) => {
-        //   data.matchList = res.data.data;
-        // });
+        const obj = {
+          countryId: data.countryId,
+          areaId: data.areaId,
+          number: 5,
+          competitionName: data.leagueName
+        };
+        leagueListHttp(obj).then(res => {
+          data.matchList = res.data.data;
+        });
       },
       infoNews: () => {
         Router.push("/news");
@@ -352,7 +348,7 @@ export default defineComponent({
       entryInfo: (id: number) => {
         Router.push({
           path: "/newsInfo",
-          query: { value: id },
+          query: { value: id }
         });
       },
       intoPhoto: (value: string) => {
@@ -374,25 +370,28 @@ export default defineComponent({
       showLeagueInfo: (id: number) => {
         Router.push({
           path: "/calendar",
-          query: { id },
+          query: { id }
         });
       },
       areaChange: (value: number) => {
-        indexCityHttp({ countryId: value }).then((res) => {
+        indexCityHttp({ countryId: value }).then(res => {
           data.cityList = res.data.data;
           if (data.cityList.length) {
-            data.cityId = data.cityList[0]["areaId"];
+            data.areaId = data.cityList[0]["areaId"];
           } else {
-            data.cityId = null;
+            data.areaId = null;
           }
+          data.onSearch();
         });
-      },
+      }
     });
     const getCarouselList = () => {
-      indexCarouselHttp({ countryId: Store.state.countryid }).then((res) => {
+      indexCarouselHttp({
+        countryId: sessionStorage.getItem("countryId")
+      }).then(res => {
         [data.mainList, data.viceList] = [
           res.data.data.main,
-          res.data.data.vice,
+          res.data.data.vice
         ];
       });
     };
@@ -401,7 +400,7 @@ export default defineComponent({
       //   areaId: data.areaId,
       //   countryId: data.areaId,
       // };
-      indexTeamHttp().then((res) => {
+      indexTeamHttp().then(res => {
         data.teamList = res.data.data;
       });
     };
@@ -410,33 +409,32 @@ export default defineComponent({
       //   areaId: data.areaId,
       //   countryId: data.areaId,
       // };
-      indexPlayerHttp().then((res) => {
+      indexPlayerHttp().then(res => {
         data.playerList = res.data.data;
       });
     };
     const getNewsList = () => {
-      indexNewsHttp().then((res) => {
+      indexNewsHttp().then(res => {
         data.newsList = res.data.data;
       });
     };
     onMounted(() => {
-      data.onSearch();
       getTeamList();
       getPlayerList();
       getNewsList();
       getCarouselList();
-      indexCountryHttp().then((res) => {
+      indexCountryHttp().then(res => {
         if (res.data.data.length) {
           data.areaList = res.data.data;
-          data.areaId = data.areaList[0]["countryId"];
+          data.countryId = data.areaList[0]["countryId"];
           data.areaChange(data.areaList[0]["countryId"]);
         }
       });
     });
     return {
-      ...toRefs(data),
+      ...toRefs(data)
     };
-  },
+  }
 });
 </script>
 <style scoped>
@@ -463,10 +461,7 @@ export default defineComponent({
 .bg {
   border: 1px solid #e5e5e5;
   box-sizing: border-box;
-  height: 55px;
   background: #f3f3f3;
-  display: flex;
-  align-items: center;
 }
 .dropBox {
   width: 100%;
@@ -489,7 +484,6 @@ export default defineComponent({
   color: #999;
 }
 .matchState {
-  width: 100px;
   color: #fff;
   border-radius: 10px;
 }
@@ -653,10 +647,8 @@ export default defineComponent({
 }
 .newSstyle {
   background: red;
-  width: 150px;
 }
 .moreStyle {
-  width: 150px;
   cursor: pointer;
 }
 .moreStyle:hover {
@@ -687,7 +679,6 @@ export default defineComponent({
   display: flex;
   height: 25px;
   line-height: 25px;
-  border: 1px solid #000;
   margin-right: 3px;
 }
 .divsision {

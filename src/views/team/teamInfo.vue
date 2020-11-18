@@ -6,7 +6,7 @@
     <inTeamTopOne />
     <a-row>
       <a-tabs type="card" class="tabsBox">
-        <a-tab-pane key="1" :tab="$t('default.230')">
+        <a-tab-pane key="1" :tab="$t('default.13')">
           <calendar />
         </a-tab-pane>
         <a-tab-pane key="2" :tab="$t('default.231')">

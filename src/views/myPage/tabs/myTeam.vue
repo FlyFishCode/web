@@ -10,39 +10,39 @@
       <a-row class="eveyTeam">
         <a-col :span='3' class="imgColStyle">
           <div>
-            <img class="matchImg" :src="item.img" alt="">
+            <img class="matchImg" :src="item.teamImg" alt="">
           </div>
         </a-col>
         <a-col :span='4' class="infoClass">
           <div class="teamStyle">{{ item.teamName }}</div>
           <div class="placeStyle">
-            <div>{{ item.place }}</div>/
-            <div class="counyStyle">{{ item.couny }}</div><span @click="showDetail(item)">
+            <div>{{ item.countryName }}</div>/
+            <div class="counyStyle">{{ item.areaName }}</div><span @click="showDetail(item)">
               <EnvironmentOutlined />
             </span>
           </div>
-          <div>{{ item.captain }}</div>
+          <div>{{ item.captainName }}</div>
         </a-col>
         <a-col :span='3' class="vipBox">
           <div>{{ $t('default.85') }}</div>
           <div class="showVipInfo" @click="entryVipPage">
-            <UserOutlined />{{ item.vipCount }}
+            <UserOutlined />{{ item.playerCount }}
           </div>
         </a-col>
         <a-col :span='8' class="topBox">
           <div>{{ topInfoTitle }}</div>
           <div class="infoStyle">
-            <div>{{ `Rating  ${item.ranting}` }}</div>|
-            <div>{{ `PPD  ${item.PPD}` }}</div>|
-            <div>{{ `MPR  ${item.MPR}` }}</div>
+            <div>{{ `Rating  ${item.rating}` }}</div>|
+            <div>{{ `PPD  ${item.ppd}` }}</div>|
+            <div>{{ `MPR  ${item.mpr}` }}</div>
           </div>
         </a-col>
         <a-col :span='3' class="vipBox">
           <div>{{ 'Entry' }}</div>
-          <div>{{ item.count }}</div>
+          <div>{{ item.list.length }}</div>
         </a-col>
         <a-col :span='2' class="iconFont">
-          <div v-if="item.record.length">
+          <div v-if="item.list.length">
             <div v-if="item.flag" @click="changeFlag(index)">
               <DownCircleOutlined />
             </div>
@@ -55,21 +55,20 @@
       <transition enter-active-class="animate__animated animate__bounceInUp">
         <a-row v-show="item.flag" class="recordBox">
           <div class="matchTitle">{{ $t('default.83') }}</div>
-          <a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
-            <a-col :span='3' class="imgColStyle">
+          <a-row v-for="info in item.list" :key="info.index" class="msgBox">
+            <a-col :span='4' class="imgColStyle">
               <div>
-                <img class="matchImg" :src="recordInfo.img" alt="">
+                <img class="matchImg" :src="info.competitionImg" alt="">
               </div>
             </a-col>
-            <a-col :span='10' class="countBox">
+            <a-col :span='20' class="countBox">
               <div class="recordInfoStyle">
-                <div class="recordInfoFont">{{ recordInfo.matchName }}</div>
-                <div>{{ recordInfo.date }}</div>
-                <div>{{ recordInfo.place }}</div>
+                <div class="recordInfoFont">{{ `${info.competitionName}  /  ${info.date }` }}</div> 
+                <div>{{ info.countryName }}</div>
               </div>
               <div class="btnBox">
-                <div v-for="disition in recordInfo.divisiList" :key="disition.index">
-                  <a-button type="danger" size='small'>{{ disition.divisiName }}</a-button>
+                <div v-for="div in info.divisionList" :key="div.divisionId">
+                  <a-button type="danger" size='small' @click="showInfo(div.divisionId)">{{ div.divisionName }}</a-button>
                 </div>
               </div>
             </a-col>
@@ -100,14 +99,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { myTeamListHttp } from "@/axios/api";
 import {
   SettingFilled,
   EnvironmentOutlined,
   UserOutlined,
   UpCircleOutlined,
-  DownCircleOutlined,
+  DownCircleOutlined
 } from "@ant-design/icons-vue";
 export default defineComponent({
   name: "myTeam",
@@ -116,7 +116,7 @@ export default defineComponent({
     EnvironmentOutlined,
     UserOutlined,
     UpCircleOutlined,
-    DownCircleOutlined,
+    DownCircleOutlined
   },
   setup() {
     const Router = useRouter();
@@ -127,103 +127,11 @@ export default defineComponent({
         img: require("@/assets/3.jpg"),
         shopName: "",
         phone: "",
-        address: "",
+        address: ""
       },
       colSpan: 5,
       topInfoTitle: "Top 4 平均 Competition Rating",
-      teamList: [
-        {
-          id: 1,
-          img: require("@/assets/1.jpg"),
-          teamName: "上海队",
-          couny: "北京",
-          place: "汉庭会所",
-          captain: "刘半仙",
-          vipCount: 8,
-          ranting: 2.15,
-          PPD: 25.0,
-          MPR: 19.5,
-          count: 0,
-          flag: false,
-          record: [
-            {
-              matchName: "第三届DARTS WORLD（广州联赛）",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              divisiList: [
-                { id: 1, divisiName: "class1" },
-                { id: 2, divisiName: "class2" },
-                { id: 3, divisiName: "class3" },
-              ],
-            },
-            {
-              matchName: "第三届DARTS WORLD（广州联赛）",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              divisiList: [
-                { id: 1, divisiName: "class1" },
-                { id: 2, divisiName: "class2" },
-                { id: 3, divisiName: "class3" },
-              ],
-            },
-          ],
-        },
-        {
-          id: 1,
-          img: require("@/assets/1.jpg"),
-          teamName: "上海队",
-          couny: "北京",
-          place: "汉庭会所",
-          captain: "刘半仙",
-          vipCount: 8,
-          ranting: 2.15,
-          PPD: 25.0,
-          MPR: 19.5,
-          count: 0,
-          flag: false,
-          record: [],
-        },
-        {
-          id: 1,
-          img: require("@/assets/1.jpg"),
-          teamName: "上海队",
-          couny: "北京",
-          place: "汉庭会所",
-          captain: "刘半仙",
-          vipCount: 8,
-          ranting: 2.15,
-          PPD: 25.0,
-          MPR: 19.5,
-          count: 0,
-          flag: false,
-          record: [
-            {
-              matchName: "第三届DARTS WORLD（广州联赛）",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              divisiList: [
-                { id: 1, divisiName: "class1" },
-                { id: 2, divisiName: "class2" },
-                { id: 3, divisiName: "class3" },
-              ],
-            },
-            {
-              matchName: "第三届DARTS WORLD（广州联赛）",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              divisiList: [
-                { id: 1, divisiName: "class1" },
-                { id: 2, divisiName: "class2" },
-                { id: 3, divisiName: "class3" },
-              ],
-            },
-          ],
-        },
-      ],
+      teamList: [{ flag: false, list: [] }],
       showDetail: (item: any) => {
         data.dialogObj.title = item.shopAddress;
         data.dialogObj.shopName = item.shopName;
@@ -234,17 +142,37 @@ export default defineComponent({
       changeFlag: (index: number) => {
         data.teamList[index].flag = !data.teamList[index].flag;
       },
-      handleOk:() =>{
-        console.log(1)
+      handleOk: () => {
+        console.log(1);
       },
       entryVipPage: () => {
         Router.push("/");
       },
+      showInfo:(id: number) =>{
+        console.log(id)
+      }
+    });
+    const getList = () => {
+      const obj = {
+        countryId: sessionStorage.getItem("countryId"),
+        memberId: sessionStorage.getItem("userId"),
+        pageIndex: 1,
+        pageSize: 10
+      };
+      myTeamListHttp(obj).then(res => {
+        res.data.data.list.forEach((i: any) => {
+          i.flag = false;
+        });
+        data.teamList = res.data.data.list;
+      });
+    };
+    onMounted(() => {
+      getList();
     });
     return {
-      ...toRefs(data),
+      ...toRefs(data)
     };
-  },
+  }
 });
 </script>
 
@@ -327,13 +255,14 @@ export default defineComponent({
 }
 .btnBox {
   display: flex;
+  flex-wrap: wrap;
 }
 .btnBox div {
-  margin-right: 15px;
+  margin: 2px;
 }
 .msgBox {
   margin: 10px 0;
-  height: 80px;
+  min-height: 80px;
   box-sizing: border-box;
   border-bottom: 1px dashed #666;
 }

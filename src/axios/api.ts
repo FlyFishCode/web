@@ -9,8 +9,15 @@ import qs from 'qs'
 import { login,leagueList ,indexTeam,indexPlayer,indexCountrylist,indexCitylist,indexNewslist,newslist,newsInfo,indexCarousel} from './index/index'
 
 // 我的页面
-import { myPageInfo,myMatchInfo,myMatchInfoMore,myBattleSelectList,myBattleDataList,
-myBattleDateList} from './myPage/index'
+import { 
+	myPageInfo,
+	myMatchInfo,
+	myMatchInfoMore,
+	myBattleSelectList,
+	myBattleDataList,
+	myBattleDateList,
+	myTeamList
+} from './myPage/index'
 const baseURL = "/apw"
 // const Router = useRouter()
 
@@ -124,6 +131,10 @@ const myBattleDataListHttp = (data: any = null) =>{
 const myBattleDateListHttp = (data: any = null) =>{
 	return Axios.post(myBattleDateList,data)
 }
+//  我的队伍 列表数据
+const myTeamListHttp = (data: any = null) =>{
+	return Axios.post(myTeamList,data)
+}
 export {
 	loginHttp ,
 	leagueListHttp,
@@ -140,5 +151,6 @@ export {
 	indexCarouselHttp,
 	myBattleSelectHttp,
 	myBattleDataListHttp,
-	myBattleDateListHttp
+	myBattleDateListHttp,
+	myTeamListHttp
 }

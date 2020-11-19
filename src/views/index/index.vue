@@ -135,14 +135,14 @@
           <a-col :lg='4' :xs="8" class="matchState R" v-if="item.status === 2">{{ $t('default.104') }}</a-col>
           <a-col :lg='4' :xs="8" class="matchState F" v-if="item.status === 3">{{ $t('default.244') }}</a-col>
         </a-col>
-        <!-- <div>{{ $filters.filterDate(item.endPeriod) }}</div> -->
+        <!-- <div>{{ $filters.filterDate(item) }}</div> -->
         <a-col>{{ item.date }}</a-col>
       </a-col>
     </a-row>
 
     <divTitle :msg="matchTitle" :span="colSpan" :lastDate="getDate()" :showMore="true" :path='rankingPath' />
 
-    <a-row class="rowStyle">
+    <a-row class="rowStyle inPhoneTableDisplay">
       <a-tabs class="tabsBox" type='card'>
         <a-tab-pane key="1" :tab="$t('default.9')" class="teamBG">
           <a-col :span="7" class="colStyle" v-for="every in teamList" :key="every.index">
@@ -220,6 +220,118 @@
         </a-tab-pane>
       </a-tabs>
     </a-row>
+
+    <div class="showPhoneTable">
+      <a-row class="isPhone">
+        <a-col :span='12' class="buttonBox">
+          <a-button :type="isTeam?'primary':''" @click="showTeamBox">{{ $t('default.9') }}</a-button>
+        </a-col>
+        <a-col :span='12' class="buttonBox">
+          <a-button :type="isTeam?'':'primary'" @click="showPlayerBox">{{ $t('default.10') }}</a-button>
+        </a-col>
+      </a-row>
+
+      <a-row v-show="isTeam" class="inPhone">
+        <a-carousel arrows>
+          <template #prevArrow>
+            <div class="custom-slick-arrow" style="left: 10px;zIndex: 1">
+              <left-circle-outlined />
+            </div>
+          </template>
+          <template #nextArrow>
+            <div class="custom-slick-arrow" style="right: 10px">
+              <right-circle-outlined />
+            </div>
+          </template>
+          <div :span="7" class="colStyle" v-for="every in teamList" :key="every.index">
+            <div class="gameStyle">{{ every.title }}</div>
+            <div v-for="(item,index) in every.list" :key="index" class="teamBox">
+              <div :class="{first:!index,noFirst:index}">
+                <div class="teamImgBox">
+                  <img :src="item.teamImg">
+                </div>
+                <div v-if="!index" class="detailStyle">
+                  <div class="teamName" @click="goToPage">{{ item.teamName }}</div>
+                  <div class="name">{{ item.captainName }}</div>
+                  <div class="area">{{ item.shopAddress }}
+                    <span @click="showDetail(item)">
+                      <EnvironmentOutlined />
+                    </span>
+                  </div>
+                  <div class="current">{{ every.type }}</div>
+                  <div class="number">{{ item.teamScore }}</div>
+                </div>
+                <div v-else class="detailStyle">
+                  <div class="name smallBox" @click="goToPage">{{ item.teamName }}</div>
+                  <div class="area">{{ item.shopAddress }}
+                    <span @click="showDetail(item)">
+                      <EnvironmentOutlined />
+                    </span>
+                  </div>
+                  <div class="current">
+                    <span>{{ every.type }}</span> <span>{{ item.teamScore }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="more">
+              <div @click="entryRanking('ranking','1')">{{ `${$t('default.25')} +` }}</div>
+            </div>
+          </div>
+        </a-carousel>
+      </a-row>
+
+      <a-row v-show="!isTeam" class="inPhone">
+        <a-carousel arrows>
+          <template #prevArrow>
+            <div class="custom-slick-arrow" style="left: 10px;zIndex: 1">
+              <left-circle-outlined />
+            </div>
+          </template>
+          <template #nextArrow>
+            <div class="custom-slick-arrow" style="right: 10px">
+              <right-circle-outlined />
+            </div>
+          </template>
+          <div :span="7" class="colStyle" v-for="every in playerList" :key="every.index">
+            <div class="gameStyle">{{ every.title }}</div>
+            <div v-for="(item,index) in every.list" :key="index" class="teamBox">
+              <div :class="{first:!index,noFirst:index}">
+                <div class="teamImgBox">
+                  <img :src="item.playerImg" alt="">
+                </div>
+                <div v-if="!index" class="detailStyle">
+                  <div class="teamName" @click="goToPage">{{ item.playerName }}</div>
+                  <div class="name">{{ item.name }}</div>
+                  <div class="area">{{ item.shopAddress }}
+                    <span @click="showDetail(item)">
+                      <EnvironmentOutlined />
+                    </span>
+                  </div>
+                  <div class="current">{{ every.type }}</div>
+                  <div class="number">{{ item.playerScore }}</div>
+                </div>
+                <div v-else class="detailStyle">
+                  <div class="name smallBox" @click="goToPage">{{ item.playerName }}</div>
+                  <div class="area">{{ item.shopAddress }}
+                    <span @click="showDetail(item)">
+                      <EnvironmentOutlined />
+                    </span>
+                  </div>
+                  <div class="current">
+                    <span>{{ every.type }}</span> <span>{{ item.playerScore }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="more">
+              <div @click="entryRanking('ranking','3')">{{ `${$t('default.25')} +` }}</div>
+            </div>
+          </div>
+        </a-carousel>
+      </a-row>
+    </div>
+
     <a-modal v-model:visible="visible" :title="dialogObj.title">
       <template v-slot:footer>
         <a-row class="rowStyle dialogBox">
@@ -289,6 +401,7 @@ export default defineComponent({
   setup() {
     const Router = useRouter();
     const data = reactive({
+      isTeam: true,
       leaguePath: "league",
       rankingPath: "ranking",
       img: require("@/assets/logo.png"),
@@ -383,6 +496,12 @@ export default defineComponent({
           }
           data.onSearch();
         });
+      },
+      showTeamBox: () => {
+        data.isTeam = true;
+      },
+      showPlayerBox: () => {
+        data.isTeam = false;
       }
     });
     const getCarouselList = () => {
@@ -691,7 +810,7 @@ export default defineComponent({
   cursor: pointer;
   text-align: left;
 }
-.ant-carousel ::v-deep(.slick-slide) {
+.carouselBox .ant-carousel ::v-deep(.slick-slide) {
   text-align: center;
   height: 250px;
   line-height: 250px;
@@ -699,7 +818,21 @@ export default defineComponent({
   overflow: hidden;
 }
 
-.ant-carousel ::v-deep(.slick-arrow.custom-slick-arrow) {
+.carouselBox .ant-carousel ::v-deep(.slick-arrow.custom-slick-arrow) {
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
+  color: #fff;
+  background-color: rgba(31, 45, 61, 0.11);
+  opacity: 0.3;
+}
+.inPhone .ant-carousel ::v-deep(.slick-slide) {
+  text-align: center;
+  background: #364d79;
+  overflow: hidden;
+}
+
+.inPhone .ant-carousel ::v-deep(.slick-arrow.custom-slick-arrow) {
   width: 25px;
   height: 25px;
   font-size: 25px;
@@ -728,5 +861,11 @@ export default defineComponent({
 }
 .photoLink {
   cursor: pointer;
+}
+.isPhone {
+  margin: 5px 0;
+}
+.showPhoneTable{
+  display: none;
 }
 </style>

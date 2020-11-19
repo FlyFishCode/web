@@ -2,10 +2,10 @@
   <div class="content">
     <divTitle :msg="title" :span='colSpan' />
     <a-row class="rowStyle">
-      <a-col :span='12'>
+      <a-col :lg='12' :xs="24">
         <div id="container"></div>
       </a-col>
-      <a-col :span='12' class="mapSearch">
+      <a-col :lg='12' :xs="24" class="mapSearch">
         <div class="shopTitle">{{ $t('default.158') }}</div>
         <div class="center">
           <div>{{ $t('default.27') }}</div>
@@ -54,19 +54,17 @@
       </a-col>
     </a-row>
     <a-row class="shopRow">
-      <a-col :span='5' class="centerFont">
+      <a-col :span='12' class="centerFont">
         <SettingFilled /> {{ `${$t('default.161')}(${shopList.length})` }}
       </a-col>
     </a-row>
     <a-row>
       <a-row v-for="(item,index) in shopList" :key="item.id">
         <a-row class="eveyTeam">
-          <a-col :span='3' class="imgColStyle">
-            <div>
-              <img class="matchImg" :src="item.img" alt="">
-            </div>
+          <a-col :lg='3' :xs="4" class="imgColStyle">
+            <img class="matchImg" :src="item.img" alt="">
           </a-col>
-          <a-col :span='4' class="infoClass">
+          <a-col :lg='{span:4,offset:0}' :xs="{ span:10,offset:4 }" class="infoClass">
             <div class="teamStyle" @click="showShopInfo">{{ item.teamName }}</div>
             <div class="placeStyle">
               <div>{{ item.place }}</div>/
@@ -75,13 +73,13 @@
               </span>
             </div>
           </a-col>
-          <a-col :span='3' class="vipBox" :offset='3'>
+          <a-col :lg='{ span: 3, offset:3 }' :xs="4" class="vipBox inPhoneTableDisplay">
             <div>{{ $t('default.89') }}</div>
             <div>
-              <PhoneOutlined />   {{ item.vipCount }}
+              <PhoneOutlined /> {{ item.vipCount }}
             </div>
           </a-col>
-          <a-col :span='8' class="vipBox" :offset='1'>
+          <a-col :span='8' class="vipBox inPhoneTableDisplay" :offset='1'>
             <div>{{ $t('default.159') }}</div>
             <div class="infoStyle">
               <div>{{ `Rating  ${item.ranting}` }}</div>
@@ -102,16 +100,18 @@
           <a-row v-show="item.flag" class="recordBox">
             <!-- <div class="matchTitle">{{ joinMatch }}</div> -->
             <a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
-              <a-col :span='3' class="imgColStyle">
+              <a-col :span='4' class="imgColStyle">
                 <div>
                   <img class="matchImg" :src="recordInfo.img" alt="">
                 </div>
               </a-col>
-              <a-col :span='10' class="countBox">
-                <div class="recordInfoStyle">
+              <a-col :span='20' class="countBox">
+                <div class="recordInfoStyle inPhoneTableStyle">
                   <div class="recordInfoFont">{{ recordInfo.matchName }}</div>
-                  <div>{{ recordInfo.date }}</div>
-                  <div>{{ recordInfo.place }}</div>
+                  <div class="tableDate">
+                    <div>{{ recordInfo.date }}</div>
+                    <div>{{ recordInfo.place }}</div>
+                  </div>
                 </div>
                 <div class="btnBox">
                   <div v-for="disition in recordInfo.class" :key="disition.index">
@@ -130,9 +130,15 @@
 <script>
 import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import divTitle from "@/components/DividingLine.vue";
-import { message } from 'ant-design-vue'
-import { SettingFilled,InfoCircleFilled ,PhoneOutlined,DownCircleOutlined,UpCircleOutlined } from "@ant-design/icons-vue";
-import { useRouter } from 'vue-router';
+import { message } from "ant-design-vue";
+import {
+  SettingFilled,
+  InfoCircleFilled,
+  PhoneOutlined,
+  DownCircleOutlined,
+  UpCircleOutlined,
+} from "@ant-design/icons-vue";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "shop",
   components: {
@@ -141,10 +147,10 @@ export default defineComponent({
     InfoCircleFilled,
     PhoneOutlined,
     DownCircleOutlined,
-    UpCircleOutlined 
+    UpCircleOutlined,
   },
-  setup () {
-    const Router = useRouter()
+  setup() {
+    const Router = useRouter();
     const loadMap = () => {
       const url =
         "https://webapi.amap.com/maps?v=1.4.15&key=4288b5f8c829eba5d80f4664f7e40dcf&callback=load";
@@ -153,46 +159,49 @@ export default defineComponent({
       jsapi.src = url;
       document.head.appendChild(jsapi);
     };
-    let placeSearch = null
+    let placeSearch = null;
     const initMap = (map) => {
       // 加载定位插件，搜索提示插件，搜索插件
       // eslint-disable-next-line no-undef
-      AMap.plugin(['AMap.Geolocation', 'AMap.PlaceSearch', 'AMap.Autocomplete'], function () {
-        // eslint-disable-next-line no-undef
-        const geolocation = new AMap.Geolocation({
-          enableHighAccuracy: true,//是否使用高精度定位，默认:true
-          timeout: 10000,          //超过10秒后停止定位，默认：无穷大
-          maximumAge: 0,           //定位结果缓存0毫秒，默认：0
-          convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
-          showButton: true,        //显示定位按钮，默认：true
-          buttonPosition: 'RB',    //定位按钮停靠位置，默认：'LB'，左下角
+      AMap.plugin(
+        ["AMap.Geolocation", "AMap.PlaceSearch", "AMap.Autocomplete"],
+        function () {
           // eslint-disable-next-line no-undef
-          buttonOffset: new AMap.Pixel(5, 5),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-          showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
-          showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
-          panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
-          zoomToAccuracy: true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-        });
-        map.addControl(geolocation);
-        geolocation.getCurrentPosition();
-        // eslint-disable-next-line no-undef
-        const auto = new AMap.Autocomplete({
-          input: "input_id"
-        })
-        // eslint-disable-next-line no-undef
-        placeSearch = new AMap.PlaceSearch({
-          map: map,
-        });
-        // eslint-disable-next-line no-undef
-        AMap.event.addListener(geolocation, 'error', (onError) => {
-          message.error('定位出错:' + onError.message)
-        });//返回定位出错信息
-        // eslint-disable-next-line no-undef
-        AMap.event.addListener(auto, "select", (e) => {
-          placeSearch.setCity(e.poi.adcode);
-          placeSearch.search(e.poi.name);
-        });
-      });
+          const geolocation = new AMap.Geolocation({
+            enableHighAccuracy: true, //是否使用高精度定位，默认:true
+            timeout: 10000, //超过10秒后停止定位，默认：无穷大
+            maximumAge: 0, //定位结果缓存0毫秒，默认：0
+            convert: true, //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+            showButton: true, //显示定位按钮，默认：true
+            buttonPosition: "RB", //定位按钮停靠位置，默认：'LB'，左下角
+            // eslint-disable-next-line no-undef
+            buttonOffset: new AMap.Pixel(5, 5), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+            showMarker: true, //定位成功后在定位到的位置显示点标记，默认：true
+            showCircle: true, //定位成功后用圆圈表示定位精度范围，默认：true
+            panToLocation: true, //定位成功后将定位到的位置作为地图中心点，默认：true
+            zoomToAccuracy: true, //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+          });
+          map.addControl(geolocation);
+          geolocation.getCurrentPosition();
+          // eslint-disable-next-line no-undef
+          const auto = new AMap.Autocomplete({
+            input: "input_id",
+          });
+          // eslint-disable-next-line no-undef
+          placeSearch = new AMap.PlaceSearch({
+            map: map,
+          });
+          // eslint-disable-next-line no-undef
+          AMap.event.addListener(geolocation, "error", (onError) => {
+            message.error("定位出错:" + onError.message);
+          }); //返回定位出错信息
+          // eslint-disable-next-line no-undef
+          AMap.event.addListener(auto, "select", (e) => {
+            placeSearch.setCity(e.poi.adcode);
+            placeSearch.search(e.poi.name);
+          });
+        }
+      );
     };
     const showMap = () => {
       window.load = () => {
@@ -202,8 +211,8 @@ export default defineComponent({
           center: [116.397428, 39.90923],
           zoom: 13,
         });
-        initMap(map)
-      }
+        initMap(map);
+      };
     };
     const data = reactive({
       title: "default.127",
@@ -276,14 +285,14 @@ export default defineComponent({
         },
       ],
       search: () => {
-        placeSearch.search(data.shopName)
+        placeSearch.search(data.shopName);
       },
       changeFlag: (index) => {
         data.shopList[index].flag = !data.shopList[index].flag;
       },
-      showShopInfo:() =>{
-        Router.push('/shopAddress')
-      }
+      showShopInfo: () => {
+        Router.push("/shopAddress");
+      },
     });
     onMounted(() => {
       loadMap();
@@ -392,8 +401,11 @@ export default defineComponent({
 }
 .msgBox {
   margin: 10px 0;
+  padding: 0 0 0 10px;
   height: 80px;
+  border-radius: 10px;
   box-sizing: border-box;
+  border: 1px solid #2b2b2b;
 }
 .countBox {
   height: 100%;
@@ -410,7 +422,7 @@ export default defineComponent({
 }
 .btnBox {
   display: flex;
-  justify-content: center;
+  padding: 0 0 0 10px;
 }
 .btnBox div {
   margin-right: 15px;

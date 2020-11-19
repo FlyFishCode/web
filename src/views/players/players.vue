@@ -2,7 +2,7 @@
   <div class="content">
     <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
     <a-row class="rowStyle">
-      <a-col :span='6' class="centerFont">
+      <a-col :span='12' class="centerFont">
         <SettingFilled /> {{ `${$t('default.163')}(${$t('default.8')})` }}
       </a-col>
     </a-row>
@@ -51,46 +51,46 @@
     </a-row>
 
     <a-row class="rowStyle rowSearchBox">
-      <a-col :span='2' class="titleStyle">
+      <a-col :lg='2' :xs="6" class="titleStyle">
         <BankFilled class="fontIcon" />{{ $t('default.27') }}
       </a-col>
-      <a-col :span='3'>
+      <a-col :lg='3' :xs="6">
         <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='2' class="titleStyle">{{ $t('default.164') }}</a-col>
-      <a-col :span='3'>
+      <a-col :lg='2' :xs="6" class="titleStyle">{{ $t('default.164') }}</a-col>
+      <a-col :lg='3' :xs="6">
         <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='2' :offset="4" class="titleStyle">
+      <a-col :lg='{ span:2,offset:4 }' :xs="6" class="titleStyle">
         <SearchOutlined class="fontIcon" />{{ $t('default.165') }}
       </a-col>
-      <a-col :span='3'>
+      <a-col :lg='3' :xs="6">
         <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='5'>
+      <a-col :lg='5' :xs="12">
         <a-input-search v-model:value="value" :enter-button="$t('default.16')" size="default" @search="onSearch" />
       </a-col>
     </a-row>
     <a-row>
-      <a-col :span='4' class="centerFont">
+      <a-col :span='12' class="centerFont">
         <SettingFilled /> {{ `${$t('default.92')} (${teamList.length})` }}
       </a-col>
     </a-row>
 
     <a-row v-for="(item,index) in teamList" :key="item.id">
       <a-row class="eveyTeam">
-        <a-col :span='3' class="imgColStyle">
+        <a-col :lg='3' :xs="4" class="imgColStyle">
           <div>
             <img class="matchImg" :src="item.img" alt="">
           </div>
         </a-col>
-        <a-col :span='4' class="infoClass">
+        <a-col :lg='{span:4,offset:0}' :xs="{ span:10,offset:4 }" class="infoClass">
           <div class="teamStyle" @click="entryPage">{{ item.teamName }}</div>
           <div class="placeStyle">
             <div>{{ item.place }}</div>/
@@ -99,11 +99,11 @@
             </span>
           </div>
         </a-col>
-        <a-col :span='3' class="vipBox">
+        <a-col :lg='3' :xs="4" class="vipBox">
           <div>{{ $t('default.55') }}</div>
           <div> {{ item.vipCount }} </div>
         </a-col>
-        <a-col :span='8' class="topBox">
+        <a-col :span='8' class="topBox inPhoneTableDisplay">
           <div>{{ topInfoTitle }}</div>
           <div class="infoStyle">
             <div>{{ `Rating  ${item.ranting}` }}</div>|
@@ -111,7 +111,7 @@
             <div>{{ `MPR  ${item.MPR}` }}</div>
           </div>
         </a-col>
-        <a-col :span='3' class="vipBox">
+        <a-col :span='3' class="vipBox inPhoneTableDisplay">
           <div>{{ type }}</div>
           <div>{{ item.count }}</div>
         </a-col>
@@ -130,16 +130,16 @@
         <a-row v-show="item.flag" class="recordBox">
           <div class="matchTitle">{{ $t('default.83') }}</div>
           <a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
-            <a-col :span='3' class="imgColStyle">
-              <div>
-                <img class="matchImg" :src="recordInfo.img" alt="">
-              </div>
+            <a-col :span='4' class="imgColStyle">
+              <img class="matchImg" :src="recordInfo.img" alt="">
             </a-col>
-            <a-col :span='10' class="countBox">
-              <div class="recordInfoStyle">
+            <a-col :span='20' class="countBox">
+              <div class="recordInfoStyle inPhoneTableStyle">
                 <div class="recordInfoFont">{{ recordInfo.matchName }}</div>
-                <div>{{ recordInfo.date }}</div>
-                <div>{{ recordInfo.place }}</div>
+                <div class="tableDate">
+                  <div>{{ recordInfo.date }}</div>
+                  <div>{{ recordInfo.place }}</div>
+                </div>
               </div>
               <div class="btnBox">
                 <div v-for="disition in recordInfo.class" :key="disition.index">
@@ -152,7 +152,7 @@
       </transition>
     </a-row>
 
-    <a-modal v-model:visible="visible" :title="dialogObj.title">
+    <a-modal v-model:visible="visible" :title="dialogObj.title" centered>
       <template v-slot:footer>
         <a-row class="rowStyle dialogBox">
           <a-col :span='8'>
@@ -190,7 +190,7 @@ import {
   SearchOutlined,
   EnvironmentOutlined,
   DownCircleOutlined,
-  UpCircleOutlined,
+  UpCircleOutlined
 } from "@ant-design/icons-vue";
 export default defineComponent({
   name: "players",
@@ -201,7 +201,7 @@ export default defineComponent({
     SettingFilled,
     EnvironmentOutlined,
     DownCircleOutlined,
-    UpCircleOutlined,
+    UpCircleOutlined
   },
   setup() {
     const Router = useRouter();
@@ -213,16 +213,16 @@ export default defineComponent({
       topInfoTitle: "Competition Rating",
       current: 1,
       pageSize: 1,
-      total:1,
+      total: 1,
       colSpan: 4,
       matchType: 2020,
-      visible:false,
-      dialogObj:{
+      visible: false,
+      dialogObj: {
         title: "",
         img: require("@/assets/3.jpg"),
         shopName: "",
         phone: "",
-        address: "",
+        address: ""
       },
       matchTypeList: [{ value: 2020, label: "2020" }],
       monthList: [],
@@ -250,8 +250,8 @@ export default defineComponent({
               class: [
                 { className: "class1" },
                 { className: "class2" },
-                { className: "class3" },
-              ],
+                { className: "class3" }
+              ]
             },
             {
               matchName: "第三届DARTS WORLD（广州联赛）",
@@ -261,10 +261,10 @@ export default defineComponent({
               class: [
                 { className: "class1" },
                 { className: "class2" },
-                { className: "class3" },
-              ],
-            },
-          ],
+                { className: "class3" }
+              ]
+            }
+          ]
         },
         {
           id: 1,
@@ -279,7 +279,7 @@ export default defineComponent({
           count: 0,
           enroll: 10,
           flag: false,
-          record: [],
+          record: []
         },
         {
           id: 1,
@@ -303,8 +303,8 @@ export default defineComponent({
               class: [
                 { className: "class1" },
                 { className: "class2" },
-                { className: "class3" },
-              ],
+                { className: "class3" }
+              ]
             },
             {
               matchName: "第三届DARTS WORLD（广州联赛）",
@@ -314,11 +314,11 @@ export default defineComponent({
               class: [
                 { className: "class1" },
                 { className: "class2" },
-                { className: "class3" },
-              ],
-            },
-          ],
-        },
+                { className: "class3" }
+              ]
+            }
+          ]
+        }
       ],
       bestPlayers: [
         {
@@ -330,7 +330,7 @@ export default defineComponent({
           PPD: "PPD",
           MPR: "MPR",
           score: "15",
-          top: "BEST HELLO WORLD",
+          top: "BEST HELLO WORLD"
         },
         {
           id: 2,
@@ -341,7 +341,7 @@ export default defineComponent({
           PPD: "PPD",
           MPR: "MPR",
           score: "15",
-          top: "HELLO WORLD",
+          top: "HELLO WORLD"
         },
         {
           id: 3,
@@ -352,7 +352,7 @@ export default defineComponent({
           PPD: "PPD",
           MPR: "MPR",
           score: "15",
-          top: "BEST WORLD",
+          top: "BEST WORLD"
         },
         {
           id: 4,
@@ -363,17 +363,17 @@ export default defineComponent({
           win: "PPD",
           MPR: "MPR",
           score: "15",
-          top: "BEST WORLD",
-        },
+          top: "BEST WORLD"
+        }
       ],
       getDate: () => "220-10-16",
       showDetail: (value: number) => {
         Router.push({
           path: "/playerInfo",
-          query: { value },
+          query: { value }
         });
       },
-      showDialog:(item: any) =>{
+      showDialog: (item: any) => {
         data.dialogObj.title = item.place;
         data.dialogObj.shopName = item.shopName;
         data.dialogObj.phone = item.phoneNumber;
@@ -389,17 +389,17 @@ export default defineComponent({
       matchTypeChange: (value: number) => {
         console.log(value);
       },
-      entryPage:() =>{
-        Router.push('playerInfo');
+      entryPage: () => {
+        Router.push("playerInfo");
       },
-      handleOk:() =>{
-        console.log(1)
+      handleOk: () => {
+        console.log(1);
       }
     });
     return {
-      ...toRefs(data),
+      ...toRefs(data)
     };
-  },
+  }
 });
 </script>
 
@@ -422,10 +422,12 @@ export default defineComponent({
 .winnerListStyle {
   background: #999;
   display: flex;
+  overflow: hidden;
+  overflow-x: auto;
   justify-content: space-around;
 }
 .fourBox {
-  width: 220px;
+  min-width: 200px;
   height: 190px;
   padding: 10px;
   opacity: 0.7;
@@ -592,6 +594,7 @@ export default defineComponent({
 }
 .btnBox {
   display: flex;
+  padding: 0 0 0 10px;
 }
 .btnBox div {
   margin-right: 15px;
@@ -605,8 +608,11 @@ export default defineComponent({
 }
 .msgBox {
   margin: 10px 0;
+  padding: 0 0 0 10px;
   height: 80px;
+  border-radius: 10px;
   box-sizing: border-box;
+  border: 1px solid #2b2b2b;
 }
 .recordInfoStyle {
   display: flex;
@@ -625,11 +631,6 @@ export default defineComponent({
 .recordInfoFont:hover {
   text-decoration: underline;
 }
-.dialogBox {
-  height: 100px;
-  color: #ff3202;
-  border: 1px solid #eee;
-}
 .imgBox {
   height: 100px;
   width: 100px;
@@ -638,13 +639,6 @@ export default defineComponent({
 .imgBox img {
   width: 100%;
   height: 100%;
-}
-.dialog {
-  text-align: left;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
 }
 .dialogBtn {
   text-align: center;

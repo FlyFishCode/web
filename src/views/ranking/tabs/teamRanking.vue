@@ -1,47 +1,47 @@
 <template>
   <div class="content">
     <a-row>
-      <a-col :span='5' class="smallTitle">
+      <a-col :span='12' class="smallTitle">
         <SettingFilled /> {{ $t('default.67') }}
       </a-col>
     </a-row>
     <a-row class="rowStyle rowSearchBox">
-      <a-col :span='3'>
+      <a-col :lg='3' :xs="12">
         <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in list" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='3'>
+      <a-col :lg='3' :xs="12">
         <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in list" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='2' :offset="2" class="titleStyle">
+      <a-col :lg='{span:2,offset:2}' :xs='{span:6,offset:0}' class="titleStyle">
         <AimOutlined class="fontIcon" />{{ $t('default.27') }}
       </a-col>
-      <a-col :span='3'>
+      <a-col :lg='3' :xs="6">
         <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in list" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='3'>
+      <a-col :lg='3' :xs="6">
         <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in list" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='3'>
+      <a-col :lg='3' :xs="6">
         <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in list" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
     </a-row>
 
-    <a-row>
+    <a-row class="inPhoneTableDisplay">
       <tramRanking />
     </a-row>
 
     <!-- 表格 -->
-    <a-row>
+    <a-row class="inPhoneTableDisplay">
       <a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey='key' :customHeaderRow='customHeaderRow'>
         <template v-slot:index>{{ $t('default.70') }}</template>
         <template v-slot:date>{{ $t('default.55') }}</template>
@@ -58,6 +58,19 @@
         <template v-slot:awayLose>{{ $t('default.47') }}</template>
         <template v-slot:awayDraw>{{ $t('default.48') }}</template>
         <template v-slot:awayChange>{{ $t('default.185') }}</template>
+        <template v-slot:team="{ text }">
+          <div class="tableBox">
+            <div class="tableImgBox"><img :src="dialogObj.img" alt=""></div>
+            <div class="tableMsgCentent">
+              <div @click="entryInfoPage" class="link">{{ text }}</div>
+              <div>{{ text }}
+                <span style="cursor:pointer" @click="showDialog(text)">
+                  <EnvironmentOutlined />
+                </span>
+              </div>
+            </div>
+          </div>
+        </template>
         <template v-slot:state="{ text }">
           <div class="tableState">
             <div v-if="text === 1" class="plan" @click="showPlan">{{ $t('default.41') }}</div>
@@ -68,12 +81,56 @@
       </a-table>
     </a-row>
 
+    <a-row class="showPhoneTable">
+      <a-table :columns="inPhoneColumns" :data-source="tableList" :pagination="false" bordered rowKey='key'>
+        <template v-slot:index>{{ $t('default.70') }}</template>
+        <template v-slot:date>{{ $t('default.55') }}</template>
+        <template v-slot:Rating>{{ $t('default.168') }}</template>
+        <template v-slot:team="{ text }">
+          <div class="tableBox">
+            <div class="tableImgBox"><img :src="dialogObj.img" alt=""></div>
+            <div class="tableMsgCentent">
+              <div @click="entryInfoPage" class="link">{{ text }}</div>
+              <div>{{ text }}
+                <span style="cursor:pointer" @click="showDialog(text)">
+                  <EnvironmentOutlined />
+                </span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </a-table>
+    </a-row>
+
+    <a-modal v-model:visible="visible" :title="dialogObj.title" centered>
+      <template v-slot:footer>
+        <a-row class="rowStyle dialogBox">
+          <a-col :span='8'>
+            <div class="imgBox">
+              <img :src="dialogObj.img" alt="">
+            </div>
+          </a-col>
+          <a-col :span='16' class="dialog">
+            <div>{{ `${$t('default.28')}：${dialogObj.shopName}` }}</div>
+            <div>{{ `${$t('default.89')}：${dialogObj.phone}` }}</div>
+            <div>{{ `${$t('default.125')}：${dialogObj.address}` }}</div>
+          </a-col>
+        </a-row>
+        <div class="dialogBtn">
+          <a-button type="primary" @click="handleOk">{{ $t('default.25') }}</a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
-import { SettingFilled, AimOutlined } from "@ant-design/icons-vue";
+import {
+  SettingFilled,
+  AimOutlined,
+  EnvironmentOutlined
+} from "@ant-design/icons-vue";
 import tramRanking from "@/components/rankingTeam.vue";
 export default defineComponent({
   name: "teamRanking",
@@ -81,6 +138,7 @@ export default defineComponent({
     SettingFilled,
     AimOutlined,
     tramRanking,
+    EnvironmentOutlined
   },
   setup() {
     const data = reactive({
@@ -91,15 +149,23 @@ export default defineComponent({
       matchType: 1,
       list: [
         { value: 1, label: "sssssss" },
-        { value: 2, label: "aaaaaaa" },
+        { value: 2, label: "aaaaaaa" }
       ],
+      visible: false,
+      dialogObj: {
+        title: "",
+        img: require("@/assets/3.jpg"),
+        shopName: "",
+        phone: "",
+        address: ""
+      },
       customHeaderRow: (column: any) => {
         return {
           // on: {
           click: (event: any) => {
             debugger;
             console.log(event, column);
-          },
+          }
           // },
         };
       },
@@ -108,8 +174,8 @@ export default defineComponent({
         columnTitle: "对比",
         onChange: (selectedRowKeys: number[]) => {
           if (selectedRowKeys.length == 2) {
-            selectedRowKeys.forEach((i) => {
-              const index = data.tableList.findIndex((j) => j.key === i);
+            selectedRowKeys.forEach(i => {
+              const index = data.tableList.findIndex(j => j.key === i);
               data.tableList.forEach((k, kndex) => {
                 if (index !== kndex) {
                   k.disabled = true;
@@ -121,7 +187,7 @@ export default defineComponent({
               data.tableList = [...list];
             });
           } else {
-            data.tableList.forEach((i) => {
+            data.tableList.forEach(i => {
               i.disabled = false;
             });
             const list = data.tableList;
@@ -129,15 +195,25 @@ export default defineComponent({
           }
         },
         getCheckboxProps: (record: { disabled: boolean }) => ({
-          disabled: record.disabled, // Column configuration not to be checked
-        }),
+          disabled: record.disabled // Column configuration not to be checked
+        })
       },
-      columns: [
+      inPhoneColumns: [
         { dataIndex: "key", key: "time", slots: { title: "index" } },
         {
           dataIndex: "data",
           key: "name",
-          slots: { title: "date" },
+          slots: { title: "date", customRender: "team" }
+        },
+        { dataIndex: "data", key: "time", slots: { title: "Rating" } }
+      ],
+      columns: [
+        { dataIndex: "key", key: "time", slots: { title: "index" } },
+        {
+          dataIndex: "data",
+          width: 180,
+          key: "name",
+          slots: { title: "date", customRender: "team" }
         },
         { dataIndex: "data", key: "time", slots: { title: "Rating" } },
         { dataIndex: "data", key: "type", slots: { title: "PPD" } },
@@ -147,51 +223,51 @@ export default defineComponent({
             {
               dataIndex: "homaName",
               key: "homaName",
-              slots: { title: "homeWin" },
+              slots: { title: "homeWin" }
             },
             {
               dataIndex: "homeScore",
               key: "homeScore",
-              slots: { title: "homeLose" },
+              slots: { title: "homeLose" }
             },
             {
               dataIndex: "homeScore",
               key: "homeScore",
-              slots: { title: "homeDraw" },
+              slots: { title: "homeDraw" }
             },
             {
               dataIndex: "homeScore",
               key: "homeScore",
-              slots: { title: "homeChange" },
-            },
+              slots: { title: "homeChange" }
+            }
           ],
-          slots: { title: "homeTeam" },
+          slots: { title: "homeTeam" }
         },
         {
           children: [
             {
               dataIndex: "awayScore",
               key: "awayScore",
-              slots: { title: "awayWin" },
+              slots: { title: "awayWin" }
             },
             {
               dataIndex: "homeScore",
               key: "awayName",
-              slots: { title: "awayLose" },
+              slots: { title: "awayLose" }
             },
             {
               dataIndex: "homeScore",
               key: "homeScore",
-              slots: { title: "awayDraw" },
+              slots: { title: "awayDraw" }
             },
             {
               dataIndex: "homeScore",
               key: "homeScore",
-              slots: { title: "awayChange" },
-            },
+              slots: { title: "awayChange" }
+            }
           ],
-          slots: { title: "awayTeam" },
-        },
+          slots: { title: "awayTeam" }
+        }
       ],
       tableList: [
         {
@@ -204,7 +280,7 @@ export default defineComponent({
           awayName: "李逍遥",
           awayScore: 5,
           key: 1,
-          disabled: false,
+          disabled: false
         },
         {
           data: "2020-10-2",
@@ -216,7 +292,7 @@ export default defineComponent({
           awayName: "李逍遥",
           awayScore: 5,
           key: 2,
-          disabled: false,
+          disabled: false
         },
         {
           data: "2020-10-3",
@@ -228,7 +304,7 @@ export default defineComponent({
           awayName: "李逍遥",
           awayScore: 5,
           key: 3,
-          disabled: false,
+          disabled: false
         },
         {
           data: "2020-10-3",
@@ -240,7 +316,7 @@ export default defineComponent({
           awayName: "李逍遥",
           awayScore: 5,
           key: 4,
-          disabled: false,
+          disabled: false
         },
         {
           data: "2020-10-3",
@@ -252,17 +328,27 @@ export default defineComponent({
           awayName: "李逍遥",
           awayScore: 5,
           key: 5,
-          disabled: false,
-        },
+          disabled: false
+        }
       ],
       matchTypeChange: (value: number) => {
         console.log(value);
       },
+      showDialog: (item: any) => {
+        data.dialogObj.title = item.place;
+        data.dialogObj.shopName = item.shopName;
+        data.dialogObj.phone = item.phoneNumber;
+        data.dialogObj.address = item.address;
+        data.visible = true;
+      },
+      handleOk: () => {
+        console.log(1);
+      }
     });
     return {
-      ...toRefs(data),
+      ...toRefs(data)
     };
-  },
+  }
 });
 </script>
 
@@ -275,5 +361,37 @@ export default defineComponent({
   color: #fff;
   border-radius: 10px;
   cursor: pointer;
+}
+.tableImgBox {
+  height: 60px;
+  width: 60px;
+  margin: 0 auto;
+}
+.tableImgBox img {
+  width: 100%;
+  height: 100%;
+}
+.imgBox {
+  height: 100px;
+  width: 100px;
+  margin: 0 auto;
+}
+.imgBox img {
+  width: 100%;
+  height: 100%;
+}
+.tableMsgCentent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.dialogBtn {
+  text-align: center;
+}
+.tableBox {
+  display: flex;
+}
+.showPhoneTable{
+  display: none;
 }
 </style>

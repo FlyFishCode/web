@@ -1,8 +1,8 @@
 <template>
   <div class="content">
     <a-row id="title-g">
-      <a-col :lg='4' :xs="4">{{ $t('default.13') }}</a-col>
-      <a-col :lg="{ span: 3, offset: 5 }" :xs="{ span: 6, offset: 3 }" class="btnBox">
+      <a-col :lg='4' :xs="{ span:4 , offset: 1 }">{{ $t('default.13') }}</a-col>
+      <a-col :lg="{ span: 3, offset: 5 }" :xs="{ span: 6, offset: 2 }" class="btnBox">
         <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
@@ -15,65 +15,64 @@
     </a-row>
     <a-row class="centerStyle">
       <a-row class="rowSearchBox">
-        <a-col :span='2'>
+        <a-col :lg='2' :xs="6">
           <EnvironmentOutlined class="fontIcon" />{{ $t('default.27') }}
         </a-col>
-        <a-col :span='3'>
+        <a-col :lg='3' :xs="9">
           <a-select v-model:value="areaId" @change="areaChange" class="selectBox">
             <a-select-option v-for="item in areaList" :key="item.countryId" :value='item.countryId'>{{ item.countryName }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='3'>
+        <a-col :lg='3' :xs="9">
           <a-select v-model:value="cityId" @change="cityChange" class="selectBox">
             <a-select-option v-for="item in cityList" :key="item.areaId" :value='item.areaId'>{{ item.areaName }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='3'>{{ $t('default.14') }}</a-col>
-        <a-col :span='2'>
+        <a-col :lg='3' :xs="6">{{ $t('default.14') }}</a-col>
+        <a-col :lg='2' :xs="18">
           <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='4' :offset="1">
+        <a-col :lg="{ span:4 , offset:1 }" :xs="6">
           <SearchOutlined class="fontIcon" />{{ $t('default.15') }}
         </a-col>
-        <a-col :span='6'>
+        <a-col :lg='6' :xs="18">
           <a-input-search v-model:value="value" allowClear :enter-button="$t('default.16')" size="default" @search="onSearch" />
         </a-col>
       </a-row>
+
       <a-row>
-        <a-col :span='5' class="centerFont">
+        <a-col :lg='5' :xs="10" class="centerFont">
           <SettingFilled /> {{ $t('default.224') + `(${matchTotal})` }}
         </a-col>
       </a-row>
-      <a-row class="rowStyle">
-        <a-col :span='3' class="buttonBox" @click="showALLleague">
+      <a-row class="rowStyle inPhoneBtnBox">
+        <a-col :span='3' @click="showALLleague" class="buttonBox">
           <a-button :type="allLeague?'primary':''">{{ all }}</a-button>
         </a-col>
-        <a-col :span='3' class="buttonBox" @click="showMyLengue">
+        <a-col :span='3' @click="showMyLengue" class="buttonBox">
           <a-button :type="myLeague?'primary':''">{{ my }}</a-button>
         </a-col>
       </a-row>
       <div v-show="allLeague">
         <a-row v-for="item in allLeagueList" :key="item.matchId" class="matchBox">
-          <a-col :span='14'>
-            <div>
-              <a-col :span='5' class="matchImgBox">
-                <img class="matchImg" :src="item.img">
-              </a-col>
-              <a-col @click="showMore(item.state)" style="cursor:pointer" :span='10'>
-                <div>
-                  <div>{{ item.title }}</div>
-                  <div>{{ item.tip }}</div>
-                </div>
-              </a-col>
-            </div>
+          <a-col :lg='14' :xs="24">
+            <a-col :span='4' class="matchImgBox">
+              <img class="matchImg" :src="item.img">
+            </a-col>
+            <a-col :span='20' @click="showMore(item.state)" style="cursor:pointer">
+              <div>
+                <div>{{ item.title }}</div>
+                <div>{{ item.tip }}</div>
+              </div>
+            </a-col>
           </a-col>
-          <a-col :span='2'>
+          <a-col :lg='2' :xs="0">
             <div class="fontDisplay">{{ $t('default.167') }}</div>
             <div>{{ item.area }}</div>
           </a-col>
-          <a-col :span='8'>
+          <a-col :lg='8' :xs="0">
             <div class="rightStyle">
               <div class="fontDisplay">{{ '比赛期间' }}</div>
               <div class="matchState I" v-if="item.state === 1">{{ '比赛中' }}</div>
@@ -90,24 +89,22 @@
 
       <div v-show="myLeague">
         <a-row v-for="item in myLeagueList" :key="item.matchId" class="matchBox">
-          <a-col :span='14'>
-            <div>
-              <a-col :span='5' class="matchImgBox">
-                <img class="matchImg" :src="item.img">
-              </a-col>
-              <a-col @click="showMore(item.state)" style="cursor:pointer" :span='10'>
-                <div>
-                  <div>{{ item.title }}</div>
-                  <div>{{ item.tip }}</div>
-                </div>
-              </a-col>
-            </div>
+          <a-col :lg='14' :xs="24">
+            <a-col :span='4' class="matchImgBox">
+              <img class="matchImg" :src="item.img">
+            </a-col>
+            <a-col :span='20' @click="showMore(item.state)" style="cursor:pointer">
+              <div>
+                <div>{{ item.title }}</div>
+                <div>{{ item.tip }}</div>
+              </div>
+            </a-col>
           </a-col>
-          <a-col :span='2'>
+          <a-col :lg='2' :xs="0">
             <div class="fontDisplay">{{ $t('default.167') }}</div>
             <div>{{ item.area }}</div>
           </a-col>
-          <a-col :span='8'>
+          <a-col :lg='8' :xs="0">
             <div class="rightStyle">
               <div class="fontDisplay">{{ '比赛期间' }}</div>
               <div class="matchState I" v-if="item.state === 1">{{ '比赛中' }}</div>
@@ -131,7 +128,7 @@ import { useRouter } from "vue-router";
 import {
   SearchOutlined,
   SettingFilled,
-  EnvironmentOutlined,
+  EnvironmentOutlined
 } from "@ant-design/icons-vue";
 interface HTMLInputEvent {
   value: HTMLInputElement & EventTarget;
@@ -172,12 +169,12 @@ export default defineComponent({
       newsSearch: [
         { id: 1, value: "新闻" },
         { id: 2, value: "标题" },
-        { id: 3, value: "新闻+标题" },
+        { id: 3, value: "新闻+标题" }
       ],
       stateList: [
         { id: 1, value: "准备中" },
         { id: 2, value: "进行中" },
-        { id: 3, value: "已结束" },
+        { id: 3, value: "已结束" }
       ],
       allLeagueList: [
         {
@@ -187,7 +184,7 @@ export default defineComponent({
           tip: "U-LEAGUE 苏州赛区季后赛",
           area: "上海",
           date: "2020-9-10",
-          state: 1,
+          state: 1
         },
         {
           matchId: 1,
@@ -196,7 +193,7 @@ export default defineComponent({
           tip: "U-LEAGUE 广州赛区季后赛",
           area: "武汉",
           date: "2020-9-10",
-          state: 2,
+          state: 2
         },
         {
           matchId: 1,
@@ -205,8 +202,8 @@ export default defineComponent({
           tip: "U-LEAGUE 兰州赛区季后赛",
           area: "云南",
           date: "2020-9-10",
-          state: 3,
-        },
+          state: 3
+        }
       ],
       myLeagueList: [
         {
@@ -216,8 +213,8 @@ export default defineComponent({
           tip: "U-LEAGUE 兰州赛区季后赛",
           area: "云南",
           date: "2020-9-10",
-          state: 3,
-        },
+          state: 3
+        }
       ],
       monthList: [{ id: 0, value: 0 }],
       handleMenuClick: (e: string) => {
@@ -229,7 +226,7 @@ export default defineComponent({
       showMore: (value: string) => {
         Router.push({
           path: "/calendar",
-          query: { value },
+          query: { value }
         });
       },
       showALLleague: () => {
@@ -246,7 +243,7 @@ export default defineComponent({
         console.log(value);
       },
       areaChange: (value: number) => {
-        indexCityHttp({ countryId: value }).then((res) => {
+        indexCityHttp({ countryId: value }).then(res => {
           data.cityList = res.data.data;
           if (data.cityList.length) {
             data.cityId = data.cityList[0]["areaId"];
@@ -257,10 +254,10 @@ export default defineComponent({
       },
       cityChange: (value: number) => {
         console.log(value);
-      },
+      }
     });
     const getCountryList = () => {
-      indexCountryHttp().then((res) => {
+      indexCountryHttp().then(res => {
         if (res.data.data.length) {
           data.areaList = res.data.data;
           data.areaId = data.areaList[0]["countryId"];
@@ -275,9 +272,9 @@ export default defineComponent({
       getCountryList();
     });
     return {
-      ...toRefs(data),
+      ...toRefs(data)
     };
-  },
+  }
 });
 </script>
 <style scoped>

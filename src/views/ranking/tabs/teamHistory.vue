@@ -1,10 +1,10 @@
 <template>
   <div class="content">
     <a-row type="flex" justify="space-between">
-      <a-col :span='5' class="smallTitle">
+      <a-col :span='10' class="smallTitle">
         <SettingFilled /> {{ $t('default.181') }}
       </a-col>
-      <a-col :span='2' class="btnBox">
+      <a-col :span='4' class="btnBox">
         <a-button type="danger" size="small" @click="clearList">{{ $t('default.196') }}</a-button>
       </a-col>
     </a-row>
@@ -461,6 +461,7 @@ export default defineComponent({
 }
 .btnBox {
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 .chanceBox {

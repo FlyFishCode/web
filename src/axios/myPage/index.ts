@@ -13,10 +13,13 @@ const myBattleSelectList = '/mycompetitionmenu'
 const myBattleDataList = '/myconfrontationinfolist'
 // 我的对战 查日历表数据
 const myBattleDateList = '/myconfrontationinfocalendar'
+// 我的队伍列表数据
+const myTeamList = '/myteam'
 export {
   myPageInfo,
   myMatchInfo, myMatchInfoMore,
   myBattleSelectList,
   myBattleDataList,
-  myBattleDateList
+  myBattleDateList,
+  myTeamList
 }

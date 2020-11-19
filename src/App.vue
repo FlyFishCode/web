@@ -123,4 +123,29 @@ export default defineComponent({
 .ant-fullcalendar-fullscreen .ant-fullcalendar-content{
   height: auto!important;
 }
+.tableDate {
+  display: flex;
+  justify-content: center;
+}
+  /* 弹出框样式 */
+.dialogBox {
+  height: 100px;
+  color: #ff3202;
+  border: 1px solid #eee;
+}
+.dialog {
+  text-align: left;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+ /* 排名统计页面表格队伍显示样式s */
+.link {
+  color: #1890ff;
+  cursor: pointer;
+}
+.link:hover {
+  text-decoration: underline;
+}
 </style>

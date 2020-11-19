@@ -40,7 +40,7 @@ export default defineComponent({
     const data = reactive({
       activeKey:'1',
       title: "default.180",
-      colSpan: 5,
+      colSpan: 10,
       getDate: () => {
         return "2020-10-17";
       },

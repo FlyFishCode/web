@@ -38,13 +38,14 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .line {
-  height: 50px;
   border-radius: 20px 20px 0 0;
   border: 1px solid #2b2b2b;
   margin: 10px 0;
 }
 .fontStyle {
-  font-size: 30px;
+  font-size: 20px;
+  height: 50px;
+  line-height: 50px;
 }
 .timeStyle {
   color: red;

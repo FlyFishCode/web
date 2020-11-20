@@ -48,7 +48,7 @@
             <a-checkbox v-model:checked="league">{{ $t('default.8') }}</a-checkbox>
           </div>
         </div>
-        <div class="btnBox">
+        <div class="btnBg">
           <a-button type="danger" @click="search">{{ $t('default.16') }}</a-button>
         </div>
       </a-col>
@@ -430,5 +430,9 @@ export default defineComponent({
 .recordInfoStyle {
   display: flex;
   justify-content: flex-start;
+}
+.btnBg{
+  display: flex;
+  justify-content: center;
 }
 </style>

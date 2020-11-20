@@ -53,7 +53,7 @@ export default defineComponent({
   line-height: 50px;
 }
 .shwoMoreBox {
-  height: 100%;
+  height: 50px;
   display: flex;
   align-items: center;
 }

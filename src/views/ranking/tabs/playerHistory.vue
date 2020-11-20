@@ -9,12 +9,12 @@
       </a-col>
     </a-row>
     <a-row class="allBox">
-      <a-col :span='4'>
+      <a-col :lg='4' :xs="8">
         <div v-for="item in titleList" :key="item.id">
-          <div class="titleBox" :class="{ imgTitle:item.id === 1,plain:item.id === 4 || item.id === 5 || item.id === 6 || item.id === 8 || item.id === 9,chance:item.id === 7 }">{{ $t(item.title) }}</div>
+          <div class="titleBox" :class="{ imgTitle:item.id === 1,plain:item.id === 4 || item.id === 5 || item.id === 6 || item.id === 8 || item.id === 9,playerChance:item.id === 7 }">{{ $t(item.title) }}</div>
         </div>
       </a-col>
-      <a-col :span='5' v-for="(item,index) in teamList" :key="index">
+      <a-col class="inPhoneTableDisplay" :span='5' v-for="(item,index) in teamList" :key="index">
         <div v-if="item.flag" class="playerBox">
           <div class="imgBg">
             <div class="closeBox">
@@ -125,7 +125,24 @@
               </a-progress>
             </div>
           </div>
-          <!-- <div class="plainList">
+        </div>
+        <div v-else class="addBox">
+          <a-button type="dashed" ghost @click="showDialog(index)">{{ $t('default.222') }}</a-button>
+        </div>
+      </a-col>
+      <!-- 移动端显示两个 -->
+      <a-col class="showPhoneTable" :span='8' v-for="(item,index) in inPhoneTeamList" :key="index">
+        <div v-if="item.flag" class="playerBox">
+          <div class="imgBg">
+            <div class="closeBox">
+              <CloseCircleFilled class="closeIcon" @click="inPhonebySpliceIndex(index)" />
+            </div>
+            <div class="img"><img :src="item.img" alt=""></div>
+            <div>{{ item.captain }}</div>
+          </div>
+          <div class="info">{{ item.place }}</div>
+          <div class="info">{{ item.address }}</div>
+          <div class="plainList">
             <div>
               <a-progress type="circle" status="exception" :percent="item.plainRating">
                 <template v-slot:format="percent">
@@ -184,27 +201,67 @@
                 </div>
               </div>
             </div>
-          </div> -->
+          </div>
+          <div class="plainList">
+            <div>
+              <a-progress type="circle" status="exception" :percent="item.matchRating">
+                <template v-slot:format="percent">
+                  <div class="rankingScore">{{ percent }}</div>
+                  <div class="rankingBox">{{ $t('default.168') }}</div>
+                </template>
+              </a-progress>
+            </div>
+            <div class="plainScore">
+              <div>
+                <div class="score">
+                  <div>{{ $t('default.169') }}</div>
+                  <div>{{ item.matchPPD }}</div>
+                </div>
+                <div class="progress">
+                  <a-progress status="exception" :percent="item.matchPPD" />
+                </div>
+              </div>
+              <div>
+                <div class="score">
+                  <div>{{ $t('default.169') }}</div>
+                  <div>{{ item.matchMPR }}</div>
+                </div>
+                <div class="progress">
+                  <a-progress status="exception" :percent="item.matchMPR" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="playerChance">
+            <div>
+              <a-progress type="circle" status="exception" :percent="item.chanceSet" :width="80">
+                <template v-slot:format="percent">
+                  <div class="scoreBox">{{ percent }}</div>
+                  <div class="scoreTitle">{{ 'Set' }}</div>
+                </template>
+              </a-progress>
+            </div>
+          </div>
         </div>
         <div v-else class="addBox">
-          <a-button type="dashed" ghost @click="showDialog(index)">{{ $t('default.222') }}</a-button>
+          <a-button type="dashed" ghost @click="showDialog(index)">{{ $t('default.197') }}</a-button>
         </div>
       </a-col>
     </a-row>
     <a-modal v-model:visible="visible" centered width='900px' :footer="null" :title="$t('default.223')">
       <a-row class="rowSearchBox">
-        <a-col :span='3'>
+        <a-col :lg='3' :xs="12">
           <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='3'>
+        <a-col :lg='3' :xs="12">
           <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='1' :offset='11'></a-col>
-        <a-col :span='6'>
+        <a-col :lg='{ span: 1, offset: 1 }' :xs="0"></a-col>
+        <a-col :lg='6' :xs="24">
           <a-input-search v-model:value="dialogValue" class="selectBox" :enter-button="$t('default.16')" size="default" @search="onSearch" />
         </a-col>
       </a-row>
@@ -305,6 +362,10 @@ export default defineComponent({
         { flag: false },
         { flag: false },
       ],
+      inPhoneTeamList:[
+        { flag: false },
+        { flag: false }
+      ],
       dataList: [
         {
           key: 1,
@@ -388,6 +449,14 @@ export default defineComponent({
             i.flag = true;
             //  展示表格显示填充数据
             data.teamList.fill(i, data.currentIndex, data.currentIndex + 1);
+          }
+        });
+        data.dataList.forEach(i => {
+          if (i.matchId === value) {
+            // dialog table 设置数据已被选择
+            i.flag = true;
+            //  展示表格显示填充数据
+            data.inPhoneTeamList.fill(i, data.currentIndex, data.currentIndex + 1);
           }
         });
         data.visible = false;
@@ -475,12 +544,12 @@ export default defineComponent({
 }
 .plainList {
   border-top: 1px solid #5f5f5f;
-  height: 200px;
+  height: 220px;
   padding: 20px;
 }
 .plain {
-  height: 200px;
-  padding: 20px;
+  height: 220px;
+  padding: 10px;
   box-sizing: border-box;
 }
 .plainScore {
@@ -516,10 +585,11 @@ export default defineComponent({
   font-size: 11px;
   color: #fff;
 }
-.chance {
+.playerChance {
   height: 100px;
   padding: 10px;
   box-sizing: border-box;
+  border-top: 1px solid #5f5f5f;
 }
 .topBox {
   height: 50px;

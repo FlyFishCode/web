@@ -14,7 +14,7 @@
           </div>
         </a-col>
         <a-col :span='4' class="infoClass">
-          <div class="teamStyle">{{ item.teamName }}</div>
+          <div class="teamStyle" @click="entryPage">{{ item.teamName }}</div>
           <div class="placeStyle">
             <div>{{ item.countryName }}</div>/
             <div class="counyStyle">{{ item.areaName }}</div><span @click="showDetail(item)">
@@ -39,10 +39,10 @@
         </a-col>
         <a-col :span='3' class="vipBox">
           <div>{{ 'Entry' }}</div>
-          <div>{{ item.list.length }}</div>
+          <div>{{ item.competitionList.length }}</div>
         </a-col>
         <a-col :span='2' class="iconFont">
-          <div v-if="item.list.length">
+          <div v-if="item.competitionList.length">
             <div v-if="item.flag" @click="changeFlag(index)">
               <DownCircleOutlined />
             </div>
@@ -55,7 +55,7 @@
       <transition enter-active-class="animate__animated animate__bounceInUp">
         <a-row v-show="item.flag" class="recordBox">
           <div class="matchTitle">{{ $t('default.83') }}</div>
-          <a-row v-for="info in item.list" :key="info.index" class="msgBox">
+          <a-row v-for="info in item.competitionList" :key="info.index" class="msgBox">
             <a-col :span='4' class="imgColStyle">
               <div>
                 <img class="matchImg" :src="info.competitionImg" alt="">
@@ -63,7 +63,7 @@
             </a-col>
             <a-col :span='20' class="countBox">
               <div class="recordInfoStyle">
-                <div class="recordInfoFont">{{ `${info.competitionName}  /  ${info.date }` }}</div> 
+                <div class="recordInfoFont">{{ `${info.competitionName}  /  ${info.date }` }}</div>
                 <div>{{ info.countryName }}</div>
               </div>
               <div class="btnBox">
@@ -95,6 +95,7 @@
         </div>
       </template>
     </a-modal>
+
   </div>
 </template>
 
@@ -119,7 +120,7 @@ export default defineComponent({
     DownCircleOutlined
   },
   setup() {
-    const Router = useRouter();
+    const ROUTER = useRouter();
     const data = reactive({
       visible: false,
       dialogObj: {
@@ -131,9 +132,10 @@ export default defineComponent({
       },
       colSpan: 5,
       topInfoTitle: "Top 4 平均 Competition Rating",
-      teamList: [{ flag: false, list: [] }],
+      teamList: [{ flag: false, competitionList: [] }],
       showDetail: (item: any) => {
         data.dialogObj.title = item.shopAddress;
+        data.dialogObj.img = item.shopImg;
         data.dialogObj.shopName = item.shopName;
         data.dialogObj.phone = item.shopPhone;
         data.dialogObj.address = item.shopAddress;
@@ -146,10 +148,13 @@ export default defineComponent({
         console.log(1);
       },
       entryVipPage: () => {
-        Router.push("/");
+        ROUTER.push("/");
       },
-      showInfo:(id: number) =>{
-        console.log(id)
+      showInfo: (id: number) => {
+        console.log(id);
+      },
+      entryPage: () => {
+        ROUTER.push("teamInfo");
       }
     });
     const getList = () => {

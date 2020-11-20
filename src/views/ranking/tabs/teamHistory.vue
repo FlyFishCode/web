@@ -9,12 +9,12 @@
       </a-col>
     </a-row>
     <a-row class="allBox">
-      <a-col :span='4'>
+      <a-col :lg='4' :xs="8">
         <div v-for="item in titleList" :key="item.id">
           <div class="titleBox" :class="{ imgTitle:item.id === 1,captainTitle:item.id === 4,plain:item.id === 6 || item.id === 7,chance:item.id === 9, topTitle:item.id === 10 }">{{ $t(item.title) }}</div>
         </div>
       </a-col>
-      <a-col :span='5' v-for="(item,index) in teamList" :key="index">
+      <a-col class="inPhoneTableDisplay" :span='5' v-for="(item,index) in teamList" :key="index">
         <div v-if="item.flag" class="playerBox">
           <div class="imgBg">
             <div class="closeBox">
@@ -116,21 +116,124 @@
           <a-button type="dashed" ghost @click="showDialog(index)">{{ $t('default.197') }}</a-button>
         </div>
       </a-col>
+      <!-- 移动端显示两个 -->
+      <a-col class="showPhoneTable" :span='8' v-for="(item,index) in inPhoneTeamList" :key="index">
+        <div v-if="item.flag" class="playerBox">
+          <div class="imgBg">
+            <div class="closeBox">
+              <CloseCircleFilled class="closeIcon" @click="inPhonebySpliceIndex(index)" />
+            </div>
+            <div class="img"><img :src="item.img" alt=""></div>
+            <div>{{ item.captain }}</div>
+          </div>
+          <div class="info">{{ item.place }}</div>
+          <div class="info">{{ item.address }}</div>
+          <div class="captainBox">
+            <div class="topBox"><img :src="item.captainImg" alt=""></div>
+            <div>{{ item.captain }}</div>
+          </div>
+          <div class="info">{{ item.playerNum }}</div>
+          <div class="plainList">
+            <div>
+              <a-progress type="circle" status="exception" :percent="item.plainRating">
+                <template v-slot:format="percent">
+                  <span style="color: red">{{ percent }}</span>
+                </template>
+              </a-progress>
+            </div>
+            <div class="plainScore">
+              <div>
+                <div class="score">
+                  <div>{{ $t('default.169') }}</div>
+                  <div>{{ item.plainPPD }}</div>
+                </div>
+                <div class="progress">
+                  <a-progress status="exception" :percent="item.plainPPD" />
+                </div>
+              </div>
+              <div>
+                <div class="score">
+                  <div>{{ $t('default.169') }}</div>
+                  <div>{{ item.plainMPR }}</div>
+                </div>
+                <div class="progress">
+                  <a-progress status="exception" :percent="item.plainMPR" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="plainList">
+            <div>
+              <a-progress type="circle" status="exception" :percent="item.matchRating">
+                <template v-slot:format="percent">
+                  <span style="color: red">{{ percent }}</span>
+                </template>
+              </a-progress>
+            </div>
+            <div class="plainScore">
+              <div>
+                <div class="score">
+                  <div>{{ $t('default.169') }}</div>
+                  <div>{{ item.matchPPD }}</div>
+                </div>
+                <div class="progress">
+                  <a-progress status="exception" :percent="item.matchPPD" />
+                </div>
+              </div>
+              <div>
+                <div class="score">
+                  <div>{{ $t('default.169') }}</div>
+                  <div>{{ item.matchMPR }}</div>
+                </div>
+                <div class="progress">
+                  <a-progress status="exception" :percent="item.matchMPR" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="info">{{ item.joinCount }}</div>
+          <div class="chanceBox">
+            <div>
+              <a-progress type="circle" status="exception" :percent="item.chanceSet" :width="80">
+                <template v-slot:format="percent">
+                  <div class="scoreBox">{{ percent }}</div>
+                  <div class="scoreTitle">{{ 'Set' }}</div>
+                </template>
+              </a-progress>
+            </div>
+            <div>
+              <a-progress type="circle" status="exception" :percent="item.chanceMatch" :width="80">
+                <template v-slot:format="percent">
+                  <div class="scoreBox">{{ percent }}</div>
+                  <div class="scoreTitle">{{ 'Match' }}</div>
+                </template>
+              </a-progress>
+            </div>
+          </div>
+          <div v-for="top in item.top" :key="top" class="topBg">
+            <div class="topBox"><img :src="top.img" alt=""></div>
+            <div>{{ top.name }}</div>
+          </div>
+        </div>
+        <div v-else class="addBox">
+          <a-button type="dashed" ghost @click="showDialog(index)">{{ $t('default.197') }}</a-button>
+        </div>
+      </a-col>
     </a-row>
     <a-modal v-model:visible="visible" centered width='900px' :footer="null" :title="$t('default.200')">
       <a-row class="rowSearchBox">
-        <a-col :span='3'>
+        <a-col :lg='3' :xs="12">
           <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='3'>
+        <a-col :lg='3' :xs="12">
           <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
             <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
           </a-select>
         </a-col>
-        <a-col :span='1' :offset='11'></a-col>
-        <a-col :span='6'>
+        <a-col :lg='{ span: 1, offset: 11 }' :xs="0"></a-col>
+        <a-col :lg='6' :xs="24">
           <a-input-search v-model:value="dialogValue" class="selectBox" :enter-button="$t('default.16')" size="default" @search="onSearch" />
         </a-col>
       </a-row>
@@ -162,18 +265,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import {
   SettingFilled,
   CloseCircleFilled,
-  PlusOutlined,
+  PlusOutlined
 } from "@ant-design/icons-vue";
 export default defineComponent({
   name: "teamHistory",
   components: {
     SettingFilled,
     CloseCircleFilled,
-    PlusOutlined,
+    PlusOutlined
   },
   setup() {
     // let selectList: number[] = [];
@@ -194,25 +297,25 @@ export default defineComponent({
         },
         onChange: (current: number) => {
           console.log(current);
-        },
+        }
       },
       matchTypeList: [{ value: 2020, label: "2020" }],
       columns: [
         {
           dataIndex: "matchId",
           key: "matchId",
-          slots: { title: "choice", customRender: "add" },
+          slots: { title: "choice", customRender: "add" }
         },
         {
           dataIndex: "place",
           key: "id",
-          slots: { title: "teamName" },
+          slots: { title: "teamName" }
         },
         {
           dataIndex: "address",
           key: "playerNum",
-          slots: { title: "captain" },
-        },
+          slots: { title: "captain" }
+        }
       ],
       titleList: [
         { id: 1, title: "default.189" },
@@ -224,13 +327,17 @@ export default defineComponent({
         { id: 7, title: "default.192" },
         { id: 8, title: "default.193" },
         { id: 9, title: "default.185" },
-        { id: 10, title: "default.194" },
+        { id: 10, title: "default.194" }
       ],
       teamList: [
         { flag: false },
         { flag: false },
         { flag: false },
+        { flag: false }
+      ],
+      inPhoneTeamList:[
         { flag: false },
+        { flag: false }
       ],
       dataList: [
         {
@@ -256,8 +363,8 @@ export default defineComponent({
             { img: require("@/assets/1.jpg"), name: "jiapsja" },
             { img: require("@/assets/1.jpg"), name: "adasda" },
             { img: require("@/assets/1.jpg"), name: "vfdgsdfs" },
-            { img: require("@/assets/1.jpg"), name: "rtyrtrty" },
-          ],
+            { img: require("@/assets/1.jpg"), name: "rtyrtrty" }
+          ]
         },
         {
           key: 2,
@@ -282,8 +389,8 @@ export default defineComponent({
             { img: require("@/assets/1.jpg"), name: "jiapsja" },
             { img: require("@/assets/1.jpg"), name: "adasda" },
             { img: require("@/assets/1.jpg"), name: "vfdgsdfs" },
-            { img: require("@/assets/1.jpg"), name: "rtyrtrty" },
-          ],
+            { img: require("@/assets/1.jpg"), name: "rtyrtrty" }
+          ]
         },
         {
           key: 3,
@@ -308,8 +415,8 @@ export default defineComponent({
             { img: require("@/assets/1.jpg"), name: "jiapsja" },
             { img: require("@/assets/1.jpg"), name: "adasda" },
             { img: require("@/assets/1.jpg"), name: "vfdgsdfs" },
-            { img: require("@/assets/1.jpg"), name: "rtyrtrty" },
-          ],
+            { img: require("@/assets/1.jpg"), name: "rtyrtrty" }
+          ]
         },
         {
           key: 4,
@@ -334,23 +441,31 @@ export default defineComponent({
             { img: require("@/assets/1.jpg"), name: "jiapsja" },
             { img: require("@/assets/1.jpg"), name: "adasda" },
             { img: require("@/assets/1.jpg"), name: "vfdgsdfs" },
-            { img: require("@/assets/1.jpg"), name: "rtyrtrty" },
-          ],
-        },
+            { img: require("@/assets/1.jpg"), name: "rtyrtrty" }
+          ]
+        }
       ],
       clearList: () => {
-        data.teamList.forEach((i,index) => {
-          i.flag = false
-          data.teamList.splice(index, 1, { flag: false })
+        data.teamList.forEach((i, index) => {
+          i.flag = false;
+          data.teamList.splice(index, 1, { flag: false });
         });
       },
       selectPlayer: (value: number) => {
-        data.dataList.forEach((i) => {
+        data.dataList.forEach(i => {
           if (i.matchId === value) {
             // dialog table 设置数据已被选择
             i.flag = true;
             //  展示表格显示填充数据
             data.teamList.fill(i, data.currentIndex, data.currentIndex + 1);
+          }
+        });
+        data.dataList.forEach(i => {
+          if (i.matchId === value) {
+            // dialog table 设置数据已被选择
+            i.flag = true;
+            //  展示表格显示填充数据
+            data.inPhoneTeamList.fill(i, data.currentIndex, data.currentIndex + 1);
           }
         });
         data.visible = false;
@@ -367,17 +482,28 @@ export default defineComponent({
       },
       bySpliceIndex: (index: number) => {
         const obj: any = data.teamList.splice(index, 1, { flag: false });
-        data.dataList.forEach((i) => {
+        data.dataList.forEach(i => {
           if (i.matchId === obj[0].matchId) {
             i.flag = false;
           }
         });
       },
+      inPhonebySpliceIndex: (index: number) => {
+        const obj: any = data.inPhoneTeamList.splice(index, 1, { flag: false });
+        data.dataList.forEach(i => {
+          if (i.matchId === obj[0].matchId) {
+            i.flag = false;
+          }
+        });
+      }
+    });
+    onMounted(() => {
+      console.log(1)
     });
     return {
-      ...toRefs(data),
+      ...toRefs(data)
     };
-  },
+  }
 });
 </script>
 
@@ -438,13 +564,15 @@ export default defineComponent({
 }
 .plainList {
   border-top: 1px solid #5f5f5f;
-  height: 200px;
+  height: 220px;
   padding: 20px;
 }
 .plain {
-  height: 200px;
-  padding: 20px;
+  height: 220px;
+  padding: 5px;
   box-sizing: border-box;
+  white-space: normal;
+  word-break: break-all;
 }
 .plainScore {
   display: flex;

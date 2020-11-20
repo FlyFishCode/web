@@ -865,7 +865,4 @@ export default defineComponent({
 .isPhone {
   margin: 5px 0;
 }
-.showPhoneTable{
-  display: none;
-}
 </style>

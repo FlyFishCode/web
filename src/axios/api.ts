@@ -18,12 +18,20 @@ import {
 	myBattleDateList,
 	myTeamList
 } from './myPage/index'
+
+// 我的队伍
+import { theBestTeam } from '@/axios/myTeam/index'
+
+
+
+
+
 const baseURL = "/apw"
 // const Router = useRouter()
 
 const Axios = axios.create({
 	baseURL:baseURL,
-	timeout:1000
+	timeout:2000
 })
 
 Axios.interceptors.request.use((config) => {
@@ -135,6 +143,12 @@ const myBattleDateListHttp = (data: any = null) =>{
 const myTeamListHttp = (data: any = null) =>{
 	return Axios.post(myTeamList,data)
 }
+// 我的队伍 最佳队伍
+const myTeamBestListHttp = (data: any = null) =>{
+	return Axios.get(getNewUrl(theBestTeam,data))
+}
+
+
 export {
 	loginHttp ,
 	leagueListHttp,
@@ -152,5 +166,6 @@ export {
 	myBattleSelectHttp,
 	myBattleDataListHttp,
 	myBattleDateListHttp,
-	myTeamListHttp
+	myTeamListHttp,
+	myTeamBestListHttp
 }

@@ -12,17 +12,17 @@
           <div class="title infoTitle">{{ item.title }}</div>
           <div class="title teamName">{{ item.teamName }}</div>
           <div>
-            <div class="title">{{ item.couny }}</div>
-            <div v-if="!item.win" class="dataInfo">
-              <div class="infoScore contentLeft">{{ item.itemScore }}</div>
+            <div class="title">{{ item.shopName }}</div>
+            <div v-if="item.rating" class="dataInfo">
+              <div class="infoScore contentLeft">{{ item.rating }}</div>
               <div class="infoScore contentRight">
                 <div class="matchScore">
-                  <div>{{ item.PPD }}</div>
-                  <div>{{ item.itemScore }}</div>
+                  <div>{{$t('default.169') }}</div>
+                  <div>{{ item.ppd }}</div>
                 </div>
                 <div class="matchScore" style="borderTop:1px solid #fff">
-                  <div>{{ item.MPR }}</div>
-                  <div>{{ item.itemScore }}</div>
+                  <div>{{ $t('default.170') }}</div>
+                  <div>{{ item.mpr }}</div>
                 </div>
               </div>
             </div>
@@ -30,21 +30,21 @@
               <div class="winBox">
                 <div>
                   <div>{{ $t('default.46') }}</div>
-                  <div>{{ item.win }}</div>
+                  <div>{{ item.wins }}</div>
                 </div>
                 <div class="winBg">
                   <div>{{ $t('default.48') }}</div>
-                  <div>{{ item.win }}</div>
+                  <div>{{ item.losses }}</div>
                 </div>
                 <div>
                   <div>{{ $t('default.47') }}</div>
-                  <div>{{ item.win }}</div>
+                  <div>{{ item.draws }}</div>
                 </div>
               </div>
             </div>
           </div>
           <div class="backBox">
-            <u class="backFont" @click="showDetail(item.id)">{{ item.top }}</u>
+            <u class="backFont" @click="showDetail(item.id)">{{ item.title }}</u>
           </div>
         </div>
       </a-col>
@@ -164,8 +164,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { myTeamBestListHttp } from "@/axios/api";
 import divTitle from "@/components/DividingLine.vue";
 import {
   SettingFilled,
@@ -176,6 +177,9 @@ import {
   DownCircleOutlined,
   UpCircleOutlined
 } from "@ant-design/icons-vue";
+interface DataProps {
+  bestTeam: { [key: string]: string };
+}
 export default defineComponent({
   name: "team",
   components: {
@@ -297,63 +301,7 @@ export default defineComponent({
           ]
         }
       ],
-      bestTeam: [
-        {
-          id: 1,
-          title: "鲨鱼辣椒",
-          teamName: "鲨鱼辣椒队",
-          couny: "ABSP(广州)",
-          itemScore: "71",
-          PPD: "PPD",
-          MPR: "MPR",
-          score: "15",
-          top: "BEST HELLO WORLD"
-        },
-        {
-          id: 2,
-          title: "蜘蛛侦探",
-          teamName: "蜘蛛侦探队",
-          couny: "ABSP(广州)",
-          itemScore: "71",
-          PPD: "PPD",
-          MPR: "MPR",
-          score: "15",
-          top: "HELLO WORLD"
-        },
-        {
-          id: 3,
-          title: "奥特曼",
-          teamName: "奥特曼队",
-          couny: "ABSP(广州)",
-          itemScore: "71",
-          PPD: "PPD",
-          MPR: "MPR",
-          score: "15",
-          top: "BEST WORLD"
-        },
-        {
-          id: 4,
-          title: "奥特曼",
-          teamName: "奥特曼队",
-          couny: "ABSP(广州)",
-          itemScore: "71",
-          win: "PPD",
-          MPR: "MPR",
-          score: "15",
-          top: "BEST WORLD"
-        },
-        {
-          id: 5,
-          title: "奥特曼",
-          teamName: "奥特曼队",
-          couny: "ABSP(广州)",
-          itemScore: "71",
-          win: "PPD",
-          MPR: "MPR",
-          score: "15",
-          top: "BEST WORLD"
-        }
-      ],
+      bestTeam: [],
       getDate: () => "220-10-16",
       showDetail: (value: number) => {
         Router.push({
@@ -376,6 +324,21 @@ export default defineComponent({
       matchTypeChange: (value: number) => {
         console.log(value);
       }
+    });
+    const getBestTeamList = () => {
+      myTeamBestListHttp({
+        countryId: sessionStorage.getItem("countryId")
+      }).then(res => {
+        const list: any = []
+        for (const item in res.data.data) {
+          const obj: any = Object.assign(res.data.data[item], { title: item });
+          list.push(obj)
+          data.bestTeam = list;
+        }
+      });
+    };
+    onMounted(() => {
+      getBestTeamList();
     });
     return {
       ...toRefs(data)
@@ -454,6 +417,10 @@ export default defineComponent({
 .title {
   padding-left: 15px;
   text-align: left;
+  color: #fff;
+  text-overflow:ellipsis;
+  overflow:hidden;
+  white-space:nowrap;
 }
 .infoTitle {
   font-size: 20px;
@@ -487,6 +454,7 @@ export default defineComponent({
   color: #fff;
   font-weight: bold;
   cursor: pointer;
+  word-break: break-all;
 }
 .winBox {
   display: flex;

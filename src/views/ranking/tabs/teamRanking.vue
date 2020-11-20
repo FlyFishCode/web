@@ -391,7 +391,4 @@ export default defineComponent({
 .tableBox {
   display: flex;
 }
-.showPhoneTable{
-  display: none;
-}
 </style>

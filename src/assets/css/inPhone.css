@@ -40,4 +40,26 @@
     .mapSearch {
         border: none!important;
     }
+    .plainList {
+        padding: 5px!important;
+    }
+    .ant-progress {
+        width: 100%!important;
+    }
+    .plainList /deep/.ant-progress-inner {
+        width: 100%!important;
+    }
+    .plainScore {
+        flex-direction: column;
+    }
+    .plainScore div {
+        width: 100%!important;
+    }
+    .chance {
+        height: 200px!important;
+    }
+    .chanceBox {
+        height: 200px!important;
+        flex-direction: column;
+    }
 }

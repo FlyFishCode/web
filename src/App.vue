@@ -2,9 +2,9 @@
   <a-row type="flex" justify="center">
     <a-col class="bg">
       <!-- <a-config-provider :locale="locale"> -->
-        <hearder />
-        <router-view />
-        <afooter />
+      <hearder />
+      <router-view />
+      <afooter />
       <!-- </a-config-provider> -->
     </a-col>
   </a-row>
@@ -13,22 +13,22 @@
 <script>
 import hearder from "@/components/hearder.vue";
 import afooter from "@/components/footer.vue";
-import { defineComponent,reactive,toRefs } from "vue";
-import zhCN from 'ant-design-vue/es/locale/en_GB';
+import { defineComponent, reactive, toRefs } from "vue";
+import zhCN from "ant-design-vue/es/locale/en_GB";
 export default defineComponent({
   name: "app",
   components: {
     hearder,
     afooter,
   },
-  setup(){
+  setup() {
     const data = reactive({
-      locale:zhCN
+      locale: zhCN,
     });
     return {
-      ...toRefs(data)
-    }
-  }
+      ...toRefs(data),
+    };
+  },
 });
 </script>
 
@@ -48,7 +48,7 @@ export default defineComponent({
   max-width: 1000px;
   overflow: hidden;
 }
-.titleCol{
+.titleCol {
   margin: 5px 0;
 }
 .rowStyle {
@@ -105,29 +105,29 @@ export default defineComponent({
 .content {
   margin: 5px;
 }
- /* 去掉高德水印 */
+/* 去掉高德水印 */
 .amap-logo {
-  display: none!important;
-  visibility: hidden!important;
+  display: none !important;
+  visibility: hidden !important;
 }
 .amap-copyright {
-  display: none!important;
-  visibility: hidden!important;
+  display: none !important;
+  visibility: hidden !important;
 }
 /*  修改日历样式 */
-.ant-fullcalendar-date{
-  height: 200px!important;
+.ant-fullcalendar-date {
+  height: 200px !important;
   overflow-y: auto;
   padding: 0;
 }
-.ant-fullcalendar-fullscreen .ant-fullcalendar-content{
-  height: auto!important;
+.ant-fullcalendar-fullscreen .ant-fullcalendar-content {
+  height: auto !important;
 }
 .tableDate {
   display: flex;
   justify-content: center;
 }
-  /* 弹出框样式 */
+/* 弹出框样式 */
 .dialogBox {
   height: 100px;
   color: #ff3202;
@@ -140,12 +140,15 @@ export default defineComponent({
   flex-direction: column;
   justify-content: space-around;
 }
- /* 排名统计页面表格队伍显示样式s */
+/* 排名统计页面表格队伍显示样式s */
 .link {
   color: #1890ff;
   cursor: pointer;
 }
 .link:hover {
   text-decoration: underline;
+}
+.showPhoneTable{
+  display: none!important;
 }
 </style>

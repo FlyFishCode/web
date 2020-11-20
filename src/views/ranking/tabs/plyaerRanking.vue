@@ -466,9 +466,6 @@ export default defineComponent({
   align-items: center;
   height: 32px;
 }
-.showPhoneTable {
-  display: none;
-}
 .imgBox {
   height: 100px;
   width: 100px;

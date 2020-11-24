@@ -1,29 +1,34 @@
 <template>
   <div class="content">
     <a-row>
-      <a-col :span='3' class="centerFont">
+      <a-col :span='12' class="centerFont">
         <SettingFilled /> {{ $t('default.107') }}
       </a-col>
     </a-row>
     <a-row class="rowStyle">
-      <a-col :span='3'>
+      <a-col :lg='3' :xs="6">
         <a-select v-model:value="year" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='3'>
+      <a-col :lg='3' :xs="6">
         <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='3'>
+      <a-col :lg='3' :xs="6">
         <a-select v-model:value="leagueId" @change="leagueChange" class="selectBox">
           <a-select-option v-for="item in leagueList" :key="item.competitionId" :value='item.competitionId'>{{ item.competitionName }}</a-select-option>
         </a-select>
       </a-col>
+      <a-col :lg='0' :xs="6">
+        <a-select v-model:value="status" @change="statusChange" class="selectBox">
+          <a-select-option v-for="item in statusList" :key="item.value" :value='item.value'>{{ $t(item.label) }}</a-select-option>
+        </a-select>
+      </a-col>
     </a-row>
 
-    <a-row class="rowSearchBox">
+    <a-row class="rowSearchBox inPhoneTableDisplay">
       <a-col :span='3'>
         <a-button @click="showList">
           <template v-slot:icon>
@@ -58,9 +63,45 @@
         </a-button>
       </a-col>
     </a-row>
+    <!--  移动端显示 -->
+    <a-row class="showPhoneTable">
+      <a-col :span='12'>
+        <a-button @click="showList">
+          <template v-slot:icon>
+            <UnorderedListOutlined />
+          </template>{{ $t('default.87') }}
+        </a-button>
+      </a-col>
+      <a-col :span='12'>
+        <a-button @click="showCalendar">
+          <template v-slot:icon>
+            <CalendarOutlined />
+          </template>{{ $t('default.228') }}
+        </a-button>
+      </a-col>
+    </a-row>
 
     <a-row v-show="isList">
-      <a-table :columns="columns" :data-source="dataList" :pagination='false' bordered>
+      <a-table class="inPhoneTableDisplay" :columns="columns" :data-source="dataList" :pagination='false' bordered>
+        <template v-slot:home="{ text }">
+          <a-button type="link" size="small">{{ text }}</a-button>
+        </template>
+        <template v-slot:type="{ text }">
+          <div v-if="text === 1">{{ $t('default.63') }}</div>
+          <div v-if="text === 2">{{ $t('default.142') }}</div>
+        </template>
+        <template v-slot:away="{ text }">
+          <a-button type="link" size="small">{{ text }}</a-button>
+        </template>
+        <template v-slot:status="{ text }">
+          <div class="stateBox">
+            <div v-if="text === 1" class="inPlay" @click="goPlay">{{ $t('default.64') }}</div>
+            <div v-if="text === 2">{{ $t('default.104') }}</div>
+            <div v-if="text === 3">{{ $t('default.244') }}</div>
+          </div>
+        </template>
+      </a-table>
+      <a-table class="showPhoneTable" :columns="inPhoneColumns" :data-source="dataList" :pagination='false' bordered>
         <template v-slot:home="{ text }">
           <a-button type="link" size="small">{{ text }}</a-button>
         </template>
@@ -259,6 +300,30 @@ export default defineComponent({
         {
           title: "移动",
           width: 50
+        }
+      ],
+      inPhoneColumns: [
+        {
+          title: "日期",
+          width: 80,
+          dataIndex: "date"
+        },
+        {
+          title: "HOME TEAM",
+          width: 190,
+          dataIndex: "homeTeamName",
+          slots: { customRender: "home" }
+        },
+        {
+          title: "VS",
+          width: 60,
+          dataIndex: "homeTeamName",
+        },
+        {
+          title: "AWAY TEAM",
+          width: 180,
+          dataIndex: "visitingTeamName",
+          slots: { customRender: "away" }
         }
       ],
       getDate: () => {

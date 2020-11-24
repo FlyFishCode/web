@@ -1,6 +1,6 @@
 <template>
   <a-row class="rowStyle">
-    <a-col :span='2' :offset="22">
+    <a-col :lg="{ span:2,offset:22 }" :xs="{span:4,offset:20}">
       <a-button type="danger" size="small" @click="Gohistory">{{ $t('default.139') }}</a-button>
     </a-col>
   </a-row>

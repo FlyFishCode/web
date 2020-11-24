@@ -1,19 +1,19 @@
 <template>
   <div class="content">
     <a-row>
-      <a-col :span='4' class="centerFont">
+      <a-col :span='12' class="centerFont">
         <SettingFilled /> {{ `${$t('default.110')} (${teamList.length})` }}
       </a-col>
     </a-row>
 
     <a-row v-for="(item,index) in teamList" :key="item.id">
       <a-row class="eveyTeam">
-        <a-col :span='3' class="imgColStyle">
+        <a-col :lg='3' :xs="4" class="imgColStyle">
           <div>
             <img class="matchImg" :src="item.teamImg" alt="">
           </div>
         </a-col>
-        <a-col :span='4' class="infoClass">
+        <a-col :lg='4' :xs="10" class="infoClass">
           <div class="teamStyle" @click="entryPage">{{ item.teamName }}</div>
           <div class="placeStyle">
             <div>{{ item.countryName }}</div>/
@@ -23,13 +23,13 @@
           </div>
           <div>{{ item.captainName }}</div>
         </a-col>
-        <a-col :span='3' class="vipBox">
+        <a-col :lg='3' :xs="4" class="vipBox">
           <div>{{ $t('default.85') }}</div>
           <div class="showVipInfo" @click="entryVipPage">
             <UserOutlined />{{ item.playerCount }}
           </div>
         </a-col>
-        <a-col :span='8' class="topBox">
+        <a-col :lg='8' :xs="0" class="topBox">
           <div>{{ topInfoTitle }}</div>
           <div class="infoStyle">
             <div>{{ `Rating  ${item.rating}` }}</div>|
@@ -37,11 +37,11 @@
             <div>{{ `MPR  ${item.mpr}` }}</div>
           </div>
         </a-col>
-        <a-col :span='3' class="vipBox">
+        <a-col :lg='3' :xs="0" class="vipBox">
           <div>{{ 'Entry' }}</div>
           <div>{{ item.competitionList.length }}</div>
         </a-col>
-        <a-col :span='2' class="iconFont">
+        <a-col :lg='{span:2,offset:0}' :xs="{span:3,offset:2}" class="iconFont">
           <div v-if="item.competitionList.length">
             <div v-if="item.flag" @click="changeFlag(index)">
               <DownCircleOutlined />

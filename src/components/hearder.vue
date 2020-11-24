@@ -85,7 +85,7 @@
       </a-col>
     </a-row>
     <a-row class="rowStyle boxBG">
-      <a-tabs class="tabsBox" type='card' @tabClick="tabClick" :defaultActiveKey='defaultKey'>
+      <a-tabs class="tabsBox" type='card' @tabClick="tabClick" v-model:activeKey="activeKey">
         <a-tab-pane key="league" :tab="$t('default.8')"></a-tab-pane>
         <a-tab-pane key="team" :tab="$t('default.9')"></a-tab-pane>
         <a-tab-pane key="players" :tab="$t('default.10')"></a-tab-pane>
@@ -198,7 +198,7 @@ export default defineComponent({
     const data = reactive({
       showPhoneTabs:false,
       collapsed: true,
-      defaultKey: "league",
+      activeKey: "league",
       isLogin: false,
       imputValue: "",
       visible: false,

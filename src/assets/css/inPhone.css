@@ -62,4 +62,24 @@
         height: 200px!important;
         flex-direction: column;
     }
+    .ant-col-xs-0 {
+        display: none!important;
+    }
+    .msgBox {
+        display: block!important;
+    }
+    .ant-fullcalendar-date {
+        height: 100px!important;
+    }
+    .tableImg {
+        width: 30px!important;
+        margin: 0 5px 0 0!important;
+    }
+    /* 队伍自定义组件样式 */
+    .left {
+        width: 69%!important;
+    }
+    .fontStyle {
+        justify-content: normal!important;
+    }
 }

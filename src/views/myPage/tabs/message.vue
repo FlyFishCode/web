@@ -1,41 +1,41 @@
 <template>
   <div class="content">
     <a-row>
-      <a-col :span='2' class="centerFont">
+      <a-col :span='12' class="centerFont">
         <SettingFilled /> {{ $t('default.108') }}
       </a-col>
     </a-row>
     <a-row class="rowSearchBox">
-      <a-col :span='3' class="buttonBox">
+      <a-col :lg='3' :xs="8" class="buttonBox">
         <a-button @click="deleteMsg">
           {{ $t('default.112') }}
         </a-button>
       </a-col>
-      <a-col :span='3' class="buttonBox">
-        <a-button @click="deleteAll" type='danger'>
+      <a-col :lg='3' :xs="8" class="buttonBox">
+        <a-button @click="deleteAll">
           {{ $t('default.113') }}
         </a-button>
       </a-col>
-      <a-col :span='3' class="buttonBox">
+      <a-col :lg='3' :xs="8" class="buttonBox">
         <div class="titleStyle setting" @click="showDlalog">
           <SettingFilled /> {{ $t('default.114') }}
         </div>
       </a-col>
-      <a-col :span='2' :offset='9' class="titleStyle">
+      <a-col :lg="{ span:2,offset:9 }" :xs="8" class="titleStyle">
         {{ $t('default.119') }}
       </a-col>
-      <a-col :span='2'>
+      <a-col :lg='2' :xs="8">
         <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
-      <a-col :span='2'>
+      <a-col :lg='2' :xs="8">
         <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
           <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
       </a-col>
     </a-row>
-    <a-row>
+    <a-row class="inPhoneTableDisplay">
       <a-table :row-selection="rowSelection" :columns="columns" :data-source="data" bordered :pagination='paginationProps'>
         <template v-slot:title="{ text }">
           <a>{{ text }}</a>
@@ -45,6 +45,18 @@
         </template>
       </a-table>
     </a-row>
+
+    <a-row class="showPhoneTable">
+      <a-table :row-selection="rowSelection" :columns="inPhoneColumns" :data-source="data" bordered :pagination='paginationProps'>
+        <template v-slot:title="{ text }">
+          <a>{{ text }}</a>
+        </template>
+        <template v-slot:state>
+          <a-button size='small' type="danger" class="tableBtn">{{ $t('default.123') }}</a-button>
+        </template>
+      </a-table>
+    </a-row>
+
     <entryList :entryPath='entryPath' />
     <a-modal v-model:visible="visible" :title="$t('default.240')" centered @ok="handleOk">
       <a-row>
@@ -196,6 +208,24 @@ export default defineComponent({
           slots: { customRender: "state" },
         },
       ],
+      inPhoneColumns:[
+        {
+          title: "DIVISION",
+          dataIndex: "age",
+          width: 140,
+        },
+        {
+          title: "标题",
+          dataIndex: "address",
+          slots: { customRender: "title" },
+          width: 200,
+        },
+        {
+          title: "日期",
+          dataIndex: "address",
+          width: 80,
+        }
+      ],
       data: [
         {
           key: "1",
@@ -293,5 +323,8 @@ export default defineComponent({
 }
 .footerBox {
   text-align: center;
+}
+.showPhoneTable{
+  display: none;
 }
 </style>

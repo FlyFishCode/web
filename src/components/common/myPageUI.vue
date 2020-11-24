@@ -1,8 +1,8 @@
 <template>
   <div>
     <a-row class="rowStyle myPageUI">
-      <a-col :span='10' class="allBox">
-        <a-col :span='12' class="firstClass">
+      <a-col :lg='10' :xs="24" class="allBox">
+        <a-col :span='12' class="imgClass">
           <img :src="infoData.memberImg" alt="">
         </a-col>
         <a-col :span='12' class="firstClass FONT">
@@ -21,7 +21,7 @@
           <div class="disabledClass">{{ `${infoData.countryName}>${infoData.areaName}` }}</div>
         </a-col>
       </a-col>
-      <a-col :span='7'>
+      <a-col :lg='7' :xs="0">
         <div class="title">{{ $t('default.238') }}</div>
         <a-progress type="circle" class="myYuan" :percent="infoData.competitionRating || 0" />
         <div class="myProgress">
@@ -39,7 +39,7 @@
           </div>
         </div>
       </a-col>
-      <a-col :span='7'>
+      <a-col :lg='7' :xs="0">
         <div class="title">{{ $t('default.239') }}</div>
         <a-progress type="circle" class="myYuan" :percent="75" />
         <div class="myProgress">
@@ -142,8 +142,9 @@ export default {
   padding: 5px;
   box-sizing: border-box;
 }
-.firstClass img {
-  height: 100%;
+.imgClass img {
+  width: 140px;
+  height: 140px;
 }
 .allBox {
   height: 100%;
@@ -160,12 +161,15 @@ export default {
   overflow: hidden;
 }
 .firstClass {
-  height: 140px;
-  width: 140px;
+  height: 100%;
+  padding: 15px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   text-align: left;
+}
+.imgClass{
+  padding: 15px;
 }
 .FONT {
   padding-left: 10px;

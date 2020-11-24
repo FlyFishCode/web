@@ -1,62 +1,70 @@
 <template>
-  <div class="content">
-    <a-row>
-      <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
-    </a-row>
-    <inTeamTopOne />
-    <a-row>
-      <a-tabs type="card" class="tabsBox">
-        <a-tab-pane key="1" :tab="$t('default.13')">
-          <calendar />
-        </a-tab-pane>
-        <a-tab-pane key="2" :tab="$t('default.231')">
-          <beforeResult />
-        </a-tab-pane>
-        <a-tab-pane key="3" :tab="$t('default.227')">
-          <vip />
-        </a-tab-pane>
-      </a-tabs>
-    </a-row>
-  </div>
+	<div class="content">
+		<a-row>
+			<divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
+		</a-row>
+		<a-row>
+			<inTeamTopOne />
+		</a-row>
+		<a-row>
+			<a-tabs type="card" v-model:activeKey="activeKey" class="tabsBox">
+				<a-tab-pane key="1" :tab="$t('default.13')">
+					<calendar />
+				</a-tab-pane>
+				<a-tab-pane key="2" :tab="$t('default.231')">
+					<beforeResult />
+				</a-tab-pane>
+				<a-tab-pane key="3" :tab="$t('default.227')">
+					<vip />
+				</a-tab-pane>
+			</a-tabs>
+		</a-row>
+	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
-import divTitle from "@/components/DividingLine.vue";
-import inTeamTopOne from "@/components/inTeamTopOne.vue";
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import divTitle from '@/components/DividingLine.vue';
+import inTeamTopOne from '@/components/inTeamTopOne.vue';
 // tabs
-import calendar from './teamInfoTabs/calendar.vue'
-import beforeResult from './teamInfoTabs/beforeResult.vue'
-import vip from './teamInfoTabs/vip.vue'
+import calendar from './teamInfoTabs/calendar.vue';
+import beforeResult from './teamInfoTabs/beforeResult.vue';
+import vip from './teamInfoTabs/vip.vue';
+import { useRoute } from 'vue-router';
 export default defineComponent({
-  name: "teamInfo",
-  components: {
-    divTitle,
-    inTeamTopOne,
-    calendar,
-    beforeResult,
-    vip
-  },
-  setup() {
-    const data = reactive({
-      title: "default.9",
-      colSpan:4,
-      getDate: () => {
-        return "2020-10-17";
-      },
-    });
-    return {
-      ...toRefs(data),
-    };
-  },
+	name: 'teamInfo',
+	components: {
+		divTitle,
+		inTeamTopOne,
+		calendar,
+		beforeResult,
+		vip
+	},
+	setup() {
+		const ROUTE = useRoute();
+		const data = reactive({
+			title: 'default.9',
+			colSpan: 5,
+			activeKey: '1',
+			getDate: () => {
+				return '2020-10-17';
+			}
+		});
+		onMounted(() => {
+			data.activeKey = ROUTE.query.whichPage as string;
+		});
+		return {
+			...toRefs(data)
+		};
+	}
 });
 </script>
 
 <style scoped>
 .rowStyle {
-  margin: 10px;
+	margin: 10px;
 }
 .tabsBox >>> .ant-tabs-nav-scroll {
-  display: flex;
+	display: flex;
 }
 </style>

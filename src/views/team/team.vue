@@ -1,581 +1,580 @@
 <template>
-  <div class="content">
-    <divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
-    <a-row class="rowStyle">
-      <a-col :span='14' class="centerFont">
-        <SettingFilled /> {{ `${$t('default.80')}(${$t('default.8')})` }}
-      </a-col>
-    </a-row>
-    <a-row class="winnerListStyle">
-      <a-col class="fourBox" v-for="item in bestTeam" :key="item.id">
-        <div class="centerBox">
-          <div class="title infoTitle">{{ item.title }}</div>
-          <div class="title teamName">{{ item.teamName }}</div>
-          <div>
-            <div class="title">{{ item.shopName }}</div>
-            <div v-if="item.rating" class="dataInfo">
-              <div class="infoScore contentLeft">{{ item.rating }}</div>
-              <div class="infoScore contentRight">
-                <div class="matchScore">
-                  <div>{{$t('default.169') }}</div>
-                  <div>{{ item.ppd }}</div>
-                </div>
-                <div class="matchScore" style="borderTop:1px solid #fff">
-                  <div>{{ $t('default.170') }}</div>
-                  <div>{{ item.mpr }}</div>
-                </div>
-              </div>
-            </div>
-            <div v-else>
-              <div class="winBox">
-                <div>
-                  <div>{{ $t('default.46') }}</div>
-                  <div>{{ item.wins }}</div>
-                </div>
-                <div class="winBg">
-                  <div>{{ $t('default.48') }}</div>
-                  <div>{{ item.losses }}</div>
-                </div>
-                <div>
-                  <div>{{ $t('default.47') }}</div>
-                  <div>{{ item.draws }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="backBox">
-            <u class="backFont" @click="showDetail(item.id)">{{ item.title }}</u>
-          </div>
-        </div>
-      </a-col>
-    </a-row>
+	<div class="content">
+		<divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
+		<a-row class="rowStyle">
+			<a-col :span="14" class="centerFont"> <SettingFilled /> {{ `${$t('default.80')}(${$t('default.8')})` }} </a-col>
+		</a-row>
+		<a-row class="winnerListStyle">
+			<a-col class="fourBox" v-for="item in bestTeam" :key="item.id">
+				<div class="centerBox">
+					<div class="title infoTitle">{{ item.title }}</div>
+					<div class="title teamName">{{ item.teamName }}</div>
+					<div>
+						<div class="title">{{ item.shopName }}</div>
+						<div v-if="item.rating" class="dataInfo">
+							<div class="infoScore contentLeft">{{ item.rating }}</div>
+							<div class="infoScore contentRight">
+								<div class="matchScore">
+									<div>{{ $t('default.169') }}</div>
+									<div>{{ item.ppd }}</div>
+								</div>
+								<div class="matchScore" style="borderTop:1px solid #fff">
+									<div>{{ $t('default.170') }}</div>
+									<div>{{ item.mpr }}</div>
+								</div>
+							</div>
+						</div>
+						<div v-else>
+							<div class="winBox">
+								<div>
+									<div>{{ $t('default.46') }}</div>
+									<div>{{ item.wins }}</div>
+								</div>
+								<div class="winBg">
+									<div>{{ $t('default.48') }}</div>
+									<div>{{ item.losses }}</div>
+								</div>
+								<div>
+									<div>{{ $t('default.47') }}</div>
+									<div>{{ item.draws }}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="backBox">
+						<u class="backFont" @click="showDetail(item.id)">{{ item.title }}</u>
+					</div>
+				</div>
+			</a-col>
+		</a-row>
 
-    <a-row class="rowStyle rowSearchBox">
-      <a-col :lg='2' :xs="6" class="titleStyle">
-        <BankFilled class="fontIcon" />{{ $t('default.27') }}
-      </a-col>
-      <a-col :lg='3' :xs="6">
-        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
-        </a-select>
-      </a-col>
-      <a-col :lg='2' :xs="6" class="titleStyle">{{ $t('default.164') }}</a-col>
-      <a-col :lg='3' :xs="6">
-        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
-        </a-select>
-      </a-col>
-      <a-col :lg='{ span:2,offset:4 }' :xs="6" class="titleStyle">
-        <SearchOutlined class="fontIcon" />{{ $t('default.165') }}
-      </a-col>
-      <a-col :lg='3' :xs="6">
-        <a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-          <a-select-option v-for="item in matchTypeList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
-        </a-select>
-      </a-col>
-      <a-col :lg='5' :xs="12">
-        <a-input-search v-model:value="value" :enter-button="$t('default.16')" size="default" @search="onSearch" />
-      </a-col>
-    </a-row>
-    <a-row>
-      <a-col :span='12' class="centerFont">
-        <SettingFilled /> {{ `${$t('default.82')} (${teamList.length})` }}
-      </a-col>
-    </a-row>
+		<a-row class="rowStyle rowSearchBox">
+			<a-col :lg="2" :xs="6" class="titleStyle"> <BankFilled class="fontIcon" />{{ $t('default.27') }} </a-col>
+			<a-col :lg="3" :xs="6">
+				<a-select v-model:value="countryId" @change="areaChange" class="selectBox">
+					<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
+				</a-select>
+			</a-col>
+			<a-col :lg="2" :xs="6" class="titleStyle">{{ $t('default.164') }}</a-col>
+			<a-col :lg="3" :xs="6">
+				<a-select v-model:value="areaId" class="selectBox">
+					<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
+				</a-select>
+			</a-col>
+			<a-col :lg="{ span: 2, offset: 4 }" :xs="6" class="titleStyle"> <SearchOutlined class="fontIcon" />{{ $t('default.165') }} </a-col>
+			<a-col :lg="3" :xs="6">
+				<a-select v-model:value="matchType" class="selectBox">
+					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
+				</a-select>
+			</a-col>
+			<a-col :lg="5" :xs="12">
+				<a-input-search v-model:value="inputValue" :enter-button="$t('default.16')" size="default" @search="onSearch" />
+			</a-col>
+		</a-row>
+		<a-row>
+			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ `${$t('default.82')} (${teamList.length})` }} </a-col>
+			<a-col :lg="3" :xs="0" class="colBox">{{ 'TEAM RATING' }}</a-col>
+			<a-col :lg="5" :xs="0" class="colBox">
+				<a-button size="small" :type="btnType === 1 ? 'primary' : ''" @click="changeType(1, 30)">{{ 'ALL' }}</a-button>
+				<a-button size="small" :type="btnType === 2 ? 'primary' : ''" @click="changeType(2, 7)">{{ '~7' }}</a-button>
+				<a-button size="small" :type="btnType === 3 ? 'primary' : ''" @click="changeType(3, 13)">{{ '~13' }}</a-button>
+				<a-button size="small" :type="btnType === 4 ? 'primary' : ''" @click="changeType(4, 23)">{{ '~23' }}</a-button>
+				<a-button size="small" :type="btnType === 5 ? 'primary' : ''" @click="changeType(5, 30)">{{ '~30' }}</a-button>
+			</a-col>
+			<a-col :lg="4" :xs="0" class="colBox">
+				<div>
+					<a-button type="link" @click="changeIcon">
+						{{ 'Top 4 CR' }}
+						<span v-if="isUp">
+							<DownOutlined />
+						</span>
+						<span v-else>
+							<UpOutlined />
+						</span>
+					</a-button>
+				</div>
+			</a-col>
+		</a-row>
 
-    <a-row v-for="(item,index) in teamList" :key="item.id">
-      <a-row class="eveyTeam">
-        <a-col :lg='3' :xs="4" class="imgColStyle">
-          <div>
-            <img class="matchImg" :src="item.img" alt="">
-          </div>
-        </a-col>
-        <a-col :lg='{span:4,offset:0}' :xs="{ span:10,offset:4 }" class="infoClass">
-          <div class="teamStyle" @click="entryPage">{{ item.teamName }}</div>
-          <div class="placeStyle">
-            <div>{{ item.place }}</div>/
-            <div class="counyStyle">{{ item.couny }}</div><span @click="showDetail">
-              <InfoCircleFilled />
-            </span>
-          </div>
-          <div>{{ item.captain }}</div>
-        </a-col>
-        <a-col :lg='3' :xs="4" class="vipBox">
-          <a-col>{{ $t('default.227') }}</a-col>
-          <a-col>
-            <UserOutlined />{{ item.vipCount }}
-          </a-col>
-        </a-col>
-        <a-col :span='8' class="topBox inPhoneTableDisplay">
-          <a-col>{{ $t('default.178') }}</a-col>
-          <a-col class="infoStyle">
-            <a-col>{{ `Rating  ${item.ranting}` }}</a-col>|
-            <a-col>{{ `PPD  ${item.PPD}` }}</a-col>|
-            <a-col>{{ `MPR  ${item.MPR}` }}</a-col>
-          </a-col>
-        </a-col>
-        <a-col :span='3' class="vipBox inPhoneTableDisplay">
-          <div>{{ $t('default.226') }}</div>
-          <div>{{ item.count }}</div>
-        </a-col>
-        <a-col :span='2' class="iconFont">
-          <div v-if="item.record.length">
-            <div v-if="item.flag" @click="changeFlag(index)">
-              <DownCircleOutlined />
-            </div>
-            <div v-else @click="changeFlag(index)">
-              <UpCircleOutlined />
-            </div>
-          </div>
-        </a-col>
-      </a-row>
-      <transition enter-active-class="animate__animated animate__bounceInUp">
-        <a-row v-show="item.flag" class="recordBox">
-          <div class="matchTitle">{{ $t('default.225') }}</div>
-          <a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
-            <a-col :span='4' class="imgColStyle">
-              <img class="matchImg" :src="recordInfo.img" alt="">
-            </a-col>
-            <a-col :span='20' class="countBox">
-              <div class="recordInfoStyle inPhoneTableStyle">
-                <div class="recordInfoFont">{{ recordInfo.matchName }}</div>
-                <div class="tableDate">
-                  <div>{{ recordInfo.date }}</div>
-                  <div>{{ recordInfo.place }}</div>
-                </div>
-              </div>
-              <div class="btnBox">
-                <div v-for="disition in recordInfo.class" :key="disition.index">
-                  <a-button type="danger" size='small'>{{ disition.className }}</a-button>
-                </div>
-              </div>
-            </a-col>
-          </a-row>
-        </a-row>
-      </transition>
-    </a-row>
+		<a-row v-for="(item, index) in teamList" :key="item.id">
+			<a-row class="eveyTeam">
+				<a-col :lg="3" :xs="4" class="imgColStyle">
+					<img class="matchImg" :src="item.shopImg" alt="" />
+				</a-col>
+				<a-col :lg="6" :xs="{ span: 14, offset: 1 }" class="infoClass">
+					<div class="teamStyle" @click="entryPage(1, item.teamId)">{{ item.teamName }}</div>
+					<div class="placeStyle">
+						<div v-show="item.shopAddress">{{ item.shopAddress }}/</div>
+						<div v-show="item.countryName">{{ item.countryName }}/</div>
+						<div class="counyStyle">{{ item.areaName }}</div>
+						<span @click="showDetail">
+							<InfoCircleFilled />
+						</span>
+					</div>
+					<div>{{ item.captainName }}</div>
+				</a-col>
+				<a-col :lg="2" :xs="3" class="vipBox">
+					<a-col>{{ $t('default.227') }}</a-col>
+					<a-col class="vipPlayer" @click="entryPage(3, item.captainId)"> <UserOutlined />{{ item.playerCount }} </a-col>
+				</a-col>
+				<a-col :lg="8" :xs="0" class="topBox">
+					<a-col>{{ $t('default.178') }}</a-col>
+					<a-col class="infoStyle">
+						<a-col>{{ `Rating  ${item.rating}` }}</a-col
+						>| <a-col>{{ `PPD  ${item.ppd}` }}</a-col
+						>|
+						<a-col>{{ `MPR  ${item.mpr}` }}</a-col>
+					</a-col>
+				</a-col>
+				<a-col :lg="2" :xs="0" class="vipBox">
+					<div>{{ $t('default.226') }}</div>
+					<div>{{ item.competitionList.length }}</div>
+				</a-col>
+				<a-col :lg="2" :xs="2" class="iconFont">
+					<div v-if="item.competitionList.length">
+						<div v-if="item.flag" @click="changeFlag(index)">
+							<DownCircleOutlined />
+						</div>
+						<div v-else @click="changeFlag(index)">
+							<UpCircleOutlined />
+						</div>
+					</div>
+				</a-col>
+			</a-row>
+			<transition enter-active-class="animate__animated animate__bounceInUp">
+				<a-row v-show="item.flag" class="recordBox">
+					<div class="matchTitle">{{ $t('default.225') }}</div>
+					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" class="msgBox">
+						<a-col :span="4" class="imgColStyle">
+							<img class="matchImg" :src="recordInfo.competitionImg" alt="" />
+						</a-col>
+						<a-col :span="20" class="countBox">
+							<div class="recordInfoStyle inPhoneTableStyle">
+								<div class="recordInfoFont">{{ recordInfo.competitionName }}</div>
+								<div class="tableDate">
+									<div>{{ recordInfo.date }}</div>
+									<!-- <div>{{ recordInfo.place }}</div> -->
+								</div>
+							</div>
+							<div class="btnBox">
+								<div v-for="disition in recordInfo.divisionList" :key="disition.divisionId">
+									<a-button type="danger" size="small" @click="entryPage(3, disition.divisionId)">{{ disition.divisionName }}</a-button>
+								</div>
+							</div>
+						</a-col>
+					</a-row>
+				</a-row>
+			</transition>
+		</a-row>
 
-    <a-row class="rowStyle">
-      <a-col class="pagination">
-        <a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="500" @showSizeChange="onShowSizeChange" />
-      </a-col>
-    </a-row>
-  </div>
+		<a-row class="rowStyle">
+			<a-col class="pagination">
+				<a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="total" @showSizeChange="onShowSizeChange" />
+			</a-col>
+		</a-row>
+	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { myTeamBestListHttp } from "@/axios/api";
-import divTitle from "@/components/DividingLine.vue";
-import {
-  SettingFilled,
-  BankFilled,
-  SearchOutlined,
-  InfoCircleFilled,
-  UserOutlined,
-  DownCircleOutlined,
-  UpCircleOutlined
-} from "@ant-design/icons-vue";
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { teamBestListHttp, teamListHttp, indexCityHttp, indexCountryHttp } from '@/axios/api';
+import divTitle from '@/components/DividingLine.vue';
+import { SettingFilled, BankFilled, SearchOutlined, InfoCircleFilled, UserOutlined, DownCircleOutlined, UpCircleOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 interface DataProps {
-  bestTeam: { [key: string]: string };
+	bestTeam: { [key: string]: string };
 }
 export default defineComponent({
-  name: "team",
-  components: {
-    divTitle,
-    BankFilled,
-    SearchOutlined,
-    SettingFilled,
-    InfoCircleFilled,
-    UserOutlined,
-    DownCircleOutlined,
-    UpCircleOutlined
-  },
-  setup() {
-    const Router = useRouter();
-    const data = reactive({
-      title: "default.9",
-      currentValue: 1,
-      value: 201,
-      current: 1,
-      pageSize: 1,
-      colSpan: 4,
-      matchType: 2020,
-      matchTypeList: [{ value: 2020, label: "2020" }],
-      monthList: [],
-      stateList: [],
-      teamList: [
-        {
-          id: 1,
-          img: require("@/assets/1.jpg"),
-          teamName: "上海队",
-          couny: "北京",
-          place: "汉庭会所",
-          captain: "刘半仙",
-          vipCount: 8,
-          ranting: 2.15,
-          PPD: 25.0,
-          MPR: 19.5,
-          count: 0,
-          enroll: 10,
-          flag: false,
-          record: [
-            {
-              matchName: "第三届DARTS WORLD（广州联赛）",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              class: [
-                { className: "class1" },
-                { className: "class2" },
-                { className: "class3" }
-              ]
-            },
-            {
-              matchName: "第三届DARTS WORLD（广州联赛）",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              class: [
-                { className: "class1" },
-                { className: "class2" },
-                { className: "class3" }
-              ]
-            }
-          ]
-        },
-        {
-          id: 1,
-          img: require("@/assets/1.jpg"),
-          teamName: "上海队",
-          couny: "北京",
-          place: "汉庭会所",
-          captain: "刘半仙",
-          vipCount: 8,
-          ranting: 2.15,
-          PPD: 25.0,
-          MPR: 19.5,
-          count: 0,
-          enroll: 10,
-          flag: false,
-          record: []
-        },
-        {
-          id: 1,
-          img: require("@/assets/1.jpg"),
-          teamName: "上海队",
-          couny: "北京",
-          place: "汉庭会所",
-          captain: "刘半仙",
-          vipCount: 8,
-          ranting: 2.15,
-          PPD: 25.0,
-          MPR: 19.5,
-          count: 0,
-          enroll: 10,
-          flag: false,
-          record: [
-            {
-              matchName: "第三届DARTS WORLD（广州联赛）",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              class: [
-                { className: "class1" },
-                { className: "class2" },
-                { className: "class3" }
-              ]
-            },
-            {
-              matchName: "第三届DARTS WORLD（广州联赛）",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              class: [
-                { className: "class1" },
-                { className: "class2" },
-                { className: "class3" }
-              ]
-            }
-          ]
-        }
-      ],
-      bestTeam: [],
-      getDate: () => "220-10-16",
-      showDetail: (value: number) => {
-        Router.push({
-          path: "/teamInfo",
-          query: { value }
-        });
-      },
-      entryPage: () => {
-        Router.push("teamInfo");
-      },
-      onSearch: () => {
-        console.log("11");
-      },
-      changeFlag: (index: number) => {
-        data.teamList[index].flag = !data.teamList[index].flag;
-      },
-      onShowSizeChange: () => {
-        console.log(1);
-      },
-      matchTypeChange: (value: number) => {
-        console.log(value);
-      }
-    });
-    const getBestTeamList = () => {
-      myTeamBestListHttp({
-        countryId: sessionStorage.getItem("countryId")
-      }).then(res => {
-        const list: any = []
-        for (const item in res.data.data) {
-          const obj: any = Object.assign(res.data.data[item], { title: item });
-          list.push(obj)
-          data.bestTeam = list;
-        }
-      });
-    };
-    onMounted(() => {
-      getBestTeamList();
-    });
-    return {
-      ...toRefs(data)
-    };
-  }
+	name: 'team',
+	components: {
+		divTitle,
+		BankFilled,
+		SearchOutlined,
+		SettingFilled,
+		InfoCircleFilled,
+		UserOutlined,
+		DownCircleOutlined,
+		UpCircleOutlined,
+		DownOutlined,
+		UpOutlined
+	},
+	setup() {
+		const ROUTER = useRouter();
+		const data = reactive({
+			title: 'default.9',
+			currentValue: 1,
+			btnType: 1,
+			isUp: true,
+			inputValue: '',
+			current: 1,
+			pageSize: 1,
+			total: 1,
+			colSpan: 4,
+			matchType: 1,
+			countryId: null,
+			areaId: null,
+			monthList: [],
+			stateList: [],
+			areaList: [],
+			cityList: [],
+			matchTypeList: [
+				{ value: 1, label: 'default.55' },
+				{ value: 2, label: 'default.248' },
+				{ value: 3, label: 'default.94' }
+			],
+			teamList: [{ flag: false, competitionList: [] }],
+			bestTeam: [],
+			getDate: () => '220-10-16',
+			showDetail: (value: number) => {
+				ROUTER.push({
+					path: '/teamInfo',
+					query: { value }
+				});
+			},
+			onSearch: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTeamList();
+			},
+			changeFlag: (index: number) => {
+				data.teamList[index].flag = !data.teamList[index].flag;
+			},
+			onShowSizeChange: () => {
+				console.log(1);
+			},
+			changeIcon: () => {
+				data.isUp = !data.isUp;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTeamList(undefined, undefined, data.isUp ? 1 : 2);
+			},
+			changeType: (type: number, max: number) => {
+				data.btnType = type;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTeamList(undefined, max);
+			},
+			entryPage: (type: number, id: number) => {
+				ROUTER.push({
+					path: '/teamInfo',
+					query: {
+						whichPage: type,
+						id
+					}
+				});
+			},
+			areaChange: (value: number) => {
+				indexCityHttp({ countryId: value }).then((res) => {
+					data.cityList = res.data.data;
+					if (data.cityList.length) {
+						data.areaId = data.cityList[0]['areaId'];
+					} else {
+						data.areaId = null;
+					}
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getTeamList();
+				});
+			}
+		});
+		const getBestTeamList = () => {
+			teamBestListHttp({
+				countryId: sessionStorage.getItem('countryId')
+			}).then((res: any) => {
+				const list: any = [];
+				for (const item in res.data.data) {
+					const obj: any = Object.assign(res.data.data[item], { title: item });
+					list.push(obj);
+					data.bestTeam = list;
+				}
+			});
+		};
+		const getTeamList = (type = 1, max = 30, sort = 1) => {
+			let str = '';
+			switch (type) {
+				case 1:
+					str = 'teamName';
+					break;
+				case 2:
+					str = 'captainName';
+					break;
+				default:
+					str = 'shopName';
+					break;
+			}
+			const obj = {
+				countryId: data.countryId,
+				areaId: data.areaId,
+				[str]: data.inputValue,
+				minRating: 0,
+				maxRating: max,
+				sort,
+				pageIndex: 1,
+				pageSize: 10
+			};
+			teamListHttp(obj).then((res) => {
+				if (res.data.data.list.length) {
+					res.data.data.list.forEach((i: any) => {
+						i.flag = false;
+					});
+				}
+				data.teamList = res.data.data.list;
+				data.total = res.data.data.totalCount;
+			});
+		};
+		const getCountry = () => {
+			indexCountryHttp().then((res) => {
+				if (res.data.data.length) {
+					data.areaList = res.data.data;
+					data.countryId = data.areaList[0]['countryId'];
+					data.areaChange(data.areaList[0]['countryId']);
+				}
+			});
+		};
+		onMounted(() => {
+			getCountry();
+			getBestTeamList();
+		});
+		return {
+			...toRefs(data)
+		};
+	}
 });
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .line {
-  height: 50px;
-  border-radius: 20px 20px 0 0;
-  border: 1px solid #2b2b2b;
-  margin: 10px 0;
+	height: 50px;
+	border-radius: 20px 20px 0 0;
+	border: 1px solid #2b2b2b;
+	margin: 10px 0;
 }
 .fontStyle {
-  font-size: 30px;
+	font-size: 30px;
 }
 .timeStyle {
-  color: red;
-  height: 50px;
-  line-height: 50px;
+	color: red;
+	height: 50px;
+	line-height: 50px;
 }
 .winnerListStyle {
-  background: #999;
-  display: flex;
-  overflow: hidden;
-  overflow-x: auto;
+	background: #999;
+	display: flex;
+	overflow: hidden;
+	overflow-x: auto;
 }
 .fourBox {
-  min-width: 200px;
-  height: 190px;
-  padding: 10px;
-  opacity: 0.7;
+	min-width: 200px;
+	height: 190px;
+	padding: 10px;
+	opacity: 0.7;
 }
 .centerBox {
-  position: relative;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background: #4b5154;
-  overflow: hidden;
+	position: relative;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	background: #4b5154;
+	overflow: hidden;
 }
 .dataInfo {
-  display: flex;
-  justify-content: space-around;
-  border-top: 1px solid #fff;
-  border-bottom: 1px solid #fff;
+	display: flex;
+	justify-content: space-around;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #fff;
 }
 .contentLeft {
-  width: 40%;
-  color: red;
-  font-size: 25px;
-  border-right: 1px solid #fff;
+	width: 40%;
+	color: red;
+	font-size: 25px;
+	border-right: 1px solid #fff;
 }
 .contentRight {
-  width: 60%;
-  color: #fff;
+	width: 60%;
+	color: #fff;
 }
 .infoScore {
-  height: 70px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+	height: 70px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
 }
 .infoScore div {
-  height: 100%;
-  line-height: 40px;
+	height: 100%;
+	line-height: 40px;
 }
 .matchScore {
-  display: flex;
-  justify-content: space-around;
+	display: flex;
+	justify-content: space-around;
 }
 .title {
-  padding-left: 15px;
-  text-align: left;
-  color: #fff;
-  text-overflow:ellipsis;
-  overflow:hidden;
-  white-space:nowrap;
+	padding-left: 15px;
+	text-align: left;
+	color: #fff;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }
 .infoTitle {
-  font-size: 20px;
-  color: #999;
-  font-weight: bold;
+	font-size: 20px;
+	color: #999;
+	font-weight: bold;
 }
 .teamName {
-  color: #fff;
-  font-size: 20px;
-  font-weight: bold;
+	color: #fff;
+	font-size: 20px;
+	font-weight: bold;
 }
 .couny {
-  font-size: 15px;
-  color: #999;
+	font-size: 15px;
+	color: #999;
 }
 .backBox {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  background: #333;
-  top: 180px;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background: #333;
+	top: 180px;
 }
 .centerBox:hover .backBox {
-  top: 0px;
+	top: 0px;
 }
 .backBox {
-  transition: all 0.5s ease;
+	transition: all 0.5s ease;
 }
 .backFont {
-  font-size: 30px;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  word-break: break-all;
+	font-size: 30px;
+	color: #fff;
+	font-weight: bold;
+	cursor: pointer;
+	word-break: break-all;
 }
 .winBox {
-  display: flex;
-  justify-content: space-around;
-  height: 70px;
-  border-top: 1px solid #fff;
-  border-bottom: 1px solid #fff;
-  color: #fff;
+	display: flex;
+	justify-content: space-around;
+	height: 70px;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #fff;
+	color: #fff;
 }
 .winBg {
-  border-left: 1px solid #fff;
-  border-right: 1px solid #fff;
+	border-left: 1px solid #fff;
+	border-right: 1px solid #fff;
 }
 .winBox div {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  flex-direction: column;
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+	flex-direction: column;
 }
 .matchImg {
-  height: 60px;
+	height: 60px;
 }
 .eveyTeam {
-  height: 80px;
-  margin: 15px 0;
-  border: 1px solid #eee;
+	height: 80px;
+	margin: 15px 0;
+	border: 1px solid #eee;
 }
 .imgColStyle {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .placeStyle {
-  display: flex;
-  justify-content: flex-start;
+	display: flex;
+	justify-content: flex-start;
 }
 .placeStyle span {
-  cursor: pointer;
+	cursor: pointer;
 }
 .infoClass {
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
 }
 .counyStyle {
-  color: #999;
-  margin: 0 5px;
+	color: #999;
+	margin: 0 5px;
 }
 .teamStyle {
-  cursor: pointer;
-  font-weight: bold;
+	cursor: pointer;
+	font-weight: bold;
 }
 .teamStyle:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 .vipBox {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
 }
 .topBox {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
 }
 .infoStyle {
-  display: flex;
-  justify-content: space-around;
+	display: flex;
+	justify-content: space-around;
 }
 .iconFont {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  font-size: 25px;
-  cursor: pointer;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	font-size: 25px;
+	cursor: pointer;
 }
 .iconFont:hover {
-  color: #1890ff;
+	color: #1890ff;
 }
 .btnBox {
-  display: flex;
-  padding: 0 0 0 10px;
+	display: flex;
+	padding: 0 0 0 10px;
+	flex-wrap: wrap;
 }
 .btnBox div {
-  margin-right: 15px;
+	margin: 2px;
 }
 .recordBox {
-  padding: 10px;
+	padding: 10px;
 }
 .matchTitle {
-  font-size: 20px;
-  border-bottom: 1px dashed #000;
+	font-size: 20px;
+	border-bottom: 1px dashed #000;
 }
 .msgBox {
-  margin: 10px 0;
-  padding: 0 0 0 10px;
-  height: 80px;
-  border-radius: 10px;
-  box-sizing: border-box;
-  border: 1px solid #2b2b2b;
+	margin: 10px 0;
+	padding: 0 0 0 10px;
+	min-height: 60px;
+	border-radius: 10px;
+	box-sizing: border-box;
+	border: 1px solid #2b2b2b;
 }
 .recordInfoStyle {
-  display: flex;
-  justify-content: flex-start;
+	display: flex;
+	justify-content: flex-start;
 }
 .countBox {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
 }
 .recordInfoFont {
-  font-weight: bold;
-  cursor: pointer;
+	font-weight: bold;
+	cursor: pointer;
 }
 .recordInfoFont:hover {
-  text-decoration: underline;
+	text-decoration: underline;
+}
+.colBox {
+	height: 40px;
+	line-height: 40px;
+}
+.vipPlayer {
+	cursor: pointer;
 }
 </style>

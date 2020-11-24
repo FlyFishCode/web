@@ -1,12 +1,12 @@
 <template>
   <div class="content">
     <a-row>
-      <a-col :span='6' class="centerFont">
+      <a-col :span='12' class="centerFont">
         <SettingFilled /> {{ $t('default.106') }}
       </a-col>
     </a-row>
     <a-row class="rowSearchBox">
-      <a-col :span='3'>
+      <a-col :lg='3' :xs="6">
         <a-select v-model:value="year" @change="yearChange" class="selectBox">
           <a-select-option v-for="item in yearList" :key="item.value" :value='item.value'>{{ item.label }}</a-select-option>
         </a-select>
@@ -15,23 +15,23 @@
 
     <a-row v-for="(item,index) in teamList" :key="item.id">
       <a-row class="eveyTeam">
-        <a-col :span='3' class="imgColStyle">
+        <a-col :lg='3' :xs="4" class="imgColStyle">
           <div>
             <img class="matchImg" :src="item.competitionImg">
           </div>
         </a-col>
-        <a-col :span='4' class="infoClass">
+        <a-col :lg='4' :xs="16" class="infoClass">
           <div class="teamStyle" @click="showInfo">{{ item.competitionName }}</div>
           <div class="placeStyle">
             <div>{{ item.place }}</div>
             <div v-for="div in item.divisionList" :key="div.id" class="divisiBox">{{ div.divisionName }}</div>
           </div>
         </a-col>
-        <a-col :span='4' :offset='4' class="vipBox">
+        <a-col :lg='{ span:4, offset:4 }' :xs='0' class="vipBox">
           <div class="disableFont">{{ $t('default.27') }}</div>
           <div>-{{ item.areaName }}</div>
         </a-col>
-        <a-col :span='5' :offset='1' class="topBox">
+        <a-col :lg='{ span:5, offset:1 }' :xs='0' class="topBox">
           <div class="stateClass">
             <div class="disableFont">{{ $t('default.17') }}</div>
             <div v-if="item.status === 1" class="stateBox N">{{ $t('default.243') }}</div>
@@ -40,7 +40,7 @@
           </div>
           <div class="infoStyle">{{ item.date }}</div>
         </a-col>
-        <a-col :span='2' :offset='1' class="iconFont">
+        <a-col :lg='{ span:2, offset:1 }' :xs='4' class="iconFont">
           <div v-if="item.record">
             <div v-if="item.flag" @click="changeFlag(0,index)">
               <DownCircleOutlined />
@@ -53,15 +53,23 @@
       </a-row>
       <transition enter-active-class="animate__animated animate__bounceInUp">
         <a-row v-show="item.flag" class="recordBox">
-          <a-row class="title">
+          <a-row class="title inPhoneTableDisplay">
             <a-col :span=12>{{ $t('default.156') }}</a-col>
             <a-col :span=12>{{ $t('default.157') }}</a-col>
           </a-row>
           <a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
-            <a-col :span='12' class="teamBox">
-              <div class="teamName">{{ recordInfo.teamName }}</div>
+            <a-col :lg='12' :xs="24" class="teamBox">
+              <a-col :lg="12" :xs="0" class="teamName">{{ recordInfo.teamName }}</a-col>
+              <a-col :lg="0" :xs="24" class="topTitle">
+                <a-col :span="4" class="titleBox">{{ $t('default.9') }}</a-col>
+                <a-col :span="20">{{ recordInfo.teamName }}</a-col>
+                <a-col :span="4"  class="titleBox">{{ $t('default.247') }}</a-col>
+                <a-col :span="20" class="inPhoneDivBox">
+                  <div v-for="div in item.divisionList" :key="div.id" class="divBox">{{ div.divisionName }}</div>
+                </a-col>
+              </a-col>
             </a-col>
-            <a-col :span='12' class="countBox">
+            <a-col :lg='12' :xs="24" class="countBox">
               <div class="tableBox Header">
                 <div>{{ $t('default.70') }}</div>
                 <div>{{ 'Rating' }}</div>
@@ -96,16 +104,16 @@ import { defineComponent, reactive, toRefs, onMounted } from "vue";
 import {
   SettingFilled,
   DownCircleOutlined,
-  UpCircleOutlined,
+  UpCircleOutlined
 } from "@ant-design/icons-vue";
 import { myMatchInfoHttp, myMatchMoreHttp } from "@/axios/api";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "myMatchInfo",
   components: {
     SettingFilled,
     DownCircleOutlined,
-    UpCircleOutlined,
+    UpCircleOutlined
   },
   setup() {
     const Router = useRouter();
@@ -119,7 +127,7 @@ export default defineComponent({
       yearList: [
         { value: 2020, label: 2020 },
         { value: 2019, label: 2019 },
-        { value: 2018, label: 2018 },
+        { value: 2018, label: 2018 }
       ],
       teamList: [{ flag: false, record: [] }],
       changeFlag: (matchId = 0, index: number) => {
@@ -127,10 +135,10 @@ export default defineComponent({
         // if (matchId) {
         const obj = {
           memberId: Number(userId),
-          competitionId: 148,
+          competitionId: 148
         };
-        myMatchMoreHttp(obj).then((res) => {
-          if(res.data.data){
+        myMatchMoreHttp(obj).then(res => {
+          if (res.data.data) {
             data.teamList[index].record = res.data.data;
           }
         });
@@ -150,9 +158,9 @@ export default defineComponent({
           sort: 1,
           date: year,
           pageIndex: currentPage,
-          pageSize: pageSize,
+          pageSize: pageSize
         };
-        myMatchInfoHttp(obj).then((res) => {
+        myMatchInfoHttp(obj).then(res => {
           if (res.data.data) {
             res.data.data.list.forEach((i: any) => {
               i.flag = false;
@@ -163,8 +171,8 @@ export default defineComponent({
           }
         });
       },
-      showInfo:() => {
-        Router.push('/')
+      showInfo: () => {
+        Router.push("/");
       },
       yearChange: (value: number) => {
         data.getMatchList(value, undefined, undefined);
@@ -174,15 +182,15 @@ export default defineComponent({
       },
       pageChange: (page: number) => {
         data.getMatchList(undefined, page, undefined);
-      },
+      }
     });
     onMounted(() => {
       data.getMatchList();
     });
     return {
-      ...toRefs(data),
+      ...toRefs(data)
     };
-  },
+  }
 });
 </script>
 
@@ -260,7 +268,6 @@ export default defineComponent({
 }
 .msgBox {
   margin: 10px 0;
-  height: 80px;
   box-sizing: border-box;
   border-bottom: 1px solid #eee;
   display: flex;
@@ -326,5 +333,22 @@ export default defineComponent({
   border: 1px solid #000;
   padding: 0 5px;
   margin: 4px 5px;
+}
+.topTitle{
+  text-align: left;
+}
+.topTitle div{
+  border: 1px solid #2f2f2f;
+  margin: 1px 0;
+}
+.titleBox{
+  background: #eee;
+}
+.inPhoneDivBox{
+  display: flex;
+}
+.inPhoneDivBox div{
+  margin: 0 5px 0 0;
+  border: 0;
 }
 </style>

@@ -38,6 +38,7 @@ export default defineComponent({
 			activeKey: '2'
 		});
 		onMounted(() => {
+			data.activeKey = route.query.activeKey as string;
 			console.log(route.query);
 		});
 		return {

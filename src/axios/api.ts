@@ -17,6 +17,9 @@ import { theBestTeam, teamList } from '@/axios/team/index';
 // 玩家
 import { theBestPlayer, playerList } from '@/axios/player/index';
 
+// 店铺
+import { shopList, historyList } from '@/axios/shop';
+
 const baseURL = '/apw';
 // const Router = useRouter()
 
@@ -156,7 +159,14 @@ const playerBestListHttp = (data: any = null) => {
 const playerListHttp = (data: any = null) => {
 	return Axios.post(playerList, data);
 };
-
+// 店铺 店铺列表
+const shopListHttp = (data: any = null) => {
+	return Axios.post(shopList, data);
+};
+// 店铺 以前的结果 列表
+const historyListHttp = (data: any = null) => {
+	return Axios.post(historyList, data);
+};
 export {
 	loginHttp,
 	leagueListHttp,
@@ -178,5 +188,7 @@ export {
 	teamBestListHttp,
 	playerBestListHttp,
 	teamListHttp,
-	playerListHttp
+	playerListHttp,
+	shopListHttp,
+	historyListHttp
 };

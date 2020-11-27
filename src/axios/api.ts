@@ -12,13 +12,13 @@ import { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCityl
 import { myPageInfo, myMatchInfo, myMatchInfoMore, myBattleSelectList, myBattleDataList, myBattleDateList, myTeamList } from './myPage/index';
 
 // 队伍
-import { theBestTeam, teamList } from '@/axios/team/index';
+import { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList } from '@/axios/team/index';
 
 // 玩家
 import { theBestPlayer, playerList } from '@/axios/player/index';
 
 // 店铺
-import { shopList, historyList } from '@/axios/shop';
+import { shopList, shopdetails, historyList, shopTeamList, shopPlayerList } from '@/axios/shop';
 
 const baseURL = '/apw';
 // const Router = useRouter()
@@ -143,9 +143,25 @@ const myBattleDateListHttp = (data: any = null) => {
 const myTeamListHttp = (data: any = null) => {
 	return Axios.post(myTeamList, data);
 };
+// 队伍 队伍详情
+const teamdetailsHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(teamdetails, data));
+};
 // 队伍 最佳队伍
 const teamBestListHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(theBestTeam, data));
+};
+// 队伍 时间表 下拉
+const timePageSelectListHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(timePageSelectList, data));
+};
+// 队伍 时间表 列表数据
+const timePageListHttp = (data: any = null) => {
+	return Axios.post(timePageList, data);
+};
+// 队伍 时间表 日历数据
+const calendarListHttp = (data: any = null) => {
+	return Axios.post(calendarList, data);
 };
 // 队伍 队伍列表
 const teamListHttp = (data: any = null) => {
@@ -163,9 +179,21 @@ const playerListHttp = (data: any = null) => {
 const shopListHttp = (data: any = null) => {
 	return Axios.post(shopList, data);
 };
+// 店铺 店铺详情
+const shopdetailsHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(shopdetails, data));
+};
 // 店铺 以前的结果 列表
 const historyListHttp = (data: any = null) => {
 	return Axios.post(historyList, data);
+};
+// 店铺 队伍 列表
+const shopTeamListHttp = (data: any = null) => {
+	return Axios.post(shopTeamList, data);
+};
+// 店铺 玩家 列表
+const shopPlayerListHttp = (data: any = null) => {
+	return Axios.post(shopPlayerList, data);
 };
 export {
 	loginHttp,
@@ -190,5 +218,12 @@ export {
 	teamListHttp,
 	playerListHttp,
 	shopListHttp,
-	historyListHttp
+	shopdetailsHttp,
+	historyListHttp,
+	shopTeamListHttp,
+	shopPlayerListHttp,
+	teamdetailsHttp,
+	timePageSelectListHttp,
+	timePageListHttp,
+	calendarListHttp
 };

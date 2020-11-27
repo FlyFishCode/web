@@ -1,11 +1,11 @@
 <template>
 	<div class="content">
 		<a-row>
-			<a-col :span="12" class="smallTitle"> <SettingFilled /> {{ $t('default.171') + '  ' + `(${leagueList.length})` }} </a-col>
+			<a-col :lg="4" :xs="12" class="smallTitle"> <SettingFilled /> {{ $t('default.171') + '  ' + `(${leagueList.length})` }} </a-col>
 		</a-row>
 		<a-row class="centerStyle">
 			<a-row>
-				<a-col :span="3">
+				<a-col :lg="3" :xs="6">
 					<a-select v-model:value="year" @change="yearChange" class="selectBox">
 						<a-select-option v-for="item in yearList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 					</a-select>
@@ -18,7 +18,7 @@
 			</a-row>
 			<div>
 				<a-row v-for="item in leagueList" :key="item.matchId" class="matchBox">
-					<a-col :span="14">
+					<a-col :lg="14" :xs="24">
 						<a-col :span="4" class="matchImgBox">
 							<img class="matchImg" :src="item.competitionImg" />
 						</a-col>
@@ -29,11 +29,11 @@
 							</div>
 						</a-col>
 					</a-col>
-					<a-col :span="4">
+					<a-col :lg="4" :xs="0">
 						<div class="fontDisplay">{{ $t('default.27') }}</div>
 						<div>{{ item.countryName }}</div>
 					</a-col>
-					<a-col :span="6">
+					<a-col :lg="6" :xs="0">
 						<div class="rightStyle">
 							<div class="fontDisplay">{{ '比赛期间' }}</div>
 							<div class="matchState I" v-if="item.status === 1">{{ '比赛中' }}</div>
@@ -99,7 +99,7 @@ export default defineComponent({
 				};
 				historyListHttp(obj).then((res) => {
 					data.leagueList = res.data.data.list;
-					data.total = res.data.data.totalPage;
+					data.total = res.data.data.totalCount;
 				});
 			},
 			showShopInfo: (league: number) => {

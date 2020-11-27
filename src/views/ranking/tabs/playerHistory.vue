@@ -479,6 +479,14 @@ export default defineComponent({
           }
         });
       },
+      inPhonebySpliceIndex: (index: number) => {
+        const obj: any = data.inPhoneTeamList.splice(index, 1, { flag: false });
+        data.dataList.forEach(i => {
+          if (i.matchId === obj[0].matchId) {
+            i.flag = false;
+          }
+        });
+      }
     });
     return {
       ...toRefs(data),

@@ -6,7 +6,7 @@
 		<inPlayerTopOne />
 		<a-row>
 			<a-tabs type="card" v-model:activeKey="activeKey" class="tabsBox">
-				<a-tab-pane key="1" tab="Rating">
+				<a-tab-pane key="1" :tab="$t('default.254')">
 					<rating />
 				</a-tab-pane>
 				<a-tab-pane key="2" :tab="$t('default.102')">
@@ -46,7 +46,7 @@ export default defineComponent({
 			activeKey: '1'
 		});
 		onMounted(() => {
-			data.activeKey = ROUTE.query.whichPage as string;
+			data.activeKey = ROUTE.query.activeKey as string;
 		});
 		return {
 			...toRefs(data)

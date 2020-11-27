@@ -5,23 +5,23 @@
 		</a-row>
 		<a-row class="rowStyle">
 			<a-col :lg="3" :xs="6">
+				<a-select v-model:value="year" @change="yearChange" class="selectBox">
+					<a-select-option v-for="item in yearList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+				</a-select>
+			</a-col>
+			<!-- <a-col :lg="3" :xs="6">
 				<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
 					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 				</a-select>
-			</a-col>
-			<a-col :lg="3" :xs="6">
-				<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
-				</a-select>
-			</a-col>
-			<a-col :lg="3" :xs="6">
-				<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+			</a-col> -->
+			<a-col :lg="6" :xs="6">
+				<a-select v-model:value="league" @change="leagueChange" class="selectBox">
+					<a-select-option v-for="item in leagueList" :key="item.competitionId" :value="item.competitionId">{{ item.competitionName }}</a-select-option>
 				</a-select>
 			</a-col>
 			<a-col :lg="0" :xs="6">
-				<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+				<a-select v-model:value="state" @change="stateChange" class="selectBox">
+					<a-select-option v-for="item in stateList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
 				</a-select>
 			</a-col>
 		</a-row>
@@ -51,8 +51,8 @@
 				</a-button>
 			</a-col>
 			<a-col :span="3" :offset="10">
-				<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+				<a-select v-model:value="state" @change="stateChange" class="selectBox">
+					<a-select-option v-for="item in stateList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
 				</a-select>
 			</a-col>
 			<a-col :span="3">
@@ -68,59 +68,114 @@
 		</a-row>
 
 		<a-row v-show="isList">
-			<a-table class="inPhoneTableDisplay" :columns="columns" :data-source="dataList" :pagination="false" bordered>
+			<a-table class="inPhoneTableDisplay" :columns="columns" :data-source="dataList" :pagination="false" rowKey="id" bordered>
+				<template v-slot:type="{ text }">
+					<div>{{ text === 1 ? $t('default.63') : $t('default.142') }}</div>
+				</template>
 				<template v-slot:homeTeam="{ record }">
 					<div class="btnClass">
-						<a-button type="link" size="small">{{ record.homeTeam }}</a-button>
-						<a-button type="link" size="small">{{ record.place }}</a-button>
+						<div v-if="record.status !== 1">
+							<a-button type="link" size="small" @click="entryPage(record.id)">{{ record.homeTeamName }}</a-button>
+						</div>
+						<div v-else>
+							{{ record.homeTeamName }}
+						</div>
+						<a-button type="link" size="small" @click="showDetail(1, record)">{{ record.homeTeamShop }}</a-button>
 					</div>
 				</template>
 				<template v-slot:awayTeam="{ record }">
 					<div class="btnClass">
-						<a-button type="link" size="small">{{ record.awayTeam }}</a-button>
-						<a-button type="link" size="small">{{ record.place }}</a-button>
+						<div v-if="record.status !== 1">
+							<a-button type="link" size="small" @click="entryPage(record.id)">{{ record.visitingTeamName }}</a-button>
+						</div>
+						<div v-else>
+							{{ record.visitingTeamName }}
+						</div>
+						<a-button type="link" size="small" @click="showDetail(2, record)">{{ record.visitingTeamShop }}</a-button>
 					</div>
 				</template>
-				<template v-slot:type="{ text }">
-					<div v-if="text === 1">{{ '准备' }}</div>
+				<template v-slot:status="{ text }">
+					<div v-if="text === 1">{{ $t('default.64') }}</div>
 					<a-button v-if="text === 2" type="link" size="small">{{ $t('default.104') }}</a-button>
 					<a-button v-if="text === 3" type="link" size="small">{{ $t('default.244') }}</a-button>
 				</template>
 			</a-table>
-
-			<a-table class="showPhoneTable" :columns="inPhoneColumns" :data-source="dataList" :pagination="false" bordered>
+			<a-table class="showPhoneTable" :columns="inPhoneColumns" :data-source="dataList" :pagination="false" rowKey="id" bordered>
 				<template v-slot:homeTeam="{ record }">
 					<div class="btnClass">
-						<a-button type="link" size="small">{{ record.homeTeam }}</a-button>
-						<a-button type="link" size="small">{{ record.place }}</a-button>
+						<div v-if="record.status !== 1">
+							<a-button type="link" size="small" @click="entryPage(record.id)">{{ record.homeTeamName }}</a-button>
+						</div>
+						<div v-else>
+							{{ record.homeTeamName }}
+						</div>
+						<a-button type="link" size="small" @click="showDetail(1, record)">{{ record.homeTeamShop }}</a-button>
 					</div>
 				</template>
 				<template v-slot:awayTeam="{ record }">
 					<div class="btnClass">
-						<a-button type="link" size="small">{{ record.awayTeam }}</a-button>
-						<a-button type="link" size="small">{{ record.place }}</a-button>
+						<div v-if="record.status !== 1">
+							<a-button type="link" size="small" @click="entryPage(record.id)">{{ record.visitingTeamName }}</a-button>
+						</div>
+						<div v-else>
+							{{ record.visitingTeamName }}
+						</div>
+						<a-button type="link" size="small" @click="showDetail(2, record)">{{ record.visitingTeamShop }}</a-button>
 					</div>
 				</template>
-				<template v-slot:type="{ text }">
-					<div v-if="text === 1">{{ '准备' }}</div>
+				<template v-slot:status="{ text }">
+					<div v-if="text === 1">{{ $t('default.64') }}</div>
 					<a-button v-if="text === 2" type="link" size="small">{{ $t('default.104') }}</a-button>
 					<a-button v-if="text === 3" type="link" size="small">{{ $t('default.244') }}</a-button>
 				</template>
 			</a-table>
+			<div class="pagination">
+				<a-pagination v-model:current="currentPage" v-model:pageSize="pageSize" :total="total" @change="pageChange" />
+			</div>
 		</a-row>
-
+		<a-modal v-model:visible="visible" :title="dialogObj.title">
+			<template v-slot:footer>
+				<a-row class="rowStyle dialogBox">
+					<a-col :span="8">
+						<div class="imgBox">
+							<img :src="dialogObj.img" alt="" />
+						</div>
+					</a-col>
+					<a-col :span="16" class="dialog">
+						<div>{{ `${$t('default.28')}：${dialogObj.shopName}` }}</div>
+						<div>{{ `${$t('default.89')}：${dialogObj.phone}` }}</div>
+						<div>{{ `${$t('default.125')}：${dialogObj.address}` }}</div>
+					</a-col>
+				</a-row>
+				<div class="dialogBtn">
+					<a-button type="primary" @click="handleOk">{{ $t('default.25') }}</a-button>
+				</div>
+			</template>
+		</a-modal>
 		<a-row v-show="isCalendar">
-			<a-calendar v-model:value="calendarValue" @panelChange="calendarlChange" @select="onSelect" />
+			<a-calendar @panelChange="calendarlChange" @select="onSelect">
+				<template #dateCellRender="{ current: value }">
+					<div>
+						<div v-for="item in getListData(value)" :key="item.id" class="every" @click="entryPage(item.id)">
+							<div class="type">{{ item.type === 1 ? $t('default.63') : $t('default.142') }}</div>
+							<div>{{ item.homeTeamName }}</div>
+							<div>{{ `${item.homeTeamScore} : ${item.visitingTeamScore}` }}</div>
+							<div>{{ item.visitingTeamName }}</div>
+						</div>
+					</div>
+				</template>
+			</a-calendar>
 		</a-row>
 		<entryList :entryPath="entryPath" />
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import entryList from '@/components/common/entryList.vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { UnorderedListOutlined, CalendarOutlined, CloudDownloadOutlined, PrinterOutlined, SettingFilled } from '@ant-design/icons-vue';
+import { timePageSelectListHttp, timePageListHttp, calendarListHttp } from '@/axios/api';
 // interface TableRenderProps {
 //   text: string;
 //   index: number;
@@ -136,30 +191,57 @@ export default defineComponent({
 		entryList
 	},
 	setup() {
-		const Router = useRouter();
+		const ROUTE = useRoute();
+		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/team',
+			currentPage: 1,
+			pageSize: 10,
+			total: 1,
 			colSpan: 5,
 			isList: true,
 			isCalendar: false,
-			calendarValue: '',
-			matchType: 2020,
-			matchTypeList: [{ value: 2020, label: '2020' }],
+			visible: false,
+			state: '',
+			year: 2020,
+			month: new Date().getMonth() + 1,
+			league: '',
+			teamId: ROUTE.query.teamId,
+			yearList: [
+				{ value: 2020, label: 2020 },
+				{ value: 2019, label: 2019 }
+			],
+			leagueList: [],
+			calendarList: [],
+			stateList: [
+				{ value: '', label: 'default.246' },
+				{ value: 1, label: 'default.64' },
+				{ value: 2, label: 'default.104' },
+				{ value: 3, label: 'default.244' }
+			],
+			dialogObj: {
+				title: '',
+				img: require('@/assets/3.jpg'),
+				shopName: '',
+				phone: '',
+				address: ''
+			},
 			columns: [
 				{
 					title: '日期',
 					width: 100,
-					dataIndex: 'key'
+					dataIndex: 'date'
 				},
 				{
 					title: '比赛时间',
 					width: 100,
-					dataIndex: 'age'
+					dataIndex: 'time'
 				},
 				{
 					title: '比赛类型',
 					width: 100,
-					dataIndex: 'age'
+					dataIndex: 'type',
+					slots: { customRender: 'type' }
 				},
 				{
 					title: '比赛队伍',
@@ -170,12 +252,12 @@ export default defineComponent({
 				{
 					colSpan: 0,
 					width: 50,
-					dataIndex: 'age'
+					dataIndex: 'homeTeamScore'
 				},
 				{
 					colSpan: 0,
 					width: 50,
-					dataIndex: 'age'
+					dataIndex: 'visitingTeamScore'
 				},
 				{
 					colSpan: 0,
@@ -185,8 +267,8 @@ export default defineComponent({
 				{
 					title: '进行状态',
 					width: 100,
-					dataIndex: 'age',
-					slots: { customRender: 'type' }
+					dataIndex: 'status',
+					slots: { customRender: 'status' }
 				}
 			],
 			inPhoneColumns: [
@@ -211,49 +293,34 @@ export default defineComponent({
 					dataIndex: 'key'
 				}
 			],
-			dataList: [
-				{
-					key: '1',
-					homeTeam: '武汉上将怼',
-					awayTeam: '撒打算呢队伍',
-					place: '(Hea Darts（广州）)',
-					age: 1,
-					tel: '0571-22098909',
-					phone: 18889898989
-				},
-				{
-					key: '2',
-					homeTeam: '偶就嗯我队伍',
-					awayTeam: '去年名称队伍',
-					place: '(Hea Darts（广州）)',
-					tel: '0571-22098333',
-					phone: 18889898888,
-					age: 2
-				},
-				{
-					key: '3',
-					homeTeam: '阿松大色斑队伍',
-					awayTeam: '哦抗衡队伍',
-					place: '(Hea Darts（广州）)',
-					age: 3,
-					tel: '0575-22098909',
-					phone: 18900010002
-				},
-				{
-					key: '4',
-					homeTeam: '自行车队伍',
-					awayTeam: '请问队伍',
-					place: '(Hea Darts（广州）)',
-					age: 3,
-					tel: '0575-22098909',
-					phone: 18900010002
-				}
-			],
+			dataList: [],
 			getDate: () => {
 				return '2020-10-17';
 			},
-			handleMenuClick: () => {
-				console.log(11);
+			showDetail: (type: number, item: any) => {
+				if (type === 1) {
+					data.dialogObj.title = item.homeTeamShop;
+					data.dialogObj.shopName = item.homeTeamShop;
+					data.dialogObj.phone = item.shopPhone;
+					data.dialogObj.address = item.shopAddress;
+				} else {
+					data.dialogObj.title = item.homeTeamShop;
+					data.dialogObj.shopName = item.homeTeamShop;
+					data.dialogObj.phone = item.shopPhone;
+					data.dialogObj.address = item.shopAddress;
+				}
+				data.visible = true;
+			},
+			yearChange: (value: number) => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getSelectList(value);
+			},
+			handleOk: () => {
+				console.log(1);
+			},
+			stateChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getList();
 			},
 			showList: () => {
 				data.isCalendar = false;
@@ -263,21 +330,93 @@ export default defineComponent({
 				data.isList = false;
 				data.isCalendar = true;
 			},
-			calendarlChange: (value: string) => {
-				console.log(value);
+			getListData: (value: any) => {
+				let month = '0';
+				let day = '0';
+				let current = '';
+				if (value.month() + 1 < 10) {
+					month = month + (value.month() + 1);
+				} else {
+					month = value.month() + 1;
+				}
+				if (value.date() < 10) {
+					day = day + value.date();
+				} else {
+					day = value.date();
+				}
+				current = `${month}-${day}`;
+				const list = data.calendarList.filter((i: any) => i.date === current);
+				return list;
+			},
+			calendarlChange: (data: any) => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getCalendarList(data._d.getFullYear(), data._d.getMonth() + 1);
 			},
 			onSelect: (value: string) => {
 				console.log(value);
 			},
+			pageChange: (num: number) => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getList(num);
+			},
 			Gohistory: () => {
-				Router.push({
+				ROUTER.push({
 					path: 'teamIndex',
 					query: { ismatchTablePage: 1 }
 				});
 			},
-			matchTypeChange: (value: number) => {
-				console.log(value);
+			leagueChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getList();
+			},
+			entryPage: (row: any) => {
+				console.log(row);
 			}
+		});
+		const getList = (pageIndex = 1) => {
+			const obj = {
+				competitionId: data.league,
+				teamId: data.teamId,
+				status: data.state,
+				pageIndex: pageIndex,
+				pageSize: 10
+			};
+			timePageListHttp(obj).then((res) => {
+				data.dataList = res.data.data.list;
+				data.total = res.data.data.totalPage;
+			});
+		};
+		const getCalendarList = (year = data.year, month = data.month) => {
+			const obj = {
+				competitionId: data.league,
+				teamId: data.teamId,
+				status: data.state,
+				year: year,
+				month
+			};
+			calendarListHttp(obj).then((res) => {
+				data.calendarList = res.data.data;
+			});
+		};
+		const getSelectList = (year = data.year) => {
+			const obj = {
+				countryId: sessionStorage.getItem('countryId'),
+				teamId: data.teamId,
+				year
+			};
+			timePageSelectListHttp(obj).then((res) => {
+				data.leagueList = res.data.data;
+				if (data.leagueList.length) {
+					data.league = data.leagueList[0]['competitionId'];
+				} else {
+					data.league = '';
+				}
+				getList();
+				getCalendarList();
+			});
+		};
+		onMounted(() => {
+			getSelectList();
 		});
 		return {
 			...toRefs(data)
@@ -291,8 +430,45 @@ export default defineComponent({
 	display: flex;
 	justify-content: space-around;
 	flex-direction: column;
+	text-align: center;
 }
 .showPhoneTable {
 	display: none;
+}
+.teamBox {
+	text-align: center;
+}
+.dialogBox {
+	height: 100px;
+	color: #ff3202;
+	border: 1px solid #eee;
+}
+.imgBox {
+	height: 100px;
+	width: 100px;
+	margin: 0 auto;
+}
+.imgBox img {
+	width: 100%;
+	height: 100%;
+}
+.dialog {
+	text-align: left;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+.every {
+	border: 2px solid #2f2f2f;
+	margin: 2px 0;
+	text-align: center;
+	cursor: pointer;
+}
+.every:hover {
+	border-color: #1890ff;
+}
+.type {
+	color: #2f2f2f;
 }
 </style>

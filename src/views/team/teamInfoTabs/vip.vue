@@ -216,7 +216,7 @@ export default defineComponent({
 				Router.push({
 					path: '/playerInfo',
 					query: {
-						whichPage: type,
+						activeKey: type,
 						id
 					}
 				});

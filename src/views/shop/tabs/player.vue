@@ -1,317 +1,188 @@
 <template>
-  <div class="content">
-    <a-row>
-      <a-col :span='4' class="smallTitle">
-        <SettingFilled /> {{ `${$t('default.9')} (${playerList.length})` }}
-      </a-col>
-    </a-row>
+	<div class="content">
+		<a-row>
+			<a-col :lg="4" :xs="12" class="smallTitle"> <SettingFilled /> {{ `${$t('default.10')} (${playerList.length})` }} </a-col>
+			<a-col :lg="{ span: 3, offset: 17 }" :xs="0" class="sortColBox">
+				<div>
+					<div class="linkIcon">
+						<span v-if="sortTeam" @click="changeSortTeam(1)"> {{ $t('default.252') }}<DownOutlined /> </span>
+						<span v-else @click="changeSortTeam(2)"> {{ $t('default.252') }}<UpOutlined /> </span>
+					</div>
+				</div>
+			</a-col>
+		</a-row>
 
-    <a-row v-for="item in playerList" :key="item.id">
-      <a-row class="eveyTeam">
-        <a-col :span='3' class="imgColStyle">
-          <div>
-            <img class="matchImg" :src="item.img" alt="">
-          </div>
-        </a-col>
-        <a-col :span='4' class="infoClass">
-          <div class="teamStyle">{{ item.teamName }}</div>
-          <div>{{ item.captain }}</div>
-        </a-col>
-        <a-col :span='3' :offset='5' class="vipBox">
-          <div>{{ $t('default.55') }}</div>
-          <div>
-            <UserOutlined />{{ item.vipCount }}
-          </div>
-        </a-col>
-        <a-col :span='8' class="topBox">
-          <div>{{ $t('default.179') }}</div>
-          <div class="infoStyle">
-            <div>{{ `Rating  ${item.ranting}` }}</div>|
-            <div>{{ `PPD  ${item.PPD}` }}</div>|
-            <div>{{ `MPR  ${item.MPR}` }}</div>
-          </div>
-        </a-col>
-      </a-row>
-    </a-row>
-    <a-row type="flex" justify="end">
-      <a-pagination show-size-changer v-model:current="currentPage" :pageSize="10" :total="500" @showSizeChange="onShowSizeChange" />
-    </a-row>
-    <entryList :entryPath='entryPath' />
-  </div>
+		<a-row v-for="item in playerList" :key="item.id">
+			<a-row class="eveyTeam">
+				<a-col :lg="3" :xs="4" class="imgColStyle">
+					<div>
+						<img class="matchImg" :src="item.playerImg" alt="" />
+					</div>
+				</a-col>
+				<a-col :lg="4" :xs="{ span: 7, offset: 1 }" class="infoClass">
+					<div class="teamStyle" @click="entryPage(item.playerId)">{{ item.playerName }}</div>
+					<div v-if="item.gender === 0">{{ $t('default.204') }}</div>
+					<div v-else-if="item.gender === 1">{{ $t('default.203') }}</div>
+					<div v-else>{{ $t('default.253') }}</div>
+				</a-col>
+				<a-col :lg="{ span: 3 }" :xs="0" class="vipBox">
+					<div>{{ $t('default.55') }}</div>
+					<div>{{ item.teamName }}</div>
+				</a-col>
+				<a-col :lg="8" :xs="12" class="topBox">
+					<div>{{ $t('default.179') }}</div>
+					<div class="infoStyle">
+						<div>{{ `Rating  ${item.rating}` }}</div>
+						|
+						<div>{{ `PPD  ${item.ppd}` }}</div>
+						|
+						<div>{{ `MPR  ${item.mpr}` }}</div>
+					</div>
+				</a-col>
+			</a-row>
+		</a-row>
+		<a-row type="flex" justify="end">
+			<a-pagination v-model:current="currentPage" v-model:pageSize="pageSize" :total="total" @showSizeChange="onShowSizeChange" />
+		</a-row>
+		<entryList :entryPath="entryPath" />
+	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { shopPlayerListHttp } from '@/axios/api';
 import entryList from '@/components/common/entryList.vue';
-import { useRouter } from "vue-router";
-import {
-  SettingFilled,
-  UserOutlined,
-} from "@ant-design/icons-vue";
+import { useRoute, useRouter } from 'vue-router';
+import { SettingFilled, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 export default defineComponent({
-  name: "player",
-  components: {
-    SettingFilled,
-    UserOutlined,
-    entryList
-  },
-  setup() {
-    const Router = useRouter();
-    const data = reactive({
-      entryPath:'/shop',
-      currentPage: 1,
-      value: 201,
-      current: 1,
-      pageSize: 1,
-      colSpan: 4,
-      matchType: 2020,
-      matchTypeList: [{ value: 2020, label: "2020" }],
-      monthList: [],
-      stateList: [],
-      playerList: [
-        {
-          id: 1,
-          img: require("@/assets/1.jpg"),
-          teamName: "上海队",
-          couny: "北京",
-          place: "汉庭会所",
-          captain: "刘半仙",
-          vipCount: 8,
-          ranting: 2.15,
-          PPD: 25.0,
-          MPR: 19.5,
-          count: 0,
-          enroll: 10,
-          flag: false,
-          record: [
-            {
-              matchName: "第三届DARTS WORLD（广州联赛）",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              class: [
-                { className: "class1" },
-                { className: "class2" },
-                { className: "class3" },
-              ],
-            },
-            {
-              matchName: "第三届DARTS WORLD（广州联赛）",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              class: [
-                { className: "class1" },
-                { className: "class2" },
-                { className: "class3" },
-              ],
-            },
-          ],
-        },
-        {
-          id: 1,
-          img: require("@/assets/1.jpg"),
-          teamName: "上海队",
-          couny: "北京",
-          place: "汉庭会所",
-          captain: "刘半仙",
-          vipCount: 8,
-          ranting: 2.15,
-          PPD: 25.0,
-          MPR: 19.5,
-          count: 0,
-          enroll: 10,
-          flag: false,
-          record: [],
-        },
-        {
-          id: 1,
-          img: require("@/assets/1.jpg"),
-          teamName: "上海队",
-          couny: "北京",
-          place: "汉庭会所",
-          captain: "刘半仙",
-          vipCount: 8,
-          ranting: 2.15,
-          PPD: 25.0,
-          MPR: 19.5,
-          count: 0,
-          enroll: 10,
-          flag: false,
-          record: [
-            {
-              matchName: "第三届DARTS WORLD（广州联赛）",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              class: [
-                { className: "class1" },
-                { className: "class2" },
-                { className: "class3" },
-              ],
-            },
-            {
-              matchName: "第三届DARTS WORLD（广州联赛）",
-              img: require("@/assets/1.jpg"),
-              date: "2020-5-40 ~ 2020-6-10",
-              place: "广州",
-              class: [
-                { className: "class1" },
-                { className: "class2" },
-                { className: "class3" },
-              ],
-            },
-          ],
-        },
-      ],
-      bestTeam: [
-        {
-          id: 1,
-          title: "鲨鱼辣椒",
-          teamName: "鲨鱼辣椒队",
-          couny: "ABSP(广州)",
-          itemScore: "71",
-          PPD: "PPD",
-          MPR: "MPR",
-          score: "15",
-          top: "BEST HELLO WORLD",
-        },
-        {
-          id: 2,
-          title: "蜘蛛侦探",
-          teamName: "蜘蛛侦探队",
-          couny: "ABSP(广州)",
-          itemScore: "71",
-          PPD: "PPD",
-          MPR: "MPR",
-          score: "15",
-          top: "HELLO WORLD",
-        },
-        {
-          id: 3,
-          title: "奥特曼",
-          teamName: "奥特曼队",
-          couny: "ABSP(广州)",
-          itemScore: "71",
-          PPD: "PPD",
-          MPR: "MPR",
-          score: "15",
-          top: "BEST WORLD",
-        },
-        {
-          id: 4,
-          title: "奥特曼",
-          teamName: "奥特曼队",
-          couny: "ABSP(广州)",
-          itemScore: "71",
-          win: "PPD",
-          MPR: "MPR",
-          score: "15",
-          top: "BEST WORLD",
-        },
-        {
-          id: 5,
-          title: "奥特曼",
-          teamName: "奥特曼队",
-          couny: "ABSP(广州)",
-          itemScore: "71",
-          win: "PPD",
-          MPR: "MPR",
-          score: "15",
-          top: "BEST WORLD",
-        },
-      ],
-      getDate: () => "220-10-16",
-      showDetail: (value: number) => {
-        Router.push({
-          path: "/teamInfo",
-          query: { value },
-        });
-      },
-      onSearch: () => {
-        console.log("11");
-      },
-      changeFlag: (index: number) => {
-        data.playerList[index].flag = !data.playerList[index].flag;
-      },
-      onShowSizeChange: () => {
-        console.log(1);
-      },
-      matchTypeChange: (value: number) => {
-        console.log(value);
-      },
-    });
-    return {
-      ...toRefs(data),
-    };
-  },
+	name: 'player',
+	components: {
+		SettingFilled,
+		DownOutlined,
+		UpOutlined,
+		entryList
+	},
+	setup() {
+		const ROUTE = useRoute();
+		const ROUTER = useRouter();
+		const data = reactive({
+			entryPath: '/shop',
+			currentPage: 1,
+			value: 201,
+			current: 1,
+			pageSize: 10,
+			total: 1,
+			sort: 1,
+			colSpan: 4,
+			sortTeam: true,
+			shopId: ROUTE.query.shopId,
+			playerList: [],
+			getDate: () => '220-10-16',
+			entryPage: (id: number) => {
+				ROUTER.push({
+					path: '/playerInfo',
+					query: {
+						activeKey: '1',
+						id
+					}
+				});
+			},
+			onShowSizeChange: () => {
+				console.log(1);
+			},
+			changeSortTeam: (value: number) => {
+				data.sort = value;
+				data.sortTeam = !data.sortTeam;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getList();
+			}
+		});
+		const getList = () => {
+			const obj = {
+				shopId: data.shopId,
+				sort: data.sort,
+				pageIndex: 1,
+				pageSize: 10
+			};
+			shopPlayerListHttp(obj).then((res) => {
+				data.playerList = res.data.data.list;
+				data.total = res.data.data.totalCount;
+			});
+		};
+		onMounted(() => {
+			getList();
+		});
+		return {
+			...toRefs(data)
+		};
+	}
 });
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .teamName {
-  color: #fff;
-  font-size: 20px;
-  font-weight: bold;
+	color: #fff;
+	font-size: 20px;
+	font-weight: bold;
 }
 .couny {
-  font-size: 15px;
-  color: #999;
+	font-size: 15px;
+	color: #999;
 }
 .matchImg {
-  height: 60px;
+	height: 60px;
 }
 .eveyTeam {
-  height: 80px;
-  margin: 15px 0;
-  border: 1px solid #eee;
+	height: 80px;
+	margin: 15px 0;
+	border: 1px solid #eee;
 }
 .imgColStyle {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .placeStyle {
-  display: flex;
-  justify-content: flex-start;
+	display: flex;
+	justify-content: flex-start;
 }
 .placeStyle span {
-  cursor: pointer;
+	cursor: pointer;
 }
 .infoClass {
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
 }
 .counyStyle {
-  color: #999;
-  margin: 0 5px;
+	color: #999;
+	margin: 0 5px;
 }
 .teamStyle {
-  cursor: pointer;
-  font-weight: bold;
+	cursor: pointer;
+	font-weight: bold;
 }
 .teamStyle:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 .vipBox {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
 }
 .topBox {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
 }
 .infoStyle {
-  display: flex;
-  justify-content: space-around;
+	display: flex;
+	justify-content: space-around;
 }
 </style>

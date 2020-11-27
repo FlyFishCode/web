@@ -1,12 +1,12 @@
 <template>
 	<a-row type="flex" justify="center">
-		<a-col class="bg">
+		<div class="bg">
 			<!-- <a-config-provider :locale="locale"> -->
 			<hearder />
 			<router-view />
 			<afooter />
 			<!-- </a-config-provider> -->
-		</a-col>
+		</div>
 	</a-row>
 </template>
 
@@ -101,6 +101,7 @@ export default defineComponent({
 .pagination {
 	display: flex;
 	justify-content: flex-end;
+	margin: 10px 0;
 }
 .content {
 	margin: 5px;
@@ -182,5 +183,19 @@ export default defineComponent({
 }
 .showPhoneTable {
 	display: none !important;
+}
+/* 排序样式 */
+.linkIcon {
+	cursor: pointer;
+	color: #1890ff;
+}
+.sortColBox {
+	height: 40px;
+	line-height: 40px;
+}
+.overStyle {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 </style>

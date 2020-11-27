@@ -82,4 +82,24 @@
     .fontStyle {
         justify-content: normal!important;
     }
+    .allBox {
+        border-right: none!important;
+        border-bottom: 2px solid #fff;
+    }
+    .inPhonePlayer .ant-progress-inner {
+        width: 100%!important;
+        height: 100%!important;
+    }
+    .scoreBox>div {
+        padding: 0!important;
+    }
+    .currentScore {
+        border: none!important;
+    }
+    .scoreName {
+        text-align: center!important;
+    }
+    .recordBox {
+        padding: 0px!important;
+    }
 }

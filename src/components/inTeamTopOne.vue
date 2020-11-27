@@ -2,19 +2,20 @@
 	<div>
 		<a-row class="rowStyle">
 			<a-col :lg="12" :xs="24" class="allBox">
-				<a-col :span="12" class="firstClass">
-					<img class="imgBg" :src="infoData.img" alt="" />
+				<a-col :span="10" class="firstClass">
+					<img class="imgBg" :src="infoData.teamImg" alt="" />
 				</a-col>
-				<a-col :span="12" class="firstClass FONT">
+				<a-col :span="14" class="firstClass">
 					<div class="teamName" @click="showTeamInfo">{{ infoData.teamName }}</div>
 					<div class="disabledClass">{{ infoData.captainName }}</div>
+					<div class="disabledClass">{{ infoData.countryName }} > {{ infoData.areaName }}</div>
 					<div class="disabledClass">
-						{{ infoData.place }}
+						{{ infoData.shopAddress }}
 						<span @click="showDetail" class="icon">
-							<InfoCircleFilled />
+							<EnvironmentOutlined />
 						</span>
 					</div>
-					<div class="disabledClass">{{ infoData.country }}</div>
+					<div class="disabledClass">{{ infoData.createDate }}</div>
 				</a-col>
 			</a-col>
 			<!-- // 左侧按钮 -->
@@ -25,7 +26,7 @@
 				<a-col class="center animate__backOutRight" id="Box">
 					<div v-for="item in infoData.resultList" :key="item.id" class="centerBox">
 						<div class="progressStyle">
-							<div class="title">{{ $t('default.183') }}</div>
+							<div class="title">{{ item.title }}</div>
 							<a-progress type="circle" class="myYuan" :percent="75" />
 						</div>
 						<div class="matchBox">
@@ -64,52 +65,22 @@
 <script lang="ts">
 import { useRoute } from 'vue-router';
 import { reactive, toRefs, onMounted, ref } from 'vue';
-import { InfoCircleFilled, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+import { teamdetailsHttp } from '@/axios/api';
+import { EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
 export default {
 	name: 'inTeamTopOne',
 	components: {
-		InfoCircleFilled,
+		EnvironmentOutlined,
 		LeftCircleOutlined,
 		RightCircleOutlined
 	},
 	setup() {
-		const route = useRoute();
+		const ROUTE = useRoute();
 		let currentPosition = 0;
 		const currentIndex = ref(0);
 		const data = reactive({
 			infoData: {
-				img: require('@/assets/1.jpg'),
-				teamName: '上海市消防总队黄埔支队嵩山中队',
-				captainName: '李逍遥',
-				place: '李逍遥',
-				country: '山东',
-				allScore: '总分数',
-				scoreNumber: 59,
-				ppdNumber: 51,
-				mprNumber: 65,
-				resultList: [
-					{
-						id: 1,
-						name: 'Award 01',
-						rating: 0,
-						ppd: 20,
-						mpr: 25
-					},
-					{
-						id: 1,
-						name: 'Award 02',
-						rating: 0,
-						ppd: 20,
-						mpr: 25
-					},
-					{
-						id: 1,
-						name: 'Award 03',
-						rating: 42,
-						ppd: 20,
-						mpr: 25
-					}
-				]
+				resultList: []
 			},
 			showTeamInfo: () => {
 				console.log('111');
@@ -146,8 +117,26 @@ export default {
 				box.style.left = `${currentPosition}px`;
 			}
 		});
+		const getTeamDetails = () => {
+			teamdetailsHttp({ teamId: 46 || ROUTE.query.teamId }).then((res) => {
+				res.data.data.resultList = [];
+				for (const [key, value] of Object.entries(res.data.data)) {
+					switch (key) {
+						case 'bestPlayer':
+							res.data.data.resultList.push(Object.assign(value, { title: key }));
+							break;
+						case 'leagueRating':
+							res.data.data.resultList.push(Object.assign(value, { title: key }));
+							break;
+						default:
+							break;
+					}
+				}
+				data.infoData = res.data.data;
+			});
+		};
 		onMounted(() => {
-			console.log(route.query);
+			getTeamDetails();
 		});
 		return {
 			...toRefs(data),
@@ -186,9 +175,6 @@ export default {
 	justify-content: space-between;
 	text-align: left;
 }
-.FONT {
-	padding-left: 10px;
-}
 .teamName {
 	font-size: 15px;
 	font-weight: bold;
@@ -197,11 +183,11 @@ export default {
 }
 .disabledClass {
 	color: #eee;
-	cursor: pointer;
 }
 .icon {
 	position: relative;
 	top: 1px;
+	cursor: pointer;
 }
 .secondClass .bigFont {
 	font-size: 25px;

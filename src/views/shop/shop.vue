@@ -5,7 +5,7 @@
 			<a-col :lg="12" :xs="24">
 				<div id="container"></div>
 			</a-col>
-			<a-col :lg="12" :xs="24" class="mapSearch">
+			<a-col :lg="12" class="mapSearch inPhoneTableDisplay">
 				<div class="shopTitle">{{ $t('default.158') }}</div>
 				<div class="center">
 					<div>{{ $t('default.27') }}</div>
@@ -26,7 +26,71 @@
 				<div class="center">
 					<div>{{ $t('default.28') }}</div>
 					<div>
-						<a-select v-model:value="shopName" show-search style="width: 100%" :placeholder="$t('default.160')" option-filter-prop="children" :filter-option="filterOption" allowClear>
+						<a-select
+							v-model:value="shopName"
+							show-search
+							style="width: 100%"
+							:placeholder="$t('default.160')"
+							option-filter-prop="children"
+							:getPopupContainer="(trigger) => trigger.parentNode"
+							:filter-option="filterOption"
+							allowClear
+						>
+							<a-select-option v-for="item in shopNameList" :key="item.shopId" :value="item.shopName">{{ item.shopName }}</a-select-option>
+						</a-select>
+					</div>
+				</div>
+				<div class="center">
+					<div>{{ $t('default.159') }}</div>
+					<div>
+						<a-checkbox v-model:checked="a1">{{ 'A1' }}</a-checkbox>
+						<a-checkbox v-model:checked="w1">{{ 'W1' }}</a-checkbox>
+					</div>
+				</div>
+				<div class="center">
+					<div>{{ $t('default.119') }}</div>
+					<div>
+						<a-checkbox v-model:checked="league">{{ $t('default.8') }}</a-checkbox>
+					</div>
+				</div>
+				<div class="btnBg">
+					<a-button type="danger" @click="search">{{ $t('default.16') }}</a-button>
+				</div>
+			</a-col>
+		</a-row>
+
+		<a-row>
+			<a-col :lg="0" :xs="24" class="showPhoneTable">
+				<div class="shopTitle">{{ $t('default.158') }}</div>
+				<div class="center">
+					<div>{{ $t('default.27') }}</div>
+					<div class="selectBox">
+						<a-select v-model:value="countryId" @change="areaChange" class="selectBox" allowClear>
+							<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
+						</a-select>
+						<a-select v-model:value="areaId" class="selectBox" allowClear>
+							<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
+						</a-select>
+						<!-- <a-select v-model:value="city">
+              <a-select-option v-for="city in cityList" :key="city.value" :value='city.value'>
+                {{ city.label }}
+              </a-select-option>
+            </a-select> -->
+					</div>
+				</div>
+				<div class="center">
+					<div>{{ $t('default.28') }}</div>
+					<div>
+						<a-select
+							v-model:value="shopName"
+							show-search
+							style="width: 100%"
+							:placeholder="$t('default.160')"
+							option-filter-prop="children"
+							:getPopupContainer="(trigger) => trigger.parentNode"
+							:filter-option="filterOption"
+							allowClear
+						>
 							<a-select-option v-for="item in shopNameList" :key="item.shopId" :value="item.shopName">{{ item.shopName }}</a-select-option>
 						</a-select>
 					</div>
@@ -600,5 +664,12 @@ export default defineComponent({
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
+}
+.showPhoneTable {
+	display: none;
+	height: 100%;
+	border-left: 1px solid #4b4b4b;
+	padding: 20px;
+	text-align: left;
 }
 </style>

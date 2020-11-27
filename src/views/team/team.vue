@@ -73,15 +73,15 @@
 		</a-row>
 		<a-row>
 			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ `${$t('default.82')} (${teamList.length})` }} </a-col>
-			<a-col :lg="3" :xs="0" class="colBox">{{ 'TEAM RATING' }}</a-col>
-			<a-col :lg="5" :xs="0" class="colBox">
+			<a-col :lg="3" :xs="0" class="sortColBox">{{ 'TEAM RATING' }}</a-col>
+			<a-col :lg="5" :xs="0" class="sortColBox">
 				<a-button size="small" :type="btnType === 1 ? 'primary' : ''" @click="changeType(1, 30)">{{ 'ALL' }}</a-button>
 				<a-button size="small" :type="btnType === 2 ? 'primary' : ''" @click="changeType(2, 7)">{{ '~7' }}</a-button>
 				<a-button size="small" :type="btnType === 3 ? 'primary' : ''" @click="changeType(3, 13)">{{ '~13' }}</a-button>
 				<a-button size="small" :type="btnType === 4 ? 'primary' : ''" @click="changeType(4, 23)">{{ '~23' }}</a-button>
 				<a-button size="small" :type="btnType === 5 ? 'primary' : ''" @click="changeType(5, 30)">{{ '~30' }}</a-button>
 			</a-col>
-			<a-col :lg="4" :xs="0" class="colBox">
+			<a-col :lg="4" :xs="0" class="sortColBox">
 				<div>
 					<a-button type="link" @click="changeIcon">
 						{{ 'Top 4 CR' }}
@@ -104,11 +104,11 @@
 				<a-col :lg="6" :xs="{ span: 14, offset: 1 }" class="infoClass">
 					<div class="teamStyle" @click="entryPage(1, item.teamId)">{{ item.teamName }}</div>
 					<div class="placeStyle">
-						<div v-show="item.shopAddress">{{ item.shopAddress }}/</div>
+						<div v-show="item.shopAddress" class="overStyle">{{ item.shopAddress }}/</div>
 						<div v-show="item.countryName">{{ item.countryName }}/</div>
 						<div class="counyStyle">{{ item.areaName }}</div>
 						<span @click="showDetail">
-							<InfoCircleFilled />
+							<EnvironmentOutlined />
 						</span>
 					</div>
 					<div>{{ item.captainName }}</div>
@@ -169,18 +169,18 @@
 
 		<a-row class="rowStyle">
 			<a-col class="pagination">
-				<a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="total" @showSizeChange="onShowSizeChange" />
+				<a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="total" @change="onPageChange" />
 			</a-col>
 		</a-row>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { teamBestListHttp, teamListHttp, indexCityHttp, indexCountryHttp } from '@/axios/api';
 import divTitle from '@/components/DividingLine.vue';
-import { SettingFilled, BankFilled, SearchOutlined, InfoCircleFilled, UserOutlined, DownCircleOutlined, UpCircleOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
+import { SettingFilled, BankFilled, SearchOutlined, EnvironmentOutlined, UserOutlined, DownCircleOutlined, UpCircleOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 interface DataProps {
 	bestTeam: { [key: string]: string };
 }
@@ -191,7 +191,7 @@ export default defineComponent({
 		BankFilled,
 		SearchOutlined,
 		SettingFilled,
-		InfoCircleFilled,
+		EnvironmentOutlined,
 		UserOutlined,
 		DownCircleOutlined,
 		UpCircleOutlined,
@@ -238,8 +238,9 @@ export default defineComponent({
 			changeFlag: (index: number) => {
 				data.teamList[index].flag = !data.teamList[index].flag;
 			},
-			onShowSizeChange: () => {
-				console.log(1);
+			onPageChange: (num: number) => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTeamList(undefined, undefined, undefined, num);
 			},
 			changeIcon: () => {
 				data.isUp = !data.isUp;
@@ -255,8 +256,8 @@ export default defineComponent({
 				ROUTER.push({
 					path: '/teamInfo',
 					query: {
-						whichPage: type,
-						id
+						activeKey: type,
+						teamId: id
 					}
 				});
 			},
@@ -268,8 +269,6 @@ export default defineComponent({
 					} else {
 						data.areaId = null;
 					}
-					// eslint-disable-next-line @typescript-eslint/no-use-before-define
-					getTeamList();
 				});
 			}
 		});
@@ -285,7 +284,7 @@ export default defineComponent({
 				}
 			});
 		};
-		const getTeamList = (type = 1, max = 30, sort = 1) => {
+		const getTeamList = (type = 1, max = 30, sort = 1, pageNum = 1) => {
 			let str = '';
 			switch (type) {
 				case 1:
@@ -305,7 +304,7 @@ export default defineComponent({
 				minRating: 0,
 				maxRating: max,
 				sort,
-				pageIndex: 1,
+				pageIndex: pageNum,
 				pageSize: 10
 			};
 			teamListHttp(obj).then((res) => {
@@ -315,7 +314,7 @@ export default defineComponent({
 					});
 				}
 				data.teamList = res.data.data.list;
-				data.total = res.data.data.totalCount;
+				data.total = res.data.data.totalPage;
 			});
 		};
 		const getCountry = () => {
@@ -324,6 +323,9 @@ export default defineComponent({
 					data.areaList = res.data.data;
 					data.countryId = data.areaList[0]['countryId'];
 					data.areaChange(data.areaList[0]['countryId']);
+					nextTick(() => {
+						getTeamList();
+					});
 				}
 			});
 		};
@@ -482,6 +484,8 @@ export default defineComponent({
 .placeStyle {
 	display: flex;
 	justify-content: flex-start;
+	white-space: nowrap;
+	overflow: hidden;
 }
 .placeStyle span {
 	cursor: pointer;
@@ -569,10 +573,6 @@ export default defineComponent({
 }
 .recordInfoFont:hover {
 	text-decoration: underline;
-}
-.colBox {
-	height: 40px;
-	line-height: 40px;
 }
 .vipPlayer {
 	cursor: pointer;

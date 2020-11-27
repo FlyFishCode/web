@@ -1,521 +1,510 @@
 <template>
-  <div>
-    <a-row type="flex" justify="end">
-      <a-col :lg="12" :xs='24' class="lineStyle">
-        <a-col :lg="3" :xs="3" v-show="!isLogin">
-          <a-button type="link" size='small' @click="showLoginBox">{{ $t('default.0') }}</a-button>
-          <a-modal id="loginBox" v-model:visible="visible" :title="$t('default.0')" centered>
-            <div>
-              <a-input v-model:value="userId">
-                <template v-slot:prefix>
-                  <user-outlined type="user" />
-                </template>
-              </a-input>
-              <br />
-              <br />
-              <a-input v-model:value="passWord" type='passWord'>
-                <template v-slot:prefix>
-                  <LockOutlined />
-                </template>
-              </a-input>
-              <br />
-              <br />
-              <a-checkbox v-model="autoLogin" @change="onChange">{{ $t('default.5') }}</a-checkbox>
-            </div>
-            <template v-slot:footer>
-              <a-row>
-                <a-col :span='24' class="buttonBox">
-                  <a-button type="primary" @click="login">{{ $t('default.0') }}</a-button>
-                </a-col>
-              </a-row>
-              <a-row class="loginMore">
-                <a-col :span='4'>
-                  <a-button type="link">
-                    {{ $t('default.1') }}
-                  </a-button>
-                </a-col>|
-                <a-col :span='4'>
-                  <a-button type="link">
-                    {{ $t('default.6') }}
-                  </a-button>
-                </a-col>|
-                <a-col :span='4'>
-                  <a-button type="link">
-                    {{ $t('default.7') }}
-                  </a-button>
-                </a-col>
-              </a-row>
-            </template>
-          </a-modal>
-        </a-col>
-        <a-col :lg="3" :xs="3" v-show="!isLogin">
-          <a-button type="link" size='small'>{{ $t('default.1') }}</a-button>
-        </a-col>
-        <a-col :lg='3' :xs="3" v-show="isLogin">{{ userName }}</a-col>
-        <a-col :lg='3' :xs="3" v-show="isLogin">
-          <a-button type="link" size='small' @click="loginOut">{{ $t('default.126') }}</a-button>
-        </a-col>
-        <a-col :lg="4" :xs="4">{{ $t('default.3') }}</a-col>
-        <a-col :lg='5' :xs="5">
-          <a-select v-model:value="country" style="width: 100%" size='small'>
-            <a-select-option v-for="item in countryList" :key="item.countryId" :value='item.countryId'>{{ item.countryName }}</a-select-option>
-          </a-select>
-        </a-col>
-        <a-col :lg="4" :xs="4">{{ $t('default.4') }}</a-col>
-        <a-col :lg='5' :xs="5">
-          <a-select v-model:value="$i18n.locale" style="width: 100%" size='small'>
-            <a-select-option v-for="item in languageList" :key="item.key" :value='item.key'>{{ $t(item.label) }}</a-select-option>
-          </a-select>
-        </a-col>
-      </a-col>
-    </a-row>
-    <a-row class="lineBox">
-      <a-col :lg="{ span: 8, offset: 0 }" :xs="{ span: 8, offset: 4  }">
-        <div class="imgBox" @click="entryIndex"><img :src="img" alt=""></div>
-      </a-col>
-      <a-col :lg="{ span: 8, offset: 8 }" :xs="{ span: 12}">
-        <a-col :lg='6' :xs="10">
-          <a-select v-model:value="type" style="width: 100%" @change="typeChange">
-            <a-select-option v-for="item in typeList" :key="item.key" :value='item.key'>{{ $t(item.label) }}</a-select-option>
-          </a-select>
-        </a-col>
-        <a-col :lg='18' :xs="14">
-          <a-input-search v-model:value="imputValue" style="width: 100%" @search="onSearch" />
-        </a-col>
-      </a-col>
-    </a-row>
-    <a-row class="rowStyle boxBG">
-      <a-tabs class="tabsBox" type='card' @tabClick="tabClick" v-model:activeKey="activeKey">
-        <a-tab-pane key="league" :tab="$t('default.8')"></a-tab-pane>
-        <a-tab-pane key="team" :tab="$t('default.9')"></a-tab-pane>
-        <a-tab-pane key="players" :tab="$t('default.10')"></a-tab-pane>
-        <a-tab-pane key="shop" :tab="$t('default.127')"></a-tab-pane>
-        <a-tab-pane key="ranking" :tab="$t('default.26')"></a-tab-pane>
-        <template v-slot:tabBarExtraContent>
-          <a-button @click="entryPage('myPage')">{{ $t('default.2') }}</a-button>
-          <a-button @click="showPersonBox">
-            <template v-slot:icon>
-              <ProfileTwoTone />
-            </template>
-          </a-button>
-        </template>
-      </a-tabs>
-      <div v-show="showBox" class="showBox animate__animated animate__fadeInRight animate__faster">
-        <div class="hearder">
-          <div>{{ $t('default.128') }}</div>
-          <div class="closeStyle" @click="closeBox">
-            <CloseOutlined />
-          </div>
-        </div>
-        <div class="content">
-          <div class="personalMsg">
-            <div class="contentImgBox">
-              <img :src="myInfo.img" alt="">
-            </div>
-            <div class="contentRight">
-              <div class="contentName">{{ myInfo.name }}</div>
-              <div>{{ myInfo.number }}</div>
-              <div>
-                <a-button type="danger">{{ 'Profile' }}</a-button>
-              </div>
-            </div>
-          </div>
-          <div id="myMsgCard">
-            <div class="Mytabs">
-              <a-button :type="isMyMatch?'primary':''" @click="myMatchClick">{{ $t('default.129') }}</a-button>
-              <a-button :type="isMyMatch?'':'primary'" @click="matchTableClick">{{ $t('default.79') }}</a-button>
-            </div>
-            <div v-if="isMyMatch">
-              <div v-for="item in myInfo.myMatch" :key="item.index" class="match">
-                <div class="myMatchImgBox">
-                  <img :src="item.img" alt="">
-                </div>
-                <div class="myMatchRight">
-                  <div class="myMatchName">{{ item.matchName }}</div>
-                  <div>{{ item.date }}</div>
-                </div>
-              </div>
-              <div class="moreStyle" @click="entryMaPage">
-                <PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}
-              </div>
-            </div>
-            <div v-else>
-              <!-- <div v-if="item in myInfo.matchTimeTable" :key="item.index"></div> -->
-              <div class="moreStyle">
-                <PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </a-row>
-    <div id="isPhoneTabs">
-      <transition enter-active-class="animate__animated animate__fadeInLeft">
-        <div v-if="showPhoneTabs" class="phoneTabsBg">
-          <div v-for="item in phoneTabsList" :key="item.value" class="phoneTabsBox" @click="entryPage(item.value)">
-            {{ $t(item.label) }}
-          </div>
-        </div>
-      </transition>
-      <div class="phoneButton">
-        <a-button type="primary" @click="toggleCollapsed">
-          <MenuUnfoldOutlined v-if="collapsed" />
-          <MenuFoldOutlined v-else />
-        </a-button>
-      </div>
-    </div>
-  </div>
+	<div>
+		<a-row type="flex" justify="end">
+			<a-col :lg="12" :xs="24" class="lineStyle">
+				<a-col :lg="3" :xs="3" v-show="!isLogin">
+					<a-button type="link" size="small" @click="showLoginBox">{{ $t('default.0') }}</a-button>
+					<a-modal id="loginBox" v-model:visible="visible" :title="$t('default.0')" centered>
+						<div>
+							<a-input v-model:value="userId">
+								<template v-slot:prefix>
+									<user-outlined type="user" />
+								</template>
+							</a-input>
+							<br />
+							<br />
+							<a-input v-model:value="passWord" type="passWord">
+								<template v-slot:prefix>
+									<LockOutlined />
+								</template>
+							</a-input>
+							<br />
+							<br />
+							<a-checkbox v-model="autoLogin" @change="onChange">{{ $t('default.5') }}</a-checkbox>
+						</div>
+						<template v-slot:footer>
+							<a-row>
+								<a-col :span="24" class="buttonBox">
+									<a-button type="primary" @click="login">{{ $t('default.0') }}</a-button>
+								</a-col>
+							</a-row>
+							<a-row class="loginMore">
+								<a-col :span="4">
+									<a-button type="link">
+										{{ $t('default.1') }}
+									</a-button> </a-col
+								>|
+								<a-col :span="4">
+									<a-button type="link">
+										{{ $t('default.6') }}
+									</a-button> </a-col
+								>|
+								<a-col :span="4">
+									<a-button type="link">
+										{{ $t('default.7') }}
+									</a-button>
+								</a-col>
+							</a-row>
+						</template>
+					</a-modal>
+				</a-col>
+				<a-col :lg="3" :xs="3" v-show="!isLogin">
+					<a-button type="link" size="small">{{ $t('default.1') }}</a-button>
+				</a-col>
+				<a-col :lg="3" :xs="3" v-show="isLogin">{{ userName }}</a-col>
+				<a-col :lg="3" :xs="3" v-show="isLogin">
+					<a-button type="link" size="small" @click="loginOut">{{ $t('default.126') }}</a-button>
+				</a-col>
+				<a-col :lg="4" :xs="4">{{ $t('default.3') }}</a-col>
+				<a-col :lg="5" :xs="5">
+					<a-select v-model:value="country" style="width: 100%" size="small">
+						<a-select-option v-for="item in countryList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
+					</a-select>
+				</a-col>
+				<a-col :lg="4" :xs="4">{{ $t('default.4') }}</a-col>
+				<a-col :lg="5" :xs="5">
+					<a-select v-model:value="$i18n.locale" style="width: 100%" size="small">
+						<a-select-option v-for="item in languageList" :key="item.key" :value="item.key">{{ $t(item.label) }}</a-select-option>
+					</a-select>
+				</a-col>
+			</a-col>
+		</a-row>
+		<a-row class="lineBox">
+			<a-col :lg="{ span: 8, offset: 0 }" :xs="{ span: 8, offset: 4 }">
+				<div class="imgBox" @click="entryIndex"><img :src="img" alt="" /></div>
+			</a-col>
+			<a-col :lg="{ span: 8, offset: 8 }" :xs="{ span: 12 }">
+				<a-col :lg="6" :xs="10">
+					<a-select v-model:value="type" style="width: 100%" @change="typeChange">
+						<a-select-option v-for="item in typeList" :key="item.key" :value="item.key">{{ $t(item.label) }}</a-select-option>
+					</a-select>
+				</a-col>
+				<a-col :lg="18" :xs="14">
+					<a-input-search v-model:value="imputValue" style="width: 100%" @search="onSearch" />
+				</a-col>
+			</a-col>
+		</a-row>
+		<a-row class="rowStyle boxBG">
+			<a-tabs class="tabsBox" type="card" @tabClick="tabClick" v-model:activeKey="activeKey">
+				<a-tab-pane key="league" :tab="$t('default.8')"></a-tab-pane>
+				<a-tab-pane key="team" :tab="$t('default.9')"></a-tab-pane>
+				<a-tab-pane key="players" :tab="$t('default.10')"></a-tab-pane>
+				<a-tab-pane key="shop" :tab="$t('default.127')"></a-tab-pane>
+				<a-tab-pane key="ranking" :tab="$t('default.26')"></a-tab-pane>
+				<template v-slot:tabBarExtraContent>
+					<a-button @click="entryPage('myPage')">{{ $t('default.2') }}</a-button>
+					<a-button @click="showPersonBox">
+						<template v-slot:icon>
+							<ProfileTwoTone />
+						</template>
+					</a-button>
+				</template>
+			</a-tabs>
+			<div v-show="showBox" class="showBox animate__animated animate__fadeInRight animate__faster">
+				<div class="hearder">
+					<div>{{ $t('default.128') }}</div>
+					<div class="closeStyle" @click="closeBox">
+						<CloseOutlined />
+					</div>
+				</div>
+				<div class="content">
+					<div class="personalMsg">
+						<div class="contentImgBox">
+							<img :src="myInfo.img" alt="" />
+						</div>
+						<div class="contentRight">
+							<div class="contentName">{{ myInfo.name }}</div>
+							<div>{{ myInfo.number }}</div>
+							<div>
+								<a-button type="danger">{{ 'Profile' }}</a-button>
+							</div>
+						</div>
+					</div>
+					<div id="myMsgCard">
+						<div class="Mytabs">
+							<a-button :type="isMyMatch ? 'primary' : ''" @click="myMatchClick">{{ $t('default.129') }}</a-button>
+							<a-button :type="isMyMatch ? '' : 'primary'" @click="matchTableClick">{{ $t('default.79') }}</a-button>
+						</div>
+						<div v-if="isMyMatch">
+							<div v-for="item in myInfo.myMatch" :key="item.index" class="match">
+								<div class="myMatchImgBox">
+									<img :src="item.img" alt="" />
+								</div>
+								<div class="myMatchRight">
+									<div class="myMatchName">{{ item.matchName }}</div>
+									<div>{{ item.date }}</div>
+								</div>
+							</div>
+							<div class="moreStyle" @click="entryMaPage"><PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}</div>
+						</div>
+						<div v-else>
+							<!-- <div v-if="item in myInfo.matchTimeTable" :key="item.index"></div> -->
+							<div class="moreStyle"><PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</a-row>
+		<div id="isPhoneTabs">
+			<transition enter-active-class="animate__animated animate__fadeInLeft">
+				<div v-if="showPhoneTabs" class="phoneTabsBg">
+					<div v-for="item in phoneTabsList" :key="item.value" class="phoneTabsBox" @click="entryPage(item.value)">
+						{{ $t(item.label) }}
+					</div>
+				</div>
+			</transition>
+			<div class="phoneButton">
+				<a-button type="primary" @click="toggleCollapsed">
+					<MenuUnfoldOutlined v-if="collapsed" />
+					<MenuFoldOutlined v-else />
+				</a-button>
+			</div>
+		</div>
+	</div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from "vue";
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 // import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-import { loginHttp, indexCountryHttp } from "@/axios/api";
-import {
-  ProfileTwoTone,
-  CloseOutlined,
-  UserOutlined,
-  LockOutlined,
-  PlusCircleOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-} from "@ant-design/icons-vue";
-import { message } from "ant-design-vue";
+import { useRouter } from 'vue-router';
+import { loginHttp, indexCountryHttp } from '@/axios/api';
+import { ProfileTwoTone, CloseOutlined, UserOutlined, LockOutlined, PlusCircleOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
 export default defineComponent({
-  name: "hearder",
-  components: {
-    ProfileTwoTone,
-    CloseOutlined,
-    UserOutlined,
-    LockOutlined,
-    PlusCircleOutlined,
-    MenuUnfoldOutlined,
-    MenuFoldOutlined,
-  },
-  setup() {
-    const Router = useRouter();
-    // const Store = useStore();
-    const data = reactive({
-      showPhoneTabs:false,
-      collapsed: true,
-      activeKey: "league",
-      isLogin: false,
-      imputValue: "",
-      visible: false,
-      showBox: false,
-      autoLogin: false,
-      userId: "",
-      passWord: "",
-      userName: "",
-      country: '',
-      img: require("@/assets/logo.png"),
-      type: 1,
-      isMyMatch: true,
-      phoneTabsList: [
-        { value: "league", label: "default.8" },
-        { value: "team", label: "default.9" },
-        { value: "players", label: "default.10" },
-        { value: "shop", label: "default.127" },
-        { value: "ranking", label: "default.26" },
-        { value: "myPage", label: "default.2" },
-      ],
-      myInfo: {
-        name: "李逍遥",
-        number: 4206251998858745210,
-        img: require("@/assets/1.jpg"),
-        myMatch: [
-          {
-            id: 1,
-            img: require("@/assets/1.jpg"),
-            matchName: "Demo_League",
-            date: "2020-10-15 ~ 2021-06-30",
-          },
-          {
-            id: 2,
-            img: require("@/assets/1.jpg"),
-            matchName: "Demo_League13隊長會",
-            date: "2020-10-15 ~ 2021-06-30",
-          },
-          {
-            id: 3,
-            img: require("@/assets/1.jpg"),
-            matchName: "Demo_league12_1",
-            date: "2020-10-15 ~ 2021-06-30",
-          },
-        ],
-        matchTimeTable: [
-          {
-            id: 1,
-            img: require("@/assets/1.jpg"),
-            matchName: "Demo_League",
-            date: "2020-10-15 ~ 2021-06-30",
-          },
-          {
-            id: 2,
-            img: require("@/assets/1.jpg"),
-            matchName: "Demo_League13隊長會",
-            date: "2020-10-15 ~ 2021-06-30",
-          },
-          {
-            id: 3,
-            img: require("@/assets/1.jpg"),
-            matchName: "Demo_league12_1",
-            date: "2020-10-15 ~ 2021-06-30",
-          },
-        ],
-      },
-      countryList: [],
-      languageList: [
-        { key: "zh-cn", label: "default.130" },
-        { key: "zh-tw", label: "default.131" },
-        { key: "en-us", label: "default.132" },
-      ],
-      typeList: [
-        { key: 1, label: "default.8" },
-        { key: 2, label: "default.9" },
-        { key: 3, label: "default.10" },
-        { key: 4, label: "default.127" },
-      ],
-      toggleCollapsed: () => {
-        data.collapsed = !data.collapsed;
-        data.showPhoneTabs = !data.showPhoneTabs
-      },
-      typeChange: (value: number) => {
-        console.log(value);
-      },
-      onSearch: () => {
-        console.log("onSearch");
-      },
-      tabClick: (e: string) => {
-        Router.push(e);
-      },
-      showPersonBox: () => {
-        data.showBox = true;
-      },
-      closeBox: () => {
-        data.showBox = false;
-      },
-      showLoginBox: () => {
-        data.visible = true;
-      },
-      handleOk: () => {
-        console.log(1);
-      },
-      onChange: (e: DOM) => {
-        console.log(e);
-      },
-      entryIndex: () => {
-        Router.push("/");
-      },
-      login: () => {
-        const obj = {
-          username: data.userId,
-          password: data.passWord,
-        };
-        loginHttp(false, obj).then((res) => {
-          if (res.data.code === 100) {
-            message.success(res.data.msg);
-            sessionStorage.setItem("token", res.data.data.token);
-            sessionStorage.setItem("userId", res.data.data.memberId);
-            sessionStorage.setItem("userName", res.data.data.username);
-            // 保存玩家id至vuex
-            // Store.dispatch("changeMemberId", res.data.data.memberId);
-            data.userName = res.data.data.username;
-            data.isLogin = true;
-            data.visible = false;
-            Router.push("myPage");
-          } else {
-            message.warning(res.data.msg);
-          }
-        });
-      },
-      loginOut: () => {
-        data.isLogin = false;
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("userId");
-        sessionStorage.removeItem("userName");
-        Router.push("/");
-      },
-      entryPage: (path: string) => {
-        data.showPhoneTabs = false
-        Router.push(path);
-      },
-      myMatchClick: () => {
-        data.isMyMatch = true;
-      },
-      matchTableClick: () => {
-        data.isMyMatch = false;
-      },
-      entryMaPage: () => {
-        data.showBox = false;
-        Router.push("/myPage");
-      },
-    });
-    onMounted(() => {
-      if (sessionStorage.getItem("userId")) {
-        data.isLogin = true;
-        data.userName = sessionStorage.getItem("userName") as string;
-      }
-      indexCountryHttp().then((res) => {
-        data.countryList = res.data.data;
-        data.country = res.data.data[0]["countryId"];
-        // 保存玩家国家id至vuex
-        // Store.dispatch("chanageCountry", data.country);
-        sessionStorage.setItem('countryId',data.country)
-      });
-    });
-    return {
-      ...toRefs(data),
-    };
-  },
+	name: 'hearder',
+	components: {
+		ProfileTwoTone,
+		CloseOutlined,
+		UserOutlined,
+		LockOutlined,
+		PlusCircleOutlined,
+		MenuUnfoldOutlined,
+		MenuFoldOutlined
+	},
+	setup() {
+		const Router = useRouter();
+		// const Store = useStore();
+		const data = reactive({
+			showPhoneTabs: false,
+			collapsed: true,
+			activeKey: 'league',
+			isLogin: false,
+			imputValue: '',
+			visible: false,
+			showBox: false,
+			autoLogin: false,
+			userId: '',
+			passWord: '',
+			userName: '',
+			country: '',
+			img: require('@/assets/logo.png'),
+			type: 1,
+			isMyMatch: true,
+			phoneTabsList: [
+				{ value: 'league', label: 'default.8' },
+				{ value: 'team', label: 'default.9' },
+				{ value: 'players', label: 'default.10' },
+				{ value: 'shop', label: 'default.127' },
+				{ value: 'ranking', label: 'default.26' },
+				{ value: 'myPage', label: 'default.2' }
+			],
+			myInfo: {
+				name: '李逍遥',
+				number: 4206251998858745210,
+				img: require('@/assets/1.jpg'),
+				myMatch: [
+					{
+						id: 1,
+						img: require('@/assets/1.jpg'),
+						matchName: 'Demo_League',
+						date: '2020-10-15 ~ 2021-06-30'
+					},
+					{
+						id: 2,
+						img: require('@/assets/1.jpg'),
+						matchName: 'Demo_League13隊長會',
+						date: '2020-10-15 ~ 2021-06-30'
+					},
+					{
+						id: 3,
+						img: require('@/assets/1.jpg'),
+						matchName: 'Demo_league12_1',
+						date: '2020-10-15 ~ 2021-06-30'
+					}
+				],
+				matchTimeTable: [
+					{
+						id: 1,
+						img: require('@/assets/1.jpg'),
+						matchName: 'Demo_League',
+						date: '2020-10-15 ~ 2021-06-30'
+					},
+					{
+						id: 2,
+						img: require('@/assets/1.jpg'),
+						matchName: 'Demo_League13隊長會',
+						date: '2020-10-15 ~ 2021-06-30'
+					},
+					{
+						id: 3,
+						img: require('@/assets/1.jpg'),
+						matchName: 'Demo_league12_1',
+						date: '2020-10-15 ~ 2021-06-30'
+					}
+				]
+			},
+			countryList: [],
+			languageList: [
+				{ key: 'zh-cn', label: 'default.130' },
+				{ key: 'zh-tw', label: 'default.131' },
+				{ key: 'en-us', label: 'default.132' }
+			],
+			typeList: [
+				{ key: 1, label: 'default.8' },
+				{ key: 2, label: 'default.9' },
+				{ key: 3, label: 'default.10' },
+				{ key: 4, label: 'default.127' }
+			],
+			toggleCollapsed: () => {
+				data.collapsed = !data.collapsed;
+				data.showPhoneTabs = !data.showPhoneTabs;
+			},
+			typeChange: (value: number) => {
+				console.log(value);
+			},
+			onSearch: () => {
+				console.log('onSearch');
+			},
+			tabClick: (e: string) => {
+				Router.push(e);
+			},
+			showPersonBox: () => {
+				data.showBox = true;
+			},
+			closeBox: () => {
+				data.showBox = false;
+			},
+			showLoginBox: () => {
+				data.visible = true;
+			},
+			handleOk: () => {
+				console.log(1);
+			},
+			onChange: (e: DOM) => {
+				console.log(e);
+			},
+			entryIndex: () => {
+				Router.push('/');
+			},
+			login: () => {
+				const obj = {
+					username: data.userId,
+					password: data.passWord
+				};
+				loginHttp(false, obj).then((res) => {
+					if (res.data.code === 100) {
+						message.success(res.data.msg);
+						sessionStorage.setItem('token', res.data.data.token);
+						sessionStorage.setItem('userId', res.data.data.memberId);
+						sessionStorage.setItem('userName', res.data.data.username);
+						// 保存玩家id至vuex
+						// Store.dispatch("changeMemberId", res.data.data.memberId);
+						data.userName = res.data.data.username;
+						data.isLogin = true;
+						data.visible = false;
+						Router.push('myPage');
+					} else {
+						message.warning(res.data.msg);
+					}
+				});
+			},
+			loginOut: () => {
+				data.isLogin = false;
+				sessionStorage.removeItem('token');
+				sessionStorage.removeItem('userId');
+				sessionStorage.removeItem('userName');
+				Router.push('/');
+			},
+			entryPage: (path: string) => {
+				data.showPhoneTabs = false;
+				Router.push(path);
+			},
+			myMatchClick: () => {
+				data.isMyMatch = true;
+			},
+			matchTableClick: () => {
+				data.isMyMatch = false;
+			},
+			entryMaPage: () => {
+				data.showBox = false;
+				Router.push('/myPage');
+			}
+		});
+		onMounted(() => {
+			if (sessionStorage.getItem('userId')) {
+				data.isLogin = true;
+				data.userName = sessionStorage.getItem('userName') as string;
+			}
+			indexCountryHttp().then((res) => {
+				data.countryList = res.data.data;
+				data.country = res.data.data[0]['countryId'];
+				// 保存玩家国家id至vuex
+				// Store.dispatch("chanageCountry", data.country);
+				sessionStorage.setItem('countryId', data.country);
+			});
+		});
+		return {
+			...toRefs(data)
+		};
+	}
 });
 </script>
 <style scoped>
 .imgBox {
-  height: 100px;
+	height: 100px;
 }
 .imgBox img {
-  height: 100%;
+	height: 100%;
 }
 .tabsBox >>> .ant-tabs-nav-scroll {
-  display: flex;
+	display: flex;
 }
 .boxBG {
-  position: relative;
+	position: relative;
 }
 .showBox {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  width: 400px;
-  height: 800px;
-  background: #eee;
-  z-index: 1;
-  border: 1px solid #000;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	width: 400px;
+	height: 800px;
+	background: #eee;
+	z-index: 1;
+	border: 1px solid #000;
 }
 .hearder {
-  background: #4d4d4d;
-  height: 50px;
-  line-height: 50px;
-  font-size: 20px;
-  color: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 20px;
+	background: #4d4d4d;
+	height: 50px;
+	line-height: 50px;
+	font-size: 20px;
+	color: #ffffff;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 20px;
 }
 .closeStyle {
-  border: 1px solid #fff;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  line-height: 30px;
-  margin-top: 10px;
-  cursor: pointer;
+	border: 1px solid #fff;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	line-height: 30px;
+	margin-top: 10px;
+	cursor: pointer;
 }
 #loginBox > .ant-modal-footer {
-  text-align: center;
+	text-align: center;
 }
 .loginMore {
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  line-height: 32px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	line-height: 32px;
 }
 .dropdown >>> button {
-  margin-left: 0px !important;
+	margin-left: 0px !important;
 }
 .lineStyle {
-  line-height: 24px;
+	line-height: 24px;
+	/* display: flex; */
 }
 .moreStyle {
-  height: 35px;
-  line-height: 35px;
-  border: 1px solid #d2d2d2;
-  color: #ff5122;
-  cursor: pointer;
-  margin: 10px 0;
+	height: 35px;
+	line-height: 35px;
+	border: 1px solid #d2d2d2;
+	color: #ff5122;
+	cursor: pointer;
+	margin: 10px 0;
 }
 .personalMsg {
-  display: flex;
+	display: flex;
 }
 .contentImgBox {
-  height: 140px;
-  width: 140px;
-  padding: 20px;
+	height: 140px;
+	width: 140px;
+	padding: 20px;
 }
 .contentImgBox img {
-  width: 100%;
+	width: 100%;
 }
 .contentRight {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  text-align: left;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	text-align: left;
 }
 .contentName {
-  font-size: 20px;
+	font-size: 20px;
 }
 .Mytabs button {
-  width: 50%;
+	width: 50%;
 }
 .myMatchImgBox {
-  width: 50px;
-  height: 50px;
+	width: 50px;
+	height: 50px;
 }
 .myMatchImgBox img {
-  width: 100%;
+	width: 100%;
 }
 .match {
-  display: flex;
-  padding: 10px;
-  border: 1px solid #ff5122;
-  margin: 4px 0;
+	display: flex;
+	padding: 10px;
+	border: 1px solid #ff5122;
+	margin: 4px 0;
 }
 .myMatchRight {
-  padding-left: 15px;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+	padding-left: 15px;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
 }
 .myMatchName:hover {
-  text-decoration: underline;
-  cursor: pointer;
+	text-decoration: underline;
+	cursor: pointer;
 }
 .lineBox {
-  padding: 15px 0;
-  border-bottom: 2px solid #4b4b4b;
+	padding: 15px 0;
+	border-bottom: 2px solid #4b4b4b;
 }
 .phoneTabsBg {
-  width: 200px;
-  background: #fff;
-  transition: all 0.5s ease;
+	width: 200px;
+	background: #fff;
+	transition: all 0.5s ease;
 }
 .phoneTabsBox {
-  width: 100%;
-  background: #001529;
+	width: 100%;
+	background: #001529;
 }
 .phoneTabsBox {
-  height: 40px;
-  line-height: 30px;
-  margin: 2px 0;
-  padding: 5px 0;
-  color: #fff;
+	height: 40px;
+	line-height: 30px;
+	margin: 2px 0;
+	padding: 5px 0;
+	color: #fff;
 }
 .phoneTabsBox:hover {
-  background: #1890ff;
-  color: #000;
+	background: #1890ff;
+	color: #000;
 }
 .phoneButton {
-  width: 50px;
-  margin: 2px 0;
+	width: 50px;
+	margin: 2px 0;
 }
 #isPhoneTabs {
-  display: flex;
-  position: absolute;
-  z-index: 10;
-  top: 38px;
-  display: none;
+	display: flex;
+	position: absolute;
+	z-index: 10;
+	top: 38px;
+	display: none;
 }
 </style>

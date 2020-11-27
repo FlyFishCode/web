@@ -51,7 +51,7 @@ export default defineComponent({
 			}
 		});
 		onMounted(() => {
-			data.activeKey = ROUTE.query.whichPage as string;
+			data.activeKey = ROUTE.query.activeKey as string;
 		});
 		return {
 			...toRefs(data)

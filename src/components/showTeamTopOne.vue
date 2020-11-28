@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<a-row class="rowStyle">
+		<a-row class="teamRow">
 			<a-col :span="6" class="allBox">
 				<a-col :span="12" class="firstClass">
 					<img class="imgBg" :src="infoData.img" alt="" />
@@ -179,7 +179,7 @@ export default {
 };
 </script>
 <style scoped>
-.rowStyle {
+.teamRow {
 	height: 190px;
 	margin: 10px 0;
 	padding: 5px;

@@ -11,16 +11,44 @@
 					<div class="title teamName">{{ item.playerName }}</div>
 					<div>
 						<div class="title">{{ item.couny }}</div>
-						<div v-if="!item.wins" class="dataInfo">
-							<div class="infoScore contentLeft">{{ item.rating }}</div>
-							<div class="infoScore contentRight">
-								<div class="matchScore">
-									<div>{{ $t('default.169') }}</div>
-									<div>{{ item.ppd }}</div>
+						<div v-if="!item.wins">
+							<div v-if="item.title === 'bestRating'" class="dataInfo">
+								<div class="infoScore contentLeft">{{ item.rating }}</div>
+								<div class="infoScore contentRight">
+									<div class="matchScore">
+										<div>{{ $t('default.169') }}</div>
+										<div>{{ item.ppd }}</div>
+									</div>
+									<div class="matchScore" style="borderTop:1px solid #fff">
+										<div>{{ $t('default.170') }}</div>
+										<div>{{ item.mpr }}</div>
+									</div>
 								</div>
-								<div class="matchScore" style="borderTop:1px solid #fff">
-									<div>{{ $t('default.170') }}</div>
-									<div>{{ item.mpr }}</div>
+							</div>
+							<div v-if="item.title === 'bestPPD'" class="dataInfo">
+								<div class="infoScore contentLeft">{{ item.ppd }}</div>
+								<div class="infoScore contentRight">
+									<div class="matchScore">
+										<div>{{ $t('default.168') }}</div>
+										<div>{{ item.rating }}</div>
+									</div>
+									<div class="matchScore" style="borderTop:1px solid #fff">
+										<div>{{ $t('default.170') }}</div>
+										<div>{{ item.mpr }}</div>
+									</div>
+								</div>
+							</div>
+							<div v-if="item.title === 'bestMPR'" class="dataInfo">
+								<div class="infoScore contentLeft">{{ item.mpr }}</div>
+								<div class="infoScore contentRight">
+									<div class="matchScore">
+										<div>{{ $t('default.168') }}</div>
+										<div>{{ item.rating }}</div>
+									</div>
+									<div class="matchScore" style="borderTop:1px solid #fff">
+										<div>{{ $t('default.169') }}</div>
+										<div>{{ item.ppd }}</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -55,7 +83,7 @@
 					<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 				</a-select>
 			</a-col>
-			<a-col :lg="2" :xs="6" class="titleStyle">{{ $t('default.164') }}</a-col>
+			<a-col :lg="2" :xs="6" class="titleStyle">{{ $t('default.260') }}</a-col>
 			<a-col :lg="3" :xs="6">
 				<a-select v-model:value="areaId" class="selectBox">
 					<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
@@ -72,7 +100,7 @@
 			</a-col>
 		</a-row>
 		<a-row>
-			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ `${$t('default.92')} (${teamList.length})` }} </a-col>
+			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ `${$t('default.92')} (${playerList.length})` }} </a-col>
 			<a-col :lg="3" :xs="0" class="colBox">{{ $t('default.249') }}</a-col>
 			<a-col :lg="5" :xs="0" class="colBox">
 				<a-button size="small" :type="btnType === 1 ? 'primary' : ''" @click="changeType(1, 30)">{{ 'ALL' }}</a-button>
@@ -96,17 +124,17 @@
 			</a-col>
 		</a-row>
 
-		<a-row v-for="(item, index) in teamList" :key="item.id">
+		<a-row v-for="(item, index) in playerList" :key="item.id">
 			<a-row class="eveyTeam">
 				<a-col :lg="3" :xs="4" class="imgColStyle">
 					<div>
-						<img class="matchImg" :src="item.img" alt="" />
+						<img class="matchImg" :src="item.playerImg" alt="" />
 					</div>
 				</a-col>
 				<a-col :lg="{ span: 4, offset: 0 }" :xs="{ span: 10, offset: 4 }" class="infoClass">
-					<div class="teamStyle" @click="entryPage">{{ item.teamName }}</div>
+					<div class="teamStyle" @click="entryPage">{{ item.playerName }}</div>
 					<div class="placeStyle">
-						<div>{{ item.place }}</div>
+						<div>{{ item.areaName }}</div>
 						/
 						<div class="counyStyle">{{ item.couny }}</div>
 						<span @click="showDialog(item)">
@@ -116,24 +144,24 @@
 				</a-col>
 				<a-col :lg="3" :xs="4" class="vipBox">
 					<div>{{ $t('default.55') }}</div>
-					<div>{{ item.vipCount }}</div>
+					<div>{{ item.teamName }}</div>
 				</a-col>
 				<a-col :span="8" class="topBox inPhoneTableDisplay">
 					<div>{{ topInfoTitle }}</div>
 					<div class="infoStyle">
-						<div>{{ `Rating  ${item.ranting}` }}</div>
+						<div>{{ `Rating  ${item.rating}` }}</div>
 						|
-						<div>{{ `PPD  ${item.PPD}` }}</div>
+						<div>{{ `PPD  ${item.ppd}` }}</div>
 						|
-						<div>{{ `MPR  ${item.MPR}` }}</div>
+						<div>{{ `MPR  ${item.mpr}` }}</div>
 					</div>
 				</a-col>
 				<a-col :span="3" class="vipBox inPhoneTableDisplay">
-					<div>{{ type }}</div>
-					<div>{{ item.count }}</div>
+					<div>{{ 'Entry' }}</div>
+					<div>{{ item.competitionList.length }}</div>
 				</a-col>
 				<a-col :span="2" class="iconFont">
-					<div v-if="item.record.length">
+					<div v-if="item.competitionList.length">
 						<div v-if="item.flag" @click="changeFlag(index)">
 							<DownCircleOutlined />
 						</div>
@@ -146,21 +174,21 @@
 			<transition enter-active-class="animate__animated animate__bounceInUp">
 				<a-row v-show="item.flag" class="recordBox">
 					<div class="matchTitle">{{ $t('default.83') }}</div>
-					<a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
+					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" class="msgBox">
 						<a-col :span="4" class="imgColStyle">
 							<img class="matchImg" :src="recordInfo.img" alt="" />
 						</a-col>
 						<a-col :span="20" class="countBox">
 							<div class="recordInfoStyle inPhoneTableStyle">
-								<div class="recordInfoFont">{{ recordInfo.matchName }}</div>
+								<div class="recordInfoFont" @click="entryCalendar(2, recordInfo.competitionId)">{{ recordInfo.competitionName }}</div>
 								<div class="tableDate">
 									<div>{{ recordInfo.date }}</div>
-									<div>{{ recordInfo.place }}</div>
+									<div>{{ recordInfo.countryName }}</div>
 								</div>
 							</div>
 							<div class="btnBox">
-								<div v-for="disition in recordInfo.class" :key="disition.index">
-									<a-button type="danger" size="small">{{ disition.className }}</a-button>
+								<div v-for="disition in recordInfo.divisionList" :key="disition.divisionId">
+									<a-button type="danger" size="small" @click="entryCalendar(2, disition.divisionId)">{{ disition.divisionName }}</a-button>
 								</div>
 							</div>
 						</a-col>
@@ -168,7 +196,9 @@
 				</a-row>
 			</transition>
 		</a-row>
-
+		<a-row v-if="!playerList.length">
+			<emptyList />
+		</a-row>
 		<a-modal v-model:visible="visible" :title="dialogObj.title" centered>
 			<template v-slot:footer>
 				<a-row class="rowStyle dialogBox">
@@ -191,7 +221,7 @@
 
 		<a-row class="rowStyle">
 			<a-col class="pagination">
-				<a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="total" />
+				<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" @change="pageChange" :total="total" />
 			</a-col>
 		</a-row>
 	</div>
@@ -202,6 +232,7 @@ import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { playerBestListHttp, playerListHttp, indexCountryHttp, indexCityHttp } from '@/axios/api';
 import divTitle from '@/components/DividingLine.vue';
+import emptyList from '@/components/common/emptyList.vue';
 import { SettingFilled, BankFilled, SearchOutlined, EnvironmentOutlined, DownCircleOutlined, UpCircleOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 export default defineComponent({
 	name: 'players',
@@ -214,19 +245,18 @@ export default defineComponent({
 		DownCircleOutlined,
 		UpCircleOutlined,
 		DownOutlined,
-		UpOutlined
+		UpOutlined,
+		emptyList
 	},
 	setup() {
-		const Router = useRouter();
+		const ROUTER = useRouter();
 		const data = reactive({
 			title: 'default.10',
-			currentValue: 1,
 			btnType: 1,
 			isUp: true,
 			inputValue: '',
-			type: 'Entry',
 			topInfoTitle: 'Competition Rating',
-			current: 1,
+			pageNum: 1,
 			pageSize: 1,
 			total: 1,
 			colSpan: 4,
@@ -234,7 +264,7 @@ export default defineComponent({
 			visible: false,
 			dialogObj: {
 				title: '',
-				img: require('@/assets/3.jpg'),
+				img: '',
 				shopName: '',
 				phone: '',
 				address: ''
@@ -250,109 +280,47 @@ export default defineComponent({
 			stateList: [],
 			areaList: [],
 			cityList: [],
-			teamList: [
-				{
-					id: 1,
-					img: require('@/assets/1.jpg'),
-					teamName: '上海队',
-					couny: '北京',
-					place: '汉庭会所',
-					vipCount: 8,
-					ranting: 2.15,
-					PPD: 25.0,
-					MPR: 19.5,
-					count: 0,
-					enroll: 10,
-					flag: false,
-					record: [
-						{
-							matchName: '第三届DARTS WORLD（广州联赛）',
-							img: require('@/assets/1.jpg'),
-							date: '2020-5-40 ~ 2020-6-10',
-							place: '广州',
-							class: [{ className: 'class1' }, { className: 'class2' }, { className: 'class3' }]
-						},
-						{
-							matchName: '第三届DARTS WORLD（广州联赛）',
-							img: require('@/assets/1.jpg'),
-							date: '2020-5-40 ~ 2020-6-10',
-							place: '广州',
-							class: [{ className: 'class1' }, { className: 'class2' }, { className: 'class3' }]
-						}
-					]
-				},
-				{
-					id: 1,
-					img: require('@/assets/1.jpg'),
-					teamName: '上海队',
-					couny: '北京',
-					place: '汉庭会所',
-					vipCount: 8,
-					ranting: 2.15,
-					PPD: 25.0,
-					MPR: 19.5,
-					count: 0,
-					enroll: 10,
-					flag: false,
-					record: []
-				},
-				{
-					id: 1,
-					img: require('@/assets/1.jpg'),
-					teamName: '上海队',
-					couny: '北京',
-					place: '汉庭会所',
-					vipCount: 8,
-					ranting: 2.15,
-					PPD: 25.0,
-					MPR: 19.5,
-					count: 0,
-					enroll: 10,
-					flag: false,
-					record: [
-						{
-							matchName: '第三届DARTS WORLD（广州联赛）',
-							img: require('@/assets/1.jpg'),
-							date: '2020-5-40 ~ 2020-6-10',
-							place: '广州',
-							class: [{ className: 'class1' }, { className: 'class2' }, { className: 'class3' }]
-						},
-						{
-							matchName: '第三届DARTS WORLD（广州联赛）',
-							img: require('@/assets/1.jpg'),
-							date: '2020-5-40 ~ 2020-6-10',
-							place: '广州',
-							class: [{ className: 'class1' }, { className: 'class2' }, { className: 'class3' }]
-						}
-					]
-				}
-			],
+			playerList: [{ competitionList: [], flag: false }],
 			bestPlayers: [],
 			getDate: () => '220-10-16',
 			showDetail: (value: number) => {
-				Router.push({
+				ROUTER.push({
 					path: '/playerInfo',
 					query: { value }
 				});
 			},
+			entryCalendar: (activeKey: string, id: number) => {
+				ROUTER.push({
+					path: '/calendar',
+					query: {
+						activeKey,
+						teamId: id
+					}
+				});
+			},
 			showDialog: (item: any) => {
-				data.dialogObj.title = item.place;
+				data.dialogObj.title = item.areaName;
+				data.dialogObj.img = item.shopImg;
 				data.dialogObj.shopName = item.shopName;
-				data.dialogObj.phone = item.phoneNumber;
-				data.dialogObj.address = item.address;
+				data.dialogObj.phone = item.shopPhone;
+				data.dialogObj.address = item.shopAddress;
 				data.visible = true;
 			},
 			onSearch: () => {
 				console.log('11');
 			},
 			changeFlag: (index: number) => {
-				data.teamList[index].flag = !data.teamList[index].flag;
+				data.playerList[index].flag = !data.playerList[index].flag;
 			},
 			entryPage: () => {
-				Router.push('playerInfo');
+				ROUTER.push('playerInfo');
 			},
 			handleOk: () => {
 				console.log(1);
+			},
+			pageChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getPlayerList();
 			},
 			areaChange: (value: number) => {
 				indexCityHttp({ countryId: value }).then((res) => {
@@ -368,14 +336,13 @@ export default defineComponent({
 			},
 			changeType: (type: number, max: number) => {
 				data.btnType = type;
-				console.log(max);
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				// getPlayerList(undefined, max);
+				getPlayerList(max);
 			},
 			changeIcon: () => {
 				data.isUp = !data.isUp;
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				// getPlayerList(undefined, undefined, data.isUp ? 1 : 2);
+				getPlayerList();
 			}
 		});
 		const getBestTeamList = () => {
@@ -390,9 +357,9 @@ export default defineComponent({
 				}
 			});
 		};
-		const getPlayerList = (type = 1, max = 30, sort = 1) => {
+		const getPlayerList = (max = 30) => {
 			let str = '';
-			switch (type) {
+			switch (data.matchType) {
 				case 1:
 					str = 'teamName';
 					break;
@@ -409,19 +376,18 @@ export default defineComponent({
 				[str]: data.inputValue,
 				minRating: 0,
 				maxRating: max,
-				sort,
-				pageIndex: 1,
+				sort: data.isUp ? 1 : 2,
+				pageIndex: data.pageNum,
 				pageSize: 10
 			};
 			playerListHttp(obj).then((res: any) => {
-				// if (res.data.data.list.length) {
-				// 	res.data.data.list.forEach((i: any) => {
-				// 		i.flag = false;
-				// 	});
-				// }
-				// data.teamList = res.data.data.list;
-				// data.total = res.data.data.totalCount;
-				console.log(res);
+				if (res.data.data.list.length) {
+					res.data.data.list.forEach((i: any) => {
+						i.flag = false;
+					});
+				}
+				data.playerList = res.data.data.list;
+				data.total = res.data.data.totalPage;
 			});
 		};
 		const getCountry = () => {
@@ -680,9 +646,6 @@ export default defineComponent({
 .imgBox img {
 	width: 100%;
 	height: 100%;
-}
-.dialogBtn {
-	text-align: center;
 }
 .colBox {
 	height: 40px;

@@ -9,7 +9,7 @@
 		<a-row>
 			<a-tabs type="card" v-model:activeKey="activeKey" class="tabsBox">
 				<a-tab-pane key="1" :tab="$t('default.13')">
-					<calendar />
+					<timeTable />
 				</a-tab-pane>
 				<a-tab-pane key="2" :tab="$t('default.231')">
 					<beforeResult />
@@ -27,7 +27,7 @@ import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import divTitle from '@/components/DividingLine.vue';
 import inTeamTopOne from '@/components/inTeamTopOne.vue';
 // tabs
-import calendar from './teamInfoTabs/calendar.vue';
+import timeTable from './teamInfoTabs/timeTable.vue';
 import beforeResult from './teamInfoTabs/beforeResult.vue';
 import vip from './teamInfoTabs/vip.vue';
 import { useRoute } from 'vue-router';
@@ -36,7 +36,7 @@ export default defineComponent({
 	components: {
 		divTitle,
 		inTeamTopOne,
-		calendar,
+		timeTable,
 		beforeResult,
 		vip
 	},

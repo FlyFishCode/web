@@ -41,6 +41,7 @@ export default defineComponent({
 	border-radius: 20px 20px 0 0;
 	border: 1px solid #2b2b2b;
 	margin: 10px 0;
+	height: 50px;
 }
 .fontStyle {
 	font-size: 20px;

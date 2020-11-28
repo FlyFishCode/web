@@ -59,7 +59,7 @@ export default defineComponent({
 	border-radius: 20px 20px 0 0;
 	border: 1px solid #2b2b2b;
 	margin: 10px 0;
-	font-size: 30px;
+	font-size: 20px;
 	line-height: 50px;
 }
 /*  字体标题 */
@@ -162,14 +162,14 @@ export default defineComponent({
 }
 /* 弹出框样式 */
 .dialogBox {
-	height: 100px;
+	height: 100px !important;
 	color: #ff3202;
 	border: 1px solid #eee;
 }
 .dialog {
 	text-align: left;
 	height: 100%;
-	display: flex;
+	display: flex !important;
 	flex-direction: column;
 	justify-content: space-around;
 }

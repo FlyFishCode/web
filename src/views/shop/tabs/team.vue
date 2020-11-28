@@ -52,7 +52,7 @@
 			</a-row>
 		</a-row>
 		<a-row type="flex" justify="end">
-			<a-pagination v-model:current="currentPage" v-model:pageSize="pageSize" :total="total" @showSizeChange="onShowSizeChange" />
+			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @showSizeChange="onShowSizeChange" />
 		</a-row>
 		<entryList :entryPath="entryPath" />
 	</div>
@@ -78,7 +78,7 @@ export default defineComponent({
 		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/shop',
-			currentPage: 1,
+			pageNum: 1,
 			current: 1,
 			pageSize: 10,
 			total: 1,
@@ -123,7 +123,7 @@ export default defineComponent({
 			};
 			shopTeamListHttp(obj).then((res) => {
 				data.teamList = res.data.data.list;
-				data.total = res.data.data.totalCount;
+				data.total = res.data.data.totalPage;
 			});
 		};
 		onMounted(() => {

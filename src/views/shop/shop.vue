@@ -10,10 +10,10 @@
 				<div class="center">
 					<div>{{ $t('default.27') }}</div>
 					<div class="selectBox">
-						<a-select v-model:value="countryId" @change="areaChange" class="selectBox" allowClear>
+						<a-select v-model:value="countryId" @change="areaChange" allowClear>
 							<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 						</a-select>
-						<a-select v-model:value="areaId" class="selectBox" allowClear>
+						<a-select v-model:value="areaId" allowClear>
 							<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 						</a-select>
 						<!-- <a-select v-model:value="city">
@@ -116,76 +116,77 @@
 		<a-row class="shopRow">
 			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ `${$t('default.161')}(${shopList.length})` }} </a-col>
 		</a-row>
-		<a-row>
-			<a-row v-for="(item, index) in shopList" :key="item.id">
-				<a-row class="eveyTeam">
-					<a-col :lg="3" :xs="4" class="imgColStyle">
-						<img class="matchImg" :src="item.shopImg" alt="" />
-					</a-col>
-					<a-col :lg="{ span: 8, offset: 0 }" :xs="{ span: 16, offset: 2 }" class="infoClass">
-						<div class="teamStyle" @click="showShopInfo(item.shopId)">{{ item.shopName }}</div>
-						<div class="placeStyle">
-							<div>{{ item.shopAddress }}</div>
-							/
-							<div class="counyStyle">{{ item.couny }}</div>
-							<span @click="showDetail(item)">
-								<EnvironmentOutlined />
-							</span>
+		<a-row v-for="(item, index) in shopList" :key="item.id">
+			<a-row class="eveyTeam">
+				<a-col :lg="3" :xs="4" class="imgColStyle">
+					<img class="matchImg" :src="item.shopImg" alt="" />
+				</a-col>
+				<a-col :lg="{ span: 8, offset: 0 }" :xs="{ span: 16, offset: 2 }" class="infoClass">
+					<div class="teamStyle" @click="showShopInfo(item.shopId)">{{ item.shopName }}</div>
+					<div class="placeStyle">
+						<div>{{ item.shopAddress }}</div>
+						/
+						<div class="counyStyle">{{ item.couny }}</div>
+						<span @click="showDetail(item)">
+							<EnvironmentOutlined />
+						</span>
+					</div>
+				</a-col>
+				<a-col :lg="4" :xs="0" class="vipBox">
+					<div>{{ $t('default.89') }}</div>
+					<div><PhoneOutlined /> {{ item.shopPhone }}</div>
+				</a-col>
+				<a-col :lg="3" :xs="0" class="vipBox">
+					<div>{{ $t('default.159') }}</div>
+					<div class="infoStyle">
+						<div v-if="item.machineMap">{{ `A1:${item.machineMap.A1}    W1:${item.machineMap.W1}` }}</div>
+					</div>
+				</a-col>
+				<a-col :lg="4" :xs="0" class="vipBox">
+					<div>{{ $t('default.250') }}</div>
+					<div class="infoStyle">
+						<div>{{ item.competitionList.length }}</div>
+					</div>
+				</a-col>
+				<a-col :lg="2" :xs="2" class="iconFont">
+					<div v-if="item.competitionList.length">
+						<div v-if="item.flag" @click="changeFlag(index)">
+							<DownCircleOutlined />
 						</div>
-					</a-col>
-					<a-col :lg="4" :xs="0" class="vipBox">
-						<div>{{ $t('default.89') }}</div>
-						<div><PhoneOutlined /> {{ item.shopPhone }}</div>
-					</a-col>
-					<a-col :lg="3" :xs="0" class="vipBox">
-						<div>{{ $t('default.159') }}</div>
-						<div class="infoStyle">
-							<div v-if="item.machineMap">{{ `A1:${item.machineMap.A1}    W1:${item.machineMap.W1}` }}</div>
+						<div v-else @click="changeFlag(index)">
+							<UpCircleOutlined />
 						</div>
-					</a-col>
-					<a-col :lg="4" :xs="0" class="vipBox">
-						<div>{{ $t('default.250') }}</div>
-						<div class="infoStyle">
-							<div>{{ item.competitionList.length }}</div>
-						</div>
-					</a-col>
-					<a-col :lg="2" :xs="2" class="iconFont">
-						<div v-if="item.competitionList.length">
-							<div v-if="item.flag" @click="changeFlag(index)">
-								<DownCircleOutlined />
-							</div>
-							<div v-else @click="changeFlag(index)">
-								<UpCircleOutlined />
-							</div>
-						</div>
-					</a-col>
-				</a-row>
-				<transition enter-active-class="animate__animated animate__bounceInUp">
-					<a-row v-show="item.flag" class="recordBox">
-						<!-- <div class="matchTitle">{{ joinMatch }}</div> -->
-						<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" class="msgBox">
-							<a-col :span="4" class="imgColStyle">
-								<div>
-									<img class="matchImg" :src="recordInfo.competitionImg" alt="" />
-								</div>
-							</a-col>
-							<a-col :span="20" class="countBox">
-								<div class="recordInfoStyle inPhoneTableStyle">
-									<div class="recordInfoFont">{{ recordInfo.competitionName }}</div>
-									<div class="tableDate">
-										<div>{{ `${recordInfo.date} / ${recordInfo.countryName}` }}</div>
-									</div>
-								</div>
-								<div class="btnBox">
-									<div v-for="disition in recordInfo.divisionList" :key="disition.divisionId">
-										<a-button type="danger" size="small" @click="entrtPage(disition.divisionId)">{{ disition.divisionName }}</a-button>
-									</div>
-								</div>
-							</a-col>
-						</a-row>
-					</a-row>
-				</transition>
+					</div>
+				</a-col>
 			</a-row>
+			<transition enter-active-class="animate__animated animate__bounceInUp">
+				<a-row v-show="item.flag" class="recordBox">
+					<!-- <div class="matchTitle">{{ joinMatch }}</div> -->
+					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" class="msgBox">
+						<a-col :span="4" class="imgColStyle">
+							<div>
+								<img class="matchImg" :src="recordInfo.competitionImg" alt="" />
+							</div>
+						</a-col>
+						<a-col :span="20" class="countBox">
+							<div class="recordInfoStyle inPhoneTableStyle">
+								<div class="recordInfoFont">{{ recordInfo.competitionName }}</div>
+								<div class="tableDate">
+									<div>{{ `${recordInfo.date} / ${recordInfo.countryName}` }}</div>
+								</div>
+							</div>
+							<div class="btnBox">
+								<div v-for="disition in recordInfo.divisionList" :key="disition.divisionId">
+									<a-button type="danger" size="small" @click="entrtPage(disition.divisionId)">{{ disition.divisionName }}</a-button>
+								</div>
+							</div>
+						</a-col>
+					</a-row>
+				</a-row>
+			</transition>
+		</a-row>
+		<a-row v-if="!shopList.length">
+			<emptyList />
 		</a-row>
 		<a-modal v-model:visible="visible" :title="dialogObj.title">
 			<template v-slot:footer>
@@ -208,7 +209,7 @@
 		</a-modal>
 		<a-row>
 			<a-col class="pagination">
-				<a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="total" />
+				<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" />
 			</a-col>
 		</a-row>
 	</div>
@@ -217,6 +218,7 @@
 <script>
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import divTitle from '@/components/DividingLine.vue';
+import emptyList from '@/components/common/emptyList.vue';
 import { indexCityHttp, indexCountryHttp, shopListHttp } from '@/axios/api';
 import { message } from 'ant-design-vue';
 import { SettingFilled, EnvironmentOutlined, PhoneOutlined, DownCircleOutlined, UpCircleOutlined } from '@ant-design/icons-vue';
@@ -229,7 +231,8 @@ export default defineComponent({
 		EnvironmentOutlined,
 		PhoneOutlined,
 		DownCircleOutlined,
-		UpCircleOutlined
+		UpCircleOutlined,
+		emptyList
 	},
 	setup() {
 		const ROUTER = useRouter();
@@ -387,7 +390,7 @@ export default defineComponent({
 			w1: false,
 			league: false,
 			total: 1,
-			current: 1,
+			pageNum: 1,
 			pageSize: 10,
 			areaList: [],
 			cityList: [],
@@ -456,12 +459,6 @@ export default defineComponent({
 				}
 			});
 		};
-		// const getGDXY = (x, y) => {
-		//   console.log(x, y)
-		// 	Axios.get(`https://restapi.amap.com/v3/assistant/coordinate/convert?key=923bafabddfcfd49160d0c0e8f6bdc74&locations=${x},${y}`).then((res) => {
-		// 		console.log(res.data.locations);
-		// 	});
-		// };
 		const getShopList = () => {
 			const obj = {
 				countryId: data.countryId,
@@ -475,7 +472,7 @@ export default defineComponent({
 			};
 			shopListHttp(obj).then((res) => {
 				data.shopList = res.data.data.list;
-				data.total = res.data.data.totalCount;
+				data.total = res.data.data.totalPage;
 				data.InfoWindow = [];
 				// 添加marker
 				res.data.data.list.forEach((i) => {

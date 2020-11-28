@@ -11,16 +11,44 @@
 					<div class="title teamName">{{ item.teamName }}</div>
 					<div>
 						<div class="title">{{ item.shopName }}</div>
-						<div v-if="item.rating" class="dataInfo">
-							<div class="infoScore contentLeft">{{ item.rating }}</div>
-							<div class="infoScore contentRight">
-								<div class="matchScore">
-									<div>{{ $t('default.169') }}</div>
-									<div>{{ item.ppd }}</div>
+						<div v-if="item.rating">
+							<div v-if="item.title === 'bestRating'" class="dataInfo">
+								<div class="infoScore contentLeft">{{ item.rating }}</div>
+								<div class="infoScore contentRight">
+									<div class="matchScore">
+										<div>{{ $t('default.169') }}</div>
+										<div>{{ item.ppd }}</div>
+									</div>
+									<div class="matchScore" style="borderTop:1px solid #fff">
+										<div>{{ $t('default.170') }}</div>
+										<div>{{ item.mpr }}</div>
+									</div>
 								</div>
-								<div class="matchScore" style="borderTop:1px solid #fff">
-									<div>{{ $t('default.170') }}</div>
-									<div>{{ item.mpr }}</div>
+							</div>
+							<div v-if="item.title === 'bestPPD'" class="dataInfo">
+								<div class="infoScore contentLeft">{{ item.ppd }}</div>
+								<div class="infoScore contentRight">
+									<div class="matchScore">
+										<div>{{ $t('default.168') }}</div>
+										<div>{{ item.rating }}</div>
+									</div>
+									<div class="matchScore" style="borderTop:1px solid #fff">
+										<div>{{ $t('default.170') }}</div>
+										<div>{{ item.mpr }}</div>
+									</div>
+								</div>
+							</div>
+							<div v-if="item.title === 'bestMPR'" class="dataInfo">
+								<div class="infoScore contentLeft">{{ item.mpr }}</div>
+								<div class="infoScore contentRight">
+									<div class="matchScore">
+										<div>{{ $t('default.168') }}</div>
+										<div>{{ item.rating }}</div>
+									</div>
+									<div class="matchScore" style="borderTop:1px solid #fff">
+										<div>{{ $t('default.169') }}</div>
+										<div>{{ item.ppd }}</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -55,7 +83,7 @@
 					<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 				</a-select>
 			</a-col>
-			<a-col :lg="2" :xs="6" class="titleStyle">{{ $t('default.164') }}</a-col>
+			<a-col :lg="2" :xs="6" class="titleStyle">{{ $t('default.260') }}</a-col>
 			<a-col :lg="3" :xs="6">
 				<a-select v-model:value="areaId" class="selectBox">
 					<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
@@ -107,7 +135,7 @@
 						<div v-show="item.shopAddress" class="overStyle">{{ item.shopAddress }}/</div>
 						<div v-show="item.countryName">{{ item.countryName }}/</div>
 						<div class="counyStyle">{{ item.areaName }}</div>
-						<span @click="showDetail">
+						<span @click="showDialog(item)">
 							<EnvironmentOutlined />
 						</span>
 					</div>
@@ -150,7 +178,7 @@
 						</a-col>
 						<a-col :span="20" class="countBox">
 							<div class="recordInfoStyle inPhoneTableStyle">
-								<div class="recordInfoFont">{{ recordInfo.competitionName }}</div>
+								<div class="recordInfoFont" @click="entryCalendar(1, recordInfo.competitionId)">{{ recordInfo.competitionName }}</div>
 								<div class="tableDate">
 									<div>{{ recordInfo.date }}</div>
 									<!-- <div>{{ recordInfo.place }}</div> -->
@@ -158,7 +186,7 @@
 							</div>
 							<div class="btnBox">
 								<div v-for="disition in recordInfo.divisionList" :key="disition.divisionId">
-									<a-button type="danger" size="small" @click="entryPage(3, disition.divisionId)">{{ disition.divisionName }}</a-button>
+									<a-button type="danger" size="small" @click="entryCalendar(2, disition.divisionId)">{{ disition.divisionName }}</a-button>
 								</div>
 							</div>
 						</a-col>
@@ -166,20 +194,42 @@
 				</a-row>
 			</transition>
 		</a-row>
-
+		<a-modal v-model:visible="visible" :title="dialogObj.title" centered>
+			<template v-slot:footer>
+				<a-row class="rowStyle dialogBox">
+					<a-col :span="8">
+						<div class="imgBox">
+							<img :src="dialogObj.img" alt="" />
+						</div>
+					</a-col>
+					<a-col :span="16" class="dialog">
+						<div>{{ `${$t('default.28')}：${dialogObj.shopName}` }}</div>
+						<div>{{ `${$t('default.89')}：${dialogObj.phone}` }}</div>
+						<div>{{ `${$t('default.125')}：${dialogObj.address}` }}</div>
+					</a-col>
+				</a-row>
+				<div class="dialogBtn">
+					<a-button type="primary" @click="handleOk">{{ $t('default.25') }}</a-button>
+				</div>
+			</template>
+		</a-modal>
+		<a-row v-if="!teamList.length">
+			<emptyList />
+		</a-row>
 		<a-row class="rowStyle">
 			<a-col class="pagination">
-				<a-pagination v-model:current="current" v-model:pageSize="pageSize" :total="total" @change="onPageChange" />
+				<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @change="onPageChange" />
 			</a-col>
 		</a-row>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, nextTick } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { teamBestListHttp, teamListHttp, indexCityHttp, indexCountryHttp } from '@/axios/api';
 import divTitle from '@/components/DividingLine.vue';
+import emptyList from '@/components/common/emptyList.vue';
 import { SettingFilled, BankFilled, SearchOutlined, EnvironmentOutlined, UserOutlined, DownCircleOutlined, UpCircleOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 interface DataProps {
 	bestTeam: { [key: string]: string };
@@ -196,7 +246,8 @@ export default defineComponent({
 		DownCircleOutlined,
 		UpCircleOutlined,
 		DownOutlined,
-		UpOutlined
+		UpOutlined,
+		emptyList
 	},
 	setup() {
 		const ROUTER = useRouter();
@@ -205,8 +256,9 @@ export default defineComponent({
 			currentValue: 1,
 			btnType: 1,
 			isUp: true,
+			visible: false,
 			inputValue: '',
-			current: 1,
+			pageNum: 1,
 			pageSize: 1,
 			total: 1,
 			colSpan: 4,
@@ -224,6 +276,13 @@ export default defineComponent({
 			],
 			teamList: [{ flag: false, competitionList: [] }],
 			bestTeam: [],
+			dialogObj: {
+				title: '',
+				img: '',
+				shopName: '',
+				phone: '',
+				address: ''
+			},
 			getDate: () => '220-10-16',
 			showDetail: (value: number) => {
 				ROUTER.push({
@@ -238,19 +297,22 @@ export default defineComponent({
 			changeFlag: (index: number) => {
 				data.teamList[index].flag = !data.teamList[index].flag;
 			},
-			onPageChange: (num: number) => {
+			onPageChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getTeamList(undefined, undefined, undefined, num);
+				getTeamList();
 			},
 			changeIcon: () => {
 				data.isUp = !data.isUp;
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getTeamList(undefined, undefined, data.isUp ? 1 : 2);
+				getTeamList();
 			},
 			changeType: (type: number, max: number) => {
 				data.btnType = type;
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getTeamList(undefined, max);
+				getTeamList(max);
+			},
+			handleOk: () => {
+				console.log(1);
 			},
 			entryPage: (type: number, id: number) => {
 				ROUTER.push({
@@ -261,6 +323,23 @@ export default defineComponent({
 					}
 				});
 			},
+			entryCalendar: (activeKey: string, id: number) => {
+				ROUTER.push({
+					path: '/calendar',
+					query: {
+						activeKey,
+						teamId: id
+					}
+				});
+			},
+			showDialog: (item: any) => {
+				data.dialogObj.title = item.areaName;
+				data.dialogObj.img = item.shopImg;
+				data.dialogObj.shopName = item.shopName;
+				data.dialogObj.phone = item.shopPhone;
+				data.dialogObj.address = item.shopAddress;
+				data.visible = true;
+			},
 			areaChange: (value: number) => {
 				indexCityHttp({ countryId: value }).then((res) => {
 					data.cityList = res.data.data;
@@ -269,6 +348,8 @@ export default defineComponent({
 					} else {
 						data.areaId = null;
 					}
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getTeamList();
 				});
 			}
 		});
@@ -284,9 +365,9 @@ export default defineComponent({
 				}
 			});
 		};
-		const getTeamList = (type = 1, max = 30, sort = 1, pageNum = 1) => {
+		const getTeamList = (max = 30) => {
 			let str = '';
-			switch (type) {
+			switch (data.matchType) {
 				case 1:
 					str = 'teamName';
 					break;
@@ -303,8 +384,8 @@ export default defineComponent({
 				[str]: data.inputValue,
 				minRating: 0,
 				maxRating: max,
-				sort,
-				pageIndex: pageNum,
+				sort: data.isUp ? 1 : 2,
+				pageIndex: data.pageNum,
 				pageSize: 10
 			};
 			teamListHttp(obj).then((res) => {
@@ -323,9 +404,6 @@ export default defineComponent({
 					data.areaList = res.data.data;
 					data.countryId = data.areaList[0]['countryId'];
 					data.areaChange(data.areaList[0]['countryId']);
-					nextTick(() => {
-						getTeamList();
-					});
 				}
 			});
 		};
@@ -576,5 +654,17 @@ export default defineComponent({
 }
 .vipPlayer {
 	cursor: pointer;
+}
+.imgBox {
+	height: 100px;
+	width: 100px;
+	margin: 0 auto;
+}
+.imgBox img {
+	width: 100%;
+	height: 100%;
+}
+.dialogBtn {
+	text-align: center;
 }
 </style>

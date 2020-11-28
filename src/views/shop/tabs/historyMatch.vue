@@ -46,7 +46,7 @@
 			</div>
 		</a-row>
 		<a-row type="flex" justify="end">
-			<a-pagination v-model:current="currentPage" v-model:pageSize="pageSize" :total="total" />
+			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" />
 		</a-row>
 		<entryList :entryPath="entryPath" />
 	</div>
@@ -76,7 +76,7 @@ export default defineComponent({
 		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/shop',
-			currentPage: 1,
+			pageNum: 1,
 			pageSize: 10,
 			total: 1,
 			value: '',
@@ -99,7 +99,7 @@ export default defineComponent({
 				};
 				historyListHttp(obj).then((res) => {
 					data.leagueList = res.data.data.list;
-					data.total = res.data.data.totalCount;
+					data.total = res.data.data.totalPage;
 				});
 			},
 			showShopInfo: (league: number) => {

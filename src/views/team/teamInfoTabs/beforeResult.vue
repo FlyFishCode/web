@@ -80,7 +80,7 @@ export default defineComponent({
 				{
 					title: '比赛',
 					dataIndex: 'address',
-					width: 100,
+					width: 180,
 					key: 2,
 					slots: { customRender: 'action' }
 					// fixed: "left",

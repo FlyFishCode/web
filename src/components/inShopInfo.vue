@@ -20,7 +20,7 @@
 			<a-col :lg="12" :xs="0" class="scoreBox">
 				<a-col :span="12" class="infoBox">
 					<div class="imgBg">
-						<img class="imgBg" :src="shopDetail.bestPlayer.playerImg" alt="" />
+						<img v-if="shopDetail.bestPlayer" class="imgBg" :src="shopDetail.bestPlayer.playerImg" alt="" />
 					</div>
 					<div class="nameBox">{{ shopDetail.bestPlayer.playerName }}</div>
 				</a-col>

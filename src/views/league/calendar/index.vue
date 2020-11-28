@@ -32,14 +32,14 @@ export default defineComponent({
 	name: 'LeagueIndex',
 	components: { matchInfo, timeTable, matchTeam, ranking },
 	setup() {
-		const route = useRoute();
+		const ROUTE = useRoute();
 		const data = reactive({
 			img: require('@/assets/21.jpg'),
 			activeKey: '2'
 		});
 		onMounted(() => {
-			data.activeKey = route.query.activeKey as string;
-			console.log(route.query);
+			data.activeKey = ROUTE.query.activeKey as string;
+			console.log(data.activeKey);
 		});
 		return {
 			...toRefs(data)

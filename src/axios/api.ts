@@ -1,6 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
-
+import { message } from 'ant-design-vue';
 // 此处使用路由，会报错
 // inject() can only be used inside setup() or functional components
 // import { useRouter } from 'vue-router'
@@ -21,19 +21,24 @@ import { theBestPlayer, playerList } from '@/axios/player/index';
 import { shopList, shopdetails, historyList, shopTeamList, shopPlayerList } from '@/axios/shop';
 
 const baseURL = '/apw';
-// const Router = useRouter()
 
 const Axios = axios.create({
 	baseURL: baseURL,
 	timeout: 2000
 });
-
+let isLogin = false;
 Axios.interceptors.request.use(
 	(config) => {
 		// 修改获取token时机，解决token验证问题
 		const token = sessionStorage.getItem('token');
 		if (config.url !== '/login' && token) {
 			config.headers.common['Authorization'] = token;
+		} else {
+			if (!isLogin) {
+				message.info('未登录');
+			}
+			isLogin = true;
+			// window.location.href = window.location.origin + '/leaguefront/';
 		}
 		return config;
 	},

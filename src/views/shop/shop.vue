@@ -10,10 +10,10 @@
 				<div class="center">
 					<div>{{ $t('default.27') }}</div>
 					<div class="selectBox">
-						<a-select v-model:value="countryId" @change="areaChange" allowClear>
+						<a-select class="selectBG" v-model:value="countryId" @change="areaChange" allowClear>
 							<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 						</a-select>
-						<a-select v-model:value="areaId" allowClear>
+						<a-select class="selectBG" v-model:value="areaId" allowClear>
 							<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 						</a-select>
 						<!-- <a-select v-model:value="city">
@@ -474,12 +474,9 @@ export default defineComponent({
 				data.shopList = res.data.data.list;
 				data.total = res.data.data.totalPage;
 				data.InfoWindow = [];
+				data.shopNameList = res.data.data.list;
 				// 添加marker
 				res.data.data.list.forEach((i) => {
-					data.shopNameList.push({
-						shopId: i.shopId,
-						shopName: i.shopName
-					});
 					if (i.longitude && i.latitude) {
 						data.InfoWindow.push({
 							title: i.shopName,

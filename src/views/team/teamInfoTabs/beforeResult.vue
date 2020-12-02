@@ -5,40 +5,44 @@
 		</a-row>
 		<a-row class="rowStyle">
 			<a-col :lg="3" :xs="12">
+				<a-select v-model:value="year" @change="yearChange" class="selectBox">
+					<a-select-option v-for="item in yearList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+				</a-select>
+			</a-col>
+			<!-- <a-col :lg="3" :xs="12">
 				<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
 					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 				</a-select>
-			</a-col>
-			<a-col :lg="3" :xs="12">
-				<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
-				</a-select>
-			</a-col>
+			</a-col> -->
 		</a-row>
 
 		<a-row class="inPhoneTableDisplay">
-			<a-table :columns="columns" :data-source="tableList" :pagination="false" bordered>
-				<template #action="{ text,record }">
-					<u class="tableMatch" @click="showMatchInfo(record.age)">{{ text }}</u>
+			<a-table :columns="columns" :data-source="tableList" :pagination="false" rowKey="competitionId" bordered>
+				<template #action="{ record }">
+					<u class="tableMatch" @click="showMatchInfo(record.competitionId)">{{ record.competitionName }}</u>
 				</template>
 			</a-table>
 		</a-row>
 		<a-row class="showPhoneTable">
-			<a-table :columns="inPhoneColumns" :data-source="tableList" :pagination="false" bordered>
-				<template #action="{ text,record }">
-					<u class="tableMatch" @click="showMatchInfo(record.age)">{{ text }}</u>
+			<a-table :columns="inPhoneColumns" :data-source="tableList" :pagination="false" rowKey="competitionId" bordered>
+				<template #action="{ record }">
+					<u class="tableMatch" @click="showMatchInfo(record.competitionId)">{{ record.competitionName }}</u>
 				</template>
 			</a-table>
 		</a-row>
+		<div class="pagination">
+			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @change="pageChange" />
+		</div>
 		<entryList :entryPath="entryPath" />
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { historyResultHttp } from '@/axios/api';
 import entryList from '@/components/common/entryList.vue';
 import { SettingFilled } from '@ant-design/icons-vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 export default defineComponent({
 	name: 'beforeResult',
 	components: {
@@ -46,20 +50,24 @@ export default defineComponent({
 		entryList
 	},
 	setup() {
-		const Router = useRouter();
+		const ROUTE = useRoute();
+		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/team',
-			matchType: 2020,
-			matchTypeList: [{ value: 2020, label: '2020' }],
+			year: 2020,
+			pageNum: 1,
+			pageSize: 10,
+			total: 1,
+			yearList: [{ value: 2020, label: '2020' }],
 			inPhoneColumns: [
 				{
 					title: '年',
-					dataIndex: 'name',
+					dataIndex: 'year',
 					key: 1
 				},
 				{
 					title: '比赛',
-					dataIndex: 'address',
+					dataIndex: 'competitionName',
 					key: 2,
 					slots: { customRender: 'action' }
 				},
@@ -72,15 +80,15 @@ export default defineComponent({
 			columns: [
 				{
 					title: '年',
-					width: 50,
-					dataIndex: 'name',
+					width: 80,
+					dataIndex: 'year',
 					key: 1
 					// fixed: "left",
 				},
 				{
 					title: '比赛',
-					dataIndex: 'address',
-					width: 180,
+					dataIndex: 'competitionName',
+					width: 200,
 					key: 2,
 					slots: { customRender: 'action' }
 					// fixed: "left",
@@ -89,36 +97,33 @@ export default defineComponent({
 					title: '排行',
 					dataIndex: 'address',
 					key: 3,
-					// fixed: "left",
 					width: 60
 				},
 				{
 					title: '队伍',
 					dataIndex: 'address',
 					key: 4,
-					// fixed: "left",
 					children: [
-						{ title: 'Rating', dataIndex: 'address', key: 9, width: 70 },
-						{ title: 'PPD', dataIndex: 'address', key: 10, width: 60 },
-						{ title: 'MPR', dataIndex: 'address', key: 11, width: 60 }
+						{ title: 'Rating', dataIndex: 'teamRating.ranking', key: 9, width: 90 },
+						{ title: 'PPD', dataIndex: 'teamRating.ppd', key: 10, width: 75 },
+						{ title: 'MPR', dataIndex: 'teamRating.mpr', key: 11, width: 75 }
 					]
 				},
 				{
 					title: '总积分',
 					dataIndex: 'address',
 					key: 5,
-					// fixed: "left",
-					width: 80
+					width: 90
 				},
 				{
 					title: 'Match',
 					dataIndex: 'address',
 					key: 6,
 					children: [
-						{ title: '胜', dataIndex: 'address', key: 12, width: 60 },
-						{ title: '败', dataIndex: 'address', key: 13, width: 60 },
-						{ title: '和', dataIndex: 'address', key: 14, width: 60 },
-						{ title: '胜率', dataIndex: 'address', key: 15, width: 60 }
+						{ title: '胜', dataIndex: 'matchResult.wins', key: 12, width: 40 },
+						{ title: '败', dataIndex: 'matchResult.losses', key: 13, width: 40 },
+						{ title: '和', dataIndex: 'matchResult.draws', key: 14, width: 40 },
+						{ title: '胜率', dataIndex: 'matchResult.winProbability', key: 15, width: 40 }
 					]
 				},
 				{
@@ -126,10 +131,10 @@ export default defineComponent({
 					dataIndex: 'address',
 					key: 7,
 					children: [
-						{ title: '胜', dataIndex: 'address', key: '2', width: 60 },
-						{ title: '败', dataIndex: 'address', key: '2', width: 60 },
-						{ title: '和', dataIndex: 'address', key: '2', width: 60 },
-						{ title: '胜率', dataIndex: 'address', key: '2', width: 60 }
+						{ title: '胜', dataIndex: 'setResult.wins', key: '2', width: 40 },
+						{ title: '败', dataIndex: 'setResult.losses', key: '2', width: 40 },
+						{ title: '和', dataIndex: 'setResult.draws', key: '2', width: 40 },
+						{ title: '胜率', dataIndex: 'setResult.winProbability', key: '2', width: 40 }
 					]
 				},
 				{
@@ -139,35 +144,42 @@ export default defineComponent({
 					width: 60
 				}
 			],
-			tableList: [
-				{
-					key: '1',
-					name: 'John Brown',
-					age: 32,
-					address: 'New York Park'
-				},
-				{
-					key: '2',
-					name: 'Jim Green',
-					age: 40,
-					address: 'London Park'
-				}
-			],
+			tableList: [],
 			handleMenuClick: () => {
 				console.log(1);
 			},
 			Gohistory: () => {
-				Router.push('/teamIndex');
+				ROUTER.push('/teamIndex');
 			},
 			showMatchInfo: (id: number) => {
-				Router.push({
+				ROUTER.push({
 					path: '/calendar',
-					params: { id }
+					query: { leagueId: id }
 				});
 			},
-			matchTypeChange: (value: number) => {
-				console.log(value);
+			yearChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getList();
+			},
+			pageChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getList();
 			}
+		});
+		const getList = () => {
+			const obj = {
+				year: data.year,
+				teamId: ROUTE.query.teamId,
+				pageIndex: data.pageNum,
+				pageSize: data.pageSize
+			};
+			historyResultHttp(obj).then((res) => {
+				data.tableList = res.data.data.list;
+				data.total = res.data.data.totalPage;
+			});
+		};
+		onMounted(() => {
+			getList();
 		});
 		return {
 			...toRefs(data)

@@ -1,100 +1,163 @@
 <template>
 	<div class="content">
 		<a-row>
-			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ $t('default.227') }} </a-col>
+			<a-col :span="11" class="centerFont"> <SettingFilled /> {{ $t('default.227') }} </a-col>
+			<a-col :lg="4" :xs="0" class="sortColBox">
+				<div>
+					<a-button type="link" @click="changeIcon('general')">
+						{{ 'General Rating' }}
+						<span v-if="general">
+							<DownOutlined />
+						</span>
+						<span v-else>
+							<UpOutlined />
+						</span>
+					</a-button>
+				</div>
+			</a-col>
+			<a-col :lg="4" :xs="0" class="sortColBox">
+				<div>
+					<a-button type="link" @click="changeIcon('league')">
+						{{ 'League Rating' }}
+						<span v-if="league">
+							<DownOutlined />
+						</span>
+						<span v-else>
+							<UpOutlined />
+						</span>
+					</a-button>
+				</div>
+			</a-col>
+			<a-col :lg="5" :xs="0" class="sortColBox">
+				<div>
+					<a-button type="link" @click="changeIcon('quarter')">
+						{{ 'League Rating (Quarter)' }}
+						<span v-if="quarter">
+							<DownOutlined />
+						</span>
+						<span v-else>
+							<UpOutlined />
+						</span>
+					</a-button>
+				</div>
+			</a-col>
 		</a-row>
 		<a-row class="inPhoneTableDisplay">
-			<a-table :columns="columns" :data-source="tableList" :pagination="false" bordered>
-				<template #action="{ text,record }">
-					<u class="tableMatch" @click="entryPage(1, record.age)">{{ text }}</u>
+			<a-table :columns="columns" :data-source="tableList" :pagination="false" rowkey="playerId" bordered>
+				<template #player="{ record }">
+					<div class="inPhoneTableBox">
+						<div class="imgBox">
+							<img :src="record.playerImg" alt="" />
+						</div>
+						<div class="tableMatch" @click="entryPage(1, record.playerId)">{{ record.playerName }}</div>
+					</div>
+				</template>
+				<template #gender="{ text }">
+					<div>{{ text ? $t('default.264') : $t('default.265') }}</div>
 				</template>
 			</a-table>
 		</a-row>
 		<a-row class="showPhoneTable">
-			<a-table :columns="inPhoneColumns" :scroll="{ x: 600 }" :data-source="tableList" :pagination="false" bordered>
+			<a-table :columns="inPhoneColumns" :scroll="{ x: 600 }" :data-source="tableList" rowkey="playerId" :pagination="false" bordered>
 				<template #index="{ index }">
 					<div>{{ index + 1 }}</div>
 				</template>
 				<template #player="{ record }">
 					<div class="inPhoneTableBox">
 						<div class="imgBox">
-							<img :src="record.img" alt="" />
+							<img :src="record.playerImg" alt="" />
 						</div>
-						<div>
-							<div>{{ record.name }}</div>
-							<div>{{ record.address }}</div>
-						</div>
+						<div class="tableMatch" @click="entryPage(1, record.playerId)">{{ record.playerName }}</div>
 					</div>
 				</template>
 			</a-table>
 		</a-row>
+		<div class="pagination">
+			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @change="pageChange" />
+		</div>
 		<entryList :entryPath="entryPath" />
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import { vipListHttp } from '@/axios/api';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import entryList from '@/components/common/entryList.vue';
-import { SettingFilled } from '@ant-design/icons-vue';
-import { useRouter } from 'vue-router';
+import { SettingFilled, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
+import { useRoute, useRouter } from 'vue-router';
+interface DataProps {
+	[x: string]: any;
+	general: boolean;
+	league: boolean;
+	quarter: boolean;
+}
 export default defineComponent({
 	name: 'vip',
 	components: {
 		SettingFilled,
-		entryList
+		entryList,
+		DownOutlined,
+		UpOutlined
 	},
 	setup() {
-		const Router = useRouter();
-		const data = reactive({
+		const ROUTE = useRoute();
+		const ROUTER = useRouter();
+		const data: DataProps = reactive({
+			pageNum: 1,
+			pageSize: 10,
+			total: 1,
+			sort: 1,
 			entryPath: '/team',
+			general: true,
+			league: true,
+			quarter: true,
 			columns: [
 				{
 					title: '玩家',
 					width: 100,
-					dataIndex: 'name',
-					key: 'name',
-					slots: { customRender: 'action' }
+					dataIndex: 'playerName',
+					slots: { customRender: 'player' }
 				},
 				{
 					title: '性别',
-					dataIndex: 'address',
+					dataIndex: 'gender',
 					width: 10,
-					key: '1'
+					slots: { customRender: 'gender' }
 				},
 				{
 					title: '主店',
-					dataIndex: 'address',
+					dataIndex: 'shop',
 					key: '2',
 					width: 10
 				},
 				{
-					title: '一般等级',
+					title: 'General Rating',
 					dataIndex: 'address',
 					key: '3',
 					children: [
-						{ title: 'Rating', dataIndex: 'address', key: '2', width: 60 },
-						{ title: 'PPD', dataIndex: 'address', key: '2', width: 50 },
-						{ title: 'MPR', dataIndex: 'address', key: '2', width: 50 }
+						{ title: 'Rating', dataIndex: 'generalRating.rating', key: '2', width: 60 },
+						{ title: 'PPD', dataIndex: 'generalRating.ppd', key: '2', width: 50 },
+						{ title: 'MPR', dataIndex: 'generalRating.mpr', key: '2', width: 50 }
 					]
 				},
 				{
-					title: '比赛等级',
+					title: 'League Rating',
 					dataIndex: 'address',
 					key: '3',
 					children: [
-						{ title: 'Rating', dataIndex: 'address', key: '2', width: 60 },
-						{ title: 'PPD', dataIndex: 'address', key: '2', width: 50 },
-						{ title: 'MPR', dataIndex: 'address', key: '2', width: 50 }
+						{ title: 'Rating', dataIndex: 'competitionRating.rating', key: '2', width: 60 },
+						{ title: 'PPD', dataIndex: 'competitionRating.ppd', key: '2', width: 50 },
+						{ title: 'MPR', dataIndex: 'competitionRating.mpr', key: '2', width: 50 }
 					]
 				},
 				{
-					title: '比赛等级 ( 4Q )',
+					title: 'League Rating ( 4Q )',
 					dataIndex: 'address',
 					key: '5',
 					children: [
-						{ title: 'Rating', dataIndex: 'address', key: '2', width: 30 },
-						{ title: 'PPD', dataIndex: 'address', key: '2', width: 30 },
-						{ title: 'MPR', dataIndex: 'address', key: '2', width: 30 }
+						{ title: 'Rating', dataIndex: 'quaterCompetitionRating.rating', key: '2', width: 30 },
+						{ title: 'PPD', dataIndex: 'quaterCompetitionRating.ppd', key: '2', width: 30 },
+						{ title: 'MPR', dataIndex: 'quaterCompetitionRating.mpr', key: '2', width: 30 }
 					]
 				}
 			],
@@ -108,9 +171,9 @@ export default defineComponent({
 				},
 				{
 					title: '玩家',
-					width: 160,
+					width: 130,
 					fixed: 'left',
-					dataIndex: 'name',
+					dataIndex: 'playerName',
 					key: 'name',
 					slots: { customRender: 'player' }
 				},
@@ -122,105 +185,127 @@ export default defineComponent({
 						{
 							title: 'Rating',
 							width: 80,
-							dataIndex: 'name',
+							dataIndex: 'generalRating.rating',
 							key: 'name'
 						},
 						{
 							title: 'PPD',
 							width: 80,
-							dataIndex: 'name',
+							dataIndex: 'generalRating.ppd',
 							key: 'name'
 						},
 						{
 							title: 'MPR',
 							width: 80,
-							dataIndex: 'name',
+							dataIndex: 'generalRating.mpr',
 							key: 'name'
 						}
 					]
 				},
 				{
-					title: 'Competition Rating',
+					title: 'League Rating',
 					dataIndex: 'name',
 					key: 'name',
 					children: [
 						{
 							title: 'Rating',
 							width: 80,
-							dataIndex: 'name',
+							dataIndex: 'competitionRating.rating',
 							key: 'name'
 						},
 						{
 							title: 'PPD',
 							width: 80,
-							dataIndex: 'name',
+							dataIndex: 'competitionRating.ppd',
 							key: 'name'
 						},
 						{
 							title: 'MPR',
 							width: 80,
-							dataIndex: 'name',
+							dataIndex: 'competitionRating.mpr',
 							key: 'name'
 						}
 					]
 				},
 				{
-					title: 'Competition Rating ( 4Q )',
+					title: 'League Rating ( 4Q )',
 					dataIndex: 'name',
 					key: 'name',
 					children: [
 						{
 							title: 'Rating',
 							width: 80,
-							dataIndex: 'name',
+							dataIndex: 'quaterCompetitionRating.rating',
 							key: 'name'
 						},
 						{
 							title: 'PPD',
 							width: 80,
-							dataIndex: 'name',
+							dataIndex: 'quaterCompetitionRating.ppd',
 							key: 'name'
 						},
 						{
 							title: 'MPR',
 							width: 80,
-							dataIndex: 'name',
+							dataIndex: 'quaterCompetitionRating.mpr',
 							key: 'name'
 						}
 					]
 				}
 			],
-			tableList: [
-				{
-					key: '1',
-					img: require('@/assets/1.jpg'),
-					name: 'John Brown',
-					age: 32,
-					address: 'New York Park'
-				},
-				{
-					key: '2',
-					img: require('@/assets/1.jpg'),
-					name: 'Jim Green',
-					age: 40,
-					address: 'London Park'
+			tableList: [],
+			changeIcon: (type: keyof DataProps) => {
+				data[type] = !data[type];
+				if (type === 'general' && data[type]) {
+					data.sort = 1;
+				} else if (type === 'general' && !data[type]) {
+					data.sort = 2;
+				} else if (type === 'league' && data[type]) {
+					data.sort = 3;
+				} else if (type === 'league' && !data[type]) {
+					data.sort = 4;
+				} else if (type === 'quarter' && data[type]) {
+					data.sort = 5;
+				} else {
+					data.sort = 6;
 				}
-			],
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDataList();
+			},
 			handleMenuClick: () => {
 				console.log(1);
 			},
 			Gohistory: () => {
-				Router.push('/teamIndex');
+				ROUTER.push('/teamIndex');
 			},
 			entryPage: (type: number, id: number) => {
-				Router.push({
+				ROUTER.push({
 					path: '/playerInfo',
 					query: {
 						activeKey: type,
 						id
 					}
 				});
+			},
+			pageChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDataList();
 			}
+		});
+		const getDataList = () => {
+			const obj = {
+				teamId: 63 || ROUTE.query.teamId,
+				sort: data.sort,
+				pageIndex: data.pageNum,
+				pageSize: data.pageSize
+			};
+			vipListHttp(obj).then((res) => {
+				data.tableList = res.data.data.list;
+				data.total = res.data.data.totalPage;
+			});
+		};
+		onMounted(() => {
+			getDataList();
 		});
 		return {
 			...toRefs(data)
@@ -236,6 +321,7 @@ export default defineComponent({
 }
 .inPhoneTableBox {
 	display: flex;
+	align-items: center;
 	justify-content: space-around;
 }
 .imgBox {

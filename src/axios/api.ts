@@ -11,8 +11,11 @@ import { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCityl
 // 我的页面
 import { myPageInfo, myMatchInfo, myMatchInfoMore, myBattleSelectList, myBattleDataList, myBattleDateList, myTeamList } from './myPage/index';
 
+// 联赛
+import { timeTableList, matchPlayerList, submitMatchTable } from './league/index';
+
 // 队伍
-import { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList } from '@/axios/team/index';
+import { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList, vipList, historyResult } from '@/axios/team/index';
 
 // 玩家
 import { theBestPlayer, playerList } from '@/axios/player/index';
@@ -144,6 +147,20 @@ const myBattleDataListHttp = (data: any = null) => {
 const myBattleDateListHttp = (data: any = null) => {
 	return Axios.post(myBattleDateList, data);
 };
+
+// 联赛 时间表 查看排阵
+const timeTableLineHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(timeTableList, data));
+};
+// 联赛 获取对战列表玩家列表
+const matchPlayerListHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(matchPlayerList, data));
+};
+// 联赛 提交排阵
+const submitMatchTableHttp = (data: Array<any>) => {
+	return Axios.post(submitMatchTable, data);
+};
+
 //  队伍 列表数据
 const myTeamListHttp = (data: any = null) => {
 	return Axios.post(myTeamList, data);
@@ -168,10 +185,19 @@ const timePageListHttp = (data: any = null) => {
 const calendarListHttp = (data: any = null) => {
 	return Axios.post(calendarList, data);
 };
+// 队伍 以前结果 列表
+const historyResultHttp = (data: any = null) => {
+	return Axios.post(historyResult, data);
+};
 // 队伍 队伍列表
 const teamListHttp = (data: any = null) => {
 	return Axios.post(teamList, data);
 };
+// 队伍 会员 列表
+const vipListHttp = (data: any = null) => {
+	return Axios.post(vipList, data);
+};
+
 // 玩家 最佳玩家
 const playerBestListHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(theBestPlayer, data));
@@ -180,6 +206,7 @@ const playerBestListHttp = (data: any = null) => {
 const playerListHttp = (data: any = null) => {
 	return Axios.post(playerList, data);
 };
+
 // 店铺 店铺列表
 const shopListHttp = (data: any = null) => {
 	return Axios.post(shopList, data);
@@ -230,5 +257,10 @@ export {
 	teamdetailsHttp,
 	timePageSelectListHttp,
 	timePageListHttp,
-	calendarListHttp
+	calendarListHttp,
+	vipListHttp,
+	timeTableLineHttp,
+	historyResultHttp,
+	matchPlayerListHttp,
+	submitMatchTableHttp
 };

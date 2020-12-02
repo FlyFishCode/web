@@ -198,4 +198,12 @@ export default defineComponent({
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+.dialogBG /deep/ .ant-modal-content {
+	height: 800px;
+	overflow-y: auto;
+}
+/* 测试环境店铺搜索框宽度 */
+.selectBG {
+	width: 50%;
+}
 </style>

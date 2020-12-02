@@ -30,7 +30,7 @@
 					<div>{{ item.teamName }}</div>
 				</a-col>
 				<a-col :lg="8" :xs="12" class="topBox">
-					<div>{{ $t('default.179') }}</div>
+					<div>{{ $t('default.184') }}</div>
 					<div class="infoStyle">
 						<div>{{ `Rating  ${item.rating}` }}</div>
 						|

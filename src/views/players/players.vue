@@ -100,7 +100,7 @@
 			</a-col>
 		</a-row>
 		<a-row>
-			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ `${$t('default.92')} (${playerList.length})` }} </a-col>
+			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ `${$t('default.92')} (${totalCount})` }} </a-col>
 			<a-col :lg="3" :xs="0" class="colBox">{{ $t('default.249') }}</a-col>
 			<a-col :lg="5" :xs="0" class="colBox">
 				<a-button size="small" :type="btnType === 1 ? 'primary' : ''" @click="changeType(1, 30)">{{ 'ALL' }}</a-button>
@@ -112,7 +112,7 @@
 			<a-col :lg="4" :xs="0" class="colBox">
 				<div>
 					<a-button type="link" @click="changeIcon">
-						{{ 'Competition Rating' }}
+						{{ 'League Rating' }}
 						<span v-if="isUp">
 							<DownOutlined />
 						</span>
@@ -255,10 +255,11 @@ export default defineComponent({
 			btnType: 1,
 			isUp: true,
 			inputValue: '',
-			topInfoTitle: 'Competition Rating',
+			topInfoTitle: 'League Rating',
 			pageNum: 1,
 			pageSize: 1,
 			total: 1,
+			totalCount: 0,
 			colSpan: 4,
 			matchType: 1,
 			visible: false,
@@ -388,6 +389,7 @@ export default defineComponent({
 				}
 				data.playerList = res.data.data.list;
 				data.total = res.data.data.totalPage;
+				data.totalCount = res.data.data.totalCount;
 			});
 		};
 		const getCountry = () => {

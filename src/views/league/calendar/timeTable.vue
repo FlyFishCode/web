@@ -43,8 +43,8 @@
 					<a-tab-pane key="2" :tab="$t('default.41')">
 						<matchTable />
 					</a-tab-pane>
-					<a-tab-pane key="3" tab="AWARD">
-						<AWARD />
+					<a-tab-pane v-if="AWARD" key="3" tab="AWARD">
+						<award />
 					</a-tab-pane>
 				</a-tabs>
 				<!-- </div> -->
@@ -192,7 +192,7 @@ import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 // 排阵页面
 import matchTable from '@/views/league/matchTable/matchTable.vue';
 import matchResult from '@/views/league/matchResult/matchResult.vue';
-import AWARD from '@/views/league/AWARD/AWARD.vue';
+import award from '@/views/league/award/award.vue';
 // import { DOM } from "@/type/interface.d.ts";
 import { SettingFilled, PlusOutlined, SearchOutlined } from '@ant-design/icons-vue';
 import lunboGundong from '@/components/inCalendar.vue';
@@ -207,7 +207,7 @@ export default defineComponent({
 		PlusOutlined,
 		inMatchTable,
 		matchTable,
-		AWARD,
+		award,
 		matchResult,
 		entryList,
 		SearchOutlined
@@ -217,6 +217,7 @@ export default defineComponent({
 		const data = reactive({
 			entryPath: '/league',
 			visible: false,
+			AWARD: ROUTE.query.AWARD,
 			stateList: [],
 			currentValue: '',
 			ismatchTablePage: false,

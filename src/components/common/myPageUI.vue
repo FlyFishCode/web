@@ -47,7 +47,7 @@
 				</div>
 			</a-col>
 			<a-col :lg="7" :xs="0">
-				<div class="title">{{ $t('default.239') }}</div>
+				<div class="title">{{ $t('default.184') }}</div>
 				<a-progress type="circle" class="myYuan" :percent="75" />
 				<div class="myProgress">
 					<div class="myProgressBox">

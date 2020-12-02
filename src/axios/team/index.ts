@@ -12,4 +12,10 @@ const timePageSelectList = '/teamcompetitionmenu';
 const timePageList = '/teamconfrontationinfolist';
 // 时间表 日历数据
 const calendarList = '/teamconfrontationinfocalendar';
-export { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList };
+
+// 以前结果 列表
+const historyResult = '/teamresult';
+
+// 会员 列表
+const vipList = '/teamplayer';
+export { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList, vipList, historyResult };

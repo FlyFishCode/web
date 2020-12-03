@@ -206,4 +206,7 @@ export default defineComponent({
 .selectBG {
 	width: 50%;
 }
+#diaLogTable .ant-table-header-column {
+	width: 100%;
+}
 </style>

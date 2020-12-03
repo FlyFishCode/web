@@ -3,27 +3,31 @@
 		<a-row class="rowStyle">
 			<a-col :span="8" class="allBox">
 				<a-col :span="12" class="firstClass">
-					<img class="imgBg" :src="infoData.img" alt="" />
+					<img class="imgBg" :src="infoData.teamImg" alt="" />
 				</a-col>
 				<a-col :span="12" class="firstClass FONT">
 					<div class="teamName" @click="showTeamInfo">{{ infoData.teamName }}</div>
-					<div class="disabledClass">{{ infoData.captainName }}</div>
+					<div class="captainBG">
+						<div class="captainBox">
+							<img :src="infoData.captainImg" alt="" />
+						</div>
+						<div class="disabledClass">{{ infoData.captainName }}</div>
+					</div>
 					<div class="disabledClass">
-						{{ infoData.place }}
+						<span>{{ infoData.shopName }}</span>
 						<span @click="showDetail" class="icon">
-							<InfoCircleFilled />
+							<EnvironmentOutlined />
 						</span>
 					</div>
-					<div class="disabledClass">{{ infoData.country }}</div>
 				</a-col>
 			</a-col>
 			<a-col :span="4" class="progressBox">
-				<div class="title">{{ $t('default.184') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="75" />
+				<div class="title">{{ 'League Rating' }}</div>
+				<a-progress type="circle" class="myYuan" :percent="infoData.rating" />
 			</a-col>
 			<a-col :span="4" class="progressBox">
-				<div class="title">{{ $t('default.185') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="75" />
+				<div class="title">{{ '胜率(Set)' }}</div>
+				<a-progress type="circle" class="myYuan" :percent="infoData.winProbability" />
 			</a-col>
 			<!-- // 左侧按钮 -->
 			<a-col :span="8" class="carousel">
@@ -33,7 +37,7 @@
 				<a-col class="center animate__backOutRight" id="myBox">
 					<div v-for="item in infoData.resultList" :key="item.id" class="centerBox">
 						<div class="matchBox">
-							<div class="title">{{ item.name }}</div>
+							<div class="title">{{ item.title }}</div>
 							<div class="fontStyle">
 								<div class="left">
 									<div>{{ '胜' }}</div>
@@ -52,7 +56,7 @@
 										<a-progress :percent="item.lost" strokeColor="red" />
 									</div>
 									<div>
-										<a-progress :percent="item.probability" strokeColor="red" />
+										<a-progress :percent="item.winProbability" strokeColor="red" />
 									</div>
 								</div>
 							</div>
@@ -74,48 +78,59 @@
 
 <script lang="ts">
 import { useRoute } from 'vue-router';
-import { reactive, toRefs, onMounted, ref } from 'vue';
-import { InfoCircleFilled, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+import { reactive, toRefs, onMounted, ref, watch } from 'vue';
+import { EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+
+const getNewData = (obj: any) => {
+	const data = {
+		teamImg: obj.teamImg,
+		teamName: obj.teamName,
+		captainName: obj.captainName,
+		captainImg: obj.captainImg,
+		shopName: obj.shop.shopName,
+		rating: obj.competitionRating.rating,
+		winProbability: obj.competitionRating.winProbability,
+		resultList: [
+			{
+				title: 'matchResult',
+				win: obj.matchResult.wins,
+				draw: obj.matchResult.draws,
+				lost: obj.matchResult.losses,
+				winProbability: Number(obj.matchResult.winProbability)
+			},
+			{
+				title: 'setResult',
+				win: obj.setResult.wins,
+				draw: obj.setResult.draws,
+				lost: obj.setResult.losses,
+				winProbability: Number(obj.setResult.winProbability)
+			}
+		]
+	};
+	return data;
+};
+
+interface DataProps {
+	infoData: {
+		resultList: Array<any>;
+	};
+}
+
 export default {
 	name: 'rankingTeam',
 	components: {
-		InfoCircleFilled,
+		EnvironmentOutlined,
 		LeftCircleOutlined,
 		RightCircleOutlined
 	},
-	setup() {
+	props: ['dataObj'],
+	setup(props: any) {
 		const route = useRoute();
 		let currentPosition = 0;
 		const currentIndex = ref(0);
-		const data = reactive({
+		const data: DataProps = reactive({
 			infoData: {
-				img: require('@/assets/1.jpg'),
-				teamName: '上海市消防总队黄埔支队嵩山中队',
-				captainName: '李逍遥',
-				place: '李逍遥',
-				country: '山东',
-				allScore: '总分数',
-				scoreNumber: 59,
-				ppdNumber: 51,
-				mprNumber: 65,
-				resultList: [
-					{
-						id: 1,
-						name: 'Set 结果',
-						win: 15,
-						draw: 20,
-						lost: 25,
-						probability: 80
-					},
-					{
-						id: 1,
-						name: 'Match 结果',
-						win: 15,
-						draw: 20,
-						lost: 25,
-						probability: 80
-					}
-				]
+				resultList: []
 			},
 			showTeamInfo: () => {
 				console.log('111');
@@ -155,6 +170,12 @@ export default {
 		onMounted(() => {
 			console.log(route.query);
 		});
+		watch(
+			() => props.dataObj,
+			(val) => {
+				data.infoData = getNewData(val);
+			}
+		);
 		return {
 			...toRefs(data),
 			currentIndex
@@ -295,5 +316,16 @@ export default {
 }
 .isActived {
 	background: red;
+}
+.captainBG {
+	display: flex;
+	align-items: center;
+}
+.captainBox {
+	width: 50px;
+	height: 50px;
+}
+.captainBox img {
+	width: 100%;
 }
 </style>

@@ -171,16 +171,29 @@
 		<div>
 			<a-modal v-model:visible="visible" centered width="800px" :footer="null" :title="$t('default.157')">
 				<a-row>
-					<a-col :span="3">
+					<a-col :span="6">
 						<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
 							<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 						</a-select>
 					</a-col>
-					<a-col :span="3">
+					<a-col :span="6">
 						<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
 							<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 						</a-select>
 					</a-col>
+				</a-row>
+				<a-row class="dialogRow" v-for="item in dialogList" :key="item.index">
+					<a-table id="diaLogTable" :columns="dialogColumns" :data-source="item.matchTableList" :pagination="false" width="70%" bordered>
+						<template #customTitle>
+							<div class="columnsBox">
+								<div class="awayClass">{{ 'Away' }}</div>
+								<div class="homeClass">{{ 'Home' }}</div>
+							</div>
+						</template>
+						<template #homeTeamName="{ text }">
+							<div>{{ text }}</div>
+						</template>
+					</a-table>
 				</a-row>
 			</a-modal>
 		</div>
@@ -194,11 +207,20 @@ import matchTable from '@/views/league/matchTable/matchTable.vue';
 import matchResult from '@/views/league/matchResult/matchResult.vue';
 import award from '@/views/league/award/award.vue';
 // import { DOM } from "@/type/interface.d.ts";
+import { matchtableHttp } from '@/axios/api';
 import { SettingFilled, PlusOutlined, SearchOutlined } from '@ant-design/icons-vue';
 import lunboGundong from '@/components/inCalendar.vue';
 import inMatchTable from '@/components/inMatchTable.vue';
 import entryList from '@/components/common/entryList.vue';
 import { useRoute } from 'vue-router';
+
+interface DataProps {
+	dialogColumns: Array<any>;
+	tableList: Array<any>;
+	dialogList: Array<any>;
+	visible: boolean;
+	ismatchTablePage: boolean;
+}
 export default defineComponent({
 	name: 'timeTable',
 	components: {
@@ -214,7 +236,7 @@ export default defineComponent({
 	},
 	setup() {
 		const ROUTE = useRoute();
-		const data = reactive({
+		const data: DataProps = reactive({
 			entryPath: '/league',
 			visible: false,
 			AWARD: ROUTE.query.AWARD,
@@ -223,6 +245,15 @@ export default defineComponent({
 			ismatchTablePage: false,
 			matchType: 2020,
 			month: 1,
+			dialogColumns: [
+				{
+					dataIndex: 'homeTeamName',
+					key: 'homeTeamName',
+					width: 150,
+					slots: { title: 'customTitle', customRender: 'homeTeamName' }
+				}
+			],
+			dialogList: [],
 			monthList: [
 				{ value: 1, label: 1 },
 				{ value: 2, label: 2 },
@@ -598,7 +629,7 @@ export default defineComponent({
 			// },
 			rowSelection: {
 				columnWidth: 100,
-				columnTitle: '对比',
+				columnTitle: '排行',
 				onChange: (selectedRowKeys: number[]) => {
 					if (selectedRowKeys.length == 2) {
 						selectedRowKeys.forEach((i) => {
@@ -642,10 +673,29 @@ export default defineComponent({
 				console.log(1);
 			}
 		});
+		const getDialogList = () => {
+			matchtableHttp({ confrontationId: 505 }).then((res) => {
+				const teamObj: any = {};
+				res.data.data.loopSurfaceList.forEach((i: any) => {
+					i.matchTableList.forEach((j: any) => {
+						if (!teamObj[j.visitingTeamName]) {
+							teamObj[j.visitingTeamName] = true;
+							const obj = {
+								title: j.visitingTeamName,
+								dataIndex: 'visitingTeamName'
+							};
+							data.dialogColumns.push(obj);
+						}
+					});
+				});
+				data.dialogList = res.data.data.loopSurfaceList;
+			});
+		};
 		onMounted(() => {
 			if (ROUTE.query.ismatchTablePage) {
 				data.ismatchTablePage = true;
 			}
+			getDialogList();
 		});
 		return {
 			...toRefs(data)
@@ -666,5 +716,11 @@ export default defineComponent({
 }
 .showPhoneTable {
 	display: none;
+}
+.dialogRow {
+	margin: 10px 0;
+}
+.awayClass {
+	text-align: right;
 }
 </style>

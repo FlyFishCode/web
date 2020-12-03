@@ -50,32 +50,37 @@
 				</a-col>
 			</a-row>
 			<div v-show="allLeague">
-				<a-row v-for="item in allLeagueList" :key="item.matchId" class="matchBox">
-					<a-col :lg="14" :xs="24">
-						<a-col :span="4" class="matchImgBox">
-							<img class="matchImg" :src="item.img" />
+				<div v-if="allLeagueList.length">
+					<a-row v-for="item in allLeagueList" :key="item.matchId" class="matchBox">
+						<a-col :lg="14" :xs="24">
+							<a-col :span="4" class="matchImgBox">
+								<img class="matchImg" :src="item.img" />
+							</a-col>
+							<a-col :span="20" @click="showMore(item.state)" style="cursor:pointer">
+								<div>
+									<div>{{ item.title }}</div>
+									<div>{{ item.tip }}</div>
+								</div>
+							</a-col>
 						</a-col>
-						<a-col :span="20" @click="showMore(item.state)" style="cursor:pointer">
-							<div>
-								<div>{{ item.title }}</div>
-								<div>{{ item.tip }}</div>
+						<a-col :lg="2" :xs="0">
+							<div class="fontDisplay">{{ $t('default.167') }}</div>
+							<div>{{ item.area }}</div>
+						</a-col>
+						<a-col :lg="8" :xs="0">
+							<div class="rightStyle">
+								<div class="fontDisplay">{{ '比赛期间' }}</div>
+								<div class="matchState I" v-if="item.state === 1">{{ '比赛中' }}</div>
+								<div class="matchState R" v-if="item.state === 2">{{ '比赛结束' }}</div>
+								<div class="matchState F" v-if="item.state === 3">{{ '比赛结束' }}</div>
 							</div>
+							<div>{{ item.date }}</div>
 						</a-col>
-					</a-col>
-					<a-col :lg="2" :xs="0">
-						<div class="fontDisplay">{{ $t('default.167') }}</div>
-						<div>{{ item.area }}</div>
-					</a-col>
-					<a-col :lg="8" :xs="0">
-						<div class="rightStyle">
-							<div class="fontDisplay">{{ '比赛期间' }}</div>
-							<div class="matchState I" v-if="item.state === 1">{{ '比赛中' }}</div>
-							<div class="matchState R" v-if="item.state === 2">{{ '比赛结束' }}</div>
-							<div class="matchState F" v-if="item.state === 3">{{ '比赛结束' }}</div>
-						</div>
-						<div>{{ item.date }}</div>
-					</a-col>
-				</a-row>
+					</a-row>
+				</div>
+				<div v-else>
+					<emptyList />
+				</div>
 				<a-row type="flex" justify="end">
 					<a-pagination v-model:current="pageNum" :total="total" />
 				</a-row>
@@ -120,6 +125,7 @@ import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { indexCountryHttp, indexCityHttp } from '@/axios/api';
 import { useRouter } from 'vue-router';
 import { SearchOutlined, SettingFilled, EnvironmentOutlined } from '@ant-design/icons-vue';
+import emptyList from '@/components/common/emptyList.vue';
 interface HTMLInputEvent {
 	value: HTMLInputElement & EventTarget;
 }
@@ -136,7 +142,7 @@ interface DataProp {
 }
 export default defineComponent({
 	name: 'league',
-	components: { EnvironmentOutlined, SearchOutlined, SettingFilled },
+	components: { EnvironmentOutlined, SearchOutlined, SettingFilled, emptyList },
 	setup() {
 		const Router = useRouter();
 		const data = reactive({
@@ -146,7 +152,7 @@ export default defineComponent({
 			my: 'MY',
 			matchTotal: 0,
 			pageNum: 1,
-			total: 100,
+			total: 1,
 			value: '',
 			allLeague: true,
 			myLeague: false,
@@ -166,35 +172,7 @@ export default defineComponent({
 				{ id: 2, value: '进行中' },
 				{ id: 3, value: '已结束' }
 			],
-			allLeagueList: [
-				{
-					matchId: 1,
-					img: require('@/assets/1.jpg'),
-					title: '2020第一次比赛',
-					tip: 'U-LEAGUE 苏州赛区季后赛',
-					area: '上海',
-					date: '2020-9-10',
-					state: 1
-				},
-				{
-					matchId: 1,
-					img: require('@/assets/1.jpg'),
-					title: '2021第二次比赛',
-					tip: 'U-LEAGUE 广州赛区季后赛',
-					area: '武汉',
-					date: '2020-9-10',
-					state: 2
-				},
-				{
-					matchId: 1,
-					img: require('@/assets/1.jpg'),
-					title: '2022第三次比赛',
-					tip: 'U-LEAGUE 兰州赛区季后赛',
-					area: '云南',
-					date: '2020-9-10',
-					state: 3
-				}
-			],
+			allLeagueList: [],
 			myLeagueList: [
 				{
 					matchId: 1,

@@ -1,32 +1,28 @@
 // 登录
-const login = '/login'
-
+const login = '/login';
 
 // 首页联赛列表
-const leagueList = '/multileague'
-
+const leagueList = '/multileague';
 
 // 首页队伍列表
-const indexTeam = '/teamranking'
-
+const indexTeam = '/hometeamranking';
 
 // 首页玩家列表
-const indexPlayer = '/playerranking'
-
+const indexPlayer = '/homeplayerranking';
 
 // 首页 国家列表
-const indexCountrylist = '/countrylist'
+const indexCountrylist = '/countrylist';
 // 首页 区域列表
-const indexCitylist = '/arealist'
+const indexCitylist = '/arealist';
 
 // 首页 首页新闻列表
-const indexNewslist = '/homenews'
+const indexNewslist = '/homenews';
 
 // 首页 新闻所有列表
-const newslist = '/newslist'
+const newslist = '/newslist';
 // 首页 新闻详细内容
-const newsInfo = '/newsdetails'
+const newsInfo = '/newsdetails';
 
 // 首页 首页轮播图
-const indexCarousel = '/bannerlist'
-export {login,leagueList,indexTeam,indexPlayer,indexCountrylist,indexCitylist,indexNewslist,newslist,newsInfo,indexCarousel}
+const indexCarousel = '/bannerlist';
+export { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCitylist, indexNewslist, newslist, newsInfo, indexCarousel };

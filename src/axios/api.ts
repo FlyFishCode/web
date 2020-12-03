@@ -12,7 +12,7 @@ import { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCityl
 import { myPageInfo, myMatchInfo, myMatchInfoMore, myBattleSelectList, myBattleDataList, myBattleDateList, myTeamList } from './myPage/index';
 
 // 联赛
-import { timeTableList, matchPlayerList, submitMatchTable } from './league/index';
+import { timeTableList, matchPlayerList, submitMatchTable, matchtable } from './league/index';
 
 // 队伍
 import { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList, vipList, historyResult } from '@/axios/team/index';
@@ -22,6 +22,9 @@ import { theBestPlayer, playerList } from '@/axios/player/index';
 
 // 店铺
 import { shopList, shopdetails, historyList, shopTeamList, shopPlayerList } from '@/axios/shop';
+
+// 排名
+import { teamRanking } from '@/axios/ranking';
 
 const baseURL = '/apw';
 
@@ -70,7 +73,7 @@ const getNewUrl = (url: string, data: any = null) => {
 		for (const [key, value] of Object.entries(data)) {
 			src += `${key}=${value}&`;
 		}
-		return src;
+		return src.substring(0, src.length - 1);
 	}
 	return url;
 };
@@ -156,6 +159,10 @@ const timeTableLineHttp = (data: any = null) => {
 const matchPlayerListHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(matchPlayerList, data));
 };
+// 联赛 获取对战列表玩家列表
+const matchtableHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(matchtable, data));
+};
 // 联赛 提交排阵
 const submitMatchTableHttp = (data: Array<any>) => {
 	return Axios.post(submitMatchTable, data);
@@ -227,6 +234,10 @@ const shopTeamListHttp = (data: any = null) => {
 const shopPlayerListHttp = (data: any = null) => {
 	return Axios.post(shopPlayerList, data);
 };
+// 排名 队伍排名
+const teamRankingHttp = (data: any = null) => {
+	return Axios.post(teamRanking, data);
+};
 export {
 	loginHttp,
 	leagueListHttp,
@@ -262,5 +273,7 @@ export {
 	timeTableLineHttp,
 	historyResultHttp,
 	matchPlayerListHttp,
-	submitMatchTableHttp
+	submitMatchTableHttp,
+	matchtableHttp,
+	teamRankingHttp
 };

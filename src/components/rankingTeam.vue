@@ -6,7 +6,7 @@
 					<img class="imgBg" :src="infoData.teamImg" alt="" />
 				</a-col>
 				<a-col :span="12" class="firstClass FONT">
-					<div class="teamName" @click="showTeamInfo">{{ infoData.teamName }}</div>
+					<div class="teamName">{{ infoData.teamName }}</div>
 					<div class="captainBG">
 						<div class="captainBox">
 							<img :src="infoData.captainImg" alt="" />
@@ -15,7 +15,7 @@
 					</div>
 					<div class="disabledClass">
 						<span>{{ infoData.shopName }}</span>
-						<span @click="showDetail" class="icon">
+						<span @click="showDetail(infoData)" class="icon">
 							<EnvironmentOutlined />
 						</span>
 					</div>
@@ -73,6 +73,25 @@
 				</div>
 			</a-col>
 		</a-row>
+		<a-modal v-model:visible="visible" :title="dialogObj.title" centered>
+			<template v-slot:footer>
+				<a-row class="dialogBox">
+					<a-col :span="8">
+						<div class="imgBox">
+							<img :src="dialogObj.img" alt="" />
+						</div>
+					</a-col>
+					<a-col :span="16" class="dialog">
+						<div>{{ `${$t('default.28')}：${dialogObj.shopName}` }}</div>
+						<div>{{ `${$t('default.89')}：${dialogObj.phone}` }}</div>
+						<div>{{ `${$t('default.125')}：${dialogObj.address}` }}</div>
+					</a-col>
+				</a-row>
+				<div class="dialogBtn">
+					<a-button type="primary" @click="handleOk">{{ $t('default.25') }}</a-button>
+				</div>
+			</template>
+		</a-modal>
 	</div>
 </template>
 
@@ -90,6 +109,9 @@ const getNewData = (obj: any) => {
 		shopName: obj.shop.shopName,
 		rating: obj.competitionRating.rating,
 		winProbability: obj.competitionRating.winProbability,
+		shopImg: obj.shop.shopImg,
+		phone: obj.shop.shopPhone,
+		address: obj.shop.shopAddress,
 		resultList: [
 			{
 				title: 'matchResult',
@@ -111,6 +133,14 @@ const getNewData = (obj: any) => {
 };
 
 interface DataProps {
+	visible: boolean;
+	dialogObj: {
+		title: string;
+		img: string;
+		shopName: string;
+		phone: null | string;
+		address: string;
+	};
 	infoData: {
 		resultList: Array<any>;
 	};
@@ -129,14 +159,24 @@ export default {
 		let currentPosition = 0;
 		const currentIndex = ref(0);
 		const data: DataProps = reactive({
+			visible: false,
+			dialogObj: {
+				title: '',
+				img: '',
+				shopName: '',
+				phone: '',
+				address: ''
+			},
 			infoData: {
 				resultList: []
 			},
-			showTeamInfo: () => {
-				console.log('111');
-			},
-			showDetail: () => {
-				console.log('222');
+			showDetail: (obj: any) => {
+				data.dialogObj.title = obj.shopName;
+				data.dialogObj.img = obj.shopImg;
+				data.dialogObj.shopName = obj.shopName;
+				data.dialogObj.phone = obj.shopPhone;
+				data.dialogObj.address = obj.shopAddress;
+				data.visible = true;
 			},
 			leftClick: () => {
 				const box = document.getElementById('myBox') as HTMLElement;
@@ -165,6 +205,9 @@ export default {
 					currentPosition -= 320;
 				}
 				box.style.left = `${currentPosition}px`;
+			},
+			handleOk: () => {
+				console.log(1);
 			}
 		});
 		onMounted(() => {
@@ -227,11 +270,11 @@ export default {
 }
 .disabledClass {
 	color: #eee;
-	cursor: pointer;
 }
 .icon {
 	position: relative;
 	top: 1px;
+	cursor: pointer;
 }
 .title {
 	font-size: 20px;
@@ -327,5 +370,14 @@ export default {
 }
 .captainBox img {
 	width: 100%;
+}
+.imgBox {
+	height: 100px;
+	width: 100px;
+	margin: 0 auto;
+}
+.imgBox img {
+	width: 100%;
+	height: 100%;
 }
 </style>

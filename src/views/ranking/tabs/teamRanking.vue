@@ -58,7 +58,7 @@
 					<div class="tableBox">
 						<div class="tableImgBox"><img :src="record.teamImg" alt="" /></div>
 						<div class="tableMsgCentent">
-							<div @click="entryInfoPage" class="link">{{ record.teamName }}</div>
+							<div @click="entryInfoPage(record.teamId)" class="link">{{ record.teamName }}</div>
 							<div>
 								<span v-if="record.shop">{{ record.shop.shopName }}</span>
 								<span style="cursor:pointer" @click="showDialog(record.shop)">
@@ -87,7 +87,7 @@
 					<div class="tableBox">
 						<div class="tableImgBox"><img :src="dialogObj.img" alt="" /></div>
 						<div class="tableMsgCentent">
-							<div @click="entryInfoPage" class="link">{{ text }}</div>
+							<div @click="entryInfoPage(record.teamId)" class="link">{{ text }}</div>
 							<div>
 								{{ text }}
 								<span style="cursor:pointer" @click="showDialog(text)">
@@ -129,6 +129,7 @@ import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { SettingFilled, AimOutlined, EnvironmentOutlined } from '@ant-design/icons-vue';
 import { indexCountryHttp, indexCityHttp, teamRankingHttp } from '@/axios/api';
 import tramRanking from '@/components/rankingTeam.vue';
+import { useRouter } from 'vue-router';
 export default defineComponent({
 	name: 'teamRanking',
 	components: {
@@ -138,6 +139,7 @@ export default defineComponent({
 		EnvironmentOutlined
 	},
 	setup() {
+		const ROUTER = useRouter();
 		const data = reactive({
 			colSpan: 5,
 			getDate: () => {
@@ -300,6 +302,15 @@ export default defineComponent({
 				data.dialogObj.phone = item.phoneNumber;
 				data.dialogObj.address = item.address;
 				data.visible = true;
+			},
+			entryInfoPage: (id: number) => {
+				ROUTER.push({
+					path: 'teamInfo',
+					query: {
+						activeKey: '1',
+						teamId: id
+					}
+				});
 			},
 			handleOk: () => {
 				console.log(1);

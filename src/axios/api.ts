@@ -12,7 +12,7 @@ import { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCityl
 import { myPageInfo, myMatchInfo, myMatchInfoMore, myBattleSelectList, myBattleDataList, myBattleDateList, myTeamList } from './myPage/index';
 
 // 联赛
-import { timeTableList, matchPlayerList, submitMatchTable, matchtable } from './league/index';
+import { timeTableList, matchPlayerList, submitMatchTable, matchtable, matchTableOptions } from './league/index';
 
 // 队伍
 import { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList, vipList, historyResult } from '@/axios/team/index';
@@ -24,7 +24,7 @@ import { theBestPlayer, playerList } from '@/axios/player/index';
 import { shopList, shopdetails, historyList, shopTeamList, shopPlayerList } from '@/axios/shop';
 
 // 排名
-import { teamRanking } from '@/axios/ranking';
+import { teamRanking, playerRanking, teamSearch, teamDataList, playerSearch, playerDataList } from '@/axios/ranking';
 
 const baseURL = '/apw';
 
@@ -155,6 +155,10 @@ const myBattleDateListHttp = (data: any = null) => {
 const timeTableLineHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(timeTableList, data));
 };
+// 联赛 查看时间
+const matchDateHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(matchTableOptions, data));
+};
 // 联赛 获取对战列表玩家列表
 const matchPlayerListHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(matchPlayerList, data));
@@ -238,6 +242,26 @@ const shopPlayerListHttp = (data: any = null) => {
 const teamRankingHttp = (data: any = null) => {
 	return Axios.post(teamRanking, data);
 };
+// 排名 玩家排名
+const playerRankingHttp = (data: any = null) => {
+	return Axios.post(playerRanking, data);
+};
+// 排名 队伍对比
+const teamDataListHttp = (data: any = null) => {
+	return Axios.post(teamDataList, data);
+};
+// 排名 队伍搜索
+const teamSearchHttp = (data: any = null) => {
+	return Axios.post(teamSearch, data);
+};
+// 排名 玩家搜索
+const playerSearchHttp = (data: any = null) => {
+	return Axios.post(playerSearch, data);
+};
+// 排名 玩家对比
+const playerDataListHttp = (data: any = null) => {
+	return Axios.post(playerDataList, data);
+};
 export {
 	loginHttp,
 	leagueListHttp,
@@ -275,5 +299,11 @@ export {
 	matchPlayerListHttp,
 	submitMatchTableHttp,
 	matchtableHttp,
-	teamRankingHttp
+	teamRankingHttp,
+	matchDateHttp,
+	teamDataListHttp,
+	teamSearchHttp,
+	playerSearchHttp,
+	playerDataListHttp,
+	playerRankingHttp
 };

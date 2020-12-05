@@ -3,31 +3,29 @@
 		<a-row class="rowStyle">
 			<a-col :span="8" class="allBox">
 				<a-col :span="12" class="firstClass">
-					<img class="imgBg" :src="infoData.img" alt="" />
+					<img class="imgBg" :src="infoData.playerImg" alt="" />
 				</a-col>
 				<a-col :span="12" class="firstClass FONT">
-					<div class="teamName" @click="showTeamInfo">{{ infoData.teamName }}</div>
-					<div class="disabledClass">{{ infoData.captainName }}</div>
-					<div class="disabledClass">
-						{{ infoData.place }}
-						<span @click="showDetail" class="icon">
-							<InfoCircleFilled />
+					<div class="teamName" @click="showTeamInfo">{{ infoData.playerName }}</div>
+					<div v-if="infoData.shopName" class="disabledClass">
+						<span>{{ infoData.shopName }}</span>
+						<span @click="showDetail(infoData)" class="icon">
+							<EnvironmentOutlined />
 						</span>
 					</div>
-					<div class="disabledClass">{{ infoData.country }}</div>
 				</a-col>
 			</a-col>
 			<a-col :span="3" class="progressBox">
 				<div class="title">{{ $t('default.184') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="75" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.rating" />
 			</a-col>
 			<a-col :span="3" class="progressBox">
 				<div class="title">{{ $t('default.169') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="75" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.ppd" />
 			</a-col>
 			<a-col :span="3" class="progressBox">
 				<div class="title">{{ $t('default.170') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="75" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.mpr" />
 			</a-col>
 			<!-- // 左侧按钮 -->
 			<a-col :span="7" class="carousel">
@@ -37,7 +35,7 @@
 				<a-col class="center animate__backOutRight" id="playerBox">
 					<div v-for="item in infoData.resultList" :key="item.id" class="centerBox">
 						<div class="matchBox">
-							<div class="title">{{ item.name }}</div>
+							<div class="title">{{ item.title }}</div>
 							<div class="fontStyle">
 								<div class="left">
 									<div>{{ '胜' }}</div>
@@ -73,59 +71,110 @@
 				</div>
 			</a-col>
 		</a-row>
+		<a-modal v-model:visible="visible" :title="dialogObj.title" centered>
+			<template v-slot:footer>
+				<a-row class="dialogBox">
+					<a-col :span="8">
+						<div class="imgBox">
+							<img :src="dialogObj.img" alt="" />
+						</div>
+					</a-col>
+					<a-col :span="16" class="dialog">
+						<div>{{ `${$t('default.28')}：${dialogObj.shopName}` }}</div>
+						<div>{{ `${$t('default.89')}：${dialogObj.phone}` }}</div>
+						<div>{{ `${$t('default.125')}：${dialogObj.address}` }}</div>
+					</a-col>
+				</a-row>
+				<div class="dialogBtn">
+					<a-button type="primary" @click="handleOk">{{ $t('default.25') }}</a-button>
+				</div>
+			</template>
+		</a-modal>
 	</div>
 </template>
 
 <script lang="ts">
 import { useRoute } from 'vue-router';
-import { reactive, toRefs, onMounted, ref } from 'vue';
-import { InfoCircleFilled, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+import { reactive, toRefs, onMounted, ref, watch } from 'vue';
+import { EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+
+const getNewData = (obj: any) => {
+	const data = {
+		playerImg: obj.playerImg,
+		playerName: obj.playerName,
+		shopName: obj.shop.shopName,
+		rating: obj.playerRating.rating,
+		ppd: obj.playerRating.ppd,
+		mpr: obj.playerRating.mpr,
+		shopImg: obj.shop.shopImg,
+		phone: obj.shop.shopPhone,
+		address: obj.shop.shopAddress,
+		resultList: [
+			{
+				title: 'setResult',
+				win: obj.setResult.wins,
+				draw: obj.setResult.draws,
+				lost: obj.setResult.losses,
+				winProbability: Number(obj.setResult.winProbability)
+			}
+			// {
+			// 	title: 'setResult',
+			// 	win: obj.setResult.wins,
+			// 	draw: obj.setResult.draws,
+			// 	lost: obj.setResult.losses,
+			// 	winProbability: Number(obj.setResult.winProbability)
+			// }
+		]
+	};
+	return data;
+};
+interface DataProps {
+	visible: boolean;
+	dialogObj: {
+		title: string;
+		img: string;
+		shopName: string;
+		phone: null | string;
+		address: string;
+	};
+	infoData: {
+		resultList: Array<any>;
+	};
+}
 export default {
 	name: 'rankingPlayer',
 	components: {
-		InfoCircleFilled,
+		EnvironmentOutlined,
 		LeftCircleOutlined,
 		RightCircleOutlined
 	},
-	setup() {
+	props: ['dataObj'],
+	setup(props: any) {
 		const route = useRoute();
 		let currentPosition = 0;
 		const currentIndex = ref(0);
-		const data = reactive({
+		const data: DataProps = reactive({
+			visible: false,
+			dialogObj: {
+				title: '',
+				img: '',
+				shopName: '',
+				phone: '',
+				address: ''
+			},
 			infoData: {
-				img: require('@/assets/1.jpg'),
-				teamName: '上海市消防总队黄埔支队嵩山中队',
-				captainName: '李逍遥',
-				place: '李逍遥',
-				country: '山东',
-				allScore: '总分数',
-				scoreNumber: 59,
-				ppdNumber: 51,
-				mprNumber: 65,
-				resultList: [
-					{
-						id: 1,
-						name: 'Set 结果',
-						win: 15,
-						draw: 20,
-						lost: 25,
-						probability: 80
-					},
-					{
-						id: 1,
-						name: 'Match 结果',
-						win: 15,
-						draw: 20,
-						lost: 25,
-						probability: 80
-					}
-				]
+				resultList: []
 			},
 			showTeamInfo: () => {
 				console.log('111');
 			},
-			showDetail: () => {
-				console.log('222');
+			showDetail: (obj: any) => {
+				data.dialogObj.title = obj.shopName;
+				data.dialogObj.img = obj.playerImg;
+				data.dialogObj.shopName = obj.shopName;
+				data.dialogObj.phone = obj.phone;
+				data.dialogObj.address = obj.address;
+				data.visible = true;
 			},
 			leftClick: () => {
 				const box = document.getElementById('playerBox') as HTMLElement;
@@ -159,6 +208,12 @@ export default {
 		onMounted(() => {
 			console.log(route.query);
 		});
+		watch(
+			() => props.dataObj,
+			(val) => {
+				data.infoData = getNewData(val);
+			}
+		);
 		return {
 			...toRefs(data),
 			currentIndex
@@ -201,6 +256,9 @@ export default {
 }
 .FONT {
 	padding-left: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 .teamName {
 	font-size: 15px;
@@ -299,5 +357,14 @@ export default {
 }
 .isActived {
 	background: red;
+}
+.imgBox {
+	height: 100px;
+	width: 100px;
+	margin: 0 auto;
+}
+.imgBox img {
+	width: 100%;
+	height: 100%;
 }
 </style>

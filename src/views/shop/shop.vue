@@ -10,10 +10,10 @@
 				<div class="center">
 					<div>{{ $t('default.27') }}</div>
 					<div class="selectBox">
-						<a-select class="selectBG" v-model:value="countryId" @change="areaChange" allowClear>
+						<a-select class="selectBG" v-model:value="countryId" @change="countryChange" allowClear>
 							<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 						</a-select>
-						<a-select class="selectBG" v-model:value="areaId" allowClear>
+						<a-select class="selectBG" v-model:value="areaId" @change="areaChange" allowClear>
 							<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 						</a-select>
 						<!-- <a-select v-model:value="city">
@@ -65,10 +65,10 @@
 				<div class="center">
 					<div>{{ $t('default.27') }}</div>
 					<div class="selectBox">
-						<a-select v-model:value="countryId" @change="areaChange" class="selectBox" allowClear>
+						<a-select v-model:value="countryId" @change="countryChange" class="selectBox" allowClear>
 							<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 						</a-select>
-						<a-select v-model:value="areaId" class="selectBox" allowClear>
+						<a-select v-model:value="areaId" class="selectBox" @change="areaChange"  allowClear>
 							<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 						</a-select>
 						<!-- <a-select v-model:value="city">
@@ -423,7 +423,7 @@ export default defineComponent({
 					query: { shopId }
 				});
 			},
-			areaChange: (value) => {
+			countryChange: (value) => {
 				if (!value) return false;
 				indexCityHttp({ countryId: value }).then((res) => {
 					data.cityList = res.data.data;
@@ -435,6 +435,10 @@ export default defineComponent({
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
 					getShopList();
 				});
+			},
+			areaChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getShopList();
 			},
 			entrtPage: (id) => {
 				console.log(id);
@@ -455,7 +459,7 @@ export default defineComponent({
 				if (res.data.data.length) {
 					data.areaList = res.data.data;
 					data.countryId = data.areaList[0]['countryId'];
-					data.areaChange(data.areaList[0]['countryId']);
+					data.countryChange(data.areaList[0]['countryId']);
 				}
 			});
 		};

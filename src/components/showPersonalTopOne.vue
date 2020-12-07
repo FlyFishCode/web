@@ -151,7 +151,6 @@ export default {
 				console.log('222');
 			},
 			leftClick: () => {
-				debugger;
 				const box = document.getElementById('Box') as HTMLElement;
 				if (currentIndex.value === 0) {
 					currentIndex.value = 0;
@@ -161,7 +160,7 @@ export default {
 				if (currentPosition === 0) {
 					currentPosition = 0;
 				} else {
-					currentPosition += 320;
+					currentPosition += 300;
 				}
 				box.style.left = `${currentPosition}px`;
 			},
@@ -172,10 +171,10 @@ export default {
 				} else {
 					currentIndex.value += 1;
 				}
-				if (Math.abs(currentPosition) === (data.infoData.resultList.length - 1) * 320) {
-					currentPosition = -(data.infoData.resultList.length - 1) * 320;
+				if (Math.abs(currentPosition) === (data.infoData.resultList.length - 1) * 300) {
+					currentPosition = -(data.infoData.resultList.length - 1) * 300;
 				} else {
-					currentPosition -= 320;
+					currentPosition -= 300;
 				}
 				box.style.left = `${currentPosition}px`;
 			}
@@ -263,10 +262,10 @@ export default {
 .fontStyle {
 	display: flex;
 	width: 100%;
-	justify-content: space-around;
+	justify-content: center;
 }
 .right {
-	width: 60%;
+	width: 70%;
 }
 .right >>> .ant-progress-text {
 	color: #fff;
@@ -294,12 +293,12 @@ export default {
 }
 .rightIcon {
 	position: absolute;
-	right: 0px;
+	right: 2px;
 	top: calc(50% - 10px);
 }
 .centerBox {
 	width: 280px;
-	margin: 0 20px;
+	margin: 0 8px;
 }
 .animate__backOutRight {
 	transition: all 1s ease;

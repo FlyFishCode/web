@@ -84,12 +84,12 @@
 				</a-col>
 				<a-col :lg="4" :xs="4" class="MlineStyle">{{ $t('default.27') }}</a-col>
 				<a-col :lg="6" :xs="8">
-					<a-select v-model:value="countryId" @change="areaChange" class="selectBox">
+					<a-select v-model:value="countryId" @change="countryChange" class="selectBox">
 						<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 					</a-select>
 				</a-col>
 				<a-col :lg="6" :xs="8">
-					<a-select v-model:value="areaId" class="selectBox">
+					<a-select v-model:value="areaId" @change="areaChange" class="selectBox">
 						<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 					</a-select>
 				</a-col>
@@ -438,9 +438,6 @@ export default defineComponent({
 				const day = new Date().getDay();
 				return `${year}-${month}-${day}`;
 			},
-			countryChange: (value: number) => {
-				console.log(value);
-			},
 			entryRanking: (path: string, value: string) => {
 				Router.push({
 					path,
@@ -489,7 +486,7 @@ export default defineComponent({
 					query: { id }
 				});
 			},
-			areaChange: (value: number) => {
+			countryChange: (value: number) => {
 				indexCityHttp({ countryId: value }).then((res) => {
 					data.cityList = res.data.data;
 					if (data.cityList.length) {
@@ -499,6 +496,9 @@ export default defineComponent({
 					}
 					data.onSearch();
 				});
+			},
+			areaChange: () => {
+				data.onSearch();
 			},
 			showTeamBox: () => {
 				data.isTeam = true;
@@ -546,7 +546,7 @@ export default defineComponent({
 				if (res.data.data.length) {
 					data.areaList = res.data.data;
 					data.countryId = data.areaList[0]['countryId'];
-					data.areaChange(data.areaList[0]['countryId']);
+					data.countryChange(data.areaList[0]['countryId']);
 				}
 			});
 		});

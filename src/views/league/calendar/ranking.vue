@@ -12,13 +12,13 @@
 					</a-row>
 					<a-row>
 						<a-col :lg="3" :xs="12">
-							<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-								<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+							<a-select v-model:value="divisiton" @change="divisitonChange" class="selectBox">
+								<a-select-option v-for="item in divisitonList" :key="item.divisionId" :value="item.divisionId">{{ item.divisionName }}</a-select-option>
 							</a-select>
 						</a-col>
 						<a-col :lg="3" :xs="12">
-							<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-								<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+							<a-select v-model:value="stage" @change="stageChange" class="selectBox">
+								<a-select-option v-for="item in stageList" :key="item.stageId" :value="item.stageId">{{ item.stageName }}</a-select-option>
 							</a-select>
 						</a-col>
 						<a-col :lg="{ span: 3, offset: 15 }" :xs="0">
@@ -124,13 +124,13 @@
 					</a-row>
 					<a-row>
 						<a-col :lg="3" :xs="12">
-							<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-								<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+							<a-select v-model:value="divisiton" @change="divisitonChange" class="selectBox">
+								<a-select-option v-for="item in divisitonList" :key="item.divisionId" :value="item.divisionId">{{ item.divisionName }}</a-select-option>
 							</a-select>
 						</a-col>
 						<a-col :lg="3" :xs="12">
-							<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-								<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+							<a-select v-model:value="stage" @change="stageChange" class="selectBox">
+								<a-select-option v-for="item in stageList" :key="item.stageId" :value="item.stageId">{{ item.stageName }}</a-select-option>
 							</a-select>
 						</a-col>
 						<a-col :lg="2" :offset="4" :xs="0" class="titleStyle"> <ClusterOutlined />{{ $t('default.140') }} </a-col>
@@ -182,7 +182,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import { defineComponent, reactive, toRefs,onMounted } from 'vue';
+import { leagueSelectHttp } from '@/axios/api'
 // import { rowType } from "@/type/interface.d.ts";
 import { useRouter } from 'vue-router';
 import { SettingFilled, ClusterOutlined } from '@ant-design/icons-vue';
@@ -222,6 +223,10 @@ export default defineComponent({
 			stateList: [],
 			matchType: 2020,
 			matchTypeList: [{ value: 2020, label: '2020' }],
+			stage: '',
+			divisiton: '',
+			stageList: [{ stageId: '' }],
+			divisitonList: [{ divisionId: 0, stageList: [] }],
 			columns: [
 				{ title: '队名', dataIndex: 'homaName', key: 'homaName' },
 				{ title: '对战地点', dataIndex: 'homaName', key: 'homaName' },
@@ -391,10 +396,33 @@ export default defineComponent({
 			fastWay: (row: rowType) => {
 				console.log(row);
 			},
+			divisitonChange: (value: number) => {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				data.stageList = data.divisitonList.find((i) => i.divisionId === value)!.stageList;
+				if (data.stageList.length) {
+					data.stage = data.stageList[0].stageId;
+				} else {
+					data.stage = '';
+				}
+			},
+			stageChange: () => {
+				console.log(1);
+			},
 			matchTypeChange: (value: number) => {
 				console.log(value);
 			}
 		});
+		const getSelectList = () => {
+			leagueSelectHttp({ competitionId: 234 }).then((res) => {
+				data.divisitonList = res.data.data;
+				data.divisiton = res.data.data[0].divisionId;
+				data.stageList = res.data.data[0].stageList;
+				data.stage = res.data.data[0].stageList[0].stageId;
+			});
+		};
+		onMounted(() =>{
+			getSelectList()
+		})
 		return {
 			...toRefs(data),
 			paginationProps

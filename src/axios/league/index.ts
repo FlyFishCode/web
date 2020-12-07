@@ -1,3 +1,7 @@
+// 联赛信息
+const leagueInfo = '/competitionoverview';
+// 联赛下拉列表
+const leagueSelect = '/divisionandstage';
 // 联赛 时间表 获取排阵
 const timeTableList = '/getTeamLineU';
 // 联赛 获取对阵信息
@@ -8,4 +12,4 @@ const matchPlayerList = '/getTeamCompetitionPlayer';
 const matchtable = '/getMatchTableFightInfo';
 // 提交排阵玩家
 const submitMatchTable = '/playerIntoLeg';
-export { timeTableList, matchPlayerList, submitMatchTable, matchtable, matchTableOptions };
+export { leagueInfo, leagueSelect, timeTableList, matchPlayerList, submitMatchTable, matchtable, matchTableOptions };

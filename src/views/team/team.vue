@@ -79,13 +79,13 @@
 		<a-row class="rowStyle rowSearchBox">
 			<a-col :lg="2" :xs="6" class="titleStyle"> <BankFilled class="fontIcon" />{{ $t('default.27') }} </a-col>
 			<a-col :lg="3" :xs="6">
-				<a-select v-model:value="countryId" @change="areaChange" class="selectBox">
+				<a-select v-model:value="countryId" @change="countryChange" class="selectBox">
 					<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 				</a-select>
 			</a-col>
 			<a-col :lg="2" :xs="6" class="titleStyle">{{ $t('default.260') }}</a-col>
 			<a-col :lg="3" :xs="6">
-				<a-select v-model:value="areaId" class="selectBox">
+				<a-select v-model:value="areaId" @change="areaChange" class="selectBox">
 					<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 				</a-select>
 			</a-col>
@@ -340,7 +340,7 @@ export default defineComponent({
 				data.dialogObj.address = item.shopAddress;
 				data.visible = true;
 			},
-			areaChange: (value: number) => {
+			countryChange: (value: number) => {
 				indexCityHttp({ countryId: value }).then((res) => {
 					data.cityList = res.data.data;
 					if (data.cityList.length) {
@@ -351,6 +351,10 @@ export default defineComponent({
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
 					getTeamList();
 				});
+			},
+			areaChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTeamList();
 			}
 		});
 		const getBestTeamList = () => {
@@ -403,7 +407,7 @@ export default defineComponent({
 				if (res.data.data.length) {
 					data.areaList = res.data.data;
 					data.countryId = data.areaList[0]['countryId'];
-					data.areaChange(data.areaList[0]['countryId']);
+					data.countryChange(data.areaList[0]['countryId']);
 				}
 			});
 		};

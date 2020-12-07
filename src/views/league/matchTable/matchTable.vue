@@ -93,7 +93,6 @@ export default defineComponent({
 		const instance = getCurrentInstance();
 		console.log(instance);
 		const data = reactive({
-			flag: false,
 			playerList: [],
 			matchTable: {
 				lineupDeadLine: '',
@@ -135,9 +134,10 @@ export default defineComponent({
 				// 3：校验当前set玩家是否可以与上一Set玩家重复
 				// 4：校验玩家Set的最大数/参加游戏类型的最大数
 
+				// 当前排阵所有玩家
+				const allPlayerList = [];
 				// 当前Seg全部玩家
 				const currentSetPlayerList = [];
-
 				// 当前leg全部玩家
 				const currentLegPlayerList = [];
 				const playerObj = {};
@@ -165,6 +165,7 @@ export default defineComponent({
 							}
 						}
 						data.matchTableList[setIndex].legGameList[legIndex].playerList[playerIndex].playerId = '';
+						return;
 					}
 				}
 				// 校验leg人员不能相同
@@ -175,6 +176,7 @@ export default defineComponent({
 						} else {
 							message.warning(`玩家重复`);
 							data.matchTableList[setIndex].legGameList[legIndex].playerList[playerIndex].playerId = '';
+							return;
 						}
 					}
 				});
@@ -197,7 +199,7 @@ export default defineComponent({
 						});
 					}
 					// 如果当前Set设置了，检查上下Set玩家设置
-					if (data.matchTableList[setIndex].memberLimit === 1) {
+					if (data.matchTableList[setIndex].memberLimit === 2) {
 						if (prePlayerList.find((i) => i && i.playerId === value)) {
 							message.warning(instance.parent.ctx.$t('default.267'));
 							data.matchTableList[setIndex].legGameList[legIndex].playerList[playerIndex].playerId = '';
@@ -205,6 +207,60 @@ export default defineComponent({
 						if (nextPlayerList.find((i) => i && i.playerId === value)) {
 							message.warning(instance.parent.ctx.$t('default.268'));
 							data.matchTableList[setIndex].legGameList[legIndex].playerList[playerIndex].playerId = '';
+							return;
+						}
+					}
+				}
+				// 玩家参加mode的最大数
+				if (data.matchTableList[setIndex].entryTypeNum) {
+					const legPlayerObj = {};
+					let list = [];
+					data.matchTableList.forEach((i) => {
+						i.legGameList.forEach((j) => {
+							j.playerList.forEach((k) => {
+								if (k.playerId) {
+									const obj = {
+										playerId: k.playerId,
+										setId: i.setId,
+										mode: i.mode
+									};
+									allPlayerList.push(obj);
+								} else {
+									allPlayerList.push('');
+								}
+							});
+						});
+					});
+					// 玩家参加单人或者多人限制
+					if (data.matchTableList[setIndex].entryType === 1) {
+						for (let i = 0; i < allPlayerList.length; i++) {
+							if (i) {
+								list = allPlayerList.filter((j) => allPlayerList[i].playerId === j.playerId && allPlayerList[i].mode === j.mode && allPlayerList[i].setId !== j.setId);
+								if (list.length + 1 > data.matchTableList[setIndex].entryTypeNum) {
+									message.warning(instance.parent.ctx.$t('default.269') + data.matchTableList[setIndex].entryTypeNum);
+									data.matchTableList[setIndex].legGameList[legIndex].playerList[playerIndex].playerId = '';
+									break;
+								}
+							}
+						}
+					}
+					// 玩家参加最大leg限制
+					if (data.matchTableList[setIndex].entryType === 2) {
+						allPlayerList.forEach((i) => {
+							if (i) {
+								if (!legPlayerObj[i.playerId]) {
+									legPlayerObj[i.playerId] = 1;
+								} else {
+									legPlayerObj[i.playerId] += 1;
+								}
+							}
+						});
+						for (const [key, value] of Object.entries(legPlayerObj)) {
+							if (key && value > data.matchTableList[setIndex].entryTypeNum) {
+								message.warning(instance.parent.ctx.$t('default.270') + data.matchTableList[setIndex].entryTypeNum);
+								data.matchTableList[setIndex].legGameList[legIndex].playerList[playerIndex].playerId = '';
+								return;
+							}
 						}
 					}
 				}
@@ -213,39 +269,34 @@ export default defineComponent({
 				const list = [];
 				data.matchTableList.forEach((i) => {
 					i.legGameList.forEach((j) => {
-						j.playerList.forEach((k, kndex) => {
-							const player = {
-								isHome: 1,
-								playerId: k.homePlayerId,
-								setModeNumber: kndex + 1
-							};
-							const obj = {
-								confrontationInfoId: i.confrontationInfoId,
-								mode: i.mode,
-								setId: i.setId,
-								legId: j.legId,
-								status: type,
-								playerList: [player]
-							};
-							list.push(obj);
-						});
+						const obj = {
+							confrontationInfoId: i.confrontationInfoId,
+							mode: i.mode,
+							setId: i.setId,
+							legId: j.legId,
+							status: type,
+							playerList: j.playerList.map((k, kndex) => {
+								return {
+									isHome: 1,
+									playerId: k.playerId,
+									setModeNumber: kndex + 1
+								};
+							})
+						};
+						list.push(obj);
 					});
 				});
-				if (data.flag) {
-					submitMatchTableHttp(list).then((res) => {
-						let str = '';
-						if (res.data.data) {
-							str = res.data.data;
-						} else {
-							str = res.data.msg;
-						}
-						message.info(str);
+				submitMatchTableHttp(list).then((res) => {
+					let str = '';
+					if (res.data.data) {
+						str = res.data.data;
+					} else {
+						str = res.data.msg;
 						// eslint-disable-next-line @typescript-eslint/no-use-before-define
 						getTeamLineU();
-					});
-				} else {
-					message.warning('选择玩家');
-				}
+					}
+					message.info(str);
+				});
 			}
 		});
 		const reduce = (timer) => {

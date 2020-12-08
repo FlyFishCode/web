@@ -34,6 +34,7 @@
 						<matchTable />
 					</a-tab-pane>
 					<a-tab-pane v-if="AWARD" key="3" tab="AWARD">
+						<!-- <a-tab-pane key="3" tab="AWARD"> -->
 						<award />
 					</a-tab-pane>
 				</a-tabs>
@@ -262,7 +263,7 @@ export default defineComponent({
 			matchTypeList: [
 				{ value: 1, label: 'default.55' },
 				{ value: 2, label: 'default.248' },
-				{ value: 3, label: 'default.272' }
+				{ value: 3, label: 'default.75' }
 			],
 			dialogColumns: [
 				{

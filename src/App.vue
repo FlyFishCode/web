@@ -190,8 +190,8 @@ export default defineComponent({
 	color: #1890ff;
 }
 .sortColBox {
-	height: 40px;
-	line-height: 40px;
+	height: 32px;
+	line-height: 32px;
 }
 .overStyle {
 	overflow: hidden;

@@ -17,7 +17,7 @@
 							</a-select>
 						</a-col>
 						<a-col :lg="3" :xs="12">
-							<a-select v-model:value="stage" @change="stageChange" class="selectBox">
+							<a-select v-model:value="stageId" @change="stageChange" class="selectBox">
 								<a-select-option v-for="item in stageList" :key="item.stageId" :value="item.stageId">{{ item.stageName }}</a-select-option>
 							</a-select>
 						</a-col>
@@ -39,39 +39,22 @@
 						</a-col>
 					</a-row>
 					<a-row>
-						<a-table class="inPhoneTableDisplay" :pagination="false" :data-source="tableList" bordered>
-							<a-table-column key="lastName" title="排行" data-index="lastName" />
-							<a-table-column-group>
-								<template v-slot:title>队伍</template>
-								<a-table-column key="lastName" title="队名" data-index="awayName">
-									<template v-slot="{ record: row }">
-										<img class="tableImg" :src="row.img" alt="" />
-										<a @click="fastWay(row)">{{ row.homaName }}</a>
-									</template>
-								</a-table-column>
-								<a-table-column key="firstName" title="RATING" data-index="firstName" />
-								<a-table-column key="lastName" title="PPD" data-index="lastName" />
-								<a-table-column key="lastName" title="MPR" data-index="lastName" />
-							</a-table-column-group>
-							<a-table-column key="lastName" title="总积分" data-index="lastName" />
-							<a-table-column-group>
-								<template v-slot:title>Match</template>
-								<a-table-column key="firstName" title="胜" data-index="firstName" />
-								<a-table-column key="firstName" title="败" data-index="firstName" />
-								<a-table-column key="lastName" title="和" data-index="lastName" />
-								<a-table-column key="lastName" title="胜率" data-index="lastName" />
-							</a-table-column-group>
-							<a-table-column-group>
-								<template v-slot:title>Set</template>
-								<a-table-column key="firstName" title="胜" data-index="firstName" />
-								<a-table-column key="firstName" title="败" data-index="firstName" />
-								<a-table-column key="lastName" title="和" data-index="lastName" />
-								<a-table-column key="lastName" title="胜率" data-index="lastName" />
-							</a-table-column-group>
-							<a-table-column key="lastName" title="罚分" data-index="lastName" />
+						<a-table class="inPhoneTableDisplay" :columns="leagueColumns" :data-source="leagueTableList" :pagination="false" rowkey="id" :scroll="{ x: 300 }" bordered>
+							<template #index="{ index }">
+								<div>{{ index + 1 }}</div>
+							</template>
+							<template #player="{ record }">
+								<div class="tableStyle">
+									<img class="tableImg" :src="record.playerImg" alt="" />
+									<div>
+										<div>{{ record.playerName }}</div>
+										<div v-if="record.shop && record.shop.shopName" class="link" @click="fastWay(record)">{{ record.shop.shopName }}</div>
+									</div>
+								</div>
+							</template>
 						</a-table>
 						<!-- 移动端显示 -->
-						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 300 }" :columns="LeagueColumns" :data-source="tableList" bordered>
+						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 300 }" :columns="leagueColumns" :data-source="tableList" rowkey="id" bordered>
 							<template v-slot:teamName="{ record }">
 								<img class="tableImg" :src="record.img" alt="" />
 								<a @click="fastWay(row)">{{ record.address }}</a>
@@ -85,31 +68,22 @@
 						</a-col>
 					</a-row>
 					<a-row>
-						<a-table class="inPhoneTableDisplay" :pagination="false" :data-source="tableList" bordered>
-							<a-table-column key="lastName" title="排行" data-index="lastName" />
-							<a-table-column key="lastName" title="队伍" data-index="awayName">
-								<template v-slot="{ record: row }">
-									<img class="tableImg" :src="row.img" alt="" />
-									<a @click="fastWay(row)">{{ row.homaName }}</a>
-								</template>
-							</a-table-column>
-							<a-table-column key="firstName" title="LT" data-index="firstName" />
-							<a-table-column key="lastName" title="HAT" data-index="lastName" />
-							<a-table-column key="lastName" title="HT" data-index="lastName" />
-							<a-table-column key="lastName" title="HT.OFF" data-index="lastName" />
-							<a-table-column key="firstName" title="LT.OFF" data-index="firstName" />
-							<a-table-column key="firstName" title="BED" data-index="firstName" />
-							<a-table-column key="lastName" title="180" data-index="lastName" />
-							<a-table-column key="lastName" title="EYE" data-index="lastName" />
-							<a-table-column key="firstName" title="5M" data-index="firstName" />
-							<a-table-column key="firstName" title="6M" data-index="firstName" />
-							<a-table-column key="lastName" title="7M" data-index="lastName" />
-							<a-table-column key="lastName" title="8M" data-index="lastName" />
-							<a-table-column key="lastName" title="9M" data-index="lastName" />
-							<a-table-column key="lastName" title="WH" data-index="lastName" />
+						<a-table class="inPhoneTableDisplay" :scroll="{ x: 1200 }" :columns="rewardColumns" :data-source="rewardTableList" :pagination="false" rowkey="id" bordered>
+							<template #index="{ index }">
+								<div>{{ index + 1 }}</div>
+							</template>
+							<template #player="{ record }">
+								<div class="tableStyle">
+									<img class="tableImg" :src="record.playerImg" alt="" />
+									<div>
+										<div>{{ record.playerName }}</div>
+										<div v-if="record.shop && record.shop.shopName" class="link" @click="fastWay(record)">{{ record.shop.shopName }}</div>
+									</div>
+								</div>
+							</template>
 						</a-table>
 						<!-- 移动端显示 -->
-						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 400 }" :columns="historyColumns" :data-source="tableList" bordered>
+						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 400 }" :columns="historyColumns" rowkey="id" :data-source="tableList" bordered>
 							<template v-slot:teamName="{ record }">
 								<img class="tableImg" :src="record.img" alt="" />
 								<a @click="fastWay(row)">{{ record.address }}</a>
@@ -129,14 +103,14 @@
 							</a-select>
 						</a-col>
 						<a-col :lg="3" :xs="12">
-							<a-select v-model:value="stage" @change="stageChange" class="selectBox">
+							<a-select v-model:value="stageId" @change="stageChange" class="selectBox">
 								<a-select-option v-for="item in stageList" :key="item.stageId" :value="item.stageId">{{ item.stageName }}</a-select-option>
 							</a-select>
 						</a-col>
 						<a-col :lg="2" :offset="4" :xs="0" class="titleStyle"> <ClusterOutlined />{{ $t('default.140') }} </a-col>
 						<a-col :lg="3" :xs="0">
-							<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-								<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+							<a-select v-model:value="leagueId" @change="leagueChange" class="selectBox">
+								<a-select-option v-for="item in leagueList" :key="item.teamId" :value="item.teamId">{{ item.teamName }}</a-select-option>
 							</a-select>
 						</a-col>
 						<a-col :lg="3" :offset="6" :xs="0">
@@ -145,7 +119,7 @@
 					</a-row>
 					<!-- 第一名展示信息 -->
 					<a-row class="inPhoneTableDisplay">
-						<showPersonal />
+						<showPersonal :playerObj="playerObj" />
 					</a-row>
 					<a-row class="rowStyle">
 						<a-col :lg="2" :xs="8">
@@ -157,42 +131,52 @@
 					</a-row>
 
 					<a-row>
-						<a-table :columns="playerColumns" :data-source="tableList" bordered :scroll="{ x: 1300 }" :pagination="paginationProps">
-							<template #action="{ record:row }">
-								<a>{{ row.name }}</a>
+						<a-table :columns="playerColumns" :data-source="playerTableList" rowkey="playerId" :scroll="{ x: 1300 }" :pagination="false" bordered>
+							<template #index="{ index }">
+								<div>{{ index + 1 }}</div>
 							</template>
-							<template #player="{ record:row }">
+							<template #player="{ record }">
 								<div class="tableStyle">
+									<img class="tableImg" :src="record.playerImg" alt="" />
 									<div>
-										<img class="tableImg" :src="row.img" alt="" />
-									</div>
-									<div>
-										<div>{{ row.name }}</div>
-										<a @click="fastWay(row)">{{ row.address }}</a>
+										<div>{{ record.playerName }}</div>
+										<div class="link" @click="showDialog">{{ record.shop.shopName }}</div>
 									</div>
 								</div>
 							</template>
 						</a-table>
 					</a-row>
+					<div class="pagination">
+						<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @change="pageChange" />
+					</div>
 				</a-tab-pane>
 			</a-tabs>
+			<dialogVue :propsVisible="visible" :teamId="teamId" @dialogVisible="dialogVisible" />
 			<entryList :entryPath="entryPath" />
 		</a-row>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs,onMounted } from 'vue';
-import { leagueSelectHttp } from '@/axios/api'
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { leagueSelectHttp, rankingPlayerHttp } from '@/axios/api';
 // import { rowType } from "@/type/interface.d.ts";
 import { useRouter } from 'vue-router';
 import { SettingFilled, ClusterOutlined } from '@ant-design/icons-vue';
 import showTeam from '@/components/showTeamTopOne.vue';
 import showPersonal from '@/components/showPersonalTopOne.vue';
 import entryList from '@/components/common/entryList.vue';
+import dialogVue from '@/components/common/dialogVue.vue';
 // eslint-disable-next-line @typescript-eslint/class-name-casing
 interface rowType {
 	[x: string]: string | number;
+}
+interface DataProps {
+	stageId: string | number;
+	league: string | number;
+	stageList: [{ stageId: string; teamList: Array<any> }];
+	leagueList: [{ teamId: string }];
+	divisitonList: [{ divisionId: string; stageList: Array<any> }];
 }
 export default defineComponent({
 	name: 'ranking',
@@ -200,33 +184,34 @@ export default defineComponent({
 		SettingFilled,
 		ClusterOutlined,
 		showTeam,
+		dialogVue,
 		showPersonal,
 		entryList
 	},
 	setup() {
 		const Router = useRouter();
-		const paginationProps = {
-			showQuickJumper: false,
-			pageSize: 10,
-			current: 1,
-			total: 50,
-			onShowSizeChange: (current: number, pageSize: number) => {
-				console.log(pageSize, current);
-			},
-			onChange: (current: number) => {
-				console.log(current);
-			}
-		};
 		const data = reactive({
 			entryPath: '/league',
+			visible: false,
+			isChange: false,
+			total: 1,
+			pageNum: 1,
+			pageSize: 10,
 			monthList: [],
 			stateList: [],
-			matchType: 2020,
-			matchTypeList: [{ value: 2020, label: '2020' }],
-			stage: '',
+			teamId: 1,
+			stageId: '',
 			divisiton: '',
-			stageList: [{ stageId: '' }],
-			divisitonList: [{ divisionId: 0, stageList: [] }],
+			leagueId: '',
+			leagueList: [{ teamId: '' }],
+			stageList: [{ stageId: '', teamList: [] }],
+			divisitonList: [{ divisionId: '', stageList: [] }],
+			playerObj: {
+				teamId: 0
+			},
+			dialogObj: {
+				img: require('@/assets/1.jpg')
+			},
 			columns: [
 				{ title: '队名', dataIndex: 'homaName', key: 'homaName' },
 				{ title: '对战地点', dataIndex: 'homaName', key: 'homaName' },
@@ -243,51 +228,74 @@ export default defineComponent({
 				{ title: '分配信息', dataIndex: 'data', key: 'homaName' },
 				{ title: '比赛日程', dataIndex: 'data', key: 'homaName' }
 			],
-			LeagueColumns: [
+			leagueColumns: [
 				{
 					title: '排行',
 					width: 65,
-					dataIndex: 'name',
-					key: 'name',
 					fixed: 'left',
+					dataIndex: 'name',
 					slots: { customRender: 'action' }
 				},
 				{
-					title: '队名',
-					width: 140,
-					dataIndex: 'name',
-					key: 'name',
+					title: '队伍',
 					fixed: 'left',
-					slots: { customRender: 'teamName' }
+					dataIndex: 'name',
+					children: [
+						{ title: '队名', dataIndex: 'address', width: 200 },
+						{ title: 'Rating', dataIndex: 'address', width: 75 },
+						{ title: 'PPD', dataIndex: 'address', width: 70 },
+						{ title: 'MPR', dataIndex: 'address', width: 70 }
+					]
 				},
-				{ title: 'Rating', width: 80, dataIndex: 'name', key: 'name' },
-				{ title: 'PPD', width: 80, dataIndex: 'name', key: 'name' },
-				{ title: 'MPR', width: 80, dataIndex: 'name', key: 'name' },
-				{ title: '总积分', width: 80, dataIndex: 'name', key: 'name' },
+				{ title: '总积分', width: 80, dataIndex: 'name' },
 				{
 					title: 'Match',
 					dataIndex: 'name',
-					key: 'name',
 					children: [
-						{ title: '胜', dataIndex: 'address', width: 80, key: '7' },
-						{ title: '和', dataIndex: 'address', width: 80, key: '8' },
-						{ title: '败', dataIndex: 'address', width: 80, key: '9' },
-						{ title: '胜率', dataIndex: 'address', width: 80, key: '6' }
+						{ title: '胜', dataIndex: 'address', width: 60 },
+						{ title: '和', dataIndex: 'address', width: 60 },
+						{ title: '败', dataIndex: 'address', width: 60 },
+						{ title: '胜率', dataIndex: 'address', width: 70 }
 					]
 				},
 				{
 					title: 'Set',
 					dataIndex: 'name',
-					key: 'name',
 					children: [
-						{ title: '胜', dataIndex: 'address', width: 80, key: '7' },
-						{ title: '和', dataIndex: 'address', width: 80, key: '8' },
-						{ title: '败', dataIndex: 'address', width: 80, key: '9' },
-						{ title: '胜率', dataIndex: 'address', width: 80, key: '6' }
+						{ title: '胜', dataIndex: 'address', width: 60 },
+						{ title: '和', dataIndex: 'address', width: 60 },
+						{ title: '败', dataIndex: 'address', width: 60 },
+						{ title: '胜率', dataIndex: 'address', width: 70 }
 					]
 				},
-				{ title: '罚分', dataIndex: 'address', width: 80, key: '6' }
+				{ title: '罚分', dataIndex: 'address', width: 70 }
 			],
+			leagueTableList: [],
+			rewardColumns: [
+				{ title: '排行', dataIndex: 'homeScore', width: 65, key: 'homaName', fixed: 'left' },
+				{
+					title: '队伍',
+					width: 200,
+					dataIndex: 'name',
+					fixed: 'left',
+					slots: { customRender: 'teamName' }
+				},
+				{ title: 'LT', dataIndex: 'homeScore', width: 60, key: 'homaName' },
+				{ title: 'HAT', dataIndex: 'homeScore', width: 70, key: 'homaName' },
+				{ title: 'HT', dataIndex: 'homeScore', width: 60, key: 'homaName' },
+				{ title: 'HT.OFF', dataIndex: 'homeScore', width: 85, key: 'homaName' },
+				{ title: 'LT.OFF', dataIndex: 'homeScore', width: 85, key: 'homaName' },
+				{ title: 'BED', dataIndex: 'homeScore', width: 70, key: 'homaName' },
+				{ title: '180', dataIndex: 'homeScore', width: 70, key: 'homaName' },
+				{ title: 'EYE', dataIndex: 'homeScore', width: 70, key: 'homaName' },
+				{ title: '5M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
+				{ title: '6M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
+				{ title: '7M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
+				{ title: '8M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
+				{ title: '9M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
+				{ title: 'WH', dataIndex: 'homeScore', width: 60, key: 'homaName' }
+			],
+			rewardTableList: [],
 			historyColumns: [
 				{
 					title: '排行',
@@ -323,64 +331,77 @@ export default defineComponent({
 			playerColumns: [
 				{
 					title: '排行',
-					width: 50,
+					width: 70,
 					dataIndex: 'name',
-					key: 'name',
 					fixed: 'left',
-					slots: { customRender: 'action' }
+					slots: { customRender: 'index' }
 				},
 				{
 					title: '玩家',
-					width: 180,
-					dataIndex: 'age',
-					key: 'age',
+					width: 200,
+					dataIndex: 'playerName',
 					fixed: 'left',
 					slots: { customRender: 'player' }
 				},
-				{ title: 'Rating', dataIndex: 'address', width: 80, key: '1' },
-				{ title: 'PPD', dataIndex: 'address', width: 80, key: '2' },
-				{ title: 'MPR', dataIndex: 'address', width: 80, key: '3' },
+				{ title: 'Rating', dataIndex: 'playerRating.rating', width: 80 },
+				{ title: 'PPD', dataIndex: 'playerRating.ppd', width: 80 },
+				{ title: 'MPR', dataIndex: 'playerRating.mpr', width: 80 },
 				{
 					title: 'Set',
 					key: '4',
 					children: [
-						{ title: 'Total', dataIndex: 'address', width: 80, key: '5' },
-						{ title: '胜率', dataIndex: 'address', width: 80, key: '6' },
-						{ title: '胜', dataIndex: 'address', width: 80, key: '7' },
-						{ title: '和', dataIndex: 'address', width: 80, key: '8' },
-						{ title: '败', dataIndex: 'address', width: 80, key: '9' }
+						{ title: 'Total', dataIndex: 'setResult.total', width: 80 },
+						{ title: '胜率', dataIndex: 'setResult.winProbability', width: 80 },
+						{ title: '胜', dataIndex: 'setResult.wins', width: 80 },
+						{ title: '和', dataIndex: 'setResult.draws', width: 80 },
+						{ title: '败', dataIndex: 'setResult.losses', width: 80 }
 					]
 				},
-				{ title: 'LA', dataIndex: 'address', width: 80, key: '10' },
-				{ title: 'HAT', dataIndex: 'address', width: 80, key: '11' },
-				{ title: 'HT.OFF', dataIndex: 'address', width: 80, key: '12' },
-				{ title: 'LT.OFF', dataIndex: 'address', width: 80, key: '13' },
-				{ title: 'BED', dataIndex: 'address', width: 60, key: '14' },
-				{ title: '180', dataIndex: 'address', width: 60, key: '15' },
-				{ title: 'EYE', dataIndex: 'address', width: 60, key: '16' },
-				{ title: '5M', dataIndex: 'address', width: 60, key: '17' },
-				{ title: '6M', dataIndex: 'address', width: 60, key: '18' },
-				{ title: '7M', dataIndex: 'address', width: 60, key: '19' },
-				{ title: '8M', dataIndex: 'address', width: 60, key: '20' },
-				{ title: '9M', dataIndex: 'address', width: 60, key: '21' },
-				{ title: 'WH', dataIndex: 'address', width: 60, key: '22' }
+				{ title: 'LT', dataIndex: 'playerResultDetails.lowTon', width: 80 },
+				{ title: 'HAT', dataIndex: 'playerResultDetails.hatTrick', width: 80 },
+				{ title: 'HT.OFF', dataIndex: 'playerResultDetails.highTonOut', width: 80 },
+				{ title: 'LT.OFF', dataIndex: 'playerResultDetails.lowTonOut', width: 80 },
+				{ title: 'BED', dataIndex: 'playerResultDetails.threeInBed', width: 60 },
+				{ title: '180', dataIndex: 'playerResultDetails.ton80', width: 60 },
+				{ title: 'EYE', dataIndex: 'playerResultDetails.threeInBlack	', width: 60 },
+				{ title: '5M', dataIndex: 'playerResultDetails.fiveMarks', width: 60 },
+				{ title: '6M', dataIndex: 'playerResultDetails.sixMarks', width: 60 },
+				{ title: '7M', dataIndex: 'playerResultDetails.sevenMarks', width: 60 },
+				{ title: '8M', dataIndex: 'playerResultDetails.eightMarks', width: 60 },
+				{ title: '9M', dataIndex: 'playerResultDetails.nineMarks', width: 60 },
+				{ title: 'WH', dataIndex: 'playerResultDetails.whiteHorse', width: 60 }
 			],
+			playerTableList: [{ playerId: 0 }],
 			tableList: [
 				{
-					key: '1',
-					name: 'John Brown',
+					id: 1,
+					name: 'aaaaaaaaaaaaaaaaaaaaaaa',
 					age: 32,
 					img: require('@/assets/1.jpg'),
 					address: '晾挂个总队'
 				},
 				{
-					key: '2',
-					name: 'Jim Green',
+					id: 2,
+					name: 'vbbbbbbbbbbbbbbbbbbbbbb',
+					age: 40,
+					img: require('@/assets/1.jpg'),
+					address: '啊色彩总队'
+				},
+				{
+					id: 3,
+					name: 'vvvvvvvvvvvvvvvvvvvvvvvvv',
 					age: 40,
 					img: require('@/assets/1.jpg'),
 					address: '啊色彩总队'
 				}
 			],
+			showDialog: (value: number) => {
+				data.teamId = value;
+				data.visible = true;
+			},
+			dialogVisible: (value: boolean) => {
+				data.visible = value;
+			},
 			showMatchTable: () => {
 				console.log('1111');
 			},
@@ -396,36 +417,76 @@ export default defineComponent({
 			fastWay: (row: rowType) => {
 				console.log(row);
 			},
-			divisitonChange: (value: number) => {
+			divisitonChange: (value: any) => {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				data.stageList = data.divisitonList.find((i) => i.divisionId === value)!.stageList;
 				if (data.stageList.length) {
-					data.stage = data.stageList[0].stageId;
+					data.stageId = data.stageList[0].stageId;
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					data.leagueList = data.stageList.find((i) => i.stageId === data.stageId)!.teamList;
+					if (data.leagueList.length) {
+						data.leagueId = data.leagueList[0].teamId;
+					}
 				} else {
-					data.stage = '';
+					data.stageId = '';
+					data.leagueList = [];
+					data.leagueId = '';
 				}
 			},
-			stageChange: () => {
-				console.log(1);
+			stageChange: (value: any) => {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				data.leagueList = data.stageList.find((i) => i.stageId === value)!.teamList;
+				if (data.leagueList.length) {
+					data.leagueId = data.leagueList[0].teamId;
+				} else {
+					data.leagueId = '';
+				}
+				data.leagueChange();
 			},
-			matchTypeChange: (value: number) => {
-				console.log(value);
+			leagueChange: () => {
+				data.isChange = true;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getPlayerList();
+			},
+			pageChange: () => {
+				console.log(1);
 			}
 		});
+		const getPlayerList = () => {
+			const obj = {
+				stageId: 1082 || data.stageId,
+				teamId: 78 || data.leagueId,
+				pageIndex: data.pageNum,
+				pageSize: data.pageSize
+			};
+			rankingPlayerHttp(obj).then((res) => {
+				data.playerTableList = res.data.data.list;
+				if (res.data.data.list.length) {
+					data.isChange = false;
+					data.playerObj = res.data.data.list[0];
+				}
+			});
+		};
 		const getSelectList = () => {
-			leagueSelectHttp({ competitionId: 234 }).then((res) => {
+			const obj = {
+				competitionId: 234,
+				teamFlag: true
+			};
+			leagueSelectHttp(obj).then((res) => {
 				data.divisitonList = res.data.data;
 				data.divisiton = res.data.data[0].divisionId;
 				data.stageList = res.data.data[0].stageList;
-				data.stage = res.data.data[0].stageList[0].stageId;
+				data.stageId = res.data.data[0].stageList[0].stageId;
+				data.leagueList = res.data.data[0].stageList[0].teamList;
+				data.leagueId = res.data.data[0].stageList[0].teamList[0].teamId;
+				getPlayerList();
 			});
 		};
-		onMounted(() =>{
-			getSelectList()
-		})
+		onMounted(() => {
+			getSelectList();
+		});
 		return {
-			...toRefs(data),
-			paginationProps
+			...toRefs(data)
 		};
 	}
 });
@@ -458,8 +519,13 @@ export default defineComponent({
 .tableStyle {
 	display: flex;
 	justify-content: space-around;
+	align-items: center;
 }
 .showPhoneTable {
 	display: none;
+}
+.teamBox {
+	display: flex;
+	align-items: center;
 }
 </style>

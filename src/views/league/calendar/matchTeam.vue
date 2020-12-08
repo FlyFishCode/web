@@ -11,31 +11,43 @@
 				</a-select>
 			</a-col>
 			<a-col :lg="3" :xs="8">
-				<a-select v-model:value="stage" @change="stageChange" class="selectBox">
+				<a-select v-model:value="stageId" @change="stageChange" class="selectBox">
 					<a-select-option v-for="item in stageList" :key="item.stageId" :value="item.stageId">{{ item.stageName }}</a-select-option>
 				</a-select>
 			</a-col>
-			<a-col :lg="{ span: 2, offset: 8 }" :xs="0" class="titleStyle"> <SearchOutlined class="fontIcon" />{{ $t('default.140') }} </a-col>
+			<a-col :lg="{ span: 2, offset: 2 }" :xs="0" class="sortColBox">
+				<div class="linkIcon">
+					<span v-if="teamNameSort" @click="changeSortPlayer(1)"> {{ $t('default.168') }}<DownOutlined /> </span>
+					<span v-else @click="changeSortPlayer(2)"> {{ $t('default.168') }}<UpOutlined /> </span>
+				</div>
+			</a-col>
+			<a-col :lg="2" :xs="0" class="sortColBox">
+				<div class="linkIcon">
+					<span v-if="teamPlaceSort" @click="changeSortPlace(3)"> {{ $t('default.227') }}<DownOutlined /> </span>
+					<span v-else @click="changeSortPlace(4)"> {{ $t('default.227') }}<UpOutlined /> </span>
+				</div>
+			</a-col>
+			<a-col :lg="{ span: 2, offset: 2 }" :xs="0" class="titleStyle"> <SearchOutlined class="fontIcon" />{{ $t('default.140') }} </a-col>
 			<a-col :lg="3" :xs="8">
-				<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
+				<a-select v-model:value="matchType" class="selectBox">
 					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
 				</a-select>
 			</a-col>
 			<a-col :lg="5" :xs="0">
-				<a-input-search v-model:value="currentValue" :enter-button="$t('default.16')" size="default" @search="onSearch" />
+				<a-input-search v-model:value="inputValue" :enter-button="$t('default.16')" size="default" @search="onSearch" />
 			</a-col>
 		</a-row>
 		<!-- 表格 -->
 		<a-row class="inPhoneTableDisplay">
-			<a-table :columns="columns" :data-source="tableList" rowKey="teamId" bordered>
+			<a-table :columns="columns" :data-source="tableList" :pagination="false" rowKey="teamId" bordered>
 				<template v-slot:teamName="{ record }">
 					<img class="tableImg" :src="record.img" alt="" />
-					<a @click="showInfo(record)">{{ record.homaName }}</a>
+					<a @click="showInfo(record)">{{ record.teamName }}</a>
 				</template>
 				<template v-slot:addres="{ record }">
 					<div class="addres">
-						<div>{{ record.addres }}</div>
-						<div class="icon" @click="showDialog(record)"><EnvironmentOutlined /></div>
+						<div v-if="record.shop">{{ record.shop.shopAddress }}</div>
+						<div v-if="record.shop && record.shop.shopAddress" class="icon" @click="showDialog(record.shop)"><EnvironmentOutlined /></div>
 					</div>
 				</template>
 				<template v-slot:matchTable="{ record }">
@@ -71,6 +83,9 @@
 				<a-col> <UserOutlined />{{ item.homeScore }} </a-col>
 			</a-col>
 		</a-row>
+		<div class="pagination">
+			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @change="pageChange" />
+		</div>
 		<a-modal v-model:visible="visible" :title="dialogObj.title" centered>
 			<template v-slot:footer>
 				<a-row class="rowStyle dialogBox">
@@ -90,6 +105,7 @@
 				</div>
 			</template>
 		</a-modal>
+		<dialogVue :propsVisible="visible" :teamId="teamId" @dialogVisible="dialogVisible" />
 		<entryList :entryPath="entryPath" />
 	</div>
 </template>
@@ -98,8 +114,9 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import entryList from '@/components/common/entryList.vue';
 import { useRouter } from 'vue-router';
-import { SearchOutlined, SettingFilled, UserOutlined, EnvironmentOutlined } from '@ant-design/icons-vue';
-import { leagueSelectHttp } from '@/axios/api';
+import { SearchOutlined, SettingFilled, UserOutlined, EnvironmentOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
+import { leagueSelectHttp, leagueTeamHttp } from '@/axios/api';
+import dialogVue from '@/components/common/dialogVue.vue';
 // eslint-disable-next-line @typescript-eslint/class-name-casing
 interface rowType {
 	[x: string]: string | number;
@@ -111,79 +128,77 @@ export default defineComponent({
 		SettingFilled,
 		UserOutlined,
 		EnvironmentOutlined,
-		entryList
+		entryList,
+		DownOutlined,
+		UpOutlined,
+		dialogVue
 	},
 	setup() {
-		const Router = useRouter();
+		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/league',
 			visible: false,
-			monthList: [],
-			stateList: [],
-			currentValue: '',
-			stage: '',
-			matchType: 1,
+			teamNameSort: true,
+			teamPlaceSort: true,
+			teamId: 1,
+			sort: 1,
+			total: 1,
+			pageNum: 1,
+			pageSize: 10,
+			inputValue: '',
+			stageId: '',
+			matchType: 'teamName',
 			divisiton: '',
-			stageList: [{ stageId: '' }],
-			divisitonList: [{ divisionId: 0, stageList: [] }],
+			stageList: [{ stageId: '', stageName: '' }],
+			divisitonList: [{ divisionId: '', divisionName: '', stageList: [] }],
 			matchTypeList: [
-				{ value: 1, label: 'default.55' },
-				{ value: 2, label: 'default.248' },
-				{ value: 3, label: 'default.94' }
+				{ value: 'teamName', label: 'default.55' },
+				{ value: 'captainName', label: 'default.248' },
+				{ value: 'shopName', label: 'default.94' }
 			],
 			columns: [
 				{
 					title: '队名',
-					dataIndex: 'name',
-					key: 'name',
+					dataIndex: 'teamName',
 					slots: { customRender: 'teamName' }
 				},
 				{
 					title: '对战地点',
 					dataIndex: 'age',
-					key: 'age',
 					slots: { customRender: 'addres' }
 				},
 				{
 					title: '队长',
-					dataIndex: 'address',
-					key: 'address'
+					dataIndex: 'captainName'
 				},
 				{
 					title: '玩家人数',
-					key: 'tags',
-					dataIndex: 'tags',
+					dataIndex: 'playerCount',
 					slots: { customRender: 'tags' }
 				},
 				{
 					title: 'CRITERIA RATING',
-					key: 'action',
 					children: [
 						{
 							title: 'RATING',
-							key: 'tags',
-							dataIndex: 'tags'
+							dataIndex: 'competitionRating.rating'
 						},
 						{
 							title: 'PPD',
-							key: 'tags',
-							dataIndex: 'tags'
+							dataIndex: 'competitionRating.ppd'
 						},
 						{
 							title: 'MPR',
-							key: 'tags',
-							dataIndex: 'tags'
+							dataIndex: 'competitionRating.mpr'
 						}
 					]
 				},
 				{
 					title: 'ALLOCATION INFORMATION',
-					key: 'tags',
-					dataIndex: 'tags'
+					dataIndex: 'selectData'
 				},
 				{
 					title: '对战时间表',
-					key: 'tags',
 					dataIndex: 'tags',
 					slots: { customRender: 'matchTable' }
 				}
@@ -215,40 +230,85 @@ export default defineComponent({
 				data.dialogObj.address = row.shopAddress;
 				data.visible = true;
 			},
-			showInfo: (row: any) => {
-				console.log(row);
+			showInfo: (value: number) => {
+				data.teamId = value;
+				data.visible = true;
+			},
+			dialogVisible: (value: boolean) => {
+				data.visible = value;
+			},
+			pageChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTeamList();
+			},
+			changeSortPlayer: (type: number) => {
+				data.sort = type;
+				data.teamNameSort = !data.teamNameSort;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTeamList();
+			},
+			changeSortPlace: (type: number) => {
+				data.sort = type;
+				data.teamPlaceSort = !data.teamPlaceSort;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTeamList();
 			},
 			fastWay: (row: any) => {
 				console.log(row);
 			},
-			onSearch: () => {
-				console.log('1');
-			},
 			Gohistory: () => {
-				Router.push('/result');
+				ROUTER.push('/result');
 			},
-			divisitonChange: (value: number) => {
+			divisitonChange: (value: any) => {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				data.stageList = data.divisitonList.find((i) => i.divisionId === value)!.stageList;
 				if (data.stageList.length) {
-					data.stage = data.stageList[0].stageId;
+					data.stageId = data.stageList[0].stageId;
 				} else {
-					data.stage = '';
+					data.stageId = '';
 				}
 			},
-			stageChange: () => {
-				console.log(1);
+			onSearch: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTeamList();
 			},
-			matchTypeChange: () => {
-				console.log(1);
+			stageChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTeamList();
 			}
 		});
+		const getTeamList = () => {
+			const obj = {
+				sort: data.sort,
+				stageId: data.stageId,
+				pageIndex: data.pageNum,
+				pageSize: data.pageSize,
+				[data.matchType]: data.inputValue
+			};
+			leagueTeamHttp(obj).then((res) => {
+				let str = ``;
+				const div = data.divisitonList.find((i) => i.divisionId === data.divisiton);
+				const stage = data.stageList.find((i) => i.stageId === data.stageId);
+				if (div) {
+					str += div.divisionName;
+				}
+				if (stage) {
+					str += ` > ${stage.stageName}`;
+				}
+				res.data.data.list.forEach((i: any) => {
+					i.selectData = str;
+				});
+				data.tableList = res.data.data.list;
+				data.total = res.data.data.totalPage;
+			});
+		};
 		const getSelectList = () => {
 			leagueSelectHttp({ competitionId: 234 }).then((res) => {
 				data.divisitonList = res.data.data;
 				data.divisiton = res.data.data[0].divisionId;
 				data.stageList = res.data.data[0].stageList;
-				data.stage = res.data.data[0].stageList[0].stageId;
+				data.stageId = res.data.data[0].stageList[0].stageId;
+				getTeamList();
 			});
 		};
 		onMounted(() => {

@@ -12,7 +12,7 @@ import { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCityl
 import { myPageInfo, myMatchInfo, myMatchInfoMore, myBattleSelectList, myBattleDataList, myBattleDateList, myTeamList } from './myPage/index';
 
 // 联赛
-import { leagueInfo, leagueSelect, timeTableList, matchPlayerList, submitMatchTable, matchtable, matchTableOptions } from './league/index';
+import { leagueInfo, leagueSelect, timeTableList, matchPlayerList, submitMatchTable, matchtable, matchTableOptions, leagueTeam, rankingPlayer } from './league/index';
 
 // 队伍
 import { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList, vipList, historyResult } from '@/axios/team/index';
@@ -178,6 +178,14 @@ const matchtableHttp = (data: any = null) => {
 const submitMatchTableHttp = (data: Array<any>) => {
 	return Axios.post(submitMatchTable, data);
 };
+// 联赛 队伍
+const leagueTeamHttp = (data: any = null) => {
+	return Axios.post(leagueTeam, data);
+};
+// 联赛 记录 玩家排名
+const rankingPlayerHttp = (data: any = null) => {
+	return Axios.post(rankingPlayer, data);
+};
 
 //  队伍 列表数据
 const myTeamListHttp = (data: any = null) => {
@@ -314,5 +322,7 @@ export {
 	playerDataListHttp,
 	playerRankingHttp,
 	leagueInfoHttp,
-	leagueSelectHttp
+	leagueSelectHttp,
+	leagueTeamHttp,
+	rankingPlayerHttp
 };

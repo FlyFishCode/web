@@ -12,4 +12,9 @@ const matchPlayerList = '/getTeamCompetitionPlayer';
 const matchtable = '/getMatchTableFightInfo';
 // 提交排阵玩家
 const submitMatchTable = '/playerIntoLeg';
-export { leagueInfo, leagueSelect, timeTableList, matchPlayerList, submitMatchTable, matchtable, matchTableOptions };
+// 联赛 队伍
+const leagueTeam = '/competitionteam';
+// 联赛 排名记录 玩家排名
+const rankingPlayer = '/competitionplayerranking';
+
+export { leagueInfo, leagueSelect, timeTableList, matchPlayerList, submitMatchTable, matchtable, matchTableOptions, leagueTeam, rankingPlayer };

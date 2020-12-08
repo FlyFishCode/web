@@ -6,32 +6,32 @@
 					<img class="imgBg" :src="infoData.img" alt="" />
 				</a-col>
 				<a-col :span="12" class="firstClass FONT">
-					<div class="teamName" @click="showTeamInfo">{{ infoData.teamName }}</div>
-					<div class="disabledClass">{{ infoData.captainName }}</div>
+					<div class="teamName" @click="showTeamInfo">{{ infoData.playerName }}</div>
+					<div class="disabledClass">{{ infoData.shopName }}</div>
 					<div class="disabledClass">
-						{{ infoData.place }}
+						{{ infoData.shopAddress }}
 						<span @click="showDetail" class="icon">
-							<InfoCircleFilled />
+							<EnvironmentOutlined />
 						</span>
 					</div>
 					<div class="disabledClass">{{ infoData.country }}</div>
 				</a-col>
 			</a-col>
 			<a-col :span="9">
-				<div class="title">{{ $t('default.183') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="75" />
+				<div class="title">{{ 'Rating' }}</div>
+				<a-progress type="circle" class="myYuan" :percent="infoData.rating" />
 				<div class="myProgress">
 					<div class="myProgressBox">
 						<div>
-							<a-progress :percent="infoData.ppdNumber" strokeColor="red" />
+							<a-progress :percent="infoData.ppd" strokeColor="red" />
 						</div>
-						<div>{{ `PPD    ${infoData.ppdNumber}` }}</div>
+						<div>{{ `PPD    ${infoData.ppd}` }}</div>
 					</div>
 					<div class="myProgressBox">
 						<div>
-							<a-progress :percent="infoData.mprNumber" strokeColor="red" />
+							<a-progress :percent="infoData.mpr" strokeColor="red" />
 						</div>
-						<div>{{ `MPR    ${infoData.mprNumber}` }}</div>
+						<div>{{ `MPR    ${infoData.mpr}` }}</div>
 					</div>
 				</div>
 			</a-col>
@@ -44,26 +44,16 @@
 				<a-col class="center animate__backOutRight" id="Box">
 					<div v-for="item in infoData.resultList" :key="item.id" class="centerBox">
 						<div class="matchBox">
-							<div class="title">{{ item.name }}</div>
+							<div class="title">{{ item.title }}</div>
 							<div class="fontStyle">
 								<div class="left">
-									<div>{{ '胜' }}</div>
-									<div>{{ '败' }}</div>
-									<div>{{ '和' }}</div>
-									<div>{{ '胜率' }}</div>
+									<div v-for="key of Object.keys(item)" :key="key">
+										<div v-if="key !== 'title'">{{ key }}</div>
+									</div>
 								</div>
 								<div class="right">
-									<div>
-										<a-progress :percent="item.win" strokeColor="red" />
-									</div>
-									<div>
-										<a-progress :percent="item.draw" strokeColor="red" />
-									</div>
-									<div>
-										<a-progress :percent="item.lost" strokeColor="red" />
-									</div>
-									<div>
-										<a-progress :percent="item.probability" strokeColor="red" />
+									<div v-for="value of Object.values(item)" :key="value">
+										<div v-if="typeof value !== 'string'"><a-progress :percent="value" strokeColor="red" /></div>
 									</div>
 								</div>
 							</div>
@@ -85,64 +75,72 @@
 
 <script lang="ts">
 import { useRoute } from 'vue-router';
-import { reactive, toRefs, onMounted, ref } from 'vue';
-import { InfoCircleFilled, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+import { reactive, toRefs, onMounted, ref, watch } from 'vue';
+import { EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+
+interface DataProps {
+	infoData: {
+		resultList: Array<any>;
+	};
+}
+
+const getNewData = (obj: any) => {
+	const data = {
+		img: obj.playerImg,
+		playerName: obj.playerName,
+		shopName: obj.shop.shopName,
+		shopAddress: obj.shop.shopAddress,
+		country: obj.shop.countryName,
+		rating: obj.playerRating.rating,
+		ppd: obj.playerRating.ppd,
+		mpr: obj.playerRating.mpr,
+		resultList: [
+			{
+				title: 'Award 01',
+				LT: obj.playerResultDetails.lowTon,
+				HT: obj.playerResultDetails.highTon,
+				'LT.OFF': obj.playerResultDetails.lowTonOut,
+				'HT.OFF': obj.playerResultDetails.highTonOut
+			},
+			{
+				title: 'Award 02',
+				HAT: obj.playerResultDetails.lowTon,
+				BED: obj.playerResultDetails.highTon,
+				180: obj.playerResultDetails.lowTonOut,
+				EYE: obj.playerResultDetails.highTonOut
+			},
+			{
+				title: 'Award 03',
+				'5M': obj.playerResultDetails.fiveMarks,
+				'6M': obj.playerResultDetails.sixMarks,
+				'7M': obj.playerResultDetails.sevenMarks,
+				'8M': obj.playerResultDetails.eightMarks
+			},
+			{
+				title: 'Award 04',
+				'9M': obj.playerResultDetails.nineMarks,
+				WH: obj.playerResultDetails.whiteHorse
+			}
+		]
+	};
+	return data;
+};
+
 export default {
 	name: 'showPersonalTopOne',
 	components: {
-		InfoCircleFilled,
+		EnvironmentOutlined,
 		LeftCircleOutlined,
 		RightCircleOutlined
 	},
-	setup() {
+	props: ['playerObj'],
+	setup(prop: any) {
 		const route = useRoute();
 		let currentPosition = 0;
 		const currentIndex = ref(0);
-		const data = reactive({
+		const data: DataProps = reactive({
 			infoData: {
-				img: require('@/assets/1.jpg'),
-				teamName: '上海市消防总队黄埔支队嵩山中队',
-				captainName: '李逍遥',
-				place: '李逍遥',
-				country: '山东',
-				allScore: '总分数',
-				scoreNumber: 59,
-				ppdNumber: 51,
-				mprNumber: 65,
-				resultList: [
-					{
-						id: 1,
-						name: 'Award 01',
-						win: 15,
-						draw: 20,
-						lost: 25,
-						probability: 80
-					},
-					{
-						id: 1,
-						name: 'Award 02',
-						win: 15,
-						draw: 20,
-						lost: 25,
-						probability: 80
-					},
-					{
-						id: 1,
-						name: 'Award 03',
-						win: 15,
-						draw: 20,
-						lost: 25,
-						probability: 80
-					},
-					{
-						id: 1,
-						name: 'Award 04',
-						win: 15,
-						draw: 20,
-						lost: 25,
-						probability: 80
-					}
-				]
+				resultList: []
 			},
 			showTeamInfo: () => {
 				console.log('111');
@@ -180,8 +178,15 @@ export default {
 			}
 		});
 		onMounted(() => {
+			data.infoData = getNewData(prop.playerObj);
 			console.log(route.query);
 		});
+		watch(
+			() => prop.playerObj,
+			(val) => {
+				data.infoData = getNewData(val);
+			}
+		);
 		return {
 			...toRefs(data),
 			currentIndex
@@ -231,11 +236,11 @@ export default {
 }
 .disabledClass {
 	color: #eee;
-	cursor: pointer;
 }
 .icon {
 	position: relative;
 	top: 1px;
+	cursor: pointer;
 }
 .secondClass .bigFont {
 	font-size: 25px;
@@ -256,7 +261,7 @@ export default {
 	color: #fff;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-around;
+	justify-content: center;
 	align-items: center;
 }
 .fontStyle {

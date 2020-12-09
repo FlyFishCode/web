@@ -31,9 +31,11 @@ app.config.globalProperties.$i18n = i18n;
 app.config.globalProperties.$filters = {
 	// 添加全局时间过滤器
 	filterDate(value: string) {
-		const [first, center] = value.split('T');
-		const last = center.split('.')[0];
-		return `${first}  ${last}`;
+		if (value) {
+			const [first, center] = value.split('T');
+			const last = center.split('.')[0];
+			return `${first}  ${last}`;
+		}
 	}
 };
 

@@ -12,7 +12,21 @@ import { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCityl
 import { myPageInfo, myMatchInfo, myMatchInfoMore, myBattleSelectList, myBattleDataList, myBattleDateList, myTeamList } from './myPage/index';
 
 // 联赛
-import { leagueInfo, leagueSelect, timeTableList, matchPlayerList, submitMatchTable, matchtable, matchTableOptions, leagueTeam, rankingPlayer } from './league/index';
+import {
+	leagueInfo,
+	leagueSelect,
+	timeTableList,
+	matchPlayerList,
+	submitMatchTable,
+	matchtable,
+	matchTableOptions,
+	leagueTeam,
+	rankingPlayer,
+	matchInfo,
+	matchResult,
+	matchTeamInfo,
+	matchInfoTableList
+} from './league/index';
 
 // 队伍
 import { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList, vipList, historyResult } from '@/axios/team/index';
@@ -154,6 +168,10 @@ const myBattleDateListHttp = (data: any = null) => {
 const leagueInfoHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(leagueInfo, data));
 };
+// 联赛 比赛信息
+const matchInfoHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(matchInfo, data));
+};
 // 联赛 下拉数据
 const leagueSelectHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(leagueSelect, data));
@@ -185,6 +203,18 @@ const leagueTeamHttp = (data: any = null) => {
 // 联赛 记录 玩家排名
 const rankingPlayerHttp = (data: any = null) => {
 	return Axios.post(rankingPlayer, data);
+};
+// 联赛 时间表 对阵队伍
+const matchTeamInfoHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(matchTeamInfo, data));
+};
+// 联赛 时间表 比赛对战组成列表
+const matchInfoTableListHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(matchInfoTableList, data));
+};
+// 联赛 时间表 比赛结果
+const matchResultHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(matchResult, data));
 };
 
 //  队伍 列表数据
@@ -324,5 +354,9 @@ export {
 	leagueInfoHttp,
 	leagueSelectHttp,
 	leagueTeamHttp,
-	rankingPlayerHttp
+	rankingPlayerHttp,
+	matchInfoHttp,
+	matchResultHttp,
+	matchTeamInfoHttp,
+	matchInfoTableListHttp
 };

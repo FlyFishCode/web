@@ -16,5 +16,26 @@ const submitMatchTable = '/playerIntoLeg';
 const leagueTeam = '/competitionteam';
 // 联赛 排名记录 玩家排名
 const rankingPlayer = '/competitionplayerranking';
-
-export { leagueInfo, leagueSelect, timeTableList, matchPlayerList, submitMatchTable, matchtable, matchTableOptions, leagueTeam, rankingPlayer };
+// 联赛 比赛信息
+const matchInfo = '/information';
+// 联赛 比赛信息下表格
+const matchInfoTableList = '/matchcomposition';
+// 联赛 时间表 对阵队伍
+const matchTeamInfo = '/matchTeam';
+// 联赛 时间表 比赛结果
+const matchResult = '/matchresult';
+export {
+	leagueInfo,
+	leagueSelect,
+	timeTableList,
+	matchPlayerList,
+	submitMatchTable,
+	matchtable,
+	matchTableOptions,
+	leagueTeam,
+	rankingPlayer,
+	matchInfo,
+	matchResult,
+	matchTeamInfo,
+	matchInfoTableList
+};

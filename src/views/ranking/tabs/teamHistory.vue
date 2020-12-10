@@ -278,6 +278,7 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { teamDataListHttp, teamSearchHttp, indexCountryHttp } from '@/axios/api';
 import { SettingFilled, CloseCircleFilled, PlusOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
 import { useRoute } from 'vue-router';
 export default defineComponent({
 	name: 'teamHistory',
@@ -288,7 +289,6 @@ export default defineComponent({
 	},
 	setup() {
 		const ROUTE = useRoute();
-		console.log(ROUTE.query);
 		const data = reactive({
 			total: 1,
 			pageNum: 1,
@@ -405,12 +405,14 @@ export default defineComponent({
 		};
 		const getDataList = (list: Array<any>) => {
 			teamDataListHttp(list).then((res) => {
-				if (res.data.data.length) {
+				if (res.data.data) {
 					res.data.data.forEach((i: any) => {
 						i.flag = true;
 					});
 					data.teamList[0] = res.data.data[0];
 					data.teamList[1] = res.data.data[1];
+				} else {
+					message.error(res.data.msg);
 				}
 			});
 		};
@@ -440,8 +442,12 @@ export default defineComponent({
 			});
 		};
 		onMounted(() => {
+			let list: any = ROUTE.query.teamList;
+			if (list) {
+				list = list.split(',');
+			}
 			getCountryList();
-			getDataList([]);
+			getDataList(list);
 		});
 		return {
 			...toRefs(data)

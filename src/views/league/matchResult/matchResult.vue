@@ -36,23 +36,23 @@
 							<div class="playerImgBox">
 								<img :src="player.homeImg" alt="" />
 							</div>
-							<div class="playerName">{{ player.playerName }}</div>
+							<div class="playerName">{{ player.homePlayerName }}</div>
 						</div>
 					</a-col>
 					<a-col :span="3">{{ player.homePpd }}</a-col>
-					<a-col :span="3">{{ player.homeScores }}</a-col>
+					<a-col :span="3">{{ player.homeScore }}</a-col>
 					<a-col :span="4" class="winStyle">
 						<div class="WinStyle WinBox">{{ leg.homeIsWin === 1 ? 'win' : 'lose' }}</div>
 						<div class="WinStyle">{{ leg.homeIsWin === 2 ? 'win' : 'lose' }}</div>
 					</a-col>
-					<a-col :span="3">{{ player.awayScores }}</a-col>
-					<a-col :span="3">{{ player.awayPpd }}</a-col>
+					<a-col :span="3">{{ player.visitingScore }}</a-col>
+					<a-col :span="3">{{ player.visitingPpd }}</a-col>
 					<a-col :span="4">
 						<div class="playerImg">
 							<div class="playerImgBox">
 								<img :src="player.homeImg" alt="" />
 							</div>
-							<div class="playerName">{{ player.awayName }}</div>
+							<div class="playerName">{{ player.visitingPlayerName }}</div>
 						</div>
 					</a-col>
 				</a-row>

@@ -25,7 +25,11 @@ import {
 	matchInfo,
 	matchResult,
 	matchTeamInfo,
-	matchInfoTableList
+	matchInfoTableList,
+	timetablecustom,
+	legaueAllList,
+	timeTableDataList,
+	legaueMyList
 } from './league/index';
 
 // 队伍
@@ -168,6 +172,14 @@ const myBattleDateListHttp = (data: any = null) => {
 const leagueInfoHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(leagueInfo, data));
 };
+// 联赛 所有联赛
+const leagueAllListHttp = (data: any = null) => {
+	return Axios.post(legaueAllList, data);
+};
+// 联赛 我的联赛y
+const leagueMyListHttp = (data: any = null) => {
+	return Axios.post(legaueMyList, data);
+};
 // 联赛 比赛信息
 const matchInfoHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(matchInfo, data));
@@ -179,6 +191,14 @@ const leagueSelectHttp = (data: any = null) => {
 // 联赛 时间表 查看排阵
 const timeTableLineHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(timeTableList, data));
+};
+// 联赛 时间表 列表数据
+const timeTableDataListHttp = (data: any = null) => {
+	return Axios.post(timeTableDataList, data);
+};
+// 联赛 时间表 自定义组件
+const timetablecustomHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(timetablecustom, data));
 };
 // 联赛 查看时间
 const matchDateHttp = (data: any = null) => {
@@ -358,5 +378,9 @@ export {
 	matchInfoHttp,
 	matchResultHttp,
 	matchTeamInfoHttp,
-	matchInfoTableListHttp
+	matchInfoTableListHttp,
+	timetablecustomHttp,
+	leagueAllListHttp,
+	timeTableDataListHttp,
+	leagueMyListHttp
 };

@@ -3,13 +3,13 @@
 		<divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
 		<a-tabs type="card" v-model:activeKey="activeKey" class="tabsBox">
 			<a-tab-pane key="1" :tab="$t('default.67')">
-				<teamRanking />
+				<teamRanking @active-key-change="tabActiveKeyChange" />
 			</a-tab-pane>
 			<a-tab-pane key="2" :tab="$t('default.181')">
 				<teamHistory />
 			</a-tab-pane>
 			<a-tab-pane key="3" :tab="$t('default.68')">
-				<plyaerRanking />
+				<plyaerRanking @active-key-change="tabActiveKeyChange" />
 			</a-tab-pane>
 			<a-tab-pane key="4" :tab="$t('default.182')">
 				<playerHistory />
@@ -35,18 +35,23 @@ export default defineComponent({
 		plyaerRanking,
 		playerHistory
 	},
+	emits: ['active-key-change'],
 	setup() {
-		const Route = useRoute();
+		const ROUTE = useRoute();
 		const data = reactive({
 			activeKey: '1',
 			title: 'default.180',
 			colSpan: 10,
 			getDate: () => {
 				return '2020-10-17';
+			},
+			tabActiveKeyChange: (key: string, list: Array<any>) => {
+				data.activeKey = key;
+				ROUTE.query.teamList = `${list[0]},${list[1]}`;
 			}
 		});
 		onMounted(() => {
-			data.activeKey = Route.query.value as string;
+			data.activeKey = ROUTE.query.activeKey as string;
 		});
 		return {
 			...toRefs(data)

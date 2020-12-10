@@ -148,6 +148,7 @@ import { SettingFilled, AimOutlined, EnvironmentOutlined } from '@ant-design/ico
 import { indexCountryHttp, indexCityHttp, playerRankingHttp } from '@/axios/api';
 import playerRanking from '@/components/rankingPlayer.vue';
 import { useRouter } from 'vue-router';
+import { message } from 'ant-design-vue';
 export default defineComponent({
 	name: 'plyaerRanking',
 	components: {
@@ -156,8 +157,9 @@ export default defineComponent({
 		playerRanking,
 		EnvironmentOutlined
 	},
-	setup() {
+	setup(prop: any, ctx: any) {
 		const ROUTER = useRouter();
+		let currentSelectList: Array<any> = [];
 		const data = reactive({
 			colSpan: 5,
 			getDate: () => {
@@ -184,39 +186,42 @@ export default defineComponent({
 				phone: '',
 				address: ''
 			},
-			customHeaderRow: (column: any) => {
+			customHeaderRow: () => {
 				return {
-					// on: {
-					click: (event: any) => {
-						debugger;
-						console.log(event, column);
+					className: 'selectBox',
+					onClick: (e: any) => {
+						if (e.target.className.includes('ant-table-column-title') && currentSelectList.length === 2) {
+							ctx.emit('active-key-change', '4', currentSelectList);
+						} else {
+							message.warning('请选择两支队伍');
+						}
 					}
-					// },
 				};
 			},
 			rowSelection: {
-				columnWidth: 70,
+				columnWidth: 80,
 				columnTitle: '对比',
 				onChange: (selectedRowKeys: number[]) => {
-					if (selectedRowKeys.length == 2) {
+					if (selectedRowKeys.length === 2) {
+						currentSelectList = selectedRowKeys;
+						const selectIndex: number[] = [];
 						selectedRowKeys.forEach((i) => {
-							const index = data.tableList.findIndex((j, jndex) => jndex === i);
-							data.tableList.forEach((k, kndex) => {
-								if (index !== kndex) {
-									k.disabled = true;
-								} else {
-									k.disabled = false;
-								}
-							});
-							const list = data.tableList;
-							data.tableList = [...list];
+							selectIndex.push(data.tableList.findIndex((j) => j.playerId === i));
 						});
+						data.tableList.forEach((i, index) => {
+							if (index !== selectIndex[1]) {
+								i.disabled = true;
+							}
+						});
+						const list = data.tableList;
+						data.tableList = [...list];
 					} else {
 						data.tableList.forEach((i) => {
 							i.disabled = false;
 						});
 						const list = data.tableList;
 						data.tableList = [...list];
+						currentSelectList = [];
 					}
 				},
 				getCheckboxProps: (record: { disabled: boolean }) => ({

@@ -8,9 +8,9 @@
 			</a-col>
 			<a-col :span="22" class="centerBox">
 				<div class="center">
-					<div v-for="(item, index) in topList" :key="index" class="DIV" :class="{ currentDiv: current === index }" @click="changeDate(item)">
-						{{ item.date }}
-						<span v-if="item.match" class="divAfter">{{ item.match && item.match.length }}</span>
+					<div v-for="(item, index) in topList" :key="index" class="DIV" :class="{ currentDiv: current === index }" @click="changeDate(item.confrontationDate)">
+						{{ item.confrontationDate }}
+						<span v-if="item.matchList" class="divAfter">{{ item.matchList && item.matchList.length }}</span>
 					</div>
 				</div>
 			</a-col>
@@ -32,20 +32,20 @@
 						<div v-for="(item, index) in detailList" :key="index" class="matchBoxBG">
 							<div class="matchBox" @click="info(item)">
 								<div class="bg">
-									<div class="imgBox"><img :src="item.img" /></div>
+									<div class="imgBox"><img :src="item.homeTeamImg" /></div>
 									<div>{{ item.homeTeamName }}</div>
 								</div>
 								<div class="bg">
-									<div>{{ item.date }}</div>
-									<div>{{ `${item.homeMatch}:${item.homeMatch}` }}</div>
+									<div>{{ `${item.homeTeamResult} VS ${item.visitingTeamResult}` }}</div>
+									<div>{{ item.confrontationDate }}</div>
 								</div>
 								<div class="bg">
-									<div class="imgBox"><img :src="item.img" /></div>
+									<div class="imgBox"><img :src="item.visitingTeamImg" /></div>
 									<div>{{ item.homeTeamName }}</div>
 								</div>
-								<span v-if="item.homeMatch === 0" class="stateStyle N">{{ $t('all.tip95') }}</span>
-								<span v-if="item.homeMatch === 1" class="stateStyle I">{{ $t('all.tip96') }}</span>
-								<span v-if="item.homeMatch === 2" class="stateStyle F">{{ $t('all.tip97') }}</span>
+								<span v-if="item.state === 1" class="stateStyle N">{{ $t('default.64') }}</span>
+								<span v-if="item.state === 2" class="stateStyle I">{{ $t('default.104') }}</span>
+								<span v-if="item.state === 3" class="stateStyle F">{{ $t('default.244') }}</span>
 							</div>
 						</div>
 					</div>
@@ -62,23 +62,17 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
-// interface DataProps {
-//   detailList: string;
-// }
+import { timetablecustomHttp } from '@/axios/api';
+// import { useRoute } from 'vue-router';
 export default defineComponent({
 	name: 'inCalendar',
-	props: {
-		topList: {
-			type: Array,
-			required: true
-		}
-	},
 	components: {
 		LeftOutlined,
 		RightOutlined
 	},
 	emits: ['show-match'],
 	setup(props: any, ctx) {
+		// const ROUTE = useRoute();
 		const data = reactive({
 			direction: false,
 			hasData: false,
@@ -86,9 +80,10 @@ export default defineComponent({
 			buttomPositon: 0,
 			current: 0,
 			currentDiv: 0,
-			detailList: props.topList,
+			topList: [],
+			detailList: [{ matchList: [] }],
 			init: () => {
-				data.detailList = data.detailList[0].match;
+				data.detailList = data.detailList[0].matchList;
 				if (data.detailList && data.detailList.length > 3) {
 					data.hasData = true;
 				} else {
@@ -133,12 +128,16 @@ export default defineComponent({
 					div.style.left = this.buttomPositon + 'px';
 				}
 			},
-			changeDate(item: any) {
+			changeDate(date: string) {
+				let obj: any = '';
 				const div = document.getElementsByClassName('directionCenterBox')[0] as HTMLElement;
 				data.buttomPositon = 0;
 				div.style.left = '0px';
-				data.current = props.topList.findIndex((i: any) => i.matchId === item.matchId);
-				data.detailList = props.topList.find((i: any) => i.matchId === item.matchId).match || [];
+				data.current = data.topList.findIndex((i: any) => i.confrontationDate === date);
+				obj = data.topList.find((i: any) => i.confrontationDate === date);
+				if (obj) {
+					data.detailList = obj.matchList;
+				}
 				if (data.detailList && data.detailList.length > 3) {
 					data.hasData = true;
 				} else {
@@ -149,7 +148,15 @@ export default defineComponent({
 				ctx.emit('show-match', value.homeTeamName);
 			}
 		});
+		const getList = () => {
+			// timetablecustomHttp({ stageId: ROUTE.query.stageId }).then((res) => {
+			timetablecustomHttp({ stageId: 1080 }).then((res) => {
+				data.topList = res.data.data;
+				data.detailList = res.data.data[0].matchList;
+			});
+		};
 		onMounted(() => {
+			getList();
 			if (data.detailList.length > 6) {
 				data.direction = true;
 			}

@@ -209,4 +209,11 @@ export default defineComponent({
 #diaLogTable .ant-table-header-column {
 	width: 100%;
 }
+/* 表格 带有选择框的表格 点击对比 */
+.selectBox /deep/ .ant-table-selection-column .ant-table-header-column {
+	cursor: pointer;
+	background: #ff4e00;
+	color: #fff;
+	padding: 5px;
+}
 </style>

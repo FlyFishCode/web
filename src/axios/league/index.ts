@@ -22,8 +22,16 @@ const matchInfo = '/information';
 const matchInfoTableList = '/matchcomposition';
 // 联赛 时间表 对阵队伍
 const matchTeamInfo = '/matchTeam';
+// 联赛 时间表 列表
+const timeTableDataList = '/competition/confrontation';
 // 联赛 时间表 比赛结果
 const matchResult = '/matchresult';
+// 联赛 时间表 自定义滚动服务
+const timetablecustom = '/schedule';
+// 联赛 所有联赛
+const legaueAllList = '/competition/schedule';
+// 联赛 所有联赛
+const legaueMyList = '/competition/myschedule';
 export {
 	leagueInfo,
 	leagueSelect,
@@ -37,5 +45,9 @@ export {
 	matchInfo,
 	matchResult,
 	matchTeamInfo,
-	matchInfoTableList
+	matchInfoTableList,
+	timetablecustom,
+	legaueAllList,
+	timeTableDataList,
+	legaueMyList
 };

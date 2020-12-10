@@ -305,6 +305,7 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { playerSearchHttp, playerDataListHttp, indexCountryHttp } from '@/axios/api';
 import { SettingFilled, CloseCircleFilled, PlusOutlined } from '@ant-design/icons-vue';
+import { useRoute } from 'vue-router';
 export default defineComponent({
 	name: 'playerHistory',
 	components: {
@@ -313,7 +314,7 @@ export default defineComponent({
 		PlusOutlined
 	},
 	setup() {
-		// let selectList: number[] = [];
+		const ROUTE = useRoute();
 		const data = reactive({
 			total: 10,
 			pageNum: 1,
@@ -464,8 +465,12 @@ export default defineComponent({
 			});
 		};
 		onMounted(() => {
+			let list: any = ROUTE.query.teamList;
+			if (list) {
+				list = list.split(',');
+			}
 			getCountryList();
-			getDataList([14622,6843]);
+			getDataList(list);
 		});
 		return {
 			...toRefs(data)

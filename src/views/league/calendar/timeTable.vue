@@ -10,7 +10,7 @@
 				</a-select>
 			</a-col>
 			<a-col :lg="3" :xs="12">
-				<a-select v-model:value="stage" @change="stageChange" class="selectBox">
+				<a-select v-model:value="stageId" @change="stageChange" class="selectBox">
 					<a-select-option v-for="item in stageList" :key="item.stageId" :value="item.stageId">{{ item.stageName }}</a-select-option>
 				</a-select>
 			</a-col>
@@ -54,7 +54,7 @@
 		<!-- 对战表列表 -->
 		<div v-else>
 			<a-row class="inPhoneTableDisplay">
-				<lunboGundong :topList="gundongInfoList" @show-match="showMatch" />
+				<lunboGundong @show-match="showMatch" />
 			</a-row>
 
 			<a-row>
@@ -75,60 +75,45 @@
 					{{ $t('default.140') }}
 				</a-col>
 				<a-col :lg="3" :xs="6">
-					<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-						<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+					<a-select v-model:value="teamId" @change="teamChange" class="selectBox">
+						<a-select-option v-for="item in teamList" :key="item.teamId" :value="item.teamId">{{ item.teamName }}</a-select-option>
 					</a-select>
 				</a-col>
 				<a-col :lg="2" :xs="6" class="titleStyle">{{ $t('default.141') }}</a-col>
 				<a-col :lg="3" :xs="6">
-					<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-						<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+					<a-select v-model:value="state" @change="stateChange" class="selectBox">
+						<a-select-option v-for="item in stateList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 					</a-select>
 				</a-col>
 				<a-col :lg="{ span: 2, offset: 4 }" :xs="0" class="titleStyle"> <SearchOutlined class="fontIcon" />{{ $t('default.16') }} </a-col>
 				<a-col :lg="3" :xs="0">
-					<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-						<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
+					<a-select v-model:value="secrchType" class="selectBox">
+						<a-select-option v-for="item in secrchTypeList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
 					</a-select>
 				</a-col>
 				<a-col :lg="5" :xs="0">
-					<a-input-search v-model:value="currentValue" :enter-button="$t('default.16')" size="default" @search="onSearch" />
+					<a-input-search v-model:value="searchValue" :enter-button="$t('default.16')" size="default" @search="onSearch" />
 				</a-col>
 			</a-row>
 			<!-- 表格 -->
 			<a-row class="inPhoneTableDisplay">
-				<a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey="key" :customHeaderRow="customHeaderRow">
-					<template v-slot:date>
-						<div>{{ $t('default.52') }}</div>
+				<a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey="confrontationId" :customHeaderRow="customHeaderRow">
+					<template v-slot:homeTeam="{ record }">
+						<div class="winnerBox">
+							<div v-if="record.winOrLose === 1" class="winnerTeam">{{ 'Win' }}</div>
+							<div>{{ record.homeTeamName }}</div>
+						</div>
 					</template>
-					<template v-slot:time>
-						<div>{{ $t('default.152') }}</div>
+					<template v-slot:awayTeam="{ record }">
+						<div class="winnerBox">
+							<div>{{ record.visitingTeamName }}</div>
+							<div v-if="record.winOrLose === 3" class="winnerTeam">{{ 'Win' }}</div>
+						</div>
 					</template>
-					<template v-slot:type>
-						<div>{{ $t('default.119') }}</div>
+					<template v-slot:type="{ text }">
+						<div>{{ text === 1 ? $t('default.63') : $t('default.142') }}</div>
 					</template>
-					<template v-slot:homeTeam>
-						<div>{{ $t('default.56') }}</div>
-					</template>
-					<template v-slot:homeTeamName>
-						<div>{{ $t('default.55') }}</div>
-					</template>
-					<template v-slot:homeScore>
-						<div>{{ $t('default.58') }}</div>
-					</template>
-					<template v-slot:awayScore>
-						<div>{{ $t('default.58') }}</div>
-					</template>
-					<template v-slot:awayTeamName>
-						<div>{{ $t('default.55') }}</div>
-					</template>
-					<template v-slot:awayTeam>
-						<div>{{ $t('default.57') }}</div>
-					</template>
-					<template v-slot:inState>
-						<div>{{ $t('default.59') }}</div>
-					</template>
-					<template v-slot:state="{ text }">
+					<template v-slot:status="{ text }">
 						<div class="tableState">
 							<div v-if="text === 1" class="plan" @click="showPlan">{{ $t('default.41') }}</div>
 							<div v-if="text === 2">{{ 'Ready' }}</div>
@@ -139,7 +124,7 @@
 			</a-row>
 			<!-- 移动端 -->
 			<a-row class="showPhoneTable">
-				<a-table :columns="inPhoneColumns" :data-source="tableList" :pagination="false" bordered rowKey="key">
+				<a-table :columns="inPhoneColumns" :data-source="tableList" :pagination="false" bordered rowKey="confrontationId">
 					<template v-slot:date>
 						<div>{{ $t('default.52') }}</div>
 					</template>
@@ -157,6 +142,9 @@
 					</template>
 				</a-table>
 			</a-row>
+			<div class="pagination">
+				<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="pageTotal" @change="pageChange" />
+			</div>
 		</div>
 		<entryList :entryPath="entryPath" />
 		<div>
@@ -173,7 +161,7 @@
 						</a-select>
 					</a-col>
 				</a-row>
-				<a-row class="dialogRow" v-for="item in dialogList" :key="item.index">
+				<!-- <a-row class="dialogRow" v-for="item in dialogList" :key="item.index">
 					<a-table id="diaLogTable" :columns="dialogColumns" :data-source="item.matchTableList" :pagination="false" width="70%" bordered>
 						<template #customTitle>
 							<div class="columnsBox">
@@ -185,7 +173,7 @@
 							<div>{{ text }}</div>
 						</template>
 					</a-table>
-				</a-row>
+				</a-row> -->
 			</a-modal>
 		</div>
 	</div>
@@ -198,12 +186,13 @@ import matchTable from '@/views/league/matchTable/matchTable.vue';
 import matchResult from '@/views/league/matchResult/matchResult.vue';
 import award from '@/views/league/award/award.vue';
 // import { DOM } from "@/type/interface.d.ts";
-import { matchtableHttp, leagueSelectHttp } from '@/axios/api';
+import { matchtableHttp, leagueSelectHttp, timeTableDataListHttp } from '@/axios/api';
 import { SettingFilled, PlusOutlined, SearchOutlined } from '@ant-design/icons-vue';
 import lunboGundong from '@/components/inCalendar.vue';
 import inMatchTable from '@/components/inMatchTable.vue';
 import entryList from '@/components/common/entryList.vue';
-import { useRoute } from 'vue-router';
+import { message } from 'ant-design-vue';
+import { useRoute, useRouter } from 'vue-router';
 
 interface DataProps {
 	dialogColumns: Array<any>;
@@ -211,10 +200,20 @@ interface DataProps {
 	dialogList: Array<any>;
 	visible: boolean;
 	ismatchTablePage: boolean;
-	stage: string;
+	stageId: string;
 	divisiton: string;
+	teamId: string;
+	year: number;
+	month: number;
+	pageNum: number;
+	pageSize: number;
+	pageTotal: number;
+	state: string;
+	secrchType: string;
+	searchValue: string;
 	stageList: Array<any>;
 	divisitonList: Array<any>;
+	teamList: Array<any>;
 }
 export default defineComponent({
 	name: 'timeTable',
@@ -231,20 +230,33 @@ export default defineComponent({
 	},
 	setup() {
 		const ROUTE = useRoute();
+		const ROUTER = useRouter();
+		let currentSelectList: Array<any> = [];
 		const data: DataProps = reactive({
 			entryPath: '/league',
 			visible: false,
 			AWARD: ROUTE.query.AWARD,
-			stateList: [],
-			currentValue: '',
+			searchValue: '',
 			ismatchTablePage: false,
-			stage: '',
+			pageNum: 1,
+			pageSize: 10,
+			pageTotal: 1,
+			stageId: '',
 			divisiton: '',
 			stageList: [{ stageId: '' }],
 			divisitonList: [{ divisionId: 0, stageList: [] }],
 			year: 2020,
 			month: 1,
 			yearList: [{ value: 2020, label: 2020 }],
+			state: '',
+			stateList: [
+				{ value: '', label: 'ALL' },
+				{ value: 1, label: '准备中' },
+				{ value: 2, label: '进行中' },
+				{ value: 3, label: '已结束' }
+			],
+			teamId: '',
+			teamList: [],
 			monthList: [
 				{ value: 1, label: 1 },
 				{ value: 2, label: 2 },
@@ -258,6 +270,12 @@ export default defineComponent({
 				{ value: 10, label: 10 },
 				{ value: 11, label: 11 },
 				{ value: 12, label: 12 }
+			],
+			secrchType: 'teamName',
+			secrchTypeList: [
+				{ value: 'teamName', label: 'default.55' },
+				{ value: 'captainName', label: 'default.248' },
+				{ value: 'address', label: 'default.75' }
 			],
 			matchType: 1,
 			matchTypeList: [
@@ -274,72 +292,107 @@ export default defineComponent({
 				}
 			],
 			dialogList: [],
-			// customRow: (record: any) => {
-			//   return {
-			//     click: () => {
-			//       debugger;
-			//       console.log(record);
-			//     },
-			//   };
-			// },
-			customHeaderRow: (column: any) => {
+			customRow: (record: any) => {
 				return {
-					// on: {
-					click: (event: any) => {
+					click: () => {
 						debugger;
-						console.log(event, column);
+						console.log(record);
 					}
-					// },
 				};
 			},
-			gundongInfoList: [
+			customHeaderRow: () => {
+				return {
+					className: 'selectBox',
+					onClick: (e: any) => {
+						if (e.target.className.includes('ant-table-column-title') && currentSelectList.length === 2) {
+							ROUTER.push({
+								path: 'ranking',
+								query: {
+									activeKey: '2',
+									teamList: `${currentSelectList[0]},${currentSelectList[1]}`
+								}
+							});
+						} else {
+							message.warning('请选择两支队伍');
+						}
+					}
+				};
+			},
+			rowSelection: {
+				columnWidth: 80,
+				columnTitle: '对比',
+				onChange: (selectedRowKeys: number[]) => {
+					if (selectedRowKeys.length === 2) {
+						currentSelectList = selectedRowKeys;
+						const selectIndex: number[] = [];
+						selectedRowKeys.forEach((i) => {
+							selectIndex.push(data.tableList.findIndex((j) => j.confrontationId === i));
+						});
+						data.tableList.forEach((i, index) => {
+							if (index !== selectIndex[1]) {
+								i.disabled = true;
+							}
+						});
+						const list = data.tableList;
+						data.tableList = [...list];
+					} else {
+						data.tableList.forEach((i) => {
+							i.disabled = false;
+						});
+						const list = data.tableList;
+						data.tableList = [...list];
+						currentSelectList = [];
+					}
+				},
+				getCheckboxProps: (record: { disabled: boolean }) => ({
+					disabled: record.disabled // Column configuration not to be checked
+				})
+			},
+			columns: [
 				{
-					matchId: 1,
-					date: '2020-10-14',
-					match: [
+					title: '日期',
+					dataIndex: 'date',
+					key: 'name'
+				},
+				{ title: '对战时间', dataIndex: 'time', key: 'time' },
+				{ title: '对战类型', dataIndex: 'type', key: 'type', slots: { customRender: 'type' } },
+				{
+					title: 'HOME TEAM',
+					children: [
 						{
-							img: require('@/assets/1.jpg'),
-							homeTeamName: '上海队',
-							awayTeamName: '武汉队',
-							homeMatch: 3,
-							awayMatch: '4'
+							title: '队名',
+							dataIndex: 'homeTeamName',
+							key: 'homaName',
+							slots: { customRender: 'homeTeam' }
 						},
 						{
-							img: require('@/assets/1.jpg'),
-							homeTeamName: '广州队',
-							awayTeamName: '香港队',
-							homeMatch: 3,
-							awayMatch: '4'
+							title: 'SCORES',
+							dataIndex: 'homeTeamScore',
+							key: 'homeScore'
 						}
 					]
 				},
 				{
-					matchId: 2,
-					date: '2020-10-14',
-					match: [
+					title: 'AWAY TEAM',
+					children: [
 						{
-							img: require('@/assets/1.jpg'),
-							homeTeamName: '上海队',
-							awayTeamName: '武汉队',
-							homeMatch: 3,
-							awayMatch: '4'
+							title: 'SCORES',
+							dataIndex: 'visitingTeamScore',
+							key: 'awayScore'
 						},
 						{
-							img: require('@/assets/1.jpg'),
-							homeTeamName: '青岛队',
-							awayTeamName: '周口队',
-							homeMatch: 3,
-							awayMatch: '4'
+							title: '队名',
+							dataIndex: 'visitingTeamName',
+							key: 'awayName',
+							slots: { customRender: 'awayTeam' }
 						}
 					]
 				},
 				{
-					matchId: 3,
-					img: require('@/assets/1.jpg'),
-					homeTeamName: '上海队',
-					homeMatch: 3,
-					date: '2020-10-14',
-					match: []
+					title: '状态',
+					dataIndex: 'status',
+					key: 'state',
+					slots: { customRender: 'status' }
 				}
 			],
 			inPhoneColumns: [
@@ -364,112 +417,15 @@ export default defineComponent({
 					slots: { title: 'awayTeamName' }
 				}
 			],
-			columns: [
-				{
-					dataIndex: 'data',
-					key: 'name',
-					slots: { title: 'date' }
-				},
-				{ dataIndex: 'data', key: 'time', slots: { title: 'time' } },
-				{ dataIndex: 'data', key: 'type', slots: { title: 'type' } },
-				{
-					children: [
-						{
-							dataIndex: 'homaName',
-							key: 'homaName',
-							slots: { title: 'homeTeamName' }
-						},
-						{
-							dataIndex: 'homeScore',
-							key: 'homeScore',
-							slots: { title: 'homeScore' }
-						}
-					],
-					slots: { title: 'homeTeam' }
-				},
-				{
-					children: [
-						{
-							dataIndex: 'awayScore',
-							key: 'awayScore',
-							slots: { title: 'awayScore' }
-						},
-						{
-							dataIndex: 'awayName',
-							key: 'awayName',
-							slots: { title: 'awayTeamName' }
-						}
-					],
-					slots: { title: 'awayTeam' }
-				},
-				{
-					dataIndex: 'state',
-					key: 'state',
-					slots: { title: 'inState', customRender: 'state' }
-				}
-			],
-			tableList: [
-				{
-					data: '2020-10-1',
-					time: '18:25',
-					state: 1,
-					type: 1,
-					homaName: '张自然',
-					homeScore: 10,
-					awayName: '李逍遥',
-					awayScore: 5,
-					key: 1,
-					disabled: false
-				},
-				{
-					data: '2020-10-2',
-					time: '19:25',
-					state: 2,
-					type: 1,
-					homaName: '张自然',
-					homeScore: 10,
-					awayName: '李逍遥',
-					awayScore: 5,
-					key: 2,
-					disabled: false
-				},
-				{
-					data: '2020-10-3',
-					time: '17:25',
-					state: 3,
-					type: 1,
-					homaName: '张自然',
-					homeScore: 10,
-					awayName: '李逍遥',
-					awayScore: 5,
-					key: 3,
-					disabled: false
-				},
-				{
-					data: '2020-10-3',
-					time: '17:25',
-					state: 3,
-					type: 1,
-					homaName: '张自然',
-					homeScore: 10,
-					awayName: '李逍遥',
-					awayScore: 5,
-					key: 4,
-					disabled: false
-				},
-				{
-					data: '2020-10-3',
-					time: '17:25',
-					state: 3,
-					type: 1,
-					homaName: '张自然',
-					homeScore: 10,
-					awayName: '李逍遥',
-					awayScore: 5,
-					key: 5,
-					disabled: false
-				}
-			],
+			tableList: [{ confrontationId: 1 }],
+			teamChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTimeTableList();
+			},
+			stateChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTimeTableList();
+			},
 			showMatchTable: () => {
 				data.visible = true;
 			},
@@ -477,41 +433,12 @@ export default defineComponent({
 				console.log('1');
 			},
 			onSearch: () => {
-				console.log('1');
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTimeTableList();
 			},
-			// changeDisabled:() =>{
-			//   return {
-			//     disabled
-			//   }
-			// },
-			rowSelection: {
-				columnWidth: 100,
-				columnTitle: '排行',
-				onChange: (selectedRowKeys: number[]) => {
-					if (selectedRowKeys.length == 2) {
-						selectedRowKeys.forEach((i) => {
-							const index = data.tableList.findIndex((j) => j.key === i);
-							data.tableList.forEach((k, kndex) => {
-								if (index !== kndex) {
-									k.disabled = true;
-								} else {
-									k.disabled = false;
-								}
-							});
-							const list = data.tableList;
-							data.tableList = [...list];
-						});
-					} else {
-						data.tableList.forEach((i) => {
-							i.disabled = false;
-						});
-						const list = data.tableList;
-						data.tableList = [...list];
-					}
-				},
-				getCheckboxProps: (record: { disabled: boolean }) => ({
-					disabled: record.disabled // Column configuration not to be checked
-				})
+			pageChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTimeTableList();
 			},
 			showMatch: (value: any) => {
 				console.log(value);
@@ -533,13 +460,19 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				data.stageList = data.divisitonList.find((i) => i.divisionId === value)!.stageList;
 				if (data.stageList.length) {
-					data.stage = data.stageList[0].stageId;
+					data.stageId = data.stageList[0].stageId;
 				} else {
-					data.stage = '';
+					data.stageId = '';
 				}
 			},
-			stageChange: () => {
-				console.log(1);
+			stageChange: (value: number) => {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				data.teamList = data.stageList.find((i) => i.stageId === value)!.teamList;
+				if (data.teamList.length) {
+					data.teamId = data.teamList[0].teamId;
+				} else {
+					data.teamId = '';
+				}
 			}
 		});
 		const getDialogList = () => {
@@ -561,11 +494,39 @@ export default defineComponent({
 			});
 		};
 		const getSelectList = () => {
-			leagueSelectHttp({ competitionId: 234 }).then((res) => {
+			const obj = {
+				competitionId: 234,
+				teamFlag: true
+			};
+			leagueSelectHttp(obj).then((res) => {
 				data.divisitonList = res.data.data;
 				data.divisiton = res.data.data[0].divisionId;
 				data.stageList = res.data.data[0].stageList;
-				data.stage = res.data.data[0].stageList[0].stageId;
+				data.stageId = res.data.data[0].stageList[0].stageId;
+				data.teamList = res.data.data[0].stageList[0].teamList;
+				data.teamId = res.data.data[0].stageList[0].teamList[0].teamId;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTimeTableList();
+			});
+		};
+		const getTimeTableList = () => {
+			// const obj = {
+			// 	stageId: data.stageId,
+			// 	year: data.year,
+			// 	month: data.month,
+			// 	teamId: data.teamId,
+			// 	status: data.state,
+			// 	[data.secrchType]: data.searchValue,
+			// 	pageIndex: data.pageNum,
+			// 	pageSize: data.pageSize
+			// };
+			const obj = {
+				year: 2020,
+				stageId: 618
+			};
+			timeTableDataListHttp(obj).then((res) => {
+				data.tableList = res.data.data.list;
+				data.pageTotal = res.data.data.totalCount;
 			});
 		};
 		onMounted(() => {
@@ -600,5 +561,14 @@ export default defineComponent({
 }
 .awayClass {
 	text-align: right;
+}
+.winnerBox {
+	display: flex;
+	justify-content: space-around;
+}
+.winnerTeam {
+	background: #ff4e00;
+	color: #fff;
+	padding: 0 3px;
 }
 </style>

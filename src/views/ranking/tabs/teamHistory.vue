@@ -30,7 +30,7 @@
 						<div>{{ item.captainName }}</div>
 					</div>
 					<div class="info">{{ item.playerCount }}</div>
-					<div class="plainList">
+					<div v-if="item.top4GeneralRating" class="plainList">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.top4GeneralRating.rating">
 								<template v-slot:format="percent">
@@ -59,7 +59,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="plainList">
+					<div v-if="item.top4CompetitionRating" class="plainList">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.top4CompetitionRating.rating">
 								<template v-slot:format="percent">
@@ -89,7 +89,7 @@
 						</div>
 					</div>
 					<div class="info">{{ item.competitionCount }}</div>
-					<div class="chanceBox">
+					<div v-if="item.setWinProbability" class="chanceBox">
 						<div>
 							<a-progress type="circle" status="exception" :percent="parseInt(item.setWinProbability)" :width="80">
 								<template v-slot:format="percent">
@@ -275,19 +275,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
 import { teamDataListHttp, teamSearchHttp, indexCountryHttp } from '@/axios/api';
 import { SettingFilled, CloseCircleFilled, PlusOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRoute } from 'vue-router';
 export default defineComponent({
 	name: 'teamHistory',
+	props: ['activeKey'],
 	components: {
 		SettingFilled,
 		CloseCircleFilled,
 		PlusOutlined
 	},
-	setup() {
+	setup(prop: any) {
 		const ROUTE = useRoute();
 		const data = reactive({
 			total: 1,
@@ -442,13 +443,20 @@ export default defineComponent({
 			});
 		};
 		onMounted(() => {
-			let list: any = ROUTE.query.teamList;
-			if (list) {
-				list = list.split(',');
-			}
 			getCountryList();
-			getDataList(list);
 		});
+		watch(
+			() => prop.activeKey,
+			(val) => {
+				if (val === '2') {
+					let list: any = ROUTE.query.teamList;
+					if (list) {
+						list = list.split(',');
+						getDataList(list);
+					}
+				}
+			}
+		);
 		return {
 			...toRefs(data)
 		};

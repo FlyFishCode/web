@@ -85,7 +85,7 @@
 			</a-col>
 		</a-row>
 		<a-row class="rowStyle boxBG">
-			<a-tabs class="tabsBox" type="card" @tabClick="tabClick" v-model:activeKey="activeKey">
+			<a-tabs class="tabsBox" type="card" v-model:activeKey="activeKey">
 				<a-tab-pane key="league" :tab="$t('default.8')"></a-tab-pane>
 				<a-tab-pane key="team" :tab="$t('default.9')"></a-tab-pane>
 				<a-tab-pane key="players" :tab="$t('default.10')"></a-tab-pane>
@@ -110,11 +110,11 @@
 				<div class="content">
 					<div class="personalMsg">
 						<div class="contentImgBox">
-							<img :src="myInfo.img" alt="" />
+							<img :src="myInfo.memberImg" alt="" />
 						</div>
 						<div class="contentRight">
-							<div class="contentName">{{ myInfo.name }}</div>
-							<div>{{ myInfo.number }}</div>
+							<div class="contentName">{{ myInfo.memberName }}</div>
+							<div>{{ myInfo.name }}</div>
 							<div>
 								<a-button type="danger">{{ 'Profile' }}</a-button>
 							</div>
@@ -126,19 +126,28 @@
 							<a-button :type="isMyMatch ? '' : 'primary'" @click="matchTableClick">{{ $t('default.79') }}</a-button>
 						</div>
 						<div v-if="isMyMatch">
-							<div v-for="item in myInfo.myMatch" :key="item.index" class="match">
+							<div v-for="item in matchList" :key="item.index" class="match">
 								<div class="myMatchImgBox">
-									<img :src="item.img" alt="" />
+									<img :src="item.competitionImg" alt="" />
 								</div>
 								<div class="myMatchRight">
-									<div class="myMatchName">{{ item.matchName }}</div>
+									<div class="myMatchName" @click="infoPage(item.competitionId)">{{ item.competitionName }}</div>
 									<div>{{ item.date }}</div>
 								</div>
 							</div>
 							<div class="moreStyle" @click="entryMaPage"><PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}</div>
 						</div>
 						<div v-else>
-							<!-- <div v-if="item in myInfo.matchTimeTable" :key="item.index"></div> -->
+							<div></div>
+							<div v-if="item in matchTimeTable" :key="item.index" class="match">
+								<div class="myMatchImgBox">
+									<img :src="item.competitionImg" alt="" />
+								</div>
+								<div class="myMatchRight">
+									<div class="myMatchName" @click="infoPage(item.competitionId)">{{ item.competitionName }}</div>
+									<div>{{ item.date }}</div>
+								</div>
+							</div>
 							<div class="moreStyle"><PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}</div>
 						</div>
 					</div>
@@ -166,7 +175,7 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 // import { useStore } from "vuex";
 import { useRouter } from 'vue-router';
-import { loginHttp, indexCountryHttp } from '@/axios/api';
+import { loginHttp, indexCountryHttp, myMatchInfoHttp, myPageInfoHttp, myBattleDataListHttp, myBattleSelectHttp } from '@/axios/api';
 import { ProfileTwoTone, CloseOutlined, UserOutlined, LockOutlined, PlusCircleOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 export default defineComponent({
@@ -181,7 +190,7 @@ export default defineComponent({
 		MenuFoldOutlined
 	},
 	setup() {
-		const Router = useRouter();
+		const ROUTER = useRouter();
 		// const Store = useStore();
 		const data = reactive({
 			showPhoneTabs: false,
@@ -197,7 +206,6 @@ export default defineComponent({
 			userName: '',
 			country: '',
 			img: require('@/assets/logo.png'),
-			type: 1,
 			isMyMatch: true,
 			phoneTabsList: [
 				{ value: 'league', label: 'default.8' },
@@ -208,61 +216,22 @@ export default defineComponent({
 				{ value: 'myPage', label: 'default.2' }
 			],
 			myInfo: {
-				name: '李逍遥',
-				number: 4206251998858745210,
-				img: require('@/assets/1.jpg'),
-				myMatch: [
-					{
-						id: 1,
-						img: require('@/assets/1.jpg'),
-						matchName: 'Demo_League',
-						date: '2020-10-15 ~ 2021-06-30'
-					},
-					{
-						id: 2,
-						img: require('@/assets/1.jpg'),
-						matchName: 'Demo_League13隊長會',
-						date: '2020-10-15 ~ 2021-06-30'
-					},
-					{
-						id: 3,
-						img: require('@/assets/1.jpg'),
-						matchName: 'Demo_league12_1',
-						date: '2020-10-15 ~ 2021-06-30'
-					}
-				],
-				matchTimeTable: [
-					{
-						id: 1,
-						img: require('@/assets/1.jpg'),
-						matchName: 'Demo_League',
-						date: '2020-10-15 ~ 2021-06-30'
-					},
-					{
-						id: 2,
-						img: require('@/assets/1.jpg'),
-						matchName: 'Demo_League13隊長會',
-						date: '2020-10-15 ~ 2021-06-30'
-					},
-					{
-						id: 3,
-						img: require('@/assets/1.jpg'),
-						matchName: 'Demo_league12_1',
-						date: '2020-10-15 ~ 2021-06-30'
-					}
-				]
+				name: ''
 			},
+			matchList: [],
+			matchTimeTable: [],
 			countryList: [],
 			languageList: [
 				{ key: 'zh-cn', label: 'default.130' },
 				{ key: 'zh-tw', label: 'default.131' },
 				{ key: 'en-us', label: 'default.132' }
 			],
+			type: 'league',
 			typeList: [
-				{ key: 1, label: 'default.8' },
-				{ key: 2, label: 'default.9' },
-				{ key: 3, label: 'default.10' },
-				{ key: 4, label: 'default.127' }
+				{ key: 'league', label: 'default.8' },
+				{ key: 'team', label: 'default.9' },
+				{ key: 'players', label: 'default.10' },
+				{ key: 'shop', label: 'default.127' }
 			],
 			toggleCollapsed: () => {
 				data.collapsed = !data.collapsed;
@@ -272,13 +241,41 @@ export default defineComponent({
 				console.log(value);
 			},
 			onSearch: () => {
-				console.log('onSearch');
+				data.activeKey = data.type;
+				ROUTER.push({
+					path: data.type,
+				});
 			},
-			tabClick: (e: string) => {
-				Router.push(e);
+			infoPage: (id: number) => {
+				data.showBox = false;
+				ROUTER.push({
+					path: 'calendar',
+					query: {
+						stageId: id
+					}
+				});
 			},
 			showPersonBox: () => {
 				data.showBox = true;
+				myPageInfoHttp({ memberId: sessionStorage.getItem('userId') }).then((res) => {
+					if (res.data.data) {
+						data.myInfo = res.data.data;
+						data.myInfo.name = sessionStorage.getItem('userName') || '';
+					}
+				});
+				const obj = {
+					memberId: sessionStorage.getItem('userId'),
+					countryId: 617,
+					sort: 1,
+					date: 2020,
+					pageIndex: 1,
+					pageSize: 5
+				};
+				myMatchInfoHttp(obj).then((res) => {
+					if (res.data.data) {
+						data.matchList = res.data.data.list;
+					}
+				});
 			},
 			closeBox: () => {
 				data.showBox = false;
@@ -293,7 +290,7 @@ export default defineComponent({
 				console.log(e);
 			},
 			entryIndex: () => {
-				Router.push('/');
+				ROUTER.push('/');
 			},
 			login: () => {
 				const obj = {
@@ -311,7 +308,7 @@ export default defineComponent({
 						data.userName = res.data.data.username;
 						data.isLogin = true;
 						data.visible = false;
-						Router.push('myPage');
+						ROUTER.push('myPage');
 					} else {
 						message.warning(res.data.msg);
 					}
@@ -322,21 +319,57 @@ export default defineComponent({
 				sessionStorage.removeItem('token');
 				sessionStorage.removeItem('userId');
 				sessionStorage.removeItem('userName');
-				Router.push('/');
+				ROUTER.push('/');
 			},
 			entryPage: (path: string) => {
 				data.showPhoneTabs = false;
-				Router.push(path);
+				ROUTER.push(path);
 			},
 			myMatchClick: () => {
 				data.isMyMatch = true;
 			},
 			matchTableClick: () => {
 				data.isMyMatch = false;
+				const leagueId = '';
+				const first = new Promise((resolve, reject) => {
+					const obj = {
+						memberId: 75408,
+						countryId: sessionStorage.getItem('countryId'),
+						year: 2020
+					};
+					myBattleSelectHttp(obj).then((res) => {
+						debugger;
+						if (res.data.data.length) {
+							resolve(res.data.data);
+						} else {
+							reject('1');
+						}
+					});
+				});
+				const last = new Promise((resolve, reject) => {
+					const obj = {
+						competitionId: leagueId,
+						memberId: 75408,
+						pageIndex: 1,
+						pageSize: 5
+					};
+					myBattleDataListHttp(obj).then((res) => {
+						debugger;
+						if (res.data.data.length) {
+							resolve(res.data.data);
+						} else {
+							reject('1');
+						}
+					});
+				});
+				Promise.all([first, last]).then((res) => {
+					debugger;
+					console.log(res);
+				});
 			},
 			entryMaPage: () => {
 				data.showBox = false;
-				Router.push('/myPage');
+				ROUTER.push('/myPage');
 			}
 		});
 		onMounted(() => {

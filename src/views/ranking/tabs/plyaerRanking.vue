@@ -79,8 +79,8 @@
 						<div class="tableImgBox"><img :src="record.captainImg" alt="" /></div>
 						<div class="tableMsgCentent">
 							<div @click="entryInfoPage(record.playerId)" class="link">{{ record.playerName }}</div>
-							<div>
-								<span v-if="record.shop">{{ record.shop.shopName }}</span>
+							<div v-if="record.shop && record.shop.shopName">
+								<span>{{ record.shop.shopName }}</span>
 								<span style="cursor:pointer" @click="showDialog(record.shop)">
 									<EnvironmentOutlined />
 								</span>
@@ -190,10 +190,12 @@ export default defineComponent({
 				return {
 					className: 'selectBox',
 					onClick: (e: any) => {
-						if (e.target.className.includes('ant-table-column-title') && currentSelectList.length === 2) {
-							ctx.emit('active-key-change', '4', currentSelectList);
-						} else {
-							message.warning('请选择两支队伍');
+						if (e.target.className.includes('ant-table-column-title')) {
+							if (currentSelectList.length === 2) {
+								ctx.emit('player-key-change', '4', currentSelectList);
+							} else {
+								message.warning('请选择两支队伍');
+							}
 						}
 					}
 				};
@@ -245,7 +247,7 @@ export default defineComponent({
 				},
 				{
 					dataIndex: 'data',
-					width: 180,
+					width: 160,
 					slots: { title: 'date', customRender: 'team' },
 					fixed: 'left'
 				},

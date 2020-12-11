@@ -26,7 +26,7 @@
 
 			<a-row class="rowStyle">
 				<!-- <div v-if="state === 1"> -->
-				<a-tabs type="card">
+				<a-tabs type="card" v-model:activeKey="currentKey">
 					<a-tab-pane key="1" :tab="$t('default.62')">
 						<matchResult />
 					</a-tab-pane>
@@ -209,6 +209,7 @@ interface DataProps {
 	pageSize: number;
 	pageTotal: number;
 	state: string;
+	currentKey: any;
 	secrchType: string;
 	searchValue: string;
 	stageList: Array<any>;
@@ -234,6 +235,7 @@ export default defineComponent({
 		let currentSelectList: Array<any> = [];
 		const data: DataProps = reactive({
 			entryPath: '/league',
+			currentKey: '1',
 			visible: false,
 			AWARD: ROUTE.query.AWARD,
 			searchValue: '',
@@ -532,6 +534,9 @@ export default defineComponent({
 		onMounted(() => {
 			if (ROUTE.query.ismatchTablePage) {
 				data.ismatchTablePage = true;
+			}
+			if (ROUTE.query.currentKey) {
+				data.currentKey = ROUTE.query.currentKey;
 			}
 			getSelectList();
 			getDialogList();

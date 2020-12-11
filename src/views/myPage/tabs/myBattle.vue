@@ -9,11 +9,11 @@
 					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 				</a-select>
 			</a-col>
-			<a-col :lg="3" :xs="6">
+			<!-- <a-col :lg="3" :xs="6">
 				<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
 					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 				</a-select>
-			</a-col>
+			</a-col> -->
 			<a-col :lg="3" :xs="6">
 				<a-select v-model:value="leagueId" @change="leagueChange" class="selectBox">
 					<a-select-option v-for="item in leagueList" :key="item.competitionId" :value="item.competitionId">{{ item.competitionName }}</a-select-option>
@@ -69,41 +69,59 @@
 
 		<a-row v-show="isList">
 			<a-table class="inPhoneTableDisplay" :columns="columns" :data-source="dataList" :pagination="false" bordered>
-				<template v-slot:home="{ text }">
-					<a-button type="link" size="small">{{ text }}</a-button>
+				<template v-slot:home="{ record }">
+					<div class="teamBox">
+						<div v-if="record.winOrLose === 1" class="winBox">{{ 'Win' }}</div>
+						<div>{{ record.homeTeamName }}</div>
+					</div>
 				</template>
 				<template v-slot:type="{ text }">
 					<div v-if="text === 1">{{ $t('default.63') }}</div>
 					<div v-if="text === 2">{{ $t('default.142') }}</div>
 				</template>
-				<template v-slot:away="{ text }">
-					<a-button type="link" size="small">{{ text }}</a-button>
-				</template>
-				<template v-slot:status="{ text }">
-					<div class="stateBox">
-						<div v-if="text === 1" class="inPlay" @click="goPlay">{{ $t('default.64') }}</div>
-						<div v-if="text === 2">{{ $t('default.104') }}</div>
-						<div v-if="text === 3">{{ $t('default.244') }}</div>
+				<template v-slot:away="{ record }">
+					<div class="teamBox">
+						<div>{{ record.visitingTeamName }}</div>
+						<div v-if="record.winOrLose === 3" class="winBox">{{ 'Win' }}</div>
 					</div>
+				</template>
+				<template v-slot:status="{ record }">
+					<div class="stateBox">
+						<div v-if="record.status === 1" class="inPlay" @click="goPlay(record.id)">{{ $t('default.41') }}</div>
+						<div v-if="record.status === 2">{{ $t('default.104') }}</div>
+						<div v-if="record.status === 3">{{ $t('default.244') }}</div>
+					</div>
+				</template>
+				<template v-slot:move>
+					<div class="moveBox">{{ '捷径' }}</div>
 				</template>
 			</a-table>
 			<a-table class="showPhoneTable" :columns="inPhoneColumns" :data-source="dataList" :pagination="false" bordered>
-				<template v-slot:home="{ text }">
-					<a-button type="link" size="small">{{ text }}</a-button>
+				<template v-slot:home="{ record }">
+					<div class="teamBox">
+						<div v-if="record.winOrLose === 1" class="winBox">{{ 'Win' }}</div>
+						<div>{{ record.homeTeamName }}</div>
+					</div>
 				</template>
 				<template v-slot:type="{ text }">
 					<div v-if="text === 1">{{ $t('default.63') }}</div>
 					<div v-if="text === 2">{{ $t('default.142') }}</div>
 				</template>
-				<template v-slot:away="{ text }">
-					<a-button type="link" size="small">{{ text }}</a-button>
+				<template v-slot:away="{ record }">
+					<div class="teamBox">
+						<div>{{ record.visitingTeamName }}</div>
+						<div v-if="record.winOrLose === 3" class="winBox">{{ 'Win' }}</div>
+					</div>
 				</template>
 				<template v-slot:status="{ text }">
 					<div class="stateBox">
-						<div v-if="text === 1" class="inPlay" @click="goPlay">{{ $t('default.64') }}</div>
+						<div v-if="text === 1" class="inPlay" @click="goPlay">{{ $t('default.41') }}</div>
 						<div v-if="text === 2">{{ $t('default.104') }}</div>
 						<div v-if="text === 3">{{ $t('default.244') }}</div>
 					</div>
+				</template>
+				<template v-slot:move>
+					<div class="moveBox">{{ '捷径' }}</div>
 				</template>
 			</a-table>
 		</a-row>
@@ -149,25 +167,6 @@ export default defineComponent({
 	setup() {
 		const ROUTER = useRouter();
 		const memberId = Number(sessionStorage.getItem('userId'));
-		// let num = 0;
-		// const getMergeRowNum = (colName: any, dataList: any, data: any) => {
-		//   const temp: any = {};
-		//   let n = 0;
-		//   if (colName !== temp[colName]) {
-		//     temp[colName] = data;
-		//     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-		//     dataList.forEach((i: any) => {
-		//       if (i.date === temp.date) {
-		//         console.log(i.date, temp.date);
-		//         n += 1;
-		//       }
-		//     });
-		//   } else {
-		//     n += 1;
-		//   }
-		//   // num = n;
-		//   return n;
-		// };
 		const data = reactive({
 			entryPath: '/myPage',
 			colSpan: 5,
@@ -179,7 +178,7 @@ export default defineComponent({
 			month: new Date().getMonth() + 1,
 			leagueId: null,
 			status: '',
-			leagueList: [],
+			leagueList: [{ competitionId: '' }],
 			statusList: [
 				{ value: '', label: 'default.246' },
 				{ value: 1, label: 'default.64' },
@@ -240,7 +239,7 @@ export default defineComponent({
 				},
 				{
 					title: '对战类型',
-					width: 80,
+					width: 100,
 					dataIndex: 'type',
 					slots: { customRender: 'type' }
 				},
@@ -249,7 +248,6 @@ export default defineComponent({
 					children: [
 						{
 							title: '队名',
-							width: 100,
 							dataIndex: 'homeTeamName',
 							slots: { customRender: 'home' }
 						},
@@ -262,7 +260,6 @@ export default defineComponent({
 						{ title: 'Score', width: 100, dataIndex: 'visitingTeamScore' },
 						{
 							title: '队名',
-							width: 100,
 							dataIndex: 'visitingTeamName',
 							slots: { customRender: 'away' }
 						}
@@ -276,7 +273,8 @@ export default defineComponent({
 				},
 				{
 					title: '移动',
-					width: 50
+					width: 70,
+					slots: { customRender: 'move' }
 				}
 			],
 			inPhoneColumns: [
@@ -327,8 +325,16 @@ export default defineComponent({
 			Gohistory: () => {
 				ROUTER.push('/teamIndex');
 			},
-			goPlay: () => {
-				ROUTER.push('/teamIndex');
+			goPlay: (id: number) => {
+				ROUTER.push({
+					path: '/calendar',
+					query: {
+						activeKey: '2',
+						currentKey: '2',
+						ismatchTablePage: '1',
+						teamId: id
+					}
+				});
 			},
 			matchTypeChange: (value: number) => {
 				console.log(value);
@@ -339,32 +345,37 @@ export default defineComponent({
 					query: { ismatchTablePage: 1 }
 				});
 			},
-			statusChange: (value: any) => {
+			statusChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getDataList(data.leagueId, memberId, value);
+				getDataList();
 			},
-			leagueChange: (value: any) => {
+			leagueChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getDataList(value, memberId, data.status);
+				getDataList();
 			}
 		});
 		const getSelectList = () => {
 			const obj = {
-				memberId,
+				memberId: 75408,
 				countryId: sessionStorage.getItem('countryId'),
 				year: data.year
 			};
 			myBattleSelectHttp(obj).then((res) => {
 				if (res.data.data.length) {
 					data.leagueList = res.data.data;
+					data.leagueId = res.data.data[0].competitionId || '';
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getDataList();
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getCalendarList();
 				}
 			});
 		};
-		const getDataList = (competitionId = data.leagueId, memberId: any, status = data.status) => {
+		const getDataList = () => {
 			const obj = {
-				competitionId,
-				memberId: memberId,
-				status,
+				competitionId: data.leagueId,
+				memberId: 75408,
+				status: data.status,
 				pageIndex: 1,
 				pageSize: 10
 			};
@@ -378,6 +389,7 @@ export default defineComponent({
 		const getCalendarList = (year = data.year, month = data.month) => {
 			const obj = {
 				competitionId: data.leagueId,
+				memberId,
 				status: data.status,
 				year: year,
 				month: month
@@ -388,8 +400,6 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getSelectList();
-			getDataList(data.leagueId, memberId, data.status);
-			getCalendarList();
 		});
 		return {
 			...toRefs(data)
@@ -428,5 +438,19 @@ export default defineComponent({
 }
 .type {
 	color: #2f2f2f;
+}
+.teamBox {
+	display: flex;
+	justify-content: space-around;
+}
+.winBox {
+	background: #ff5e00;
+	padding: 0 3px;
+}
+.moveBox {
+	background: #ff5e00;
+	cursor: pointer;
+	text-align: center;
+	color: #fff;
 }
 </style>

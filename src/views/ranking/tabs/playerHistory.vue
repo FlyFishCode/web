@@ -25,8 +25,8 @@
 					</div>
 					<div class="info">{{ item.countryName }}</div>
 					<div class="info">{{ item.shopName }}</div>
-					<div class="plainList">
-						<!-- <div>
+					<div v-if="item.generalRating" class="plainList">
+						<div>
 							<a-progress type="circle" status="exception" :percent="item.generalRating.rating">
 								<template v-slot:format="percent">
 									<div class="rankingScore">{{ percent }}</div>
@@ -53,10 +53,10 @@
 									<a-progress status="exception" :percent="item.generalRating.mpr" />
 								</div>
 							</div>
-						</div> -->
+						</div>
 					</div>
-					<div class="plainList">
-						<!-- <div>
+					<div v-if="item.competitionRating" class="plainList">
+						<div>
 							<a-progress type="circle" status="exception" :percent="item.competitionRating.rating">
 								<template v-slot:format="percent">
 									<div class="rankingScore">{{ percent }}</div>
@@ -83,10 +83,10 @@
 									<a-progress status="exception" :percent="item.competitionRating.mpr" />
 								</div>
 							</div>
-						</div> -->
+						</div>
 					</div>
-					<div class="plainList">
-						<!-- <div>
+					<div v-if="item.matchRating" class="plainList">
+						<div>
 							<a-progress type="circle" status="exception" :percent="item.matchRating">
 								<template v-slot:format="percent">
 									<div class="rankingScore">{{ percent }}</div>
@@ -113,11 +113,11 @@
 									<a-progress status="exception" :percent="item.matchMPR" />
 								</div>
 							</div>
-						</div> -->
+						</div>
 					</div>
-					<div class="chanceBox">
+					<div v-if="item.setWinProbability" class="chanceBox">
 						<div>
-							<a-progress type="circle" status="exception" :percent="item.setWinProbability" :width="80">
+							<a-progress type="circle" status="exception" :percent="parseInt(item.setWinProbability)" :width="80">
 								<template v-slot:format="percent">
 									<div class="scoreBox">{{ percent }}</div>
 									<div class="scoreTitle">{{ 'Set' }}</div>
@@ -142,7 +142,7 @@
 					</div>
 					<div class="info">{{ item.place }}</div>
 					<div class="info">{{ item.address }}</div>
-					<div class="plainList">
+					<div v-if="item.plainRating" class="plainList">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.plainRating">
 								<template v-slot:format="percent">
@@ -172,7 +172,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="plainList">
+					<div v-if="item.plainRating" class="plainList">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.plainRating">
 								<template v-slot:format="percent">
@@ -302,18 +302,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
 import { playerSearchHttp, playerDataListHttp, indexCountryHttp } from '@/axios/api';
 import { SettingFilled, CloseCircleFilled, PlusOutlined } from '@ant-design/icons-vue';
 import { useRoute } from 'vue-router';
 export default defineComponent({
 	name: 'playerHistory',
+	props: ['activeKey'],
 	components: {
 		SettingFilled,
 		CloseCircleFilled,
 		PlusOutlined
 	},
-	setup() {
+	setup(prop: any) {
 		const ROUTE = useRoute();
 		const data = reactive({
 			total: 10,
@@ -376,17 +377,17 @@ export default defineComponent({
 						});
 					}
 				});
-				data.dataList.forEach((i) => {
-					if (i.playerId === value) {
-						// dialog table 设置数据已被选择
-						i.flag = true;
-						//  展示表格显示填充数据
-						// eslint-disable-next-line @typescript-eslint/no-use-before-define
-						addTeam([value]).then((response: any) => {
-							data.teamList.fill(response, data.currentIndex, data.currentIndex + 1);
-						});
-					}
-				});
+				// data.dataList.forEach((i) => {
+				// 	if (i.playerId === value) {
+				// 		// dialog table 设置数据已被选择
+				// 		i.flag = true;
+				// 		//  展示表格显示填充数据
+				// 		// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				// 		addTeam([value]).then((response: any) => {
+				// 			data.teamList.fill(response, data.currentIndex, data.currentIndex + 1);
+				// 		});
+				// 	}
+				// });
 				data.visible = false;
 			},
 			pageChange: () => {
@@ -465,13 +466,20 @@ export default defineComponent({
 			});
 		};
 		onMounted(() => {
-			let list: any = ROUTE.query.teamList;
-			if (list) {
-				list = list.split(',');
-			}
 			getCountryList();
-			getDataList(list);
 		});
+		watch(
+			() => prop.activeKey,
+			(val) => {
+				if (val === '4') {
+					let list: any = ROUTE.query.teamList;
+					if (list) {
+						list = list.split(',');
+						getDataList(list);
+					}
+				}
+			}
+		);
 		return {
 			...toRefs(data)
 		};

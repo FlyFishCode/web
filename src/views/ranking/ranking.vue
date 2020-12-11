@@ -3,16 +3,16 @@
 		<divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
 		<a-tabs type="card" v-model:activeKey="activeKey" class="tabsBox">
 			<a-tab-pane key="1" :tab="$t('default.67')">
-				<teamRanking @active-key-change="tabActiveKeyChange" />
+				<teamRanking @team-key-change="teamKeyChange" />
 			</a-tab-pane>
 			<a-tab-pane key="2" :tab="$t('default.181')">
-				<teamHistory />
+				<teamHistory :activeKey="activeKey" />
 			</a-tab-pane>
 			<a-tab-pane key="3" :tab="$t('default.68')">
-				<plyaerRanking @active-key-change="tabActiveKeyChange" />
+				<plyaerRanking @player-key-change="playerKeyChange" />
 			</a-tab-pane>
 			<a-tab-pane key="4" :tab="$t('default.182')">
-				<playerHistory />
+				<playerHistory :activeKey="activeKey" />
 			</a-tab-pane>
 		</a-tabs>
 	</div>
@@ -25,7 +25,7 @@ import teamRanking from '@/views/ranking/tabs/teamRanking.vue';
 import teamHistory from '@/views/ranking/tabs/teamHistory.vue';
 import plyaerRanking from '@/views/ranking/tabs/plyaerRanking.vue';
 import playerHistory from '@/views/ranking/tabs/playerHistory.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, onBeforeRouteUpdate } from 'vue-router';
 export default defineComponent({
 	name: 'ranking',
 	components: {
@@ -35,8 +35,12 @@ export default defineComponent({
 		plyaerRanking,
 		playerHistory
 	},
-	emits: ['active-key-change'],
+	emits: ['team-key-change', 'player-key-change'],
 	setup() {
+		onBeforeRouteUpdate(async (to, from) => {
+			// only fetch the user if the id changed as maybe only the query or the hash changed
+			console.log(to, from);
+		});
 		const ROUTE = useRoute();
 		const data = reactive({
 			activeKey: '1',
@@ -45,7 +49,11 @@ export default defineComponent({
 			getDate: () => {
 				return '2020-10-17';
 			},
-			tabActiveKeyChange: (key: string, list: Array<any>) => {
+			teamKeyChange: (key: string, list: Array<any>) => {
+				data.activeKey = key;
+				ROUTE.query.teamList = `${list[0]},${list[1]}`;
+			},
+			playerKeyChange: (key: string, list: Array<any>) => {
 				data.activeKey = key;
 				ROUTE.query.teamList = `${list[0]},${list[1]}`;
 			}

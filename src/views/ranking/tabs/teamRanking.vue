@@ -39,28 +39,13 @@
 		<!-- 表格 -->
 		<a-row class="inPhoneTableDisplay">
 			<a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey="teamId" :customHeaderRow="customHeaderRow">
-				<template v-slot:index>{{ $t('default.70') }}</template>
-				<template v-slot:date>{{ $t('default.55') }}</template>
-				<template v-slot:Rating>{{ $t('default.168') }}</template>
-				<template v-slot:PPD>{{ $t('default.169') }}</template>
-				<template v-slot:MPR>{{ $t('default.170') }}</template>
-				<template v-slot:homeTeam>{{ $t('default.134') }}</template>
-				<template v-slot:homeWin>{{ $t('default.46') }}</template>
-				<template v-slot:homeLose>{{ $t('default.47') }}</template>
-				<template v-slot:homeDraw>{{ $t('default.48') }}</template>
-				<template v-slot:homeChange>{{ $t('default.185') }}</template>
-				<template v-slot:awayTeam>{{ $t('default.137') }}</template>
-				<template v-slot:awayWin>{{ $t('default.46') }}</template>
-				<template v-slot:awayLose>{{ $t('default.47') }}</template>
-				<template v-slot:awayDraw>{{ $t('default.48') }}</template>
-				<template v-slot:awayChange>{{ $t('default.185') }}</template>
 				<template v-slot:team="{ record }">
 					<div class="tableBox">
 						<div class="tableImgBox"><img :src="record.teamImg" alt="" /></div>
 						<div class="tableMsgCentent">
 							<div @click="entryInfoPage(record.teamId)" class="link">{{ record.teamName }}</div>
-							<div>
-								<span v-if="record.shop">{{ record.shop.shopName }}</span>
+							<div v-if="record.shop">
+								<span>{{ record.shop.shopName }}</span>
 								<span style="cursor:pointer" @click="showDialog(record.shop)">
 									<EnvironmentOutlined />
 								</span>
@@ -188,10 +173,12 @@ export default defineComponent({
 				return {
 					className: 'selectBox',
 					onClick: (e: any) => {
-						if (e.target.className.includes('ant-table-column-title') && currentSelectList.length === 2) {
-							ctx.emit('active-key-change', '2', currentSelectList);
-						} else {
-							message.warning('请选择两支队伍');
+						if (e.target.className.includes('ant-table-column-title')) {
+							if (currentSelectList.length === 2) {
+								ctx.emit('team-key-change', '2', currentSelectList);
+							} else {
+								message.warning('请选择两支队伍');
+							}
 						}
 					}
 				};
@@ -236,65 +223,65 @@ export default defineComponent({
 				{ dataIndex: 'data', key: 'time', slots: { title: 'Rating' } }
 			],
 			columns: [
-				{ dataIndex: 'sort', key: 'time', slots: { title: 'index' } },
+				{ title: '排行', dataIndex: 'sort', key: 'time' },
 				{
+					title: '队名',
 					dataIndex: 'teamName',
-					width: 200,
 					key: 'name',
-					slots: { title: 'date', customRender: 'team' }
+					slots: { customRender: 'team' }
 				},
-				{ dataIndex: 'competitionRating.rating', key: 'time', slots: { title: 'Rating' } },
-				{ dataIndex: 'competitionRating.ppd', key: 'type', slots: { title: 'PPD' } },
-				{ dataIndex: 'competitionRating.mpr', key: 'type', slots: { title: 'MPR' } },
+				{ title: 'Rating', dataIndex: 'competitionRating.rating', key: 'time' },
+				{ title: 'PPD', dataIndex: 'competitionRating.ppd', key: 'type' },
+				{ title: 'MPR', dataIndex: 'competitionRating.mpr', key: 'type' },
 				{
+					title: 'Match',
 					children: [
 						{
+							title: '胜',
 							dataIndex: 'matchResult.wins',
-							key: 'homaName',
-							slots: { title: 'homeWin' }
+							key: 'homaName'
 						},
 						{
+							title: '败',
 							dataIndex: 'matchResult.draws',
-							key: 'homeScore',
-							slots: { title: 'homeLose' }
+							key: 'homeScore'
 						},
 						{
+							title: '和',
 							dataIndex: 'matchResult.losses',
-							key: 'homeScore',
-							slots: { title: 'homeDraw' }
+							key: 'homeScore'
 						},
 						{
+							title: '胜率',
 							dataIndex: 'matchResult.winProbability',
-							key: 'homeScore',
-							slots: { title: 'homeChange' }
+							key: 'homeScore'
 						}
-					],
-					slots: { title: 'homeTeam' }
+					]
 				},
 				{
+					title: 'Set',
 					children: [
 						{
+							title: '胜',
 							dataIndex: 'setResult.wins',
-							key: 'awayScore',
-							slots: { title: 'awayWin' }
+							key: 'awayScore'
 						},
 						{
+							title: '败',
 							dataIndex: 'setResult.draws',
-							key: 'awayName',
-							slots: { title: 'awayLose' }
+							key: 'awayName'
 						},
 						{
+							title: '和',
 							dataIndex: 'setResult.losses',
-							key: 'homeScore',
-							slots: { title: 'awayDraw' }
+							key: 'homeScore'
 						},
 						{
+							title: '胜率',
 							dataIndex: 'setResult.winProbability',
-							key: 'homeScore',
-							slots: { title: 'awayChange' }
+							key: 'homeScore'
 						}
-					],
-					slots: { title: 'awayTeam' }
+					]
 				}
 			],
 			tableList: [{ teamId: 1, disabled: false }],

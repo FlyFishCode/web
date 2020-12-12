@@ -159,6 +159,7 @@ export default defineComponent({
 			columns: [
 				{
 					title: '队名',
+					width: 150,
 					dataIndex: 'teamName',
 					slots: { customRender: 'teamName' }
 				},
@@ -195,6 +196,7 @@ export default defineComponent({
 				},
 				{
 					title: 'ALLOCATION INFORMATION',
+					width: 150,
 					dataIndex: 'selectData'
 				},
 				{

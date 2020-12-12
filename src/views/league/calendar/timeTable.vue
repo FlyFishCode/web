@@ -25,30 +25,18 @@
 			</a-row>
 
 			<a-row class="rowStyle">
-				<!-- <div v-if="state === 1"> -->
 				<a-tabs type="card" v-model:activeKey="currentKey">
 					<a-tab-pane key="1" :tab="$t('default.62')">
 						<matchResult />
 					</a-tab-pane>
-					<a-tab-pane key="2" :tab="$t('default.41')">
+					<a-tab-pane v-if="ready" key="2" :tab="$t('default.41')">
+						<matchTable :confrontationId="confrontationId" :tableTeamId="tableTeamId" :confrontationInfoId="confrontationInfoId" />
 						<matchTable />
 					</a-tab-pane>
-					<a-tab-pane v-if="AWARD" key="3" tab="AWARD">
-						<!-- <a-tab-pane key="3" tab="AWARD"> -->
-						<award />
+					<a-tab-pane v-else key="3" tab="AWARD">
+						<award :confrontationId="confrontationId" />
 					</a-tab-pane>
 				</a-tabs>
-				<!-- </div> -->
-				<!-- <div v-else>
-        <a-tabs type="card">
-          <a-tab-pane key="1" tab="比赛结果">
-            Content of Tab Pane 1
-          </a-tab-pane>
-          <a-tab-pane key="2" tab="AWARD">
-            Content of Tab Pane 2
-          </a-tab-pane>
-        </a-tabs>
-      </div> -->
 			</a-row>
 		</div>
 		<!-- 对战表列表 -->
@@ -113,11 +101,11 @@
 					<template v-slot:type="{ text }">
 						<div>{{ text === 1 ? $t('default.63') : $t('default.142') }}</div>
 					</template>
-					<template v-slot:status="{ text }">
+					<template v-slot:status="{ record }">
 						<div class="tableState">
-							<div v-if="text === 1" class="plan" @click="showPlan">{{ $t('default.41') }}</div>
-							<div v-if="text === 2">{{ 'Ready' }}</div>
-							<div v-if="text === 3">{{ 'Finished' }}</div>
+							<div v-if="record.status === 1" class="plan" @click="readyClick(record.confrontationId)">{{ $t('default.41') }}</div>
+							<div v-if="record.status === 2">{{ 'Ready' }}</div>
+							<div v-if="record.status === 3" @click="finishClick(record.confrontationId)">{{ 'Finished' }}</div>
 						</div>
 					</template>
 				</a-table>
@@ -199,6 +187,7 @@ interface DataProps {
 	tableList: Array<any>;
 	dialogList: Array<any>;
 	visible: boolean;
+	ready: boolean;
 	ismatchTablePage: boolean;
 	stageId: string;
 	divisiton: string;
@@ -208,6 +197,7 @@ interface DataProps {
 	pageNum: number;
 	pageSize: number;
 	pageTotal: number;
+	confrontationId: number;
 	state: string;
 	currentKey: any;
 	secrchType: string;
@@ -236,8 +226,9 @@ export default defineComponent({
 		const data: DataProps = reactive({
 			entryPath: '/league',
 			currentKey: '1',
+			confrontationId: 0,
 			visible: false,
-			AWARD: ROUTE.query.AWARD,
+			ready: true,
 			searchValue: '',
 			ismatchTablePage: false,
 			pageNum: 1,
@@ -306,16 +297,18 @@ export default defineComponent({
 				return {
 					className: 'selectBox',
 					onClick: (e: any) => {
-						if (e.target.className.includes('ant-table-column-title') && currentSelectList.length === 2) {
-							ROUTER.push({
-								path: 'ranking',
-								query: {
-									activeKey: '2',
-									teamList: `${currentSelectList[0]},${currentSelectList[1]}`
-								}
-							});
-						} else {
-							message.warning('请选择两支队伍');
+						if (e.target.className.includes('ant-table-column-title')) {
+							if (currentSelectList.length === 2) {
+								ROUTER.push({
+									path: 'ranking',
+									query: {
+										activeKey: '2',
+										teamList: `${currentSelectList[0]},${currentSelectList[1]}`
+									}
+								});
+							} else {
+								message.warning('请选择两支队伍');
+							}
 						}
 					}
 				};
@@ -446,8 +439,15 @@ export default defineComponent({
 				console.log(value);
 				data.ismatchTablePage = true;
 			},
-			showPlan: () => {
+			readyClick: (id: number) => {
 				data.ismatchTablePage = true;
+				data.ready = true;
+				data.confrontationId = id;
+			},
+			finishClick: (id: number) => {
+				data.ismatchTablePage = true;
+				data.ready = false;
+				data.confrontationId = id;
 			},
 			Gohistory: () => {
 				console.log('111');

@@ -27,7 +27,7 @@
 					</a-row>
 
 					<a-row class="inPhoneTableDisplay">
-						<showTeam />
+						<showTeam :teamObj="teamObj" />
 					</a-row>
 
 					<a-row class="rowStyle">
@@ -39,27 +39,27 @@
 						</a-col>
 					</a-row>
 					<a-row>
-						<a-table class="inPhoneTableDisplay" :columns="leagueColumns" :data-source="leagueTableList" :pagination="false" rowkey="id" :scroll="{ x: 300 }" bordered>
-							<template #index="{ index }">
+						<a-table class="inPhoneTableDisplay" :columns="leagueColumns" :data-source="leagueTableList" :pagination="false" rowkey="captainId" :scroll="{ x: 300 }" bordered>
+							<template #sort="{ index }">
 								<div>{{ index + 1 }}</div>
 							</template>
-							<template #player="{ record }">
+							<template #team="{ record }">
 								<div class="tableStyle">
-									<img class="tableImg" :src="record.playerImg" alt="" />
-									<div>
-										<div>{{ record.playerName }}</div>
-										<div v-if="record.shop && record.shop.shopName" class="link" @click="fastWay(record)">{{ record.shop.shopName }}</div>
-									</div>
+									<img class="tableImg" :src="record.teamImg" alt="" />
+									<div class="link" @click="showDialog(record)">{{ record.teamName }}</div>
 								</div>
 							</template>
 						</a-table>
 						<!-- 移动端显示 -->
-						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 300 }" :columns="leagueColumns" :data-source="tableList" rowkey="id" bordered>
+						<a-table class="showPhoneTable" :columns="leagueColumns" :data-source="leagueTableList" rowkey="captainId" :pagination="false" :scroll="{ x: 300 }" bordered>
 							<template v-slot:teamName="{ record }">
 								<img class="tableImg" :src="record.img" alt="" />
-								<a @click="fastWay(row)">{{ record.address }}</a>
+								<div class="link">{{ record.teamName }}</div>
 							</template>
 						</a-table>
+						<div class="pagination">
+							<a-pagination v-model:current="leaguePageNum" v-model:pageSize="leaguePageSize" :total="leagueTotal" @change="leaguePageChange" />
+						</div>
 					</a-row>
 
 					<a-row class="rowStyle">
@@ -68,27 +68,27 @@
 						</a-col>
 					</a-row>
 					<a-row>
-						<a-table class="inPhoneTableDisplay" :scroll="{ x: 1200 }" :columns="rewardColumns" :data-source="rewardTableList" :pagination="false" rowkey="id" bordered>
-							<template #index="{ index }">
+						<a-table class="inPhoneTableDisplay" :scroll="{ x: 1200 }" :columns="rewardColumns" :data-source="rewardTableList" :pagination="false" rowkey="captainId" bordered>
+							<template #sort="{ index }">
 								<div>{{ index + 1 }}</div>
 							</template>
-							<template #player="{ record }">
+							<template #team="{ record }">
 								<div class="tableStyle">
-									<img class="tableImg" :src="record.playerImg" alt="" />
-									<div>
-										<div>{{ record.playerName }}</div>
-										<div v-if="record.shop && record.shop.shopName" class="link" @click="fastWay(record)">{{ record.shop.shopName }}</div>
-									</div>
+									<img class="tableImg" :src="record.teamImg" alt="" />
+									<div class="link" @click="showDialog(record)">{{ record.teamName }}</div>
 								</div>
 							</template>
 						</a-table>
 						<!-- 移动端显示 -->
-						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 400 }" :columns="historyColumns" rowkey="id" :data-source="tableList" bordered>
+						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 400 }" :columns="historyColumns" rowkey="captainId" :data-source="tableList" bordered>
 							<template v-slot:teamName="{ record }">
 								<img class="tableImg" :src="record.img" alt="" />
 								<a @click="fastWay(row)">{{ record.address }}</a>
 							</template>
 						</a-table>
+						<div class="pagination">
+							<a-pagination v-model:current="rewardPageNum" v-model:pageSize="rewardPageSize" :total="rewardTotal" @change="rewardPageChange" />
+						</div>
 					</a-row>
 				</a-tab-pane>
 				<!-- // 玩家排名 -->
@@ -159,7 +159,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
-import { leagueSelectHttp, rankingPlayerHttp } from '@/axios/api';
+import { leagueSelectHttp, rankingPlayerHttp, rakingLeagueListHttp, rakingRewardListHttp } from '@/axios/api';
 // import { rowType } from "@/type/interface.d.ts";
 import { useRouter } from 'vue-router';
 import { SettingFilled, ClusterOutlined } from '@ant-design/icons-vue';
@@ -194,6 +194,12 @@ export default defineComponent({
 			entryPath: '/league',
 			visible: false,
 			isChange: false,
+			leaguePageNum: 1,
+			leaguePageSize: 10,
+			leagueTotal: 1,
+			rewardPageNum: 1,
+			rewardPageSize: 10,
+			rewardTotal: 1,
 			total: 1,
 			pageNum: 1,
 			pageSize: 10,
@@ -206,102 +212,82 @@ export default defineComponent({
 			leagueList: [{ teamId: '' }],
 			stageList: [{ stageId: '', teamList: [] }],
 			divisitonList: [{ divisionId: '', stageList: [] }],
-			playerObj: {
-				teamId: 0
-			},
+			teamObj: { teamId: 0 },
+			playerObj: { teamId: 0 },
 			dialogObj: {
 				img: require('@/assets/1.jpg')
 			},
-			columns: [
-				{ title: '队名', dataIndex: 'homaName', key: 'homaName' },
-				{ title: '对战地点', dataIndex: 'homaName', key: 'homaName' },
-				{ title: '队长管理', dataIndex: 'awayName', key: 'homaName' },
-				{ title: '玩家号码', dataIndex: 'homeScore', key: 'homaName' },
-				{
-					title: '标准等级',
-					children: [
-						{ title: 'RATING', dataIndex: 'state', key: 'homaName' },
-						{ title: 'PPD', dataIndex: 'homeScore', key: 'homaName' },
-						{ title: 'MPR', dataIndex: 'key', key: 'homaName' }
-					]
-				},
-				{ title: '分配信息', dataIndex: 'data', key: 'homaName' },
-				{ title: '比赛日程', dataIndex: 'data', key: 'homaName' }
-			],
 			leagueColumns: [
 				{
 					title: '排行',
 					width: 65,
 					fixed: 'left',
-					dataIndex: 'name',
-					slots: { customRender: 'action' }
+					slots: { customRender: 'sort' }
 				},
 				{
 					title: '队伍',
 					fixed: 'left',
 					dataIndex: 'name',
 					children: [
-						{ title: '队名', dataIndex: 'address', width: 200 },
-						{ title: 'Rating', dataIndex: 'address', width: 75 },
-						{ title: 'PPD', dataIndex: 'address', width: 70 },
-						{ title: 'MPR', dataIndex: 'address', width: 70 }
+						{ title: '队名', dataIndex: 'address', width: 200, slots: { customRender: 'team' } },
+						{ title: 'Rating', dataIndex: 'competitionRating.rating', width: 75 },
+						{ title: 'PPD', dataIndex: 'competitionRating.ppd', width: 70 },
+						{ title: 'MPR', dataIndex: 'competitionRating.mpr', width: 70 }
 					]
 				},
-				{ title: '总积分', width: 80, dataIndex: 'name' },
+				{ title: '总积分', width: 80, dataIndex: 'score' },
 				{
 					title: 'Match',
 					dataIndex: 'name',
 					children: [
-						{ title: '胜', dataIndex: 'address', width: 60 },
-						{ title: '和', dataIndex: 'address', width: 60 },
-						{ title: '败', dataIndex: 'address', width: 60 },
-						{ title: '胜率', dataIndex: 'address', width: 70 }
+						{ title: '胜', dataIndex: 'matchResult.wins', width: 60 },
+						{ title: '和', dataIndex: 'matchResult.draws', width: 60 },
+						{ title: '败', dataIndex: 'matchResult.losses', width: 60 },
+						{ title: '胜率', dataIndex: 'matchResult.winProbability', width: 100 }
 					]
 				},
 				{
 					title: 'Set',
 					dataIndex: 'name',
 					children: [
-						{ title: '胜', dataIndex: 'address', width: 60 },
-						{ title: '和', dataIndex: 'address', width: 60 },
-						{ title: '败', dataIndex: 'address', width: 60 },
-						{ title: '胜率', dataIndex: 'address', width: 70 }
+						{ title: '胜', dataIndex: 'setResult.wins', width: 60 },
+						{ title: '和', dataIndex: 'setResult.draws', width: 60 },
+						{ title: '败', dataIndex: 'setResult.losses', width: 60 },
+						{ title: '胜率', dataIndex: 'setResult.winProbability', width: 100 }
 					]
 				},
-				{ title: '罚分', dataIndex: 'address', width: 70 }
+				{ title: '罚分', dataIndex: 'penaltyPoint', width: 70 }
 			],
-			leagueTableList: [],
+			leagueTableList: [{ captainId: 0 }],
 			rewardColumns: [
-				{ title: '排行', dataIndex: 'homeScore', width: 65, key: 'homaName', fixed: 'left' },
+				{ title: '排行', dataIndex: 'homeScore', width: 65, fixed: 'left', slots: { customRender: 'sort' } },
 				{
 					title: '队伍',
 					width: 200,
-					dataIndex: 'name',
 					fixed: 'left',
-					slots: { customRender: 'teamName' }
+					slots: { customRender: 'team' }
 				},
-				{ title: 'LT', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: 'HAT', dataIndex: 'homeScore', width: 70, key: 'homaName' },
-				{ title: 'HT', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: 'HT.OFF', dataIndex: 'homeScore', width: 85, key: 'homaName' },
-				{ title: 'LT.OFF', dataIndex: 'homeScore', width: 85, key: 'homaName' },
-				{ title: 'BED', dataIndex: 'homeScore', width: 70, key: 'homaName' },
-				{ title: '180', dataIndex: 'homeScore', width: 70, key: 'homaName' },
-				{ title: 'EYE', dataIndex: 'homeScore', width: 70, key: 'homaName' },
-				{ title: '5M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: '6M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: '7M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: '8M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: '9M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: 'WH', dataIndex: 'homeScore', width: 60, key: 'homaName' }
+				{ title: 'LT', dataIndex: 'teamResultDetails.lowTon', width: 60 },
+				{ title: 'HAT', dataIndex: 'teamResultDetails.hatTrick', width: 70 },
+				{ title: 'HT', dataIndex: 'teamResultDetails.highTon', width: 60 },
+				{ title: 'HT.OFF', dataIndex: 'teamResultDetails.highTonOut', width: 85 },
+				{ title: 'LT.OFF', dataIndex: 'teamResultDetails.lowTonOut', width: 85 },
+				{ title: 'BED', dataIndex: 'teamResultDetails.threeInBed', width: 70 },
+				{ title: '180', dataIndex: 'teamResultDetails.ton80', width: 70 },
+				{ title: 'EYE', dataIndex: 'teamResultDetails.threeInBlack', width: 70 },
+				{ title: '5M', dataIndex: 'teamResultDetails.fiveMarks', width: 60 },
+				{ title: '6M', dataIndex: 'teamResultDetails.sixMarks', width: 60 },
+				{ title: '7M', dataIndex: 'teamResultDetails.sevenMarks', width: 60 },
+				{ title: '8M', dataIndex: 'teamResultDetails.eightMarks', width: 60 },
+				{ title: '9M', dataIndex: 'teamResultDetails.nineMarks', width: 60 },
+				{ title: 'WH', dataIndex: 'teamResultDetails.whiteHorse', width: 60 }
 			],
-			rewardTableList: [],
+			rewardTableList: [{ captainId: 0 }],
 			historyColumns: [
 				{
 					title: '排行',
 					width: 65,
 					dataIndex: 'name',
-					key: 'name',
 					fixed: 'left',
 					slots: { customRender: 'action' }
 				},
@@ -309,24 +295,23 @@ export default defineComponent({
 					title: '队名',
 					width: 140,
 					dataIndex: 'name',
-					key: 'name',
 					fixed: 'left',
 					slots: { customRender: 'teamName' }
 				},
-				{ title: 'LT', dataIndex: 'homeScore', width: 50, key: 'homaName' },
-				{ title: 'HAT', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: 'HT', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: 'HT.OFF', dataIndex: 'homeScore', width: 85, key: 'homaName' },
-				{ title: 'LT.OFF', dataIndex: 'homeScore', width: 80, key: 'homaName' },
-				{ title: 'BED', dataIndex: 'homeScore', width: 70, key: 'homaName' },
-				{ title: '180', dataIndex: 'homeScore', width: 70, key: 'homaName' },
-				{ title: 'EYE', dataIndex: 'homeScore', width: 70, key: 'homaName' },
-				{ title: '5M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: '6M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: '7M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: '8M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: '9M', dataIndex: 'homeScore', width: 60, key: 'homaName' },
-				{ title: 'WH', dataIndex: 'homeScore', width: 60, key: 'homaName' }
+				{ title: 'LT', dataIndex: 'homeScore', width: 50 },
+				{ title: 'HAT', dataIndex: 'homeScore', width: 60 },
+				{ title: 'HT', dataIndex: 'homeScore', width: 60 },
+				{ title: 'HT.OFF', dataIndex: 'homeScore', width: 85 },
+				{ title: 'LT.OFF', dataIndex: 'homeScore', width: 80 },
+				{ title: 'BED', dataIndex: 'homeScore', width: 70 },
+				{ title: '180', dataIndex: 'homeScore', width: 70 },
+				{ title: 'EYE', dataIndex: 'homeScore', width: 70 },
+				{ title: '5M', dataIndex: 'homeScore', width: 60 },
+				{ title: '6M', dataIndex: 'homeScore', width: 60 },
+				{ title: '7M', dataIndex: 'homeScore', width: 60 },
+				{ title: '8M', dataIndex: 'homeScore', width: 60 },
+				{ title: '9M', dataIndex: 'homeScore', width: 60 },
+				{ title: 'WH', dataIndex: 'homeScore', width: 60 }
 			],
 			playerColumns: [
 				{
@@ -447,9 +432,21 @@ export default defineComponent({
 				data.isChange = true;
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getPlayerList();
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getLeagueList();
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getRewardList();
 			},
 			pageChange: () => {
 				console.log(1);
+			},
+			leaguePageChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getLeagueList();
+			},
+			rewardPageChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getRewardList();
 			}
 		});
 		const getPlayerList = () => {
@@ -467,6 +464,35 @@ export default defineComponent({
 				}
 			});
 		};
+		const getLeagueList = () => {
+			const obj = {
+				stageId: 1066 || data.stageId,
+				sort: 12,
+				pageIndex: data.leaguePageNum,
+				pageSize: data.leaguePageSize
+			};
+			rakingLeagueListHttp(obj).then((res) => {
+				data.leagueTableList = res.data.data.list;
+				if (res.data.data.list.length) {
+					data.isChange = false;
+					data.teamObj = res.data.data.list[0];
+				}
+			});
+		};
+		const getRewardList = () => {
+			const obj = {
+				stageId: 1082 || data.stageId,
+				sort: 14,
+				pageIndex: data.rewardPageNum,
+				pageSize: data.rewardPageSize
+			};
+			rakingRewardListHttp(obj).then((res) => {
+				data.rewardTableList = res.data.data.list;
+				if (res.data.data.list.length) {
+					data.isChange = false;
+				}
+			});
+		};
 		const getSelectList = () => {
 			const obj = {
 				competitionId: 234,
@@ -480,6 +506,8 @@ export default defineComponent({
 				data.leagueList = res.data.data[0].stageList[0].teamList;
 				data.leagueId = res.data.data[0].stageList[0].teamList[0].teamId;
 				getPlayerList();
+				getLeagueList();
+				getRewardList();
 			});
 		};
 		onMounted(() => {
@@ -499,7 +527,11 @@ export default defineComponent({
 }
 .tableImg {
 	width: 50px;
-	margin: 0 10px 0 0;
+	height: 50px;
+}
+.tableImg img {
+	width: 100%;
+	height: 100%;
 }
 .tabsBox >>> .ant-tabs-nav-scroll {
 	display: flex;

@@ -113,10 +113,10 @@
 						<img class="matchImg" :src="item.competitionImg" />
 					</a-col>
 					<a-col :span="20">
-						<div @click="showLeagueInfo(item.leagueId)" class="divBg">
+						<div class="divBg">
 							<div>{{ item.competitionName }}</div>
-							<div class="divisionBox">
-								<div v-for="div in item.divisionList" :key="div.divisionId" class="divsision">{{ div.divisionName }}</div>
+							<div class="divClass" v-for="div in item.divisionList" :key="div.divisionId">
+								<a-button type="danger" size="small" @click="showLeagueInfo(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
 							</div>
 						</div>
 					</a-col>
@@ -412,12 +412,12 @@ export default defineComponent({
 			title: 'default.134',
 			matchTitle: 'default.18',
 			lastDate: new Date(),
-			time: '2020-5-41',
+			time: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
 			colSpan: 4,
 			visible: false,
 			dialogObj: {
 				title: '',
-				img: require('@/assets/3.jpg'),
+				img: '',
 				shopName: '',
 				phone: '',
 				address: ''
@@ -480,10 +480,13 @@ export default defineComponent({
 			goToPage: () => {
 				Router.push('/teamInfo');
 			},
-			showLeagueInfo: (id: number) => {
+			showLeagueInfo: (leagueId: any, stageId: number) => {
 				Router.push({
 					path: '/calendar',
-					query: { id }
+					query: {
+						leagueId,
+						stageId
+					}
 				});
 			},
 			countryChange: (value: number) => {
@@ -807,7 +810,6 @@ export default defineComponent({
 	text-decoration: underline;
 }
 .divBg {
-	cursor: pointer;
 	text-align: left;
 }
 .carouselBox .ant-carousel ::v-deep(.slick-slide) {
@@ -864,5 +866,12 @@ export default defineComponent({
 }
 .isPhone {
 	margin: 5px 0;
+}
+.divClass {
+	display: flex;
+	justify-content: flex-start;
+}
+.divClass div {
+	margin: 0 2px;
 }
 </style>

@@ -27,9 +27,14 @@ import {
 	matchTeamInfo,
 	matchInfoTableList,
 	timetablecustom,
-	legaueAllList,
+	leagueAllList,
 	timeTableDataList,
-	legaueMyList
+	leagueMyList,
+	awardHomeList,
+	awardAwayList,
+	awardInfo,
+	rakingLeagueList,
+	rakingRewardList
 } from './league/index';
 
 // 队伍
@@ -174,11 +179,11 @@ const leagueInfoHttp = (data: any = null) => {
 };
 // 联赛 所有联赛
 const leagueAllListHttp = (data: any = null) => {
-	return Axios.post(legaueAllList, data);
+	return Axios.post(leagueAllList, data);
 };
 // 联赛 我的联赛y
 const leagueMyListHttp = (data: any = null) => {
-	return Axios.post(legaueMyList, data);
+	return Axios.post(leagueMyList, data);
 };
 // 联赛 比赛信息
 const matchInfoHttp = (data: any = null) => {
@@ -235,6 +240,26 @@ const matchInfoTableListHttp = (data: any = null) => {
 // 联赛 时间表 比赛结果
 const matchResultHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(matchResult, data));
+};
+// 联赛 AWARD 信息
+const awardInfoHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(awardInfo, data));
+};
+// 联赛 AWARD 主队列表
+const awardHomeListHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(awardHomeList, data));
+};
+// 联赛 AWARD 客队列表
+const awardAwayListHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(awardAwayList, data));
+};
+// 联赛 排名记录 联赛排名
+const rakingLeagueListHttp = (data: any = null) => {
+	return Axios.post(rakingLeagueList, data);
+};
+// 联赛 排名记录 奖励排名
+const rakingRewardListHttp = (data: any = null) => {
+	return Axios.post(rakingRewardList, data);
 };
 
 //  队伍 列表数据
@@ -382,5 +407,10 @@ export {
 	timetablecustomHttp,
 	leagueAllListHttp,
 	timeTableDataListHttp,
-	leagueMyListHttp
+	leagueMyListHttp,
+	awardInfoHttp,
+	awardHomeListHttp,
+	awardAwayListHttp,
+	rakingLeagueListHttp,
+	rakingRewardListHttp
 };

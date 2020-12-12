@@ -16,29 +16,29 @@
 				</a-row>
 				<a-row class="awardRow">
 					<a-col :span="11">
-						<span class="home teamName">{{ awardData.HomeCaptain }}</span>
+						<span class="home teamName" @click="showDialog(awardData.homeId)">{{ awardData.HomeCaptain }}</span>
 					</a-col>
 					<a-col :span="2"></a-col>
 					<a-col :span="11">
-						<span class="away teamName">{{ awardData.awayCaptain }}</span>
+						<span class="away teamName" @click="showDialog(awardData.awayId)">{{ awardData.awayCaptain }}</span>
 					</a-col>
 				</a-row>
 				<a-row class="awardRow" id="awardProgress">
 					<a-col :span="11">
-						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `Rating  ${percent}`" :percent="awardData.homeRating"/></a-col>
-						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `PPD  ${percent}`" :percent="awardData.homePPD"/></a-col>
-						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `MPR  ${percent}`" :percent="awardData.homeMPR"/></a-col>
+						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `Rating  ${percent}`" :percent="parseInt(awardData.homeRating)"/></a-col>
+						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `PPD  ${percent}`" :percent="parseInt(awardData.homePPD)"/></a-col>
+						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `MPR  ${percent}`" :percent="parseInt(awardData.homeMPR)"/></a-col>
 					</a-col>
 					<a-col :span="2" class="awardVs">{{ 'VS' }}</a-col>
 					<a-col :span="11">
-						<a-col :span="8"><a-progress type="circle" :format="(percent) => `Rating  ${percent}`" :percent="awardData.awayRating"/></a-col>
-						<a-col :span="8"><a-progress type="circle" :format="(percent) => `PPD  ${percent}`" :percent="awardData.awayPPD"/></a-col>
-						<a-col :span="8"><a-progress type="circle" :format="(percent) => `MPR  ${percent}`" :percent="awardData.awayMPR"/></a-col>
+						<a-col :span="8"><a-progress type="circle" :format="(percent) => `Rating  ${percent}`" :percent="parseInt(awardData.awayRating)"/></a-col>
+						<a-col :span="8"><a-progress type="circle" :format="(percent) => `PPD  ${percent}`" :percent="parseInt(awardData.awayPPD)"/></a-col>
+						<a-col :span="8"><a-progress type="circle" :format="(percent) => `MPR  ${percent}`" :percent="parseInt(awardData.awayMPR)"/></a-col>
 					</a-col>
 				</a-row>
 				<transition enter-active-class="animate__animated animate__fadeInUp">
 					<a-row v-if="!isUp">
-						<a-row v-for="every in awardData.awardList" :key="every.id">
+						<a-row v-for="every in awardData.list" :key="every.id">
 							<a-col :span="11" class="progressBox">
 								<div>{{ every.homeScore }}</div>
 								<a-progress :percent="every.homeScore" status="exception" :show-info="false" />
@@ -66,10 +66,13 @@
 			<a-col class="home teamName" :span="3" @click="showDialog()">{{ 'Home Team' }}</a-col>
 		</a-row>
 		<a-row class="awardTop">
-			<a-table :columns="homeColumns" :data-source="homeData" :scroll="{ x: 1300 }" bordered rowKey="id">
+			<a-table :columns="homeColumns" :data-source="homeList" :pagination="false" :scroll="{ x: 1300 }" bordered rowKey="playerId">
+				<template #sort="{index}">
+					<div>{{ index + 1 }}</div>
+				</template>
 				<template #player="{record}">
 					<div class="playerInfoBox">
-						<div class="imgBox"><img :src="record.img" alt="" /></div>
+						<div class="imgBox"><img :src="record.playerImg" alt="" /></div>
 						<div class="link" @click="showDialog(record.id)">{{ record.playerName }}</div>
 					</div>
 				</template>
@@ -80,10 +83,13 @@
 			<a-col class="home teamName" :span="3" @click="showDialog()">{{ 'Away Team' }}</a-col>
 		</a-row>
 		<a-row class="awardTop">
-			<a-table :columns="homeColumns" :data-source="homeData" :scroll="{ x: 1300 }" bordered rowKey="id">
+			<a-table :columns="homeColumns" :data-source="awayList" :pagination="false" :scroll="{ x: 1300 }" bordered rowKey="playerId">
+				<template #sort="{index}">
+					<div>{{ index + 1 }}</div>
+				</template>
 				<template #player="{record}">
 					<div class="playerInfoBox">
-						<div class="imgBox"><img :src="record.img" alt="" /></div>
+						<div class="imgBox"><img :src="record.playerImg" alt="" /></div>
 						<div class="link" @click="showDialog(record.id)">{{ record.playerName }}</div>
 					</div>
 				</template>
@@ -177,21 +183,34 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { SettingFilled, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
+import { awardInfoHttp, awardHomeListHttp, awardAwayListHttp } from '@/axios/api';
+// import { useRoute } from 'vue-router';
+
+interface DataProps {
+	isUp: boolean;
+	visible: boolean;
+	homeList: Array<any>;
+	awayList: Array<any>;
+	awardData: {
+		list: Array<any>;
+	};
+}
+
 export default defineComponent({
 	name: 'templete',
+	props: ['confrontationId'],
 	components: {
 		SettingFilled,
 		DownOutlined,
 		UpOutlined
 	},
-	setup() {
-		const data = reactive({
+	setup(prop: any) {
+		// const ROUTE = useRoute();
+		const data: DataProps = reactive({
 			isUp: true,
 			visible: false,
-			memberCurrent: 1,
-			memberTotal: 1,
 			handleOk: () => {
 				console.log(1);
 			},
@@ -257,7 +276,8 @@ export default defineComponent({
 					dataIndex: 'money'
 				}
 			],
-			memberColumns: [{}],
+			homeList: [],
+			awayList: [],
 			historyColumns: [
 				{
 					title: '日期',
@@ -280,44 +300,27 @@ export default defineComponent({
 			lenguaData: [],
 			historyData: [{ dete: '2020-5-12' }, { dete: '2020-6-12' }, { dete: '2020-7-12' }, { dete: '2020-8-12' }],
 			awardData: {
-				homeName: '张自然',
-				awayTean: '李逍遥',
-				HomeCaptain: '王富贵',
-				awayCaptain: '刘长安',
-				homeRating: 20.15,
-				homePPD: 33.69,
-				homeMPR: 3.79,
-				awayRating: 16.88,
-				awayPPD: 29.92,
-				awayMPR: 3.23,
-				awardList: [
-					{ homeScore: 10, title: 'LT', awayScore: 100 },
-					{ homeScore: 20, title: 'HT', awayScore: 90 },
-					{ homeScore: 30, title: 'HT.OFF', awayScore: 80 },
-					{ homeScore: 40, title: 'LT.OFF', awayScore: 70 },
-					{ homeScore: 50, title: 'HAT', awayScore: 60 },
-					{ homeScore: 60, title: 'BED', awayScore: 50 },
-					{ homeScore: 70, title: '180', awayScore: 40 },
-					{ homeScore: 80, title: 'EYE', awayScore: 30 },
-					{ homeScore: 90, title: '5M', awayScore: 20 },
-					{ homeScore: 100, title: '6M', awayScore: 10 },
-					{ homeScore: 90, title: '7M', awayScore: 20 },
-					{ homeScore: 80, title: '8M', awayScore: 30 },
-					{ homeScore: 70, title: '9M', awayScore: 40 },
-					{ homeScore: 60, title: 'WH', awayScore: 50 }
-				]
+				homeName: '',
+				awayTean: '',
+				HomeCaptain: '',
+				awayCaptain: '',
+				homeRating: '',
+				homePPD: '',
+				homeMPR: '',
+				awayRating: '',
+				awayPPD: '',
+				awayMPR: '',
+				list: []
 			},
 			homeColumns: [
 				{
 					title: '排行',
-					key: '排行',
-					width: 60,
+					width: 70,
 					fixed: 'left',
-					dataIndex: 'id'
+					slots: { customRender: 'sort' }
 				},
 				{
 					title: '玩家',
-					key: '玩家',
 					width: 200,
 					fixed: 'left',
 					dataIndex: 'address',
@@ -325,105 +328,90 @@ export default defineComponent({
 				},
 				{
 					title: 'Rating',
-					key: 'Rating',
 					width: 80,
-					dataIndex: 'address'
+					dataIndex: 'playerRating.rating'
 				},
 				{
 					title: 'PPD',
-					key: 'Rating',
 					width: 70,
-					dataIndex: 'address'
+					dataIndex: 'playerRating.ppd'
 				},
 				{
 					title: 'MPR',
-					key: 'Rating',
 					width: 70,
-					dataIndex: 'address'
+					dataIndex: 'playerRating.mpr'
 				},
 				{
 					title: 'LT',
-					key: 'Rating',
 					width: 60,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.lowTon'
 				},
 				{
 					title: 'HAT',
-					key: 'Rating',
 					width: 70,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.hatTrick'
 				},
 				{
 					title: 'HT',
-					key: 'Rating',
 					width: 60,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.highTon'
 				},
 				{
 					title: 'HT.OFF',
-					key: 'Rating',
 					width: 90,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.highTonOut'
 				},
 				{
 					title: 'LT.OFF',
-					key: 'Rating',
 					width: 80,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.lowTonOut'
 				},
 				{
 					title: 'BED',
-					key: 'Rating',
 					width: 70,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.threeInBed'
 				},
 				{
 					title: '180',
-					key: 'Rating',
 					width: 70,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.ton80'
 				},
 				{
 					title: 'EYE',
-					key: 'Rating',
 					width: 70,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.threeInBlack'
 				},
 				{
 					title: '5M',
 					key: 'Rating',
 					width: 60,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.fiveMarks'
 				},
 				{
 					title: '6M',
-					key: 'Rating',
 					width: 60,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.sixMarks'
 				},
 				{
 					title: '7M',
 					key: 'Rating',
 					width: 60,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.sevenMarks'
 				},
 				{
 					title: '8M',
-					key: 'Rating',
 					width: 60,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.eightMarks'
 				},
 				{
 					title: '9M',
-					key: 'Rating',
 					width: 60,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.nineMarks'
 				},
 				{
 					title: 'WH',
-					key: 'Rating',
 					width: 60,
-					dataIndex: 'address'
+					dataIndex: 'playerResultDetails.whiteHorse'
 				}
 			],
 			homeData: [
@@ -435,6 +423,70 @@ export default defineComponent({
 			changeIcon: () => {
 				data.isUp = !data.isUp;
 			}
+		});
+		const getAwardData = () => {
+			awardInfoHttp({ confrontationId: prop.confrontationId }).then((res) => {
+				if (!res.data.data) return;
+				const { homeTeam, visitingTeam } = res.data.data;
+				const obj = {
+					homeName: homeTeam.teamName,
+					homeId: homeTeam.teamId,
+					HomeCaptain: homeTeam.captainName,
+					homeRating: homeTeam.competitionRating.rating,
+					homePPD: homeTeam.competitionRating.ppd,
+					homeMPR: homeTeam.competitionRating.mpr,
+					awayTean: visitingTeam.teamName,
+					awayId: homeTeam.teamId,
+					awayCaptain: visitingTeam.captainName,
+					awayRating: visitingTeam.competitionRating.ppd,
+					awayPPD: visitingTeam.competitionRating.ppd,
+					awayMPR: visitingTeam.competitionRating.ppd,
+					list: [
+						{ homeScore: homeTeam.teamResultDetails.lowTon, title: 'LT', awayScore: visitingTeam.teamResultDetails.lowTon },
+						{ homeScore: homeTeam.teamResultDetails.highTon, title: 'HT', awayScore: visitingTeam.teamResultDetails.highTon },
+						{ homeScore: homeTeam.teamResultDetails.highTonOut, title: 'HT.OFF', awayScore: visitingTeam.teamResultDetails.highTonOut },
+						{ homeScore: homeTeam.teamResultDetails.lowTonOut, title: 'LT.OFF', awayScore: visitingTeam.teamResultDetails.lowTonOut },
+						{ homeScore: homeTeam.teamResultDetails.hatTrick, title: 'HAT', awayScore: visitingTeam.teamResultDetails.hatTrick },
+						{ homeScore: homeTeam.teamResultDetails.threeInBed, title: 'BED', awayScore: visitingTeam.teamResultDetails.threeInBed },
+						{ homeScore: homeTeam.teamResultDetails.ton80, title: '180', awayScore: visitingTeam.teamResultDetails.ton80 },
+						{ homeScore: homeTeam.teamResultDetails.threeInBlack, title: 'EYE', awayScore: visitingTeam.teamResultDetails.threeInBlack },
+						{ homeScore: homeTeam.teamResultDetails.fiveMarks, title: '5M', awayScore: visitingTeam.teamResultDetails.fiveMarks },
+						{ homeScore: homeTeam.teamResultDetails.sixMarks, title: '6M', awayScore: visitingTeam.teamResultDetails.sixMarks },
+						{ homeScore: homeTeam.teamResultDetails.sevenMarks, title: '7M', awayScore: visitingTeam.teamResultDetails.sevenMarks },
+						{ homeScore: homeTeam.teamResultDetails.eightMarks, title: '8M', awayScore: visitingTeam.teamResultDetails.eightMarks },
+						{ homeScore: homeTeam.teamResultDetails.nineMarks, title: '9M', awayScore: visitingTeam.teamResultDetails.nineMarks },
+						{ homeScore: homeTeam.teamResultDetails.whiteHorse, title: 'WH', awayScore: visitingTeam.teamResultDetails.whiteHorse }
+					]
+				};
+				data.awardData = obj;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getHomeList(79);
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getAwayList(visitingTeam.teamId);
+			});
+		};
+		const getHomeList = (teamId: number) => {
+			const obj = {
+				confrontationId: prop.confrontationId,
+				sort: '',
+				teamId
+			};
+			awardHomeListHttp(obj).then((res) => {
+				data.homeList = res.data.data;
+			});
+		};
+		const getAwayList = (teamId: number) => {
+			const obj = {
+				confrontationId: prop.confrontationId,
+				sort: '',
+				teamId
+			};
+			awardAwayListHttp(obj).then((res) => {
+				console.log(res);
+			});
+		};
+		onMounted(() => {
+			getAwardData();
 		});
 		return {
 			...toRefs(data)
@@ -475,7 +527,7 @@ export default defineComponent({
 	font-weight: bold;
 }
 #awardProgress >>> .ant-progress-circle .ant-progress-text {
-	width: 80%;
+	width: 60%;
 }
 .awardIcon {
 	font-size: 30px;

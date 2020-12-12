@@ -8,10 +8,10 @@
 				<a-col :span="12" class="firstClass FONT">
 					<div class="teamName" @click="showTeamInfo">{{ infoData.teamName }}</div>
 					<div class="disabledClass">{{ infoData.captainName }}</div>
-					<div class="disabledClass">
-						{{ infoData.place }}
+					<div v-if="infoData.address" class="disabledClass">
+						{{ infoData.address }}
 						<span @click="showDetail" class="icon">
-							<InfoCircleFilled />
+							<EnvironmentOutlined />
 						</span>
 					</div>
 					<div class="disabledClass">{{ infoData.country }}</div>
@@ -19,8 +19,8 @@
 			</a-col>
 			<a-col :span="4" class="allBox">
 				<div class="secondClass">
-					<div class="bigFont">{{ infoData.allScore }}</div>
-					<div class="score">{{ infoData.scoreNumber }}</div>
+					<div class="bigFont">{{ '总积分' }}</div>
+					<div class="score">{{ infoData.score }}</div>
 				</div>
 			</a-col>
 			<!-- // 左侧按钮 -->
@@ -31,7 +31,7 @@
 				<a-col class="center animate__backOutRight" id="myBox">
 					<div v-for="item in infoData.resultList" :key="item.id" class="centerBox">
 						<div class="matchBox">
-							<div class="title">{{ item.name }}</div>
+							<div class="title">{{ item.title }}</div>
 							<div class="fontStyle">
 								<div class="left">
 									<div>{{ '胜' }}</div>
@@ -68,19 +68,19 @@
 			</a-col>
 			<a-col :span="7">
 				<div class="title">{{ $t('default.183') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="75" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.rating" />
 				<div class="myProgress">
 					<div class="myProgressBox">
 						<div>
-							<a-progress :percent="infoData.ppdNumber" strokeColor="red" />
+							<a-progress :percent="infoData.ppd" strokeColor="red" />
 						</div>
-						<div>{{ `PPD    ${infoData.ppdNumber}` }}</div>
+						<div>{{ `PPD    ${infoData.ppd}` }}</div>
 					</div>
 					<div class="myProgressBox">
 						<div>
-							<a-progress :percent="infoData.mprNumber" strokeColor="red" />
+							<a-progress :percent="infoData.mpr" strokeColor="red" />
 						</div>
-						<div>{{ `MPR    ${infoData.mprNumber}` }}</div>
+						<div>{{ `MPR    ${infoData.mpr}` }}</div>
 					</div>
 				</div>
 			</a-col>
@@ -90,48 +90,61 @@
 
 <script lang="ts">
 import { useRoute } from 'vue-router';
-import { reactive, toRefs, onMounted, ref } from 'vue';
-import { InfoCircleFilled, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+import { reactive, toRefs, onMounted, ref, watch } from 'vue';
+import { EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+
+const getNewData = (obj: any) => {
+	const data = {
+		img: obj.teamImg,
+		teamName: obj.teamName,
+		captainName: obj.captainName,
+		address: obj.shop && obj.shop.shopAddress,
+		country: obj.shop && obj.shop.countryName,
+		score: obj.score,
+		rating: obj.competitionRating.rating,
+		ppd: obj.competitionRating.ppd,
+		mpr: obj.competitionRating.mpr,
+		resultList: [
+			{
+				title: 'Set 结果',
+				win: obj.setResult.wins,
+				draw: obj.setResult.draws,
+				lost: obj.setResult.losses,
+				probability: parseInt(obj.setResult.winProbability)
+			},
+			{
+				title: 'Match 结果',
+				win: obj.matchResult.wins,
+				draw: obj.matchResult.draws,
+				lost: obj.matchResult.losses,
+				probability: parseInt(obj.matchResult.winProbability)
+			}
+		]
+	};
+	return data;
+};
+
+interface DataProps {
+	infoData: {
+		resultList: Array<any>;
+	};
+}
+
 export default {
 	name: 'showTeamTopOne',
+	props: ['teamObj'],
 	components: {
-		InfoCircleFilled,
+		EnvironmentOutlined,
 		LeftCircleOutlined,
 		RightCircleOutlined
 	},
-	setup() {
+	setup(prop: any) {
 		const route = useRoute();
 		let currentPosition = 0;
 		const currentIndex = ref(0);
-		const data = reactive({
+		const data: DataProps = reactive({
 			infoData: {
-				img: require('@/assets/1.jpg'),
-				teamName: '上海市消防总队黄埔支队嵩山中队',
-				captainName: '李逍遥',
-				place: '李逍遥',
-				country: '山东',
-				allScore: '总分数',
-				scoreNumber: 59,
-				ppdNumber: 51,
-				mprNumber: 65,
-				resultList: [
-					{
-						id: 1,
-						name: 'Set 结果',
-						win: 15,
-						draw: 20,
-						lost: 25,
-						probability: 80
-					},
-					{
-						id: 1,
-						name: 'Match 结果',
-						win: 15,
-						draw: 20,
-						lost: 25,
-						probability: 80
-					}
-				]
+				resultList: []
 			},
 			showTeamInfo: () => {
 				console.log('111');
@@ -171,6 +184,12 @@ export default {
 		onMounted(() => {
 			console.log(route.query);
 		});
+		watch(
+			() => prop.teamObj,
+			(val) => {
+				data.infoData = getNewData(val);
+			}
+		);
 		return {
 			...toRefs(data),
 			currentIndex
@@ -221,7 +240,6 @@ export default {
 }
 .disabledClass {
 	color: #eee;
-	cursor: pointer;
 }
 .icon {
 	position: relative;

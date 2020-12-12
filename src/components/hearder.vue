@@ -85,7 +85,7 @@
 			</a-col>
 		</a-row>
 		<a-row class="rowStyle boxBG">
-			<a-tabs class="tabsBox" type="card" v-model:activeKey="activeKey">
+			<a-tabs class="tabsBox" type="card" @tabClick="tabClick" v-model:activeKey="activeKey">
 				<a-tab-pane key="league" :tab="$t('default.8')"></a-tab-pane>
 				<a-tab-pane key="team" :tab="$t('default.9')"></a-tab-pane>
 				<a-tab-pane key="players" :tab="$t('default.10')"></a-tab-pane>
@@ -138,14 +138,28 @@
 							<div class="moreStyle" @click="entryMaPage"><PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}</div>
 						</div>
 						<div v-else>
-							<div></div>
-							<div v-if="item in matchTimeTable" :key="item.index" class="match">
-								<div class="myMatchImgBox">
-									<img :src="item.competitionImg" alt="" />
+							<a-select v-model:value="leagueId" style="width: 100%" @change="leagueIdChange">
+								<a-select-option v-for="item in leagueList" :key="item.competitionId" :value="item.competitionId">{{ $t(item.competitionName) }}</a-select-option>
+							</a-select>
+							<div v-for="item in matchTimeTable" :key="item.index" class="centerBox">
+								<div>
+									<div>{{ 'Round' + item.type }}</div>
+									<div>{{ item.homeTeamName }}</div>
+									<div>{{ item.visitingTeamName }}</div>
 								</div>
-								<div class="myMatchRight">
-									<div class="myMatchName" @click="infoPage(item.competitionId)">{{ item.competitionName }}</div>
-									<div>{{ item.date }}</div>
+								<div>
+									<div>{{ `${item.date} ${item.time}` }}</div>
+									<div v-if="item.winOrLose === 0" class="winbox">{{ 'Win' }}</div>
+									<div v-if="item.winOrLose === 3" class="winbox">{{ 'Win' }}</div>
+								</div>
+								<div>
+									<div>
+										<div v-if="item.status === 1">{{ $t('default.64') }}</div>
+										<div v-if="item.status === 2">{{ $t('default.104') }}</div>
+										<div v-if="item.status === 3">{{ $t('default.244') }}</div>
+									</div>
+									<div>{{ item.homeTeamScore }}</div>
+									<div>{{ item.visitingTeamScore }}</div>
 								</div>
 							</div>
 							<div class="moreStyle"><PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}</div>
@@ -196,6 +210,8 @@ export default defineComponent({
 			showPhoneTabs: false,
 			collapsed: true,
 			activeKey: 'league',
+			leagueId: '',
+			leagueList: [],
 			isLogin: false,
 			imputValue: '',
 			visible: false,
@@ -243,7 +259,7 @@ export default defineComponent({
 			onSearch: () => {
 				data.activeKey = data.type;
 				ROUTER.push({
-					path: data.type,
+					path: data.type
 				});
 			},
 			infoPage: (id: number) => {
@@ -276,6 +292,9 @@ export default defineComponent({
 						data.matchList = res.data.data.list;
 					}
 				});
+			},
+			tabClick: (e: string) => {
+				ROUTER.push(e);
 			},
 			closeBox: () => {
 				data.showBox = false;
@@ -328,43 +347,37 @@ export default defineComponent({
 			myMatchClick: () => {
 				data.isMyMatch = true;
 			},
+			leagueIdChange: () => {
+				console.log(1);
+			},
 			matchTableClick: () => {
 				data.isMyMatch = false;
-				const leagueId = '';
-				const first = new Promise((resolve, reject) => {
+				const first = new Promise((resolve) => {
 					const obj = {
 						memberId: 75408,
 						countryId: sessionStorage.getItem('countryId'),
 						year: 2020
 					};
 					myBattleSelectHttp(obj).then((res) => {
-						debugger;
-						if (res.data.data.length) {
+						if (res.data.data) {
 							resolve(res.data.data);
-						} else {
-							reject('1');
 						}
 					});
 				});
-				const last = new Promise((resolve, reject) => {
+				first.then((res: any) => {
+					data.leagueList = res;
+					data.leagueId = res[0].competitionId;
 					const obj = {
-						competitionId: leagueId,
+						competitionId: data.leagueId,
 						memberId: 75408,
 						pageIndex: 1,
 						pageSize: 5
 					};
 					myBattleDataListHttp(obj).then((res) => {
-						debugger;
-						if (res.data.data.length) {
-							resolve(res.data.data);
-						} else {
-							reject('1');
+						if (res.data.data) {
+							data.matchTimeTable = res.data.data.list;
 						}
 					});
-				});
-				Promise.all([first, last]).then((res) => {
-					debugger;
-					console.log(res);
 				});
 			},
 			entryMaPage: () => {
@@ -411,7 +424,7 @@ export default defineComponent({
 	width: 400px;
 	height: 800px;
 	background: #eee;
-	z-index: 1;
+	z-index: 10;
 	border: 1px solid #000;
 }
 .hearder {
@@ -539,5 +552,26 @@ export default defineComponent({
 	z-index: 10;
 	top: 38px;
 	display: none;
+}
+.inPlay {
+	background: red;
+	border-radius: 10px;
+	color: #fff;
+	cursor: pointer;
+}
+.centerBox {
+	width: 100%;
+	display: flex;
+	border: 1px solid #ff5122;
+	margin: 4px 0;
+	justify-content: space-around;
+	cursor: pointer;
+}
+.centerBox:hover {
+	border: 1px solid #fff;
+}
+.winbox {
+	background: #ff5e00;
+	color: #fff;
 }
 </style>

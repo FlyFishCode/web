@@ -29,9 +29,19 @@ const matchResult = '/matchresult';
 // 联赛 时间表 自定义滚动服务
 const timetablecustom = '/schedule';
 // 联赛 所有联赛
-const legaueAllList = '/competition/schedule';
+const leagueAllList = '/competition/schedule';
 // 联赛 所有联赛
-const legaueMyList = '/competition/myschedule';
+const leagueMyList = '/competition/myschedule';
+// 联赛 AWARD
+const awardInfo = '/competition/confrontationaward';
+// 联赛 AWARD 主队列表
+const awardHomeList = '/competition/confrontationplayerlist';
+// 联赛 AWARD 客队列表
+const awardAwayList = '/competition/confrontationplayerlist';
+// 联赛 排名记录 联赛排名
+const rakingLeagueList = '/competition/teamranking';
+// 联赛 排名记录 奖励排名
+const rakingRewardList = '/competition/teamaward';
 export {
 	leagueInfo,
 	leagueSelect,
@@ -47,7 +57,12 @@ export {
 	matchTeamInfo,
 	matchInfoTableList,
 	timetablecustom,
-	legaueAllList,
+	leagueAllList,
 	timeTableDataList,
-	legaueMyList
+	leagueMyList,
+	awardHomeList,
+	awardAwayList,
+	awardInfo,
+	rakingLeagueList,
+	rakingRewardList
 };

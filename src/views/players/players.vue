@@ -308,7 +308,8 @@ export default defineComponent({
 				data.visible = true;
 			},
 			onSearch: () => {
-				console.log('11');
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getPlayerList();
 			},
 			changeFlag: (index: number) => {
 				data.playerList[index].flag = !data.playerList[index].flag;

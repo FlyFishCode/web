@@ -132,7 +132,7 @@
 					</div>
 				</a-col>
 				<a-col :lg="{ span: 4, offset: 0 }" :xs="{ span: 10, offset: 4 }" class="infoClass">
-					<div class="teamStyle" @click="entryPage">{{ item.playerName }}</div>
+					<div class="teamStyle" @click="entryPage(item.playerId)">{{ item.playerName }}</div>
 					<div class="placeStyle">
 						<div>{{ item.areaName }}</div>
 						/
@@ -188,7 +188,7 @@
 							</div>
 							<div class="btnBox">
 								<div v-for="disition in recordInfo.divisionList" :key="disition.divisionId">
-									<a-button type="danger" size="small" @click="entryCalendar(2, disition.divisionId)">{{ disition.divisionName }}</a-button>
+									<a-button type="danger" size="small" @click="entryCalendar(2, recordInfo.competitionId, disition.divisionId)">{{ disition.divisionName }}</a-button>
 								</div>
 							</div>
 						</a-col>
@@ -290,11 +290,12 @@ export default defineComponent({
 					query: { value }
 				});
 			},
-			entryCalendar: (activeKey: string, id: number) => {
+			entryCalendar: (activeKey: string, competitionId: number, id: number) => {
 				ROUTER.push({
 					path: '/calendar',
 					query: {
 						activeKey,
+						competitionId,
 						teamId: id
 					}
 				});
@@ -309,13 +310,18 @@ export default defineComponent({
 			},
 			onSearch: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-					getPlayerList();
+				getPlayerList();
 			},
 			changeFlag: (index: number) => {
 				data.playerList[index].flag = !data.playerList[index].flag;
 			},
-			entryPage: () => {
-				ROUTER.push('playerInfo');
+			entryPage: (id: number) => {
+				ROUTER.push({
+					path: 'playerInfo',
+					query: {
+						playerId: id
+					}
+				});
 			},
 			handleOk: () => {
 				console.log(1);

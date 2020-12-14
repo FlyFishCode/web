@@ -15,7 +15,7 @@
 				</a-select>
 			</a-col>
 		</a-row>
-		<a-table :columns="columns" :scroll="{ x: 600 }" :data-source="matchList" bordered id="table" :pagination="false">
+		<a-table :columns="columns" :scroll="{ x: 600 }" :data-source="dataList" bordered id="table" :pagination="false">
 			<template v-slot:index="{ index }">
 				<div>{{ `${index + 1}` }}</div>
 			</template>
@@ -25,10 +25,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { plauerRewardListHttp } from '@/axios/api';
 import entryList from '@/components/common/entryList.vue';
 import { SettingFilled } from '@ant-design/icons-vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 export default defineComponent({
 	name: 'playerReward',
 	components: {
@@ -36,7 +37,8 @@ export default defineComponent({
 		entryList
 	},
 	setup() {
-		const Router = useRouter();
+		const ROUTE = useRoute();
+		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/players',
 			title: '玩家奖励',
@@ -54,112 +56,96 @@ export default defineComponent({
 				},
 				{
 					title: 'LT',
-					dataIndex: 'age',
+					dataIndex: 'lowTon',
 					key: 'address',
 					width: 80
 				},
 				{
 					title: 'HAT',
-					dataIndex: 'age',
+					dataIndex: 'hatTrick',
 					key: 'address',
 					width: 80
 				},
 				{
 					title: 'HT',
-					dataIndex: 'age',
+					dataIndex: 'highTon',
 					key: 'address',
 					width: 80
 				},
 				{
 					title: 'HT.OFF',
-					dataIndex: 'age',
+					dataIndex: 'highTonOut',
 					key: 'address',
 					width: 100
 				},
 				{
 					title: 'LT.OFF',
-					dataIndex: 'age',
+					dataIndex: 'lowTonOut',
 					key: 'address',
 					width: 100
 				},
 				{
 					title: 'BED',
-					dataIndex: 'age',
+					dataIndex: 'threeInBed',
 					key: 'address',
 					width: 80
 				},
 				{
 					title: '180',
-					dataIndex: 'age',
+					dataIndex: 'ton80',
 					key: 'address',
 					width: 80
 				},
 				{
 					title: 'LT',
-					dataIndex: 'age',
+					dataIndex: 'lowTon',
 					key: 'address',
 					width: 60
 				},
 				{
 					title: 'EYE',
-					dataIndex: 'age',
+					dataIndex: 'threeInBlack',
 					key: 'address',
 					width: 80
 				},
 				{
 					title: '5M',
-					dataIndex: 'age',
+					dataIndex: 'fiveMarks',
 					key: 'address',
 					width: 60
 				},
 				{
 					title: '6M',
-					dataIndex: 'age',
+					dataIndex: 'sixMarks',
 					key: 'address',
 					width: 60
 				},
 				{
 					title: '7M',
-					dataIndex: 'age',
+					dataIndex: 'sevenMarks',
 					key: 'address',
 					width: 60
 				},
 				{
 					title: '8M',
-					dataIndex: 'age',
+					dataIndex: 'eightMarks',
 					key: 'address',
 					width: 60
 				},
 				{
 					title: '9M',
-					dataIndex: 'age',
+					dataIndex: 'nineMarks',
 					key: 'address',
 					width: 60
 				},
 				{
 					title: 'WH',
-					dataIndex: 'age',
+					dataIndex: 'whiteHorse',
 					key: 'address',
 					width: 60
 				}
 			],
-			matchList: [
-				{
-					key: '1',
-					name: 'John Brown',
-					age: 32
-				},
-				{
-					key: '2',
-					name: 'Jim Green',
-					age: 42
-				},
-				{
-					key: '3',
-					name: 'Joe Black',
-					age: 32
-				}
-			],
+			dataList: [],
 			yearChange: (value: number) => {
 				console.log(value);
 			},
@@ -167,8 +153,20 @@ export default defineComponent({
 				console.log(value);
 			},
 			goHistory: () => {
-				Router.push('/players');
+				ROUTER.push('/players');
 			}
+		});
+		const getList = () => {
+			const obj = {
+				year: data.year,
+				playerId: ROUTE.query.playerId
+			};
+			plauerRewardListHttp(obj).then((res) => {
+				data.dataList = res.data.data;
+			});
+		};
+		onMounted(() => {
+			getList();
 		});
 		return {
 			...toRefs(data)

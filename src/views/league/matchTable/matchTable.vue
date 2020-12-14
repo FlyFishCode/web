@@ -85,13 +85,13 @@ import { message } from 'ant-design-vue';
 // }
 export default defineComponent({
 	name: 'matchTable',
+	props: ['tableTeamId', 'confrontationId'],
 	components: {
 		SettingFilled,
 		emptyList
 	},
-	setup() {
+	setup(prop) {
 		const instance = getCurrentInstance();
-		console.log(instance);
 		const data = reactive({
 			playerList: [],
 			matchTable: {
@@ -103,7 +103,7 @@ export default defineComponent({
 				minute: 0,
 				second: 0
 			},
-			matchTableList: [{ legGameList: [] }],
+			matchTableList: [],
 			getPlayerType: (type) => {
 				let str = '';
 				switch (type) {
@@ -317,7 +317,8 @@ export default defineComponent({
 			}
 		};
 		const init = () => {
-			matchDateHttp({ confrontationInfoId: 17943 }).then((res) => {
+			matchDateHttp({ confrontationInfoId: prop.confrontationId || '' }).then((res) => {
+				if (!res.data.data) return;
 				const date = new Date();
 				let surplusDay = 0;
 				let surplusHours = 0;
@@ -365,20 +366,21 @@ export default defineComponent({
 				res.data.data.minute = surplusMinutes;
 				res.data.data.second = 59;
 				data.matchTable = res.data.data;
+				const timer = setInterval(() => {
+					data.matchTable.second -= 1;
+					if (!data.matchTable.second) {
+						reduce(timer);
+					}
+				}, 1000);
 			});
-			const timer = setInterval(() => {
-				data.matchTable.second -= 1;
-				if (!data.matchTable.second) {
-					reduce(timer);
-				}
-			}, 1000);
 		};
 		const getTeamLineU = () => {
 			const obj = {
-				teamId: 49,
-				confrontationInfoId: 17840
+				teamId: prop.tableTeamId || '',
+				confrontationInfoId: prop.confrontationId || ''
 			};
 			timeTableLineHttp(obj).then((res) => {
+				if (!res.data.data) return;
 				res.data.data.forEach((i) => {
 					i.legGameList.forEach((j) => {
 						switch (i.mode) {
@@ -416,11 +418,13 @@ export default defineComponent({
 		};
 		const getPlayerList = () => {
 			const obj = {
-				teamId: 79,
-				competitionId: 472
+				teamId: prop.tableTeamId || '',
+				competitionId: prop.confrontationId || ''
 			};
 			matchPlayerListHttp(obj).then((res) => {
-				data.playerList = res.data.data;
+				if (res.data.data) {
+					data.playerList = res.data.data;
+				}
 			});
 		};
 		onMounted(() => {

@@ -243,11 +243,11 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getMyLeagueList();
 			},
-			showMore: (leagueId: number, stageId: number) => {
+			showMore: (competitionId: number, stageId: number) => {
 				Router.push({
 					path: '/calendar',
 					query: {
-						leagueId,
+						competitionId,
 						stageId
 					}
 				});

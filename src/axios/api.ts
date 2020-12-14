@@ -34,14 +34,17 @@ import {
 	awardAwayList,
 	awardInfo,
 	rakingLeagueList,
-	rakingRewardList
+	rakingRewardList,
+	dialogInfo,
+	dialogTeamList,
+	dialogHistoryList
 } from './league/index';
 
 // 队伍
 import { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList, vipList, historyResult } from '@/axios/team/index';
 
 // 玩家
-import { theBestPlayer, playerList } from '@/axios/player/index';
+import { theBestPlayer, playerList, playerRewardList, playerHistory, playerRewardDropDown } from '@/axios/player/index';
 
 // 店铺
 import { shopList, shopdetails, historyList, shopTeamList, shopPlayerList } from '@/axios/shop';
@@ -173,6 +176,19 @@ const myBattleDataListHttp = (data: any = null) => {
 const myBattleDateListHttp = (data: any = null) => {
 	return Axios.post(myBattleDateList, data);
 };
+//  弹框 组件 信息
+const dialogInfoHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(dialogInfo, data));
+};
+//  弹框 组件 队伍列表
+const dialogTeamListHttp = (data: any = null) => {
+	return Axios.post(dialogTeamList, data);
+};
+//  弹框 组件 队伍列表
+const dialogHistoryListHttp = (data: any = null) => {
+	return Axios.post(dialogHistoryList, data);
+};
+
 // 联赛 信息
 const leagueInfoHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(leagueInfo, data));
@@ -298,6 +314,18 @@ const teamListHttp = (data: any = null) => {
 const vipListHttp = (data: any = null) => {
 	return Axios.post(vipList, data);
 };
+// 队伍 玩家比赛报名记录
+const playerHistoryHttp = (data: any = null) => {
+	return Axios.post(playerHistory, data);
+};
+// 队伍 玩家奖励列表
+const plauerRewardListHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(playerRewardList, data));
+};
+// 队伍 玩家奖励列表下拉
+const playerRewardDropDownHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(playerRewardDropDown, data));
+};
 
 // 玩家 最佳玩家
 const playerBestListHttp = (data: any = null) => {
@@ -412,5 +440,11 @@ export {
 	awardHomeListHttp,
 	awardAwayListHttp,
 	rakingLeagueListHttp,
-	rakingRewardListHttp
+	rakingRewardListHttp,
+	dialogInfoHttp,
+	dialogTeamListHttp,
+	dialogHistoryListHttp,
+	plauerRewardListHttp,
+	playerHistoryHttp,
+	playerRewardDropDownHttp
 };

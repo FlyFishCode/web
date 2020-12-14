@@ -154,7 +154,7 @@ export default defineComponent({
 			showMatchInfo: (id: number) => {
 				ROUTER.push({
 					path: '/calendar',
-					query: { leagueId: id }
+					query: { competitionId: id }
 				});
 			},
 			yearChange: () => {

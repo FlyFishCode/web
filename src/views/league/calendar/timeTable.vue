@@ -30,8 +30,7 @@
 						<matchResult />
 					</a-tab-pane>
 					<a-tab-pane v-if="ready" key="2" :tab="$t('default.41')">
-						<matchTable :confrontationId="confrontationId" :tableTeamId="tableTeamId" :confrontationInfoId="confrontationInfoId" />
-						<matchTable />
+						<matchTable :confrontationId="confrontationId" :tableTeamId="tableTeamId" />
 					</a-tab-pane>
 					<a-tab-pane v-else key="3" tab="AWARD">
 						<award :confrontationId="confrontationId" />
@@ -103,7 +102,7 @@
 					</template>
 					<template v-slot:status="{ record }">
 						<div class="tableState">
-							<div v-if="record.status === 1" class="plan" @click="readyClick(record.confrontationId)">{{ $t('default.41') }}</div>
+							<div v-if="getTypeBtn(record)" class="plan" @click="readyClick(record.confrontationId)">{{ $t('default.41') }}</div>
 							<div v-if="record.status === 2">{{ 'Ready' }}</div>
 							<div v-if="record.status === 3" @click="finishClick(record.confrontationId)">{{ 'Finished' }}</div>
 						</div>
@@ -227,6 +226,8 @@ export default defineComponent({
 			entryPath: '/league',
 			currentKey: '1',
 			confrontationId: 0,
+			tableTeamId: 0,
+			confrontationInfoId: 0,
 			visible: false,
 			ready: true,
 			searchValue: '',
@@ -285,6 +286,14 @@ export default defineComponent({
 				}
 			],
 			dialogList: [],
+			getTypeBtn: (row: any) => {
+				const userId = Number(sessionStorage.getItem('userId'));
+				if ((row.homeCaptainId === userId || row.visitingCaptainId === userId) && row.status === 1) {
+					return true;
+				} else {
+					return false;
+				}
+			},
 			customRow: (record: any) => {
 				return {
 					click: () => {

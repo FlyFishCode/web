@@ -12,42 +12,44 @@
 			<a-col :lg="{ span: 3, offset: 18 }" :xs="0" class="sortColBox">
 				<div>
 					<div class="linkIcon">
-						<span v-if="sortTeam" @click="changeSortTeam(1)"> {{ $t('default.256') }}<DownOutlined /> </span>
-						<span v-else @click="changeSortTeam(2)"> {{ $t('default.256') }}<UpOutlined /> </span>
+						<span v-if="sortTeam" @click="changeSortTeam(2)"> {{ $t('default.256') }}<DownOutlined /> </span>
+						<span v-else @click="changeSortTeam(1)"> {{ $t('default.256') }}<UpOutlined /> </span>
 					</div>
 				</div>
 			</a-col>
 		</a-row>
-		<a-row v-for="(item, index) in matchList" :key="index">
+		<a-row v-for="(item, index) in dataList" :key="index">
 			<a-row class="matchBox">
 				<a-col :lg="14" :xs="22">
 					<a-col :span="5">
-						<img class="matchImg" :src="item.img" />
+						<img class="matchImg" :src="item.competitionImg" />
 					</a-col>
 					<a-col :span="10">
-						<div @click="showMore(item.state)" class="divBg">
-							<div>{{ item.title }}</div>
-							<div class="divisionBox">
-								<div v-for="div in item.divisiton" :key="div.index" class="divsision">{{ div.name }}</div>
+						<div class="divBg">
+							<div>{{ item.competitionName }}</div>
+							<div class="divClass">
+								<div v-for="div in item.divisionList" :key="div.divisionId">
+									<a-button type="danger" size="small" @click="entryPage(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
+								</div>
 							</div>
 						</div>
 					</a-col>
 				</a-col>
 				<a-col :lg="2" :xs="0">
 					<div class="fontDisplay">{{ $t('default.167') }}</div>
-					<div>{{ item.area }}</div>
+					<div>{{ item.areaName }}</div>
 				</a-col>
 				<a-col :lg="6" :xs="0">
 					<div class="rightStyle">
 						<div class="fontDisplay">{{ $t('default.17') }}</div>
-						<div class="matchState I" v-if="item.state === 1">{{ '比赛中' }}</div>
-						<div class="matchState R" v-if="item.state === 2">{{ '比赛结束' }}</div>
-						<div class="matchState F" v-if="item.state === 3">{{ '比赛结束' }}</div>
+						<div class="matchState I" v-if="item.status === 1">{{ '比赛中' }}</div>
+						<div class="matchState R" v-if="item.status === 2">{{ '比赛结束' }}</div>
+						<div class="matchState F" v-if="item.status === 3">{{ '比赛结束' }}</div>
 					</div>
 					<div>{{ item.date }}</div>
 				</a-col>
 				<a-col :lg="2" :xs="2" class="iconFont">
-					<div v-if="item.matchHistory.length">
+					<div v-if="item.matchHistory">
 						<div v-if="item.flag" @click="changeFlag(index)">
 							<DownCircleOutlined />
 						</div>
@@ -66,7 +68,7 @@
 						</a-row>
 						<a-row v-for="history in item.matchHistory" :key="history.index" class="msgBox">
 							<a-col :span="12" class="teamBox">
-								<div class="teamName">{{ history.matchName }}</div>
+								<div class="teamName">{{ history.teamName }}</div>
 							</a-col>
 							<a-col :span="12" class="countBox">
 								<div class="tableBox Header">
@@ -79,13 +81,13 @@
 									<div>{{ 'Set 败' }}</div>
 								</div>
 								<div class="tableBox Content">
-									<div>{{ history.win }}</div>
-									<div>{{ history.win }}</div>
-									<div>{{ history.win }}</div>
-									<div>{{ history.win }}</div>
-									<div>{{ history.win }}</div>
-									<div>{{ history.win }}</div>
-									<div>{{ history.win }}</div>
+									<div>{{ history.sort }}</div>
+									<div>{{ history.competitionRating.rating }}</div>
+									<div>{{ history.competitionRating.ppd }}</div>
+									<div>{{ history.competitionRating.mpr }}</div>
+									<div>{{ history.setResult.wins }}</div>
+									<div>{{ history.setResult.draws }}</div>
+									<div>{{ history.setResult.losses }}</div>
 								</div>
 							</a-col>
 						</a-row>
@@ -133,15 +135,19 @@
 				</a-row>
 			</transition>
 		</a-row>
+		<div class="pagination">
+			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @change="pageChange" />
+		</div>
 		<entryList :entryPath="entryPath" />
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { playerHistoryHttp, playerRewardDropDownHttp } from '@/axios/api';
 import entryList from '@/components/common/entryList.vue';
 import { SettingFilled, DownCircleOutlined, UpCircleOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 export default defineComponent({
 	name: 'matchRecord',
 	components: {
@@ -153,75 +159,35 @@ export default defineComponent({
 		entryList
 	},
 	setup() {
-		const Router = useRouter();
+		const ROUTE = useRoute();
+		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/players',
 			year: 2020,
 			sort: 1,
+			total: 1,
+			pageNum: 1,
+			pageSize: 10,
 			sortTeam: true,
 			yearLiat: [
 				{ value: 2020, label: 2020 },
 				{ value: 2019, label: 2019 }
 			],
-			matchList: [
+			dataList: [
 				{
-					matchId: 1,
-					img: require('@/assets/1.jpg'),
-					title: '2020第一次比赛',
-					divisiton: [
-						{ id: 1, name: '张三' },
-						{ id: 2, name: '李四' }
-					],
-					area: '上海',
-					date: '2020-9-10',
-					state: 1,
 					flag: false,
 					matchHistory: [
 						{
-							matchName: 'Demo_A_Team',
-							img: require('@/assets/1.jpg'),
-							date: '2020-5-40 ~ 2020-6-10',
-							place: '广州',
-							win: 10
-						},
-						{
-							matchName: 'Demo_A_Team',
-							img: require('@/assets/1.jpg'),
-							date: '2020-5-40 ~ 2020-6-10',
-							place: '广州',
-							win: 10
+							competitionRating: {},
+							setResult: {}
 						}
 					]
-				},
-				{
-					matchId: 1,
-					img: require('@/assets/1.jpg'),
-					title: '2021第二次比赛',
-					divisiton: [
-						{ id: 1, name: '张三' },
-						{ id: 2, name: '李四' },
-						{ id: 3, name: '王五' }
-					],
-					area: '武汉',
-					date: '2020-9-10',
-					state: 2,
-					flag: false,
-					matchHistory: []
-				},
-				{
-					matchId: 1,
-					img: require('@/assets/1.jpg'),
-					title: '2022第三次比赛',
-					divisiton: [{ id: 1, name: '张三' }],
-					area: '云南',
-					date: '2020-9-10',
-					state: 3,
-					flag: false,
-					matchHistory: []
 				}
 			],
 			changeFlag: (index: number) => {
-				data.matchList[index].flag = !data.matchList[index].flag;
+				data.dataList[index].flag = !data.dataList[index].flag;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDropDownList(index);
 			},
 			yearChange: () => {
 				console.log(1);
@@ -229,10 +195,54 @@ export default defineComponent({
 			changeSortTeam: (value: number) => {
 				data.sort = value;
 				data.sortTeam = !data.sortTeam;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDataList();
 			},
 			goHistory: () => {
-				Router.push('/players');
+				ROUTER.push('/players');
+			},
+			entryPage: (competitionId: number, id: number) => {
+				ROUTER.push({
+					path: '/calendar',
+					query: {
+						activeKey: '2',
+						competitionId,
+						divisionId: id
+					}
+				});
+			},
+			pageChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDataList();
 			}
+		});
+		const getDataList = () => {
+			const obj = {
+				year: data.year,
+				playerId: 401,
+				sort: data.sort,
+				pageIndex: data.pageNum,
+				pageSize: data.pageSize
+			};
+			playerHistoryHttp(obj).then((res) => {
+				res.data.data.list.forEach((i: any) => {
+					i.flag = false;
+					i.matchHistory = [];
+				});
+				data.dataList = res.data.data.list;
+			});
+		};
+		const getDropDownList = (index: number) => {
+			const obj = {
+				competitionId: 350,
+				playerId: 401 || ROUTE.query.playerId
+			};
+			playerRewardDropDownHttp(obj).then((res: any) => {
+				data.dataList[index].matchHistory = [res.data.data];
+			});
+		};
+		onMounted(() => {
+			getDataList();
 		});
 		return {
 			...toRefs(data)
@@ -256,8 +266,12 @@ export default defineComponent({
 	cursor: pointer;
 	text-align: left;
 }
-.divisionBox {
+.divClass {
 	display: flex;
+	justify-content: flex-start;
+}
+.divClass div {
+	margin: 0 2px;
 }
 .divsision {
 	border: 1px solid #000;

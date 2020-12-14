@@ -42,6 +42,13 @@ const awardAwayList = '/competition/confrontationplayerlist';
 const rakingLeagueList = '/competition/teamranking';
 // 联赛 排名记录 奖励排名
 const rakingRewardList = '/competition/teamaward';
+
+// 弹框组件 接口
+const dialogInfo = '/competition/teaminfo';
+// 弹框队伍
+const dialogTeamList = '/competition/teamplayer';
+// 弹框队伍
+const dialogHistoryList = '/competition/teamentryrecord';
 export {
 	leagueInfo,
 	leagueSelect,
@@ -64,5 +71,8 @@ export {
 	awardAwayList,
 	awardInfo,
 	rakingLeagueList,
-	rakingRewardList
+	rakingRewardList,
+	dialogInfo,
+	dialogTeamList,
+	dialogHistoryList
 };

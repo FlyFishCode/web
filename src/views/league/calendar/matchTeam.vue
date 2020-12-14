@@ -42,7 +42,7 @@
 			<a-table :columns="columns" :data-source="tableList" :pagination="false" rowKey="teamId" bordered>
 				<template v-slot:teamName="{ record }">
 					<img class="tableImg" :src="record.img" alt="" />
-					<a @click="showInfo(record)">{{ record.teamName }}</a>
+					<a @click="showInfo(record.teamId)">{{ record.teamName }}</a>
 				</template>
 				<template v-slot:addres="{ record }">
 					<div class="addres">
@@ -105,7 +105,7 @@
 				</div>
 			</template>
 		</a-modal>
-		<dialogVue :propsVisible="visible" :teamId="teamId" @dialogVisible="dialogVisible" />
+		<dialogVue :propsVisible="diaVisible" :teamId="teamId" :competitionId="competitionId" @dialogVisible="dialogVisible" />
 		<entryList :entryPath="entryPath" />
 	</div>
 </template>
@@ -113,7 +113,7 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import entryList from '@/components/common/entryList.vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { SearchOutlined, SettingFilled, UserOutlined, EnvironmentOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 import { leagueSelectHttp, leagueTeamHttp } from '@/axios/api';
 import dialogVue from '@/components/common/dialogVue.vue';
@@ -134,13 +134,16 @@ export default defineComponent({
 		dialogVue
 	},
 	setup() {
+		const ROUTE = useRoute();
 		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/league',
 			visible: false,
+			diaVisible: false,
 			teamNameSort: true,
 			teamPlaceSort: true,
 			teamId: 1,
+			competitionId: ROUTE.query.competitionId,
 			sort: 1,
 			total: 1,
 			pageNum: 1,
@@ -234,7 +237,7 @@ export default defineComponent({
 			},
 			showInfo: (value: number) => {
 				data.teamId = value;
-				data.visible = true;
+				data.diaVisible = true;
 			},
 			dialogVisible: (value: boolean) => {
 				data.visible = value;

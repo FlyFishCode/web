@@ -46,7 +46,7 @@
 							<template #team="{ record }">
 								<div class="tableStyle">
 									<img class="tableImg" :src="record.teamImg" alt="" />
-									<div class="link" @click="showDialog(record)">{{ record.teamName }}</div>
+									<div class="link" @click="showDialog(record.teamId)">{{ record.teamName }}</div>
 								</div>
 							</template>
 						</a-table>
@@ -75,7 +75,7 @@
 							<template #team="{ record }">
 								<div class="tableStyle">
 									<img class="tableImg" :src="record.teamImg" alt="" />
-									<div class="link" @click="showDialog(record)">{{ record.teamName }}</div>
+									<div class="link" @click="showDialog(record.teamId)">{{ record.teamName }}</div>
 								</div>
 							</template>
 						</a-table>
@@ -140,7 +140,7 @@
 									<img class="tableImg" :src="record.playerImg" alt="" />
 									<div>
 										<div>{{ record.playerName }}</div>
-										<div class="link" @click="showDialog">{{ record.shop.shopName }}</div>
+										<div class="link" @click="showDialog(record.teamId)">{{ record.shop.shopName }}</div>
 									</div>
 								</div>
 							</template>
@@ -151,7 +151,7 @@
 					</div>
 				</a-tab-pane>
 			</a-tabs>
-			<dialogVue :propsVisible="visible" :teamId="teamId" @dialogVisible="dialogVisible" />
+			<dialogVue :propsVisible="visible" :teamId="teamId" :competitionId="competitionId" @dialogVisible="dialogVisible" />
 			<entryList :entryPath="entryPath" />
 		</a-row>
 	</div>
@@ -161,7 +161,7 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { leagueSelectHttp, rankingPlayerHttp, rakingLeagueListHttp, rakingRewardListHttp } from '@/axios/api';
 // import { rowType } from "@/type/interface.d.ts";
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { SettingFilled, ClusterOutlined } from '@ant-design/icons-vue';
 import showTeam from '@/components/showTeamTopOne.vue';
 import showPersonal from '@/components/showPersonalTopOne.vue';
@@ -189,7 +189,8 @@ export default defineComponent({
 		entryList
 	},
 	setup() {
-		const Router = useRouter();
+		const ROUTE = useRoute();
+		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/league',
 			visible: false,
@@ -206,6 +207,7 @@ export default defineComponent({
 			monthList: [],
 			stateList: [],
 			teamId: 1,
+			competitionId: ROUTE.query.competitionId,
 			stageId: '',
 			divisiton: '',
 			leagueId: '',
@@ -357,29 +359,7 @@ export default defineComponent({
 				{ title: 'WH', dataIndex: 'playerResultDetails.whiteHorse', width: 60 }
 			],
 			playerTableList: [{ playerId: 0 }],
-			tableList: [
-				{
-					id: 1,
-					name: 'aaaaaaaaaaaaaaaaaaaaaaa',
-					age: 32,
-					img: require('@/assets/1.jpg'),
-					address: '晾挂个总队'
-				},
-				{
-					id: 2,
-					name: 'vbbbbbbbbbbbbbbbbbbbbbb',
-					age: 40,
-					img: require('@/assets/1.jpg'),
-					address: '啊色彩总队'
-				},
-				{
-					id: 3,
-					name: 'vvvvvvvvvvvvvvvvvvvvvvvvv',
-					age: 40,
-					img: require('@/assets/1.jpg'),
-					address: '啊色彩总队'
-				}
-			],
+			tableList: [{ captainId: 0 }],
 			showDialog: (value: number) => {
 				data.teamId = value;
 				data.visible = true;
@@ -397,7 +377,7 @@ export default defineComponent({
 				console.log('1');
 			},
 			Gohistory: () => {
-				Router.push('/result');
+				ROUTER.push('/result');
 			},
 			fastWay: (row: rowType) => {
 				console.log(row);
@@ -451,8 +431,8 @@ export default defineComponent({
 		});
 		const getPlayerList = () => {
 			const obj = {
-				stageId: 1082 || data.stageId,
-				teamId: 78 || data.leagueId,
+				stageId: data.stageId,
+				teamId: data.leagueId,
 				pageIndex: data.pageNum,
 				pageSize: data.pageSize
 			};
@@ -466,7 +446,7 @@ export default defineComponent({
 		};
 		const getLeagueList = () => {
 			const obj = {
-				stageId: 1066 || data.stageId,
+				stageId: data.stageId,
 				sort: 12,
 				pageIndex: data.leaguePageNum,
 				pageSize: data.leaguePageSize
@@ -481,7 +461,7 @@ export default defineComponent({
 		};
 		const getRewardList = () => {
 			const obj = {
-				stageId: 1082 || data.stageId,
+				stageId: data.stageId,
 				sort: 14,
 				pageIndex: data.rewardPageNum,
 				pageSize: data.rewardPageSize
@@ -495,7 +475,7 @@ export default defineComponent({
 		};
 		const getSelectList = () => {
 			const obj = {
-				competitionId: 234,
+				competitionId: data.competitionId,
 				teamFlag: true
 			};
 			leagueSelectHttp(obj).then((res) => {

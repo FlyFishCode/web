@@ -480,11 +480,11 @@ export default defineComponent({
 			goToPage: () => {
 				Router.push('/teamInfo');
 			},
-			showLeagueInfo: (leagueId: any, stageId: number) => {
+			showLeagueInfo: (competitionId: any, stageId: number) => {
 				Router.push({
 					path: '/calendar',
 					query: {
-						leagueId,
+						competitionId,
 						stageId
 					}
 				});

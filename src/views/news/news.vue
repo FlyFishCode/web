@@ -104,7 +104,7 @@ export default defineComponent({
 			],
 			newsList: [],
 			showTypeNews: (value: number) => {
-				newsHttp({ category: value }).then((res) => {
+				newsHttp({ countryId: sessionStorage.getItem('countryId'), category: value }).then((res) => {
 					data.newsList = res.data.data.list;
 					data.total = res.data.data.totalPage;
 				});
@@ -112,6 +112,7 @@ export default defineComponent({
 			handleClick: (e: any) => {
 				[data.month, data.year] = e.keyPath;
 				const obj = {
+					countryId: sessionStorage.getItem('countryId'),
 					year: data.year,
 					month: data.month
 				};
@@ -154,7 +155,7 @@ export default defineComponent({
 						str = 'allKeyword';
 						break;
 				}
-				newsHttp({ [str]: data.typeValue }).then((res) => {
+				newsHttp({ countryId: sessionStorage.getItem('countryId'), [str]: data.typeValue }).then((res) => {
 					if (res.data.data.list.length) {
 						data.newsList = res.data.data.list;
 						data.total = res.data.data.totalPage;
@@ -172,7 +173,7 @@ export default defineComponent({
 			}
 		});
 		onMounted(() => {
-			newsHttp({}).then((res) => {
+			newsHttp({ countryId: sessionStorage.getItem('countryId') }).then((res) => {
 				if (res.data.data.list.length) {
 					data.newsList = res.data.data.list;
 					data.total = res.data.data.totalPage;

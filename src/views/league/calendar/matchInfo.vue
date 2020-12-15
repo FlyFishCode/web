@@ -31,10 +31,10 @@
 				<a-col :lg="4" :xs="10" class="tableContent">
 					<div>{{ $t('default.30') }}</div>
 				</a-col>
-				<a-col :lg="8" :xs="14" class="tableContentValue">
+				<a-col :lg="8" :xs="14" class="countryBox">
 					<div v-for="item in infoData.hostingRegion" :key="item">
-						<span>{{ item.areaName }}</span>
-						<span v-if="item.countryName">{{ ` > ${item.countryName}` }}</span>
+						<span>{{ item.countryName }}</span>
+						<span v-if="item.areaName">{{ ` > ${item.areaName}；` }}</span>
 					</div>
 				</a-col>
 			</a-row>
@@ -151,7 +151,7 @@
 			</a-col>
 		</a-row>
 		<a-row class="rowStyle" id="dataListBox">
-			<a-table :data-source="tableList" class="components-table-demo-nested inPhoneTableDisplay" :pagination="false">
+			<a-table :data-source="tableList" class="components-table-demo-nested inPhoneTableDisplay" rowkey="set" :pagination="false">
 				<a-table-column data-index="stageName" />
 				<a-table-column key="other" class="dataTimeStyle">
 					<template v-slot="{ text: data }">
@@ -163,7 +163,7 @@
 				</template>
 			</a-table>
 
-			<a-table :data-source="tableList" class="components-table-demo-nested showPhoneTable" :pagination="false">
+			<a-table :data-source="tableList" class="components-table-demo-nested showPhoneTable" rowkey="set" :pagination="false">
 				<a-table-column data-index="stageName" />
 				<a-table-column key="other" class="dataTimeStyle">
 					<template v-slot="{ text: data }">
@@ -182,7 +182,7 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { matchInfoHttp, matchInfoTableListHttp } from '@/axios/api';
 import entryList from '@/components/common/entryList.vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { SettingFilled } from '@ant-design/icons-vue';
 // interface HTMLInputEvent {
 // 	e: HTMLInputElement & EventTarget;
@@ -210,8 +210,9 @@ import { SettingFilled } from '@ant-design/icons-vue';
 export default defineComponent({
 	name: 'matchInfo',
 	components: { SettingFilled, entryList },
-	setup() {
-		const router = useRouter();
+	setup(prop, ctx) {
+		const ROUTE = useRoute();
+		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/league',
 			infoData: {
@@ -376,10 +377,10 @@ export default defineComponent({
 				return str;
 			},
 			showDetail: (e) => {
-				console.log(e);
+				ctx.emit('change-activekey', '2', e);
 			},
 			Gohistory: () => {
-				router.push('/');
+				ROUTER.push('/');
 			}
 		});
 		const mergeCells = (text, dataIndex, key, index) => {
@@ -398,8 +399,10 @@ export default defineComponent({
 			return rowSpan;
 		};
 		const getMatchInfo = () => {
-			matchInfoHttp({ competitionId: 142 }).then((res) => {
-				data.infoData = res.data.data;
+			matchInfoHttp({ competitionId: ROUTE.query.competitionId || '' }).then((res) => {
+				if (res.data.data) {
+					data.infoData = res.data.data;
+				}
 			});
 		};
 		const getGameName = (type) => {
@@ -532,33 +535,35 @@ export default defineComponent({
 			return str;
 		};
 		const getMatchTableList = () => {
-			matchInfoTableListHttp({ divisionId: 804 }).then((res) => {
+			matchInfoTableListHttp({ competitionId: ROUTE.query.competitionId || '' }).then((res) => {
 				res.data.data.forEach((i, index) => {
 					i.list = [];
+					i.stageName = i.divisionName;
 					i.other = '日程表视图';
-					i.setList.forEach((j) => {
-						j.legList.forEach((k) => {
-							i.list.push({
-								dataIndex: index,
-								set: j.setNumber,
-								setPoint: j.setPoint,
-								leg: k.legNumber,
-								game: getGameName(k.gameName),
-								gameMode: getMode(i.mode),
-								round: k.round,
-								in: getGameIn(k.gameIn),
-								out: getGameOut(k.gameOut),
-								bull: getBull(k.bull),
-								freeze: k.teamFreeze,
-								option: k.freezeOption,
-								overKill: k.overkill,
-								cricket: k.teamCricket
+					i.stageList.forEach((y) => {
+						y.setList.forEach((j) => {
+							j.legList.forEach((k) => {
+								i.list.push({
+									dataIndex: index,
+									set: j.setNumber,
+									setPoint: j.setPoint,
+									leg: k.legNumber,
+									game: getGameName(k.gameName),
+									gameMode: getMode(i.mode),
+									round: k.round,
+									in: getGameIn(k.gameIn),
+									out: getGameOut(k.gameOut),
+									bull: getBull(k.bull),
+									freeze: k.teamFreeze,
+									option: k.freezeOption,
+									overKill: k.overkill,
+									cricket: k.teamCricket
+								});
 							});
 						});
 					});
 				});
 				data.tableList = res.data.data;
-				console.log(data.tableList);
 			});
 		};
 		onMounted(() => {
@@ -591,6 +596,11 @@ export default defineComponent({
 	height: 40px;
 	line-height: 40px;
 	border: 0.5px solid #d5d5d5;
+}
+.countryBox {
+	height: 40px;
+	line-height: 40px;
+	display: flex;
 }
 .decision {
 	display: flex;

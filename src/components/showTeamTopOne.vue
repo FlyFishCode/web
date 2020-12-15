@@ -89,8 +89,7 @@
 </template>
 
 <script lang="ts">
-import { useRoute } from 'vue-router';
-import { reactive, toRefs, onMounted, ref, watch } from 'vue';
+import { reactive, toRefs, ref, watch } from 'vue';
 import { EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
 
 const getNewData = (obj: any) => {
@@ -139,7 +138,6 @@ export default {
 		RightCircleOutlined
 	},
 	setup(prop: any) {
-		const route = useRoute();
 		let currentPosition = 0;
 		const currentIndex = ref(0);
 		const data: DataProps = reactive({
@@ -180,9 +178,6 @@ export default {
 				}
 				box.style.left = `${currentPosition}px`;
 			}
-		});
-		onMounted(() => {
-			console.log(route.query);
 		});
 		watch(
 			() => prop.teamObj,

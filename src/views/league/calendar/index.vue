@@ -30,7 +30,7 @@
 		<a-row>
 			<a-tabs class="tabsBox" v-model:activeKey="activeKey">
 				<a-tab-pane key="1" :tab="$t('default.24')">
-					<matchInfo />
+					<matchInfo @change-activekey="changeActiveKey" />
 				</a-tab-pane>
 				<a-tab-pane key="2" :tab="$t('default.13')">
 					<timeTable />
@@ -39,7 +39,7 @@
 					<ranking />
 				</a-tab-pane>
 				<a-tab-pane key="4" :tab="$t('default.9')">
-					<matchTeam />
+					<matchTeam @change-activekey="changeActiveKey" />
 				</a-tab-pane>
 			</a-tabs>
 		</a-row>
@@ -56,6 +56,7 @@ import matchTeam from '@/views/league/calendar/matchTeam.vue';
 export default defineComponent({
 	name: 'LeagueIndex',
 	components: { matchInfo, timeTable, matchTeam, ranking },
+	emits: ['change-activekey'],
 	setup() {
 		const ROUTE = useRoute();
 		const data = reactive({
@@ -68,17 +69,22 @@ export default defineComponent({
 					draws: 0,
 					losses: 0
 				}
+			},
+			changeActiveKey: (key: string) => {
+				data.activeKey = key;
 			}
 		});
 		const getInfo = () => {
-			leagueInfoHttp({ competitionId: 460 }).then((res) => {
+			leagueInfoHttp({ competitionId: ROUTE.query.competitionId }).then((res) => {
+				if (!res.data.data.setResult) {
+					res.data.data.setResult = {};
+				}
 				data.info = res.data.data;
 			});
 		};
 		onMounted(() => {
 			data.activeKey = ROUTE.query.activeKey as string;
 			getInfo();
-			console.log(data.activeKey);
 		});
 		return {
 			...toRefs(data)

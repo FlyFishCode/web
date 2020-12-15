@@ -80,20 +80,23 @@ import { timeTableLineHttp, matchPlayerListHttp, submitMatchTableHttp, matchDate
 import emptyList from '@/components/common/emptyList';
 import { SettingFilled } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
+import { useRoute } from 'vue-router';
 // interface DataProps {
 // 	matchTableList: [{ legGameList: Array<any> }];
 // }
 export default defineComponent({
 	name: 'matchTable',
-	props: ['tableTeamId', 'confrontationId'],
+	props: ['teamId', 'isHome', 'confrontationId'],
 	components: {
 		SettingFilled,
 		emptyList
 	},
 	setup(prop) {
+		const ROUTE = useRoute();
 		const instance = getCurrentInstance();
 		const data = reactive({
 			playerList: [],
+			competitionId: ROUTE.query.competitionId,
 			matchTable: {
 				lineupDeadLine: '',
 				maxSetCount: 0,
@@ -277,7 +280,7 @@ export default defineComponent({
 							status: type,
 							playerList: j.playerList.map((k, kndex) => {
 								return {
-									isHome: 1,
+									isHome: prop.isHome,
 									playerId: k.playerId,
 									setModeNumber: kndex + 1
 								};
@@ -346,9 +349,11 @@ export default defineComponent({
 				if (oldHours - hours > 0) {
 					surplusDay = oldHours - hours;
 				} else {
-					surplusDay -= 1;
-					oldHours += 24;
-					surplusHours = oldHours - hours;
+					if (surplusDay) {
+						surplusDay -= 1;
+						oldHours += 24;
+						surplusHours = oldHours - hours;
+					}
 				}
 				if (oldMinutes - minutes > 0) {
 					surplusDay = oldMinutes - minutes;
@@ -376,7 +381,7 @@ export default defineComponent({
 		};
 		const getTeamLineU = () => {
 			const obj = {
-				teamId: prop.tableTeamId || '',
+				teamId: prop.teamId || '',
 				confrontationInfoId: prop.confrontationId || ''
 			};
 			timeTableLineHttp(obj).then((res) => {
@@ -418,8 +423,8 @@ export default defineComponent({
 		};
 		const getPlayerList = () => {
 			const obj = {
-				teamId: prop.tableTeamId || '',
-				competitionId: prop.confrontationId || ''
+				teamId: prop.teamId || '',
+				competitionId: data.competitionId || ''
 			};
 			matchPlayerListHttp(obj).then((res) => {
 				if (res.data.data) {

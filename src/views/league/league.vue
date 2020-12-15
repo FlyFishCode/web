@@ -74,7 +74,7 @@
 									<div>{{ item.competitionName }}</div>
 									<div class="divClass">
 										<div v-for="div in item.divisionList" :key="div.divisionId">
-											<a-button type="danger" size="small" @click="showMore(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
+											<a-button type="danger" size="small" @click="entryPage(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
 										</div>
 									</div>
 								</div>
@@ -115,7 +115,7 @@
 									<div>{{ item.competitionName }}</div>
 									<div class="divClass">
 										<div v-for="div in item.divisionList" :key="div.divisionId">
-											<a-button type="danger" size="small" @click="showMore(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
+											<a-button type="danger" size="small" @click="entryPage(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
 										</div>
 									</div>
 								</div>
@@ -243,7 +243,7 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getMyLeagueList();
 			},
-			showMore: (competitionId: number, stageId: number) => {
+			entryPage: (competitionId: number, stageId: number) => {
 				Router.push({
 					path: '/calendar',
 					query: {

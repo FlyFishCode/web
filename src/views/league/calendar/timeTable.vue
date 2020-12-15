@@ -30,7 +30,7 @@
 						<matchResult />
 					</a-tab-pane>
 					<a-tab-pane v-if="ready" key="2" :tab="$t('default.41')">
-						<matchTable :confrontationId="confrontationId" :tableTeamId="tableTeamId" />
+						<matchTable :confrontationId="confrontationId" :isHome="isHome" :teamId="playerListId" />
 					</a-tab-pane>
 					<a-tab-pane v-else key="3" tab="AWARD">
 						<award :confrontationId="confrontationId" />
@@ -41,7 +41,7 @@
 		<!-- 对战表列表 -->
 		<div v-else>
 			<a-row class="inPhoneTableDisplay">
-				<lunboGundong @show-match="showMatch" />
+				<lunboGundong :stageId="stageId" @show-match="showMatch" />
 			</a-row>
 
 			<a-row>
@@ -102,7 +102,7 @@
 					</template>
 					<template v-slot:status="{ record }">
 						<div class="tableState">
-							<div v-if="getTypeBtn(record)" class="plan" @click="readyClick(record.confrontationId)">{{ $t('default.41') }}</div>
+							<div v-if="getTypeBtn(record)" class="plan" @click="readyClick(record.confrontationId, record)">{{ $t('default.41') }}</div>
 							<div v-if="record.status === 2">{{ 'Ready' }}</div>
 							<div v-if="record.status === 3" @click="finishClick(record.confrontationId)">{{ 'Finished' }}</div>
 						</div>
@@ -191,12 +191,14 @@ interface DataProps {
 	stageId: string;
 	divisiton: string;
 	teamId: string;
+	isHome: number;
+	playerListId: number;
 	year: number;
-	month: number;
+	month: string | number;
 	pageNum: number;
 	pageSize: number;
 	pageTotal: number;
-	confrontationId: number;
+	confrontationId: any;
 	state: string;
 	currentKey: any;
 	secrchType: string;
@@ -225,10 +227,11 @@ export default defineComponent({
 		const data: DataProps = reactive({
 			entryPath: '/league',
 			currentKey: '1',
-			confrontationId: 0,
-			tableTeamId: 0,
+			confrontationId: ROUTE.query.competitionId,
 			confrontationInfoId: 0,
 			visible: false,
+			isHome: 0,
+			playerListId: 0,
 			ready: true,
 			searchValue: '',
 			ismatchTablePage: false,
@@ -240,7 +243,6 @@ export default defineComponent({
 			stageList: [{ stageId: '' }],
 			divisitonList: [{ divisionId: 0, stageList: [] }],
 			year: 2020,
-			month: 1,
 			yearList: [{ value: 2020, label: 2020 }],
 			state: '',
 			stateList: [
@@ -251,7 +253,9 @@ export default defineComponent({
 			],
 			teamId: '',
 			teamList: [],
+			month: '',
 			monthList: [
+				{ value: '', label: 'ALL' },
 				{ value: 1, label: 1 },
 				{ value: 2, label: 2 },
 				{ value: 3, label: 3 },
@@ -396,6 +400,7 @@ export default defineComponent({
 					title: '状态',
 					dataIndex: 'status',
 					key: 'state',
+					width: 80,
 					slots: { customRender: 'status' }
 				}
 			],
@@ -448,7 +453,16 @@ export default defineComponent({
 				console.log(value);
 				data.ismatchTablePage = true;
 			},
-			readyClick: (id: number) => {
+			readyClick: (id: number, row: any) => {
+				const userId = sessionStorage.getItem('userId');
+				if (row.homeCaptainId === Number(userId)) {
+					data.isHome = 1;
+					data.playerListId = row.homeTeamId;
+				}
+				if (row.visitingCaptainId === Number(userId)) {
+					data.isHome = 2;
+					data.playerListId = row.visitingTeamId;
+				}
 				data.ismatchTablePage = true;
 				data.ready = true;
 				data.confrontationId = id;
@@ -465,7 +479,8 @@ export default defineComponent({
 				console.log(value);
 			},
 			monthChange: () => {
-				console.log(1);
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTimeTableList();
 			},
 			divisitonChange: (value: number) => {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -487,7 +502,7 @@ export default defineComponent({
 			}
 		});
 		const getDialogList = () => {
-			matchtableHttp({ confrontationId: 505 }).then((res) => {
+			matchtableHttp({ confrontationId: data.confrontationId }).then((res) => {
 				const teamObj: any = {};
 				res.data.data.loopSurfaceList.forEach((i: any) => {
 					i.matchTableList.forEach((j: any) => {
@@ -506,7 +521,7 @@ export default defineComponent({
 		};
 		const getSelectList = () => {
 			const obj = {
-				competitionId: 234,
+				competitionId: data.confrontationId,
 				teamFlag: true
 			};
 			leagueSelectHttp(obj).then((res) => {
@@ -521,19 +536,15 @@ export default defineComponent({
 			});
 		};
 		const getTimeTableList = () => {
-			// const obj = {
-			// 	stageId: data.stageId,
-			// 	year: data.year,
-			// 	month: data.month,
-			// 	teamId: data.teamId,
-			// 	status: data.state,
-			// 	[data.secrchType]: data.searchValue,
-			// 	pageIndex: data.pageNum,
-			// 	pageSize: data.pageSize
-			// };
 			const obj = {
-				year: 2020,
-				stageId: 618
+				stageId: data.stageId,
+				year: data.year,
+				month: data.month,
+				teamId: data.teamId,
+				status: data.state,
+				[data.secrchType]: data.searchValue,
+				pageIndex: data.pageNum,
+				pageSize: data.pageSize
 			};
 			timeTableDataListHttp(obj).then((res) => {
 				data.tableList = res.data.data.list;

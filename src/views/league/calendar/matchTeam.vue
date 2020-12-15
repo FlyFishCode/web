@@ -17,14 +17,14 @@
 			</a-col>
 			<a-col :lg="{ span: 2, offset: 2 }" :xs="0" class="sortColBox">
 				<div class="linkIcon">
-					<span v-if="teamNameSort" @click="changeSortPlayer(1)"> {{ $t('default.168') }}<DownOutlined /> </span>
-					<span v-else @click="changeSortPlayer(2)"> {{ $t('default.168') }}<UpOutlined /> </span>
+					<span v-if="teamNameSort" @click="changeSortPlayer(2)"> {{ $t('default.168') }}<DownOutlined /> </span>
+					<span v-else @click="changeSortPlayer(1)"> {{ $t('default.168') }}<UpOutlined /> </span>
 				</div>
 			</a-col>
 			<a-col :lg="2" :xs="0" class="sortColBox">
 				<div class="linkIcon">
-					<span v-if="teamPlaceSort" @click="changeSortPlace(3)"> {{ $t('default.227') }}<DownOutlined /> </span>
-					<span v-else @click="changeSortPlace(4)"> {{ $t('default.227') }}<UpOutlined /> </span>
+					<span v-if="teamPlaceSort" @click="changeSortPlace(4)"> {{ $t('default.227') }}<DownOutlined /> </span>
+					<span v-else @click="changeSortPlace(3)"> {{ $t('default.227') }}<UpOutlined /> </span>
 				</div>
 			</a-col>
 			<a-col :lg="{ span: 2, offset: 2 }" :xs="0" class="titleStyle"> <SearchOutlined class="fontIcon" />{{ $t('default.140') }} </a-col>
@@ -133,7 +133,7 @@ export default defineComponent({
 		UpOutlined,
 		dialogVue
 	},
-	setup() {
+	setup(prop: any, ctx: any) {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
 		const data = reactive({
@@ -259,7 +259,7 @@ export default defineComponent({
 				getTeamList();
 			},
 			fastWay: (row: any) => {
-				console.log(row);
+				ctx.emit('change-activekey', '2',row);
 			},
 			Gohistory: () => {
 				ROUTER.push('/result');

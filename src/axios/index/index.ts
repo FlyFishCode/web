@@ -2,13 +2,13 @@
 const login = '/login';
 
 // 首页联赛列表
-const leagueList = '/multileague';
+const leagueList = '/home/competition';
 
 // 首页队伍列表
-const indexTeam = '/hometeamranking';
+const indexTeam = '/home/teamranking';
 
 // 首页玩家列表
-const indexPlayer = '/homeplayerranking';
+const indexPlayer = '/home/playerranking';
 
 // 首页 国家列表
 const indexCountrylist = '/countrylist';
@@ -16,13 +16,13 @@ const indexCountrylist = '/countrylist';
 const indexCitylist = '/arealist';
 
 // 首页 首页新闻列表
-const indexNewslist = '/homenews';
+const indexNewslist = '/home/news';
 
 // 首页 新闻所有列表
-const newslist = '/newslist';
+const newslist = '/news/list';
 // 首页 新闻详细内容
-const newsInfo = '/newsdetails';
+const newsInfo = '/news/details';
 
 // 首页 首页轮播图
-const indexCarousel = '/bannerlist';
+const indexCarousel = '/home/banner';
 export { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCitylist, indexNewslist, newslist, newsInfo, indexCarousel };

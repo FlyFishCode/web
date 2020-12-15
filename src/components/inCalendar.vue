@@ -60,20 +60,20 @@
 	</div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { timetablecustomHttp } from '@/axios/api';
-// import { useRoute } from 'vue-router';
 export default defineComponent({
 	name: 'inCalendar',
 	components: {
 		LeftOutlined,
 		RightOutlined
 	},
+	props: ['stageId'],
 	emits: ['show-match'],
-	setup(props: any, ctx) {
-		// const ROUTE = useRoute();
+	setup(prop: any, ctx) {
 		const data = reactive({
+			stageId: prop.stageId,
 			direction: false,
 			hasData: false,
 			position: 0,
@@ -149,19 +149,23 @@ export default defineComponent({
 			}
 		});
 		const getList = () => {
-			// timetablecustomHttp({ stageId: ROUTE.query.stageId }).then((res) => {
-			timetablecustomHttp({ stageId: 1080 }).then((res) => {
-				data.topList = res.data.data;
-				data.detailList = res.data.data[0].matchList;
+			timetablecustomHttp({ stageId: prop.stageId }).then((res) => {
+				if (res.data.data) {
+					data.topList = res.data.data;
+					data.detailList = res.data.data[0].matchList;
+				}
 			});
 		};
 		onMounted(() => {
-			getList();
-			if (data.detailList.length > 6) {
-				data.direction = true;
-			}
 			data.init();
 		});
+		watch(
+			() => prop.stageId,
+			(val) => {
+				data.stageId = val;
+				getList();
+			}
+		);
 		return {
 			...toRefs(data)
 		};

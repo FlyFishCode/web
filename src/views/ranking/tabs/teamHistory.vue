@@ -404,19 +404,6 @@ export default defineComponent({
 				}
 			});
 		};
-		const getDataList = (list: Array<any>) => {
-			teamDataListHttp(list).then((res) => {
-				if (res.data.data) {
-					res.data.data.forEach((i: any) => {
-						i.flag = true;
-					});
-					data.teamList[0] = res.data.data[0];
-					data.teamList[1] = res.data.data[1];
-				} else {
-					message.error(res.data.msg);
-				}
-			});
-		};
 		const getTeamList = () => {
 			const obj = {
 				countryId: data.countryId,
@@ -442,8 +429,26 @@ export default defineComponent({
 				}
 			});
 		};
+		const getDataList = (list: Array<any>) => {
+			teamDataListHttp(list).then((res) => {
+				if (res.data.data) {
+					res.data.data.forEach((i: any) => {
+						i.flag = true;
+					});
+					data.teamList[0] = res.data.data[0];
+					data.teamList[1] = res.data.data[1];
+				} else {
+					message.error(res.data.msg);
+				}
+			});
+		};
 		onMounted(() => {
 			getCountryList();
+			let list: any = ROUTE.query.teamList;
+			if (list) {
+				list = list.split(',');
+				getDataList(list);
+			}
 		});
 		watch(
 			() => prop.activeKey,

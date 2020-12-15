@@ -134,8 +134,8 @@
 					<div class="placeStyle">
 						<div v-show="item.shopAddress" class="overStyle">{{ item.shopAddress }}/</div>
 						<div v-show="item.countryName">{{ item.countryName }}/</div>
-						<div class="counyStyle">{{ item.areaName }}</div>
-						<span @click="showDialog(item)">
+						<div class="counyStyle">{{ item.shop.areaName }}</div>
+						<span @click="showDialog(item.shop)">
 							<EnvironmentOutlined />
 						</span>
 					</div>
@@ -274,7 +274,7 @@ export default defineComponent({
 				{ value: 2, label: 'default.248' },
 				{ value: 3, label: 'default.94' }
 			],
-			teamList: [{ flag: false, competitionList: [] }],
+			teamList: [{ flag: false, shop: {}, competitionList: [] }],
 			bestTeam: [],
 			dialogObj: {
 				title: '',

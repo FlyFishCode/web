@@ -44,7 +44,7 @@ import {
 import { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList, vipList, historyResult } from '@/axios/team/index';
 
 // 玩家
-import { theBestPlayer, playerList, playerRewardList, playerHistory, playerRewardDropDown } from '@/axios/player/index';
+import { theBestPlayer, playerList, playerRewardList, playerHistory, playerRewardDropDown, playerInfo } from '@/axios/player/index';
 
 // 店铺
 import { shopList, shopdetails, historyList, shopTeamList, shopPlayerList } from '@/axios/shop';
@@ -123,8 +123,8 @@ const indexCityHttp = (data: { countryId: number }) => {
 	return Axios.get(getNewUrl(indexCitylist, data));
 };
 // 首页新闻列表
-const indexNewsHttp = () => {
-	return Axios.get(indexNewslist);
+const indexNewsHttp = (data: any) => {
+	return Axios.get(getNewUrl(indexNewslist, data));
 };
 // 新闻列表
 const newsHttp = (data: any) => {
@@ -144,7 +144,7 @@ const leagueListHttp = (data: any) => {
 };
 // 首页队伍列表
 const indexTeamHttp = (data: any = null) => {
-	return Axios.get(getNewUrl(indexTeam), data);
+	return Axios.get(getNewUrl(indexTeam, data));
 };
 // 首页玩家列表
 const indexPlayerHttp = (data: any = null) => {
@@ -335,6 +335,10 @@ const playerBestListHttp = (data: any = null) => {
 const playerListHttp = (data: any = null) => {
 	return Axios.post(playerList, data);
 };
+// 玩家 等级
+const playerInfoHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(playerInfo, data));
+};
 
 // 店铺 店铺列表
 const shopListHttp = (data: any = null) => {
@@ -446,5 +450,6 @@ export {
 	dialogHistoryListHttp,
 	plauerRewardListHttp,
 	playerHistoryHttp,
-	playerRewardDropDownHttp
+	playerRewardDropDownHttp,
+	playerInfoHttp
 };

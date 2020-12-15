@@ -30,7 +30,7 @@
 						</div>
 						<div class="newContentStyle">
 							<div class="newTitle">{{ news.title }}</div>
-							<div class="newContent">{{ news.contents }}</div>
+							<div :title="news.contents" class="newContent">{{ news.contents }}</div>
 							<div class="newIcon">
 								<span> <ScheduleOutlined /> {{ news.date }} </span>
 								<span> <EyeOutlined /> {{ news.visitCount }} </span>
@@ -433,10 +433,11 @@ export default defineComponent({
 			teamList: [],
 			playerList: [],
 			getDate: () => {
-				const year = new Date().getFullYear();
-				const month = new Date().getMonth() + 1;
-				const day = new Date().getDay();
-				return `${year}-${month}-${day}`;
+				return data.time
+				// const year = new Date().getFullYear();
+				// const month = new Date().getMonth() + 1;
+				// const day = new Date().getDay();
+				// return `${year}-${month}-${day}`;
 			},
 			entryRanking: (path: string, value: string) => {
 				Router.push({
@@ -480,12 +481,12 @@ export default defineComponent({
 			goToPage: () => {
 				Router.push('/teamInfo');
 			},
-			showLeagueInfo: (competitionId: any, stageId: number) => {
+			showLeagueInfo: (competitionId: any, divisionId: number) => {
 				Router.push({
 					path: '/calendar',
 					query: {
 						competitionId,
-						stageId
+						divisionId
 					}
 				});
 			},
@@ -518,25 +519,17 @@ export default defineComponent({
 			});
 		};
 		const getTeamList = () => {
-			// const obj = {
-			//   areaId: data.areaId,
-			//   countryId: data.areaId,
-			// };
-			indexTeamHttp().then((res) => {
+			indexTeamHttp({ countryId: sessionStorage.getItem('countryId') }).then((res) => {
 				data.teamList = res.data.data;
 			});
 		};
 		const getPlayerList = () => {
-			// const obj = {
-			//   areaId: data.areaId,
-			//   countryId: data.areaId,
-			// };
-			indexPlayerHttp().then((res) => {
+			indexPlayerHttp({ countryId: sessionStorage.getItem('countryId') }).then((res) => {
 				data.playerList = res.data.data;
 			});
 		};
 		const getNewsList = () => {
-			indexNewsHttp().then((res) => {
+			indexNewsHttp({ countryId: sessionStorage.getItem('countryId') }).then((res) => {
 				data.newsList = res.data.data;
 			});
 		};
@@ -570,6 +563,7 @@ export default defineComponent({
 }
 .newBg {
 	padding: 0 1px;
+	width: 50%;
 	cursor: pointer;
 }
 .newBox {
@@ -873,5 +867,10 @@ export default defineComponent({
 }
 .divClass div {
 	margin: 0 2px;
+}
+.newContent {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 </style>

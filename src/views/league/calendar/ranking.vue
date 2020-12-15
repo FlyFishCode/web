@@ -147,7 +147,7 @@
 						</a-table>
 					</a-row>
 					<div class="pagination">
-						<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @change="pageChange" />
+						<a-pagination v-model:current="playerPageNum" v-model:pageSize="playerPageSize" :total="playerTotal" @change="pageChange" />
 					</div>
 				</a-tab-pane>
 			</a-tabs>
@@ -201,9 +201,9 @@ export default defineComponent({
 			rewardPageNum: 1,
 			rewardPageSize: 10,
 			rewardTotal: 1,
-			total: 1,
-			pageNum: 1,
-			pageSize: 10,
+			playerTotal: 1,
+			playerPageNum: 1,
+			playerPageSize: 10,
 			monthList: [],
 			stateList: [],
 			teamId: 1,
@@ -433,11 +433,12 @@ export default defineComponent({
 			const obj = {
 				stageId: data.stageId,
 				teamId: data.leagueId,
-				pageIndex: data.pageNum,
-				pageSize: data.pageSize
+				pageIndex: data.playerPageNum,
+				pageSize: data.playerPageSize
 			};
 			rankingPlayerHttp(obj).then((res) => {
 				data.playerTableList = res.data.data.list;
+				data.playerTotal = res.data.data.totalCount;
 				if (res.data.data.list.length) {
 					data.isChange = false;
 					data.playerObj = res.data.data.list[0];
@@ -468,6 +469,7 @@ export default defineComponent({
 			};
 			rakingRewardListHttp(obj).then((res) => {
 				data.rewardTableList = res.data.data.list;
+				data.rewardTotal = res.data.data.totalCount;
 				if (res.data.data.list.length) {
 					data.isChange = false;
 				}

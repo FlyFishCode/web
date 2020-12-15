@@ -1,15 +1,15 @@
 // 最佳队伍列表
-const theBestTeam = '/bestteam';
+const theBestTeam = '/team/best';
 // 队伍列表
-const teamList = '/teamlist';
+const teamList = '/team/list';
 
 // teamInfo
-const teamdetails = '/teamdetails';
+const teamdetails = '/team/details';
 
 // 时间表 下拉数据
-const timePageSelectList = '/teamcompetitionmenu';
+const timePageSelectList = '/team/competitionmenu';
 // 时间表 列表数据
-const timePageList = '/teamconfrontationinfolist';
+const timePageList = '/team/confrontationlist';
 // 时间表 日历数据
 const calendarList = '/teamconfrontationinfocalendar';
 

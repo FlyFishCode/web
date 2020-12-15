@@ -15,7 +15,7 @@
 				</a-select>
 			</a-col>
 		</a-row>
-		<a-table :columns="columns" :scroll="{ x: 600 }" :data-source="dataList" bordered id="table" :pagination="false">
+		<a-table :columns="columns" :scroll="{ x: 600 }" :data-source="dataList" bordered rowKey="lowTon" :pagination="false">
 			<template v-slot:index="{ index }">
 				<div>{{ `${index + 1}` }}</div>
 			</template>

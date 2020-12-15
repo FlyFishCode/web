@@ -8,7 +8,7 @@
 				<a-col :span="12" class="firstClass FONT">
 					<div class="teamName" @click="showTeamInfo">{{ infoData.playerName }}</div>
 					<div class="disabledClass">{{ infoData.shopName }}</div>
-					<div class="disabledClass">
+					<div v-if="infoData.shopAddress" class="disabledClass">
 						{{ infoData.shopAddress }}
 						<span @click="showDetail" class="icon">
 							<EnvironmentOutlined />
@@ -74,8 +74,7 @@
 </template>
 
 <script lang="ts">
-import { useRoute } from 'vue-router';
-import { reactive, toRefs, onMounted, ref, watch } from 'vue';
+import { reactive, toRefs, ref, watch } from 'vue';
 import { EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
 
 interface DataProps {
@@ -135,7 +134,6 @@ export default {
 	},
 	props: ['playerObj'],
 	setup(prop: any) {
-		const route = useRoute();
 		let currentPosition = 0;
 		const currentIndex = ref(0);
 		const data: DataProps = reactive({
@@ -176,10 +174,6 @@ export default {
 				}
 				box.style.left = `${currentPosition}px`;
 			}
-		});
-		onMounted(() => {
-			data.infoData = getNewData(prop.playerObj);
-			console.log(route.query);
 		});
 		watch(
 			() => prop.playerObj,

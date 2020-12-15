@@ -8,9 +8,9 @@
 				<a-col :span="14" class="firstClass">
 					<div class="teamName" @click="showTeamInfo">{{ infoData.teamName }}</div>
 					<div class="disabledClass">{{ infoData.captainName }}</div>
-					<div class="disabledClass">{{ infoData.countryName }} > {{ infoData.areaName }}</div>
-					<div class="disabledClass">
-						{{ infoData.shopAddress }}
+					<div class="disabledClass" v-if="infoData.shop">{{ infoData.shop.countryName }} > {{ infoData.shop.areaName }}</div>
+					<div class="disabledClass" v-if="infoData.shop">
+						{{ infoData.shop.shopAddress }}
 						<span @click="showDetail" class="icon">
 							<EnvironmentOutlined />
 						</span>
@@ -19,7 +19,7 @@
 				</a-col>
 			</a-col>
 			<!-- // 左侧按钮 -->
-			<a-col :lg="12" :xs="24" class="carousel">
+			<a-col :lg="12" :xs="24" class="carousel" v-if="infoData.resultList.length">
 				<a-col :span="2" class="iconFont leftIcon">
 					<LeftCircleOutlined @click="leftClick" />
 				</a-col>
@@ -50,11 +50,11 @@
 					</div>
 				</a-col>
 				<!-- 右侧按钮 -->
-				<a-col :span="2" class="iconFont rightIcon">
+				<a-col :span="2" class="iconFont rightIcon" v-if="infoData.resultList.length">
 					<RightCircleOutlined @click="rightClick" />
 				</a-col>
 				<!-- 展示条 -->
-				<div class="showIndex">
+				<div class="showIndex" v-if="infoData.resultList.length">
 					<div v-for="(item, index) in infoData.resultList" :key="item.index" class="otherBox" :class="{ isActived: index === currentIndex }"></div>
 				</div>
 			</a-col>
@@ -122,10 +122,10 @@ export default {
 				res.data.data.resultList = [];
 				for (const [key, value] of Object.entries(res.data.data)) {
 					switch (key) {
-						case 'bestPlayer':
+						case 'bestPlayer' && value:
 							res.data.data.resultList.push(Object.assign(value, { title: key }));
 							break;
-						case 'leagueRating':
+						case 'leagueRating' && value:
 							res.data.data.resultList.push(Object.assign(value, { title: key }));
 							break;
 						default:

@@ -467,6 +467,11 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountryList();
+			let list: any = ROUTE.query.teamList;
+			if (list) {
+				list = list.split(',');
+				getDataList(list);
+			}
 		});
 		watch(
 			() => prop.activeKey,

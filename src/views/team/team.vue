@@ -1,6 +1,6 @@
 <template>
 	<div class="content">
-		<divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
+		<divTitle :msg="title" :span="colSpan" />
 		<a-row class="rowStyle">
 			<a-col :span="14" class="centerFont"> <SettingFilled /> {{ `${$t('default.80')}(${$t('default.8')})` }} </a-col>
 		</a-row>
@@ -70,7 +70,7 @@
 						</div>
 					</div>
 					<div class="backBox">
-						<u class="backFont" @click="showDetail(item.id)">{{ item.title }}</u>
+						<u class="backFont" @click="showDetail(item.teamId)">{{ item.title }}</u>
 					</div>
 				</div>
 			</a-col>
@@ -134,7 +134,7 @@
 					<div class="placeStyle">
 						<div v-show="item.shopAddress" class="overStyle">{{ item.shopAddress }}/</div>
 						<div v-show="item.countryName">{{ item.countryName }}/</div>
-						<div class="counyStyle">{{ item.shop.areaName }}</div>
+						<div class="counyStyle">{{ item.shop.shopName }}</div>
 						<span @click="showDialog(item.shop)">
 							<EnvironmentOutlined />
 						</span>
@@ -147,11 +147,11 @@
 				</a-col>
 				<a-col :lg="8" :xs="0" class="topBox">
 					<a-col>{{ $t('default.178') }}</a-col>
-					<a-col class="infoStyle">
-						<a-col>{{ `Rating  ${item.rating}` }}</a-col
-						>| <a-col>{{ `PPD  ${item.ppd}` }}</a-col
+					<a-col v-if="item.top4CompetitionRatingRating" class="infoStyle">
+						<a-col>{{ `Rating  ${item.top4CompetitionRatingRating.rating}` }}</a-col
+						>| <a-col>{{ `PPD  ${item.top4CompetitionRatingRating.ppd}` }}</a-col
 						>|
-						<a-col>{{ `MPR  ${item.mpr}` }}</a-col>
+						<a-col>{{ `MPR  ${item.top4CompetitionRatingRating.mpr}` }}</a-col>
 					</a-col>
 				</a-col>
 				<a-col :lg="2" :xs="0" class="vipBox">
@@ -283,11 +283,12 @@ export default defineComponent({
 				phone: '',
 				address: ''
 			},
-			getDate: () => '220-10-16',
-			showDetail: (value: number) => {
+			showDetail: (id: number) => {
 				ROUTER.push({
 					path: '/teamInfo',
-					query: { value }
+					query: {
+						teamId: id
+					}
 				});
 			},
 			onSearch: () => {
@@ -615,14 +616,6 @@ export default defineComponent({
 }
 .iconFont:hover {
 	color: #1890ff;
-}
-.btnBox {
-	display: flex;
-	padding: 0 0 0 10px;
-	flex-wrap: wrap;
-}
-.btnBox div {
-	margin: 2px;
 }
 .recordBox {
 	padding: 10px;

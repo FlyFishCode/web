@@ -184,29 +184,6 @@ import { matchInfoHttp, matchInfoTableListHttp } from '@/axios/api';
 import entryList from '@/components/common/entryList.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { SettingFilled } from '@ant-design/icons-vue';
-// interface HTMLInputEvent {
-// 	e: HTMLInputElement & EventTarget;
-// }
-// interface DataProps {
-// 	infoData;
-// 	innerData: Array<any>;
-// 	tableList: [
-// 		{
-// 			set;
-// 			setPoint;
-// 			game;
-// 			gameMode;
-// 			round;
-// 			in;
-// 			out;
-// 			bull;
-// 			freeze;
-// 			option;
-// 			overKill;
-// 			cricket;
-// 		}
-// 	];
-// }
 export default defineComponent({
 	name: 'matchInfo',
 	components: { SettingFilled, entryList },

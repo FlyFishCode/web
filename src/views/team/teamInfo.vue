@@ -1,7 +1,7 @@
 <template>
 	<div class="content">
 		<a-row>
-			<divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
+			<divTitle :msg="title" :span="colSpan" />
 		</a-row>
 		<a-row>
 			<inTeamTopOne />
@@ -45,10 +45,7 @@ export default defineComponent({
 		const data = reactive({
 			title: 'default.9',
 			colSpan: 5,
-			activeKey: '1',
-			getDate: () => {
-				return '2020-10-17';
-			}
+			activeKey: '1'
 		});
 		onMounted(() => {
 			data.activeKey = ROUTE.query.activeKey as string;

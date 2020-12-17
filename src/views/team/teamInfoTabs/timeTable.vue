@@ -80,7 +80,7 @@
 						<div v-else>
 							{{ record.homeTeamName }}
 						</div>
-						<a-button type="link" size="small" @click="showDetail(1, record)">{{ record.homeTeamShop }}</a-button>
+						<a-button type="link" size="small" @click="showDetail(1, record)">{{ record.homeTeamShopName }}</a-button>
 					</div>
 				</template>
 				<template v-slot:awayTeam="{ record }">
@@ -91,7 +91,7 @@
 						<div v-else>
 							{{ record.visitingTeamName }}
 						</div>
-						<a-button type="link" size="small" @click="showDetail(2, record)">{{ record.visitingTeamShop }}</a-button>
+						<a-button type="link" size="small" @click="showDetail(2, record)">{{ record.visitingTeamShopName }}</a-button>
 					</div>
 				</template>
 				<template v-slot:status="{ record }">
@@ -226,7 +226,7 @@ export default defineComponent({
 			],
 			dialogObj: {
 				title: '',
-				img: require('@/assets/3.jpg'),
+				img: '',
 				shopName: '',
 				phone: '',
 				address: ''
@@ -297,19 +297,21 @@ export default defineComponent({
 					slots: { customRender: 'awayTeam' }
 				}
 			],
-			dataList: [],
+			dataList: [{ id: 1 }],
 			getDate: () => {
 				return '2020-10-17';
 			},
 			showDetail: (type: number, item: any) => {
 				if (type === 1) {
-					data.dialogObj.title = item.homeTeamShop;
-					data.dialogObj.shopName = item.homeTeamShop;
+					data.dialogObj.title = item.homeTeamName;
+					data.dialogObj.img = item.homeTeamImg;
+					data.dialogObj.shopName = item.homeTeamShopName;
 					data.dialogObj.phone = item.shopPhone;
 					data.dialogObj.address = item.shopAddress;
 				} else {
-					data.dialogObj.title = item.homeTeamShop;
-					data.dialogObj.shopName = item.homeTeamShop;
+					data.dialogObj.title = item.visitingTeamName;
+					data.dialogObj.img = item.visitingTeamImg;
+					data.dialogObj.shopName = item.visitingTeamShopName;
 					data.dialogObj.phone = item.shopPhone;
 					data.dialogObj.address = item.shopAddress;
 				}
@@ -318,7 +320,6 @@ export default defineComponent({
 			yearChange: (value: number) => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getSelectList(value);
-				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 			},
 			handleOk: () => {
 				console.log(1);
@@ -362,9 +363,9 @@ export default defineComponent({
 			onSelect: (value: string) => {
 				console.log(value);
 			},
-			pageChange: (num: number) => {
+			pageChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getList(num);
+				getList();
 			},
 			entryCalendar: (id: number, type: number) => {
 				ROUTER.push({
@@ -389,13 +390,13 @@ export default defineComponent({
 				console.log(row);
 			}
 		});
-		const getList = (pageIndex = 1) => {
+		const getList = () => {
 			const obj = {
 				competitionId: data.league,
 				teamId: data.teamId,
 				status: data.state,
-				pageIndex: pageIndex,
-				pageSize: 10
+				pageIndex: data.pageNum,
+				pageSize: data.pageSize
 			};
 			timePageListHttp(obj).then((res) => {
 				data.dataList = res.data.data.list;

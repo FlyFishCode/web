@@ -1,6 +1,6 @@
 <template>
 	<div class="content">
-		<divTitle :msg="title" :span="colSpan" :lastDate="getDate()" />
+		<divTitle :msg="title" :span="colSpan" />
 		<a-row class="rowStyle">
 			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ `${$t('default.163')}(${$t('default.8')})` }} </a-col>
 		</a-row>
@@ -70,7 +70,7 @@
 						</div>
 					</div>
 					<div class="backBox">
-						<u class="backFont" @click="showDetail(item.id)">{{ item.title }}</u>
+						<u class="backFont" @click="showDetail(item.playerId)">{{ item.title }}</u>
 					</div>
 				</div>
 			</a-col>
@@ -133,11 +133,10 @@
 				</a-col>
 				<a-col :lg="{ span: 4, offset: 0 }" :xs="{ span: 10, offset: 4 }" class="infoClass">
 					<div class="teamStyle" @click="entryPage(item.playerId)">{{ item.playerName }}</div>
-					<div class="placeStyle">
-						<div>{{ item.areaName }}</div>
-						/
-						<div class="counyStyle">{{ item.couny }}</div>
-						<span @click="showDialog(item)">
+					<div v-if="item.shop" class="placeStyle">
+						<div>{{ item.shop.shopName }}</div>
+						<div v-if="item.shop.countryName" class="counyStyle">{{ '/' + item.shop.countryName }}</div>
+						<span @click="showDialog(item.shop)">
 							<EnvironmentOutlined />
 						</span>
 					</div>
@@ -148,12 +147,12 @@
 				</a-col>
 				<a-col :span="8" class="topBox inPhoneTableDisplay">
 					<div>{{ topInfoTitle }}</div>
-					<div class="infoStyle">
-						<div>{{ `Rating  ${item.rating}` }}</div>
+					<div v-if="item.playerRating" class="infoStyle">
+						<div>{{ `Rating  ${item.playerRating.rating}` }}</div>
 						|
-						<div>{{ `PPD  ${item.ppd}` }}</div>
+						<div>{{ `PPD  ${item.playerRating.ppd}` }}</div>
 						|
-						<div>{{ `MPR  ${item.mpr}` }}</div>
+						<div>{{ `MPR  ${item.playerRating.mpr}` }}</div>
 					</div>
 				</a-col>
 				<a-col :span="3" class="vipBox inPhoneTableDisplay">
@@ -283,11 +282,10 @@ export default defineComponent({
 			cityList: [],
 			playerList: [{ competitionList: [], flag: false }],
 			bestPlayers: [],
-			getDate: () => '220-10-16',
-			showDetail: (value: number) => {
+			showDetail: (playerId: number) => {
 				ROUTER.push({
 					path: '/playerInfo',
-					query: { value }
+					query: { playerId }
 				});
 			},
 			entryCalendar: (activeKey: string, competitionId: number, id: number) => {
@@ -611,13 +609,6 @@ export default defineComponent({
 }
 .iconFont:hover {
 	color: #1890ff;
-}
-.btnBox {
-	display: flex;
-	padding: 0 0 0 10px;
-}
-.btnBox div {
-	margin-right: 15px;
 }
 .recordBox {
 	padding: 10px;

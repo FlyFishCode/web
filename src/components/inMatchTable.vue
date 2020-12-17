@@ -36,7 +36,7 @@
 					</div>
 				</div>
 				<div class="teamMsg">
-					<div class="msgScore">{{ matchTeam.homeTeamId }}</div>
+					<div class="msgScore">{{ matchTeam.homeResult }}</div>
 					<div class="msgTitle">
 						<div>{{ 'READY' }}</div>
 						<div class="titleStyle">{{ 'MADE UP' }}</div>
@@ -44,11 +44,11 @@
 						<div class="titleStyle">{{ 'IN PLAY' }}</div>
 						<div>{{ 'ENDED' }}</div>
 					</div>
-					<div class="msgScore">{{ matchTeam.visitingTeamId }}</div>
+					<div class="msgScore">{{ matchTeam.visitingResult }}</div>
 				</div>
 				<div class="bottomScore">
-					<div class="homeScoreStyle">{{ matchTeam.homeTeamId }}</div>
-					<div>{{ matchTeam.visitingTeamId }}</div>
+					<div class="homeScoreStyle">{{ matchTeam.homeResult }}</div>
+					<div>{{ matchTeam.visitingResult }}</div>
 				</div>
 				<div class="bottomIndex">{{ $t('default.70') }}</div>
 				<div>{{ $t('default.66') }}</div>
@@ -91,13 +91,14 @@ import { matchTeamInfoHttp } from '@/axios/api';
 // }
 export default defineComponent({
 	name: 'inMatchTable',
+	props: ['confrontationId'],
 	components: {},
-	setup() {
+	setup(prop) {
 		const data = reactive({
 			matchTeam: {}
 		});
 		const getMatchTeam = () => {
-			matchTeamInfoHttp({ confrontationInfoId: 17946 }).then((res) => {
+			matchTeamInfoHttp({ confrontationInfoId: prop.confrontationId }).then((res) => {
 				data.matchTeam = res.data.data;
 			});
 		};

@@ -144,8 +144,8 @@ export default defineComponent({
 					data.hasData = false;
 				}
 			},
-			info: (value: any) => {
-				ctx.emit('show-match', value.homeTeamName);
+			info: (row: any) => {
+				ctx.emit('show-match', row.confrontationInfoId);
 			}
 		});
 		const getList = () => {

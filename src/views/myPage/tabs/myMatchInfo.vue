@@ -18,14 +18,18 @@
 						<img class="matchImg" :src="item.competitionImg" />
 					</div>
 				</a-col>
-				<a-col :lg="4" :xs="16" class="infoClass">
+				<a-col :lg="8" :xs="16" class="infoClass">
 					<div class="teamStyle" @click="showInfo">{{ item.competitionName }}</div>
 					<div class="placeStyle">
 						<div>{{ item.place }}</div>
-						<div v-for="div in item.divisionList" :key="div.id" class="divisiBox">{{ div.divisionName }}</div>
+						<div class="btnBox">
+							<div v-for="disition in item.divisionList" :key="disition.divisionId">
+								<a-button type="danger" size="small" @click="entryPage(item.competitionId, disition.divisionId)">{{ disition.divisionName }}</a-button>
+							</div>
+						</div>
 					</div>
 				</a-col>
-				<a-col :lg="{ span: 4, offset: 4 }" :xs="0" class="vipBox">
+				<a-col :lg="{ span: 4, offset: 0 }" :xs="0" class="vipBox">
 					<div class="disableFont">{{ $t('default.27') }}</div>
 					<div>-{{ item.areaName }}</div>
 				</a-col>
@@ -110,7 +114,7 @@ export default defineComponent({
 		UpCircleOutlined
 	},
 	setup() {
-		const Router = useRouter();
+		const ROUTER = useRouter();
 		const userId = sessionStorage.getItem('userId');
 		const data: any = reactive({
 			colSpan: 5,
@@ -162,7 +166,16 @@ export default defineComponent({
 				});
 			},
 			showInfo: () => {
-				Router.push('/');
+				ROUTER.push('/');
+			},
+			entryPage: (competitionId: number, divisionId: number) => {
+				ROUTER.push({
+					path: '/calendar',
+					query: {
+						competitionId,
+						divisionId
+					}
+				});
 			},
 			yearChange: (value: number) => {
 				data.getMatchList(value, undefined, undefined);

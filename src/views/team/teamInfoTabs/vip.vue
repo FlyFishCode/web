@@ -145,9 +145,9 @@ export default defineComponent({
 					dataIndex: 'address',
 					key: '3',
 					children: [
-						{ title: 'Rating', dataIndex: 'competitionRating.rating', key: '2', width: 60 },
-						{ title: 'PPD', dataIndex: 'competitionRating.ppd', key: '2', width: 50 },
-						{ title: 'MPR', dataIndex: 'competitionRating.mpr', key: '2', width: 50 }
+						{ title: 'Rating', dataIndex: 'playerRating.rating', key: '2', width: 60 },
+						{ title: 'PPD', dataIndex: 'playerRating.ppd', key: '2', width: 50 },
+						{ title: 'MPR', dataIndex: 'playerRating.mpr', key: '2', width: 50 }
 					]
 				},
 				{

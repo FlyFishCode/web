@@ -21,13 +21,13 @@
 		<!-- 对战表 排阵-->
 		<div v-if="ismatchTablePage">
 			<a-row>
-				<inMatchTable />
+				<inMatchTable :confrontationId="confrontationId" />
 			</a-row>
 
 			<a-row class="rowStyle">
 				<a-tabs type="card" v-model:activeKey="currentKey">
 					<a-tab-pane key="1" :tab="$t('default.62')">
-						<matchResult />
+						<matchResult :confrontationId="confrontationId" />
 					</a-tab-pane>
 					<a-tab-pane v-if="ready" key="2" :tab="$t('default.41')">
 						<matchTable :confrontationId="confrontationId" :isHome="isHome" :teamId="playerListId" />
@@ -228,11 +228,10 @@ export default defineComponent({
 			entryPath: '/league',
 			currentKey: '1',
 			confrontationId: ROUTE.query.competitionId,
-			confrontationInfoId: 0,
 			visible: false,
 			isHome: 0,
 			playerListId: 0,
-			ready: true,
+			ready: false,
 			searchValue: '',
 			ismatchTablePage: false,
 			pageNum: 1,
@@ -400,7 +399,7 @@ export default defineComponent({
 					title: '状态',
 					dataIndex: 'status',
 					key: 'state',
-					width: 80,
+					width: 100,
 					slots: { customRender: 'status' }
 				}
 			],
@@ -450,7 +449,7 @@ export default defineComponent({
 				getTimeTableList();
 			},
 			showMatch: (value: any) => {
-				console.log(value);
+				data.confrontationId = value;
 				data.ismatchTablePage = true;
 			},
 			readyClick: (id: number, row: any) => {

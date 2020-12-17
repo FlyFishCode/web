@@ -1,7 +1,7 @@
 // 最佳玩家列表
-const theBestPlayer = '/bestplayer';
+const theBestPlayer = '/player/best';
 // 玩家列表
-const playerList = '/playerlist';
+const playerList = '/player/list';
 // 玩家比赛记录列表
 const playerHistory = '/player/entryrecord';
 // 玩家奖励列表

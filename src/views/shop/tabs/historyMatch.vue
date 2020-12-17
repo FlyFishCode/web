@@ -22,10 +22,12 @@
 						<a-col :span="4" class="matchImgBox">
 							<img class="matchImg" :src="item.competitionImg" />
 						</a-col>
-						<a-col :span="20" @click="showMore(item.state)" class="matchInfo">
+						<a-col :span="20" class="matchInfo">
 							<div class="teamStyle" @click="showShopInfo(item.competitionId)">{{ item.competitionName }}</div>
 							<div class="divBox">
-								<div v-for="div in item.divisionList" :key="div.divisionId">{{ div.divisionName }}</div>
+								<div v-for="disition in item.divisionList" :key="disition.divisionId">
+									<a-button type="danger" size="small" @click="entrtPage(disition.divisionId)">{{ disition.divisionName }}</a-button>
+								</div>
 							</div>
 						</a-col>
 					</a-col>
@@ -87,9 +89,6 @@ export default defineComponent({
 				{ value: 2019, label: 2019 }
 			],
 			leagueList: [],
-			showMore: (value: string) => {
-				console.log(value);
-			},
 			yearChange: (year = 2020) => {
 				const obj = {
 					shopId: data.shopId,
@@ -101,6 +100,9 @@ export default defineComponent({
 					data.leagueList = res.data.data.list;
 					data.total = res.data.data.totalPage;
 				});
+			},
+			entrtPage: (id: number) => {
+				console.log(id);
 			},
 			showShopInfo: (league: number) => {
 				ROUTER.push({
@@ -169,12 +171,6 @@ export default defineComponent({
 }
 .divBox {
 	display: flex;
-}
-.divBox div {
-	border: 1px solid #000;
-	height: 25px;
-	line-height: 25px;
-	margin-right: 3px;
 }
 .teamStyle {
 	text-align: left;

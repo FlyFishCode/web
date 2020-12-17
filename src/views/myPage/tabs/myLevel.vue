@@ -4,9 +4,10 @@
 			<a-col :span="12" class="centerFont inPhoneTableDisplay"> <SettingFilled /> {{ $t('default.109') }} </a-col>
 		</a-row>
 		<a-row class="inPhoneTableDisplay">
-			<a-table :columns="columns" :data-source="tableList" :pagination="false" bordered>
-				<template v-slot:level="{ record }">
-					<div class="btnBox">
+			<a-table :columns="columns" :data-source="tableList" :pagination="false" rowKey="rating" bordered>
+				<template v-slot:count="{ record }">
+					<div class="countBox">
+						<div>{{ record.count }}</div>
 						<a-button type="danger" size="small" @click="showInfo(record.key)">{{ $t('default.166') }}</a-button>
 					</div>
 				</template>
@@ -18,18 +19,13 @@
 		</a-row>
 		<a-row class="rowStyle inPhoneTableDisplay">
 			<a-col :span="3">
-				<a-select v-model:value="year" class="selectBox" @change="handleChange">
+				<a-select v-model:value="year" class="selectBox" @change="yearChange">
 					<a-select-option v-for="year in yearList" :key="year.value" :value="year.value">{{ year.label }}</a-select-option>
-				</a-select>
-			</a-col>
-			<a-col :span="3">
-				<a-select v-model:value="league" class="selectBox" @change="handleChange">
-					<a-select-option v-for="league in leagueList" :key="league.value" :value="league.value">{{ $t(league.label) }}</a-select-option>
 				</a-select>
 			</a-col>
 		</a-row>
 		<a-row class="inPhoneTableDisplay">
-			<a-table :columns="levelColumns" :data-source="levelTableList" :pagination="false" bordered>
+			<a-table :columns="levelColumns" :data-source="levelTableList" :pagination="false" rowKey="month" bordered>
 				<template v-slot:level="{ record }">
 					<div class="btnBox">
 						<a-button type="danger" size="small" @click="showInfo(record.key)">{{ $t('default.166') }}</a-button>
@@ -44,7 +40,7 @@
 
 		<a-row class="showPhoneTable">
 			<a-col :span="6">
-				<a-select v-model:value="year" @change="handleChange" class="selectBox">
+				<a-select v-model:value="year" @change="yearChange" class="selectBox">
 					<a-select-option v-for="item in yearList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 				</a-select>
 			</a-col>
@@ -72,7 +68,7 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { SettingFilled } from '@ant-design/icons-vue';
-import Axios from 'axios';
+import { playerInfoHttp } from '@/axios/api';
 export default defineComponent({
 	name: 'myLevel',
 	components: {
@@ -123,15 +119,13 @@ export default defineComponent({
 		};
 		const data = reactive({
 			year: 2020,
-			league: 1,
 			yearList: [
 				{ value: 2020, label: 2020 },
 				{ value: 2019, label: 2019 }
 			],
-			leagueList: [{ value: 1, label: 'default.8' }],
 			echarsList: {
-				addUp: [1, 35, 5, 64, 23, 76, 23, 98, 123, 56, 121, 21],
-				cycle: [23, 43, 54, 56, 78, 12, 98, 45, 27, 84, 15, 63]
+				monthRating: [],
+				totalRating: []
 			},
 			inPhoneList: [
 				{ title: 'League Rating', Rating: 12, PPD: 52, MRP: 29 },
@@ -140,41 +134,30 @@ export default defineComponent({
 			columns: [
 				{
 					title: '比赛类型',
-					dataIndex: 'name'
+					dataIndex: 'league'
 				},
 				{
 					title: 'RATING',
-					className: 'column-money',
-					dataIndex: 'money'
+					dataIndex: 'rating'
 				},
 				{
 					title: 'PPD',
-					dataIndex: 'address'
+					dataIndex: 'ppd'
 				},
 				{
 					title: 'MPR',
-					dataIndex: 'address'
-				},
-				{
-					title: '根据周期评定之等级',
-					dataIndex: 'address',
-					slots: { customRender: 'level' },
-					width: 200
+					dataIndex: 'mpr'
 				},
 				{
 					title: '已參加比賽',
-					colSpan: 2,
-					dataIndex: 'key'
-				},
-				{
-					colSpan: 0,
-					dataIndex: 'address'
+					dataIndex: 'count',
+					slots: { customRender: 'count' }
 				}
 			],
 			levelColumns: [
 				{
 					title: 'DIVISION',
-					dataIndex: 'name'
+					dataIndex: 'month'
 				},
 				{
 					title: '月度总积分',
@@ -182,15 +165,15 @@ export default defineComponent({
 					children: [
 						{
 							title: 'RATING',
-							dataIndex: 'name'
+							dataIndex: 'monthPlayerRating.rating'
 						},
 						{
 							title: 'PPD',
-							dataIndex: 'name'
+							dataIndex: 'monthPlayerRating.ppd'
 						},
 						{
 							title: 'MPR',
-							dataIndex: 'name'
+							dataIndex: 'monthPlayerRating.mpr'
 						}
 					]
 				},
@@ -200,71 +183,67 @@ export default defineComponent({
 					children: [
 						{
 							title: 'RATING',
-							dataIndex: 'name'
+							dataIndex: 'totalPlayerRating.rating'
 						},
 						{
 							title: 'PPD',
-							dataIndex: 'name'
+							dataIndex: 'totalPlayerRating.ppd'
 						},
 						{
 							title: 'MPR',
-							dataIndex: 'name'
+							dataIndex: 'totalPlayerRating.mpr'
 						}
 					]
 				}
 			],
-			levelTableList: [
-				{
-					key: '1',
-					name: 'John Brown',
-					money: '￥300,000.00',
-					address: 'New York No. 1 Lake Park'
-				},
-				{
-					key: '2',
-					name: 'Jim Green',
-					money: '￥1,256,000.00',
-					address: 'London No. 1 Lake Park'
-				},
-				{
-					key: '3',
-					name: 'Joe Black',
-					money: '￥120,000.00',
-					address: 'Sidney No. 1 Lake Park'
-				}
-			],
-			tableList: [
-				{
-					key: '1',
-					name: 'John Brown',
-					money: '￥300,000.00',
-					address: 'New York No. 1 Lake Park'
-				},
-				{
-					key: '2',
-					name: 'Jim Green',
-					money: '￥1,256,000.00',
-					address: 'London No. 1 Lake Park'
-				},
-				{
-					key: '3',
-					name: 'Joe Black',
-					money: '￥120,000.00',
-					address: 'Sidney No. 1 Lake Park'
-				}
-			],
-			handleChange: () => {
+			levelTableList: [{ month: 0 }],
+			tableList: [{ rating: 0 }],
+			yearChange: () => {
 				console.log();
+			},
+			showInfo: (key: number) => {
+				console.log(key);
 			}
 		});
-		onMounted(() => {
-			const list: { [key: string]: string } = {
-				type: 'a'
+		const getDataInfo = () => {
+			const obj = {
+				playerId: sessionStorage.getItem('userId'),
+				year: data.year
 			};
-			Axios.post('/abs', list).then((res) => {
-				console.log(res);
+			playerInfoHttp(obj).then((res) => {
+				const dataObj = res.data.data;
+				const obj = {
+					league: 'League',
+					rating: dataObj.playerRating.rating,
+					ppd: dataObj.playerRating.ppd,
+					mpr: dataObj.playerRating.mpr,
+					count: dataObj.competitionCount
+				};
+				data.tableList = [obj];
+				dataObj.ratingPeridoList.forEach((i: any) => {
+					if (!i.monthPlayerRating) {
+						i.monthPlayerRating = {
+							rating: '-',
+							ppd: '-',
+							mpr: '-'
+						};
+					}
+					if (!i.totalPlayerRating) {
+						i.totalPlayerRating = {
+							rating: '-',
+							ppd: '-',
+							mpr: '-'
+						};
+					}
+				});
+				data.levelTableList = dataObj.ratingPeridoList;
+				data.echarsList.monthRating = dataObj.monthRating;
+				data.echarsList.totalRating = dataObj.totalRating;
 			});
+		};
+		onMounted(() => {
 			echarsInit(data.echarsList);
+			getDataInfo();
 		});
 		return {
 			...toRefs(data)
@@ -293,5 +272,9 @@ export default defineComponent({
 }
 .scoreBox {
 	padding: 0 10px;
+}
+.countBox {
+	display: flex;
+	justify-content: space-around;
 }
 </style>

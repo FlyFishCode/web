@@ -83,7 +83,6 @@ export default defineComponent({
 					width: 80,
 					dataIndex: 'year',
 					key: 1
-					// fixed: "left",
 				},
 				{
 					title: '比赛',
@@ -91,7 +90,6 @@ export default defineComponent({
 					width: 200,
 					key: 2,
 					slots: { customRender: 'action' }
-					// fixed: "left",
 				},
 				{
 					title: '排行',

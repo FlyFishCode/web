@@ -28,7 +28,7 @@
 							<div>{{ news.date }}</div>
 						</div>
 						<div class="newsTitle">{{ news.title }}</div>
-						<div class="newsContent">{{ news.contents }}</div>
+						<div class="newContent">{{ news.contents }}</div>
 					</div>
 				</div>
 				<div v-if="total" class="pagination">
@@ -260,7 +260,7 @@ export default defineComponent({
 	opacity: 0.8;
 }
 .typeContentBox {
-	width: 100%;
+	width: 75%;
 	display: flex;
 	flex-direction: column;
 	padding-left: 20px;

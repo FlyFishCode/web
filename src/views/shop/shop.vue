@@ -68,7 +68,7 @@
 						<a-select v-model:value="countryId" @change="countryChange" class="selectBox" allowClear>
 							<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 						</a-select>
-						<a-select v-model:value="areaId" class="selectBox" @change="areaChange"  allowClear>
+						<a-select v-model:value="areaId" class="selectBox" @change="areaChange" allowClear>
 							<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 						</a-select>
 						<!-- <a-select v-model:value="city">
@@ -374,8 +374,10 @@ export default defineComponent({
 					center: [116.397428, 39.90923],
 					zoom: 13
 				});
-				initMap();
-				initMarker();
+				if (MAP) {
+					initMap();
+					initMarker();
+				}
 			};
 		};
 		const data = reactive({

@@ -67,20 +67,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, onMounted, reactive, toRefs, watch } from 'vue';
 import { matchResultHttp } from '@/axios/api';
 import { SettingFilled } from '@ant-design/icons-vue';
-import { useRoute } from 'vue-router';
 import emptyList from '@/components/common/emptyList.vue';
 // import { DOM } from '@/type/interface';
 export default defineComponent({
 	name: 'matchResult',
+	props: ['confrontationId'],
 	components: {
 		SettingFilled,
 		emptyList
 	},
-	setup() {
-		const ROUTE = useRoute();
+	setup(prop: any) {
 		const data = reactive({
 			tableList: [],
 			getGameMode: (mode: number) => {
@@ -120,16 +119,22 @@ export default defineComponent({
 				return str;
 			}
 		});
-		const getMatchResultList = () => {
-			matchResultHttp({ confrontationInfoId: ROUTE.query.competitionId || '' }).then((res) => {
+		const getMatchResultList = (confrontationInfoId: any = '') => {
+			matchResultHttp({ confrontationInfoId }).then((res) => {
 				if (res.data.data) {
 					data.tableList = res.data.data;
 				}
 			});
 		};
 		onMounted(() => {
-			getMatchResultList();
+			getMatchResultList(prop.confrontationId);
 		});
+		watch(
+			() => prop.confrontationId,
+			(val) => {
+				getMatchResultList(val);
+			}
+		);
 		return {
 			...toRefs(data)
 		};

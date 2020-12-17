@@ -85,12 +85,12 @@
 				<a-col :lg="4" :xs="4" class="MlineStyle">{{ $t('default.27') }}</a-col>
 				<a-col :lg="6" :xs="8">
 					<a-select v-model:value="countryId" @change="countryChange" class="selectBox">
-						<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
+						<a-select-option v-for="item in countryList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 					</a-select>
 				</a-col>
 				<a-col :lg="6" :xs="8">
 					<a-select v-model:value="areaId" @change="areaChange" class="selectBox">
-						<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
+						<a-select-option v-for="item in areaList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 					</a-select>
 				</a-col>
 			</a-col>
@@ -154,7 +154,7 @@
 									<img :src="item.teamImg" />
 								</div>
 								<div v-if="!index" class="detailStyle">
-									<div class="teamName" @click="goToPage">{{ item.teamName }}</div>
+									<div class="teamName" @click="entryTeamPage(item.teamId)">{{ item.teamName }}</div>
 									<div class="name">{{ item.captainName }}</div>
 									<div class="area">
 										{{ item.shopAddress }}
@@ -166,7 +166,7 @@
 									<div class="number">{{ item.teamScore }}</div>
 								</div>
 								<div v-else class="detailStyle">
-									<div class="name smallBox" @click="goToPage">{{ item.teamName }}</div>
+									<div class="name smallBox" @click="entryTeamPage(item.teamId)">{{ item.teamName }}</div>
 									<div class="area">
 										{{ item.shopAddress }}
 										<span @click="showDetail(item)">
@@ -193,7 +193,7 @@
 									<img :src="item.playerImg" alt="" />
 								</div>
 								<div v-if="!index" class="detailStyle">
-									<div class="teamName" @click="goToPage">{{ item.playerName }}</div>
+									<div class="teamName" @click="entryPlayerPage(item.playerId)">{{ item.playerName }}</div>
 									<div class="name">{{ item.name }}</div>
 									<div class="area">
 										{{ item.shopAddress }}
@@ -205,7 +205,7 @@
 									<div class="number">{{ item.playerScore }}</div>
 								</div>
 								<div v-else class="detailStyle">
-									<div class="name smallBox" @click="goToPage">{{ item.playerName }}</div>
+									<div class="name smallBox" @click="entryPlayerPage(item.playerId)">{{ item.playerName }}</div>
 									<div class="area">
 										{{ item.shopAddress }}
 										<span @click="showDetail(item)">
@@ -256,7 +256,7 @@
 									<img :src="item.teamImg" />
 								</div>
 								<div v-if="!index" class="detailStyle">
-									<div class="teamName" @click="goToPage">{{ item.teamName }}</div>
+									<div class="teamName" @click="entryTeamPage(item.teamId)">{{ item.teamName }}</div>
 									<div class="name">{{ item.captainName }}</div>
 									<div class="area">
 										{{ item.shopAddress }}
@@ -268,7 +268,7 @@
 									<div class="number">{{ item.teamScore }}</div>
 								</div>
 								<div v-else class="detailStyle">
-									<div class="name smallBox" @click="goToPage">{{ item.teamName }}</div>
+									<div class="name smallBox" @click="entryTeamPage(item.teamId)">{{ item.teamName }}</div>
 									<div class="area">
 										{{ item.shopAddress }}
 										<span @click="showDetail(item)">
@@ -308,7 +308,7 @@
 									<img :src="item.playerImg" alt="" />
 								</div>
 								<div v-if="!index" class="detailStyle">
-									<div class="teamName" @click="goToPage">{{ item.playerName }}</div>
+									<div class="teamName" @click="entryPlayerPage(item.playerId)">{{ item.playerName }}</div>
 									<div class="name">{{ item.name }}</div>
 									<div class="area">
 										{{ item.shopAddress }}
@@ -320,7 +320,7 @@
 									<div class="number">{{ item.playerScore }}</div>
 								</div>
 								<div v-else class="detailStyle">
-									<div class="name smallBox" @click="goToPage">{{ item.playerName }}</div>
+									<div class="name smallBox" @click="entryPlayerPage(item.playerId)">{{ item.playerName }}</div>
 									<div class="area">
 										{{ item.shopAddress }}
 										<span @click="showDetail(item)">
@@ -402,7 +402,7 @@ export default defineComponent({
 	},
 	name: 'index',
 	setup() {
-		const Router = useRouter();
+		const ROUTER = useRouter();
 		const data = reactive({
 			isTeam: true,
 			leaguePath: 'league',
@@ -425,22 +425,22 @@ export default defineComponent({
 			countryId: null,
 			areaId: null,
 			newsList: [],
+			countryList: [],
 			areaList: [],
-			cityList: [],
 			mainList: [],
 			viceList: [],
 			matchList: [],
 			teamList: [],
 			playerList: [],
 			getDate: () => {
-				return data.time
+				return data.time;
 				// const year = new Date().getFullYear();
 				// const month = new Date().getMonth() + 1;
 				// const day = new Date().getDay();
 				// return `${year}-${month}-${day}`;
 			},
 			entryRanking: (path: string, value: string) => {
-				Router.push({
+				ROUTER.push({
 					path,
 					query: { value }
 				});
@@ -457,10 +457,10 @@ export default defineComponent({
 				});
 			},
 			infoNews: () => {
-				Router.push('/news');
+				ROUTER.push('/news');
 			},
 			entryInfo: (id: number) => {
-				Router.push({
+				ROUTER.push({
 					path: '/newsInfo',
 					query: { value: id }
 				});
@@ -478,11 +478,24 @@ export default defineComponent({
 			handleOk: () => {
 				data.visible = false;
 			},
-			goToPage: () => {
-				Router.push('/teamInfo');
+			entryPlayerPage: (playerId: number) => {
+				ROUTER.push({
+					path: 'playerInfo',
+					query: {
+						playerId
+					}
+				});
+			},
+			entryTeamPage: (teamId: number) => {
+				ROUTER.push({
+					path: 'teamInfo',
+					query: {
+						teamId
+					}
+				});
 			},
 			showLeagueInfo: (competitionId: any, divisionId: number) => {
-				Router.push({
+				ROUTER.push({
 					path: '/calendar',
 					query: {
 						competitionId,
@@ -492,9 +505,9 @@ export default defineComponent({
 			},
 			countryChange: (value: number) => {
 				indexCityHttp({ countryId: value }).then((res) => {
-					data.cityList = res.data.data;
-					if (data.cityList.length) {
-						data.areaId = data.cityList[0]['areaId'];
+					data.areaList = res.data.data;
+					if (data.areaList.length) {
+						data.areaId = data.areaList[0]['areaId'];
 					} else {
 						data.areaId = null;
 					}
@@ -540,9 +553,9 @@ export default defineComponent({
 			getCarouselList();
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
-					data.areaList = res.data.data;
-					data.countryId = data.areaList[0]['countryId'];
-					data.countryChange(data.areaList[0]['countryId']);
+					data.countryList = res.data.data;
+					data.countryId = data.countryList[0]['countryId'];
+					data.countryChange(data.countryList[0]['countryId']);
 				}
 			});
 		});
@@ -867,10 +880,5 @@ export default defineComponent({
 }
 .divClass div {
 	margin: 0 2px;
-}
-.newContent {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 }
 </style>

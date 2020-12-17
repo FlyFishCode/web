@@ -251,13 +251,6 @@ export default defineComponent({
 	display: flex;
 	justify-content: flex-start;
 }
-.btnBox {
-	display: flex;
-	flex-wrap: wrap;
-}
-.btnBox div {
-	margin: 2px;
-}
 .msgBox {
 	margin: 10px 0;
 	min-height: 80px;

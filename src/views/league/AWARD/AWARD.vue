@@ -16,11 +16,11 @@
 				</a-row>
 				<a-row class="awardRow">
 					<a-col :span="11">
-						<span class="home teamName" @click="showDialog(awardData.homeId)">{{ awardData.HomeCaptain }}</span>
+						<span class="home teamName" @click="showDialog(0)">{{ awardData.HomeCaptain }}</span>
 					</a-col>
 					<a-col :span="2"></a-col>
 					<a-col :span="11">
-						<span class="away teamName" @click="showDialog(awardData.awayId)">{{ awardData.awayCaptain }}</span>
+						<span class="away teamName" @click="showDialog(1)">{{ awardData.awayCaptain }}</span>
 					</a-col>
 				</a-row>
 				<a-row class="awardRow" id="awardProgress">
@@ -63,7 +63,7 @@
 		</a-row>
 		<a-row class="awardRow">
 			<a-col class="teamBox home" :span="3">{{ 'Home Team' }}</a-col>
-			<a-col class="home teamName" :span="3" @click="showDialog()">{{ 'Home Team' }}</a-col>
+			<a-col class="home teamName" :span="3" @click="showDialog(0)">{{ 'Home Team' }}</a-col>
 		</a-row>
 		<a-row class="awardTop">
 			<a-table :columns="homeColumns" :data-source="homeList" :pagination="false" :scroll="{ x: 1300 }" bordered rowKey="playerId">
@@ -73,14 +73,14 @@
 				<template #player="{record}">
 					<div class="playerInfoBox">
 						<div class="imgBox"><img :src="record.playerImg" alt="" /></div>
-						<div class="link" @click="showDialog(record.id)">{{ record.playerName }}</div>
+						<div class="link" @click="showDialog(0)">{{ record.playerName }}</div>
 					</div>
 				</template>
 			</a-table>
 		</a-row>
 		<a-row class="awardRow">
 			<a-col class="teamBox home" :span="3">{{ 'Away Team' }}</a-col>
-			<a-col class="home teamName" :span="3" @click="showDialog()">{{ 'Away Team' }}</a-col>
+			<a-col class="home teamName" :span="3" @click="showDialog(1)">{{ 'Away Team' }}</a-col>
 		</a-row>
 		<a-row class="awardTop">
 			<a-table :columns="homeColumns" :data-source="awayList" :pagination="false" :scroll="{ x: 1300 }" bordered rowKey="playerId">
@@ -90,95 +90,12 @@
 				<template #player="{record}">
 					<div class="playerInfoBox">
 						<div class="imgBox"><img :src="record.playerImg" alt="" /></div>
-						<div class="link" @click="showDialog(record.id)">{{ record.playerName }}</div>
+						<div class="link" @click="showDialog(1)">{{ record.playerName }}</div>
 					</div>
 				</template>
 			</a-table>
 		</a-row>
-		<div>
-			<a-modal v-model:visible="visible" :title="$t('default.261')" class="dialogBG" @ok="handleOk" width="50%" centered :footer="null">
-				<a-row>
-					<a-row class="dialogRow">
-						<a-col>{{ 'Carlsberg Phoenix Double Up 2020' }}</a-col>
-					</a-row>
-					<a-row>
-						<a-col class="personBox">
-							<div class="dialogImgBox">
-								<img :src="require('@/assets/1.jpg')" alt="" />
-							</div>
-							<div class="personInfo">
-								<div>{{ 'CBRX' }}</div>
-								<div>{{ 'Chop Bar' }}</div>
-								<div>
-									<span>{{ $t('default.76') }}</span>
-									<span>{{ 'Gary Cheng K.' }}</span>
-								</div>
-							</div>
-						</a-col>
-					</a-row>
-				</a-row>
-				<a-row class="dialogRow">
-					<div>{{ $t('default.73') }}</div>
-					<div>
-						<a-table :columns="lenguaColumns" :data-source="lenguaData" bordered></a-table>
-					</div>
-				</a-row>
-				<a-row class="dialogRow">
-					<div>{{ 'Latest Result' }}</div>
-					<a-row class="matchBox">
-						<a-col class="matchTitle">{{ 'Match No.(5)' }}</a-col>
-						<a-col :span="8" class="matchBoxDiv">
-							<div>{{ 'Home Team' }}</div>
-							<div class="matchImg"><img :src="require('@/assets/1.jpg')" alt="" /></div>
-							<div>{{ 'CBRX' }}</div>
-							<div>{{ 'Chop Bar' }}</div>
-						</a-col>
-						<a-col :span="8" class="matchBoxDiv">
-							<div class="matchVS">
-								<div>{{ '2020-11-12 (Thu.) 20:30' }}</div>
-								<div class="matchScore">
-									<span>{{ 5 }}</span>
-									<span>{{ 'VS' }}</span>
-									<span>{{ 7 }}</span>
-								</div>
-								<div>
-									<a-button type="primary">{{ '详细资料' }}</a-button>
-								</div>
-							</div>
-						</a-col>
-						<a-col :span="8" class="matchBoxDiv">
-							<div>{{ 'Away Team' }}</div>
-							<div class="matchImg"><img :src="require('@/assets/1.jpg')" alt="" /></div>
-							<div>{{ 'CBRX' }}</div>
-							<div>{{ 'Chop Bar' }}</div>
-						</a-col>
-					</a-row>
-				</a-row>
-				<a-row class="dialogRow">
-					<div>{{ $t('default.262') }}</div>
-					<div>
-						<a-table :columns="homeColumns" :data-source="homeData" :scroll="{ x: 1300 }" bordered rowKey="id">
-							<template #player="{record}">
-								<div class="playerInfoBox">
-									<div class="imgBox"><img :src="record.img" alt="" /></div>
-									<div class="link" @click="showDialog(record.id)">{{ record.playerName }}</div>
-								</div>
-							</template>
-						</a-table>
-					</div>
-				</a-row>
-				<a-row class="dialogRow">
-					<div>{{ $t('default.263') }}</div>
-					<div>
-						<a-table :columns="historyColumns" :data-source="historyData" bordered rowKey="id">
-							<template #dete="{ text }">
-								<div>{{ text }}</div>
-							</template>
-						</a-table>
-					</div>
-				</a-row>
-			</a-modal>
-		</div>
+		<dialogVue :propsVisible="diaVisible" :teamId="teamId" :competitionId="competitionId" @dialogVisible="dialogVisible" />
 	</div>
 </template>
 
@@ -186,11 +103,15 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { SettingFilled, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 import { awardInfoHttp, awardHomeListHttp, awardAwayListHttp } from '@/axios/api';
-// import { useRoute } from 'vue-router';
+import dialogVue from '@/components/common/dialogVue.vue';
+import { useRoute } from 'vue-router';
 
 interface DataProps {
 	isUp: boolean;
-	visible: boolean;
+	teamId: number;
+	homeTeamId: number;
+	awayTeamId: number;
+	diaVisible: boolean;
 	homeList: Array<any>;
 	awayList: Array<any>;
 	awardData: {
@@ -204,18 +125,25 @@ export default defineComponent({
 	components: {
 		SettingFilled,
 		DownOutlined,
-		UpOutlined
+		UpOutlined,
+		dialogVue
 	},
 	setup(prop: any) {
-		// const ROUTE = useRoute();
+		const ROUTE = useRoute();
 		const data: DataProps = reactive({
 			isUp: true,
-			visible: false,
-			handleOk: () => {
-				console.log(1);
-			},
-			showDialog: () => {
-				data.visible = true;
+			teamId: 0,
+			homeTeamId: 0,
+			awayTeamId: 0,
+			diaVisible: false,
+			competitionId: ROUTE.query.competitionId,
+			showDialog: (type: number) => {
+				if (type) {
+					data.teamId = data.awayTeamId;
+				} else {
+					data.teamId = data.homeTeamId;
+				}
+				data.diaVisible = true;
 			},
 			lenguaColumns: [
 				{
@@ -422,6 +350,9 @@ export default defineComponent({
 			],
 			changeIcon: () => {
 				data.isUp = !data.isUp;
+			},
+			dialogVisible: (value: boolean) => {
+				data.diaVisible = value;
 			}
 		});
 		const getAwardData = () => {
@@ -459,8 +390,10 @@ export default defineComponent({
 					]
 				};
 				data.awardData = obj;
+				data.homeTeamId = homeTeam.teamId;
+				data.awayTeamId = visitingTeam.teamId;
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getHomeList(79);
+				getHomeList(homeTeam.teamId);
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getAwayList(visitingTeam.teamId);
 			});
@@ -482,7 +415,7 @@ export default defineComponent({
 				teamId
 			};
 			awardAwayListHttp(obj).then((res) => {
-				console.log(res);
+				data.awayList = res.data.data;
 			});
 		};
 		onMounted(() => {

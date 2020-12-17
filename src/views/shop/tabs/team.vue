@@ -94,7 +94,7 @@ export default defineComponent({
 					path: '/teamInfo',
 					query: {
 						activeKey: '1',
-						id
+						teamId: id
 					}
 				});
 			},

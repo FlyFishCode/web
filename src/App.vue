@@ -216,4 +216,20 @@ export default defineComponent({
 	color: #fff;
 	padding: 5px;
 }
+.btnBox {
+	display: flex;
+	flex-wrap: wrap;
+}
+.btnBox div {
+	margin-right: 15px;
+}
+.playerBox {
+	width: 100%;
+}
+/* // 新闻样式 */
+.newContent {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 </style>

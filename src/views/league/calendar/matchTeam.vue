@@ -259,7 +259,7 @@ export default defineComponent({
 				getTeamList();
 			},
 			fastWay: (row: any) => {
-				ctx.emit('change-activekey', '2',row);
+				ctx.emit('change-activekey', '2', row);
 			},
 			Gohistory: () => {
 				ROUTER.push('/result');
@@ -308,7 +308,7 @@ export default defineComponent({
 			});
 		};
 		const getSelectList = () => {
-			leagueSelectHttp({ competitionId: 234 }).then((res) => {
+			leagueSelectHttp({ competitionId: data.competitionId }).then((res) => {
 				data.divisitonList = res.data.data;
 				data.divisiton = res.data.data[0].divisionId;
 				data.stageList = res.data.data[0].stageList;

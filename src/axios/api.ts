@@ -56,7 +56,7 @@ const baseURL = '/apw';
 
 const Axios = axios.create({
 	baseURL: baseURL,
-	timeout: 2000
+	timeout: 10000
 });
 let isLogin = false;
 Axios.interceptors.request.use(
@@ -81,10 +81,8 @@ Axios.interceptors.request.use(
 
 Axios.interceptors.response.use(
 	(response) => {
-		if (response.data.code === 401) {
-			// Router.push({
-			// 	path:'/',
-			// })
+		if (response.config.url?.includes('arealist')) {
+			response.data.data.unshift({ areaId: '', areaName: 'ALL' });
 		}
 		return response;
 	},

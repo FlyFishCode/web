@@ -88,35 +88,7 @@ export default {
 		// const Router = useRoute();
 		const data = reactive({
 			selectTeamName: '',
-			infoData: {
-				memberImg: require('@/assets/1.jpg'),
-				memberName: '上海市消防总队黄埔支队嵩山中队',
-				captainName: '李逍遥',
-				place: '李逍遥',
-				country: '山东',
-				allScore: '总分数',
-				scoreNumber: 59,
-				ppdNumber: 51,
-				mprNumber: 65,
-				resultList: [
-					{
-						id: 1,
-						name: 'Set 结果',
-						win: 15,
-						draw: 20,
-						lost: 25,
-						probability: 80
-					},
-					{
-						id: 1,
-						name: 'Match 结果',
-						win: 15,
-						draw: 20,
-						lost: 25,
-						probability: 80
-					}
-				]
-			},
+			infoData: {},
 			showTeamInfo: () => {
 				console.log('111');
 			},

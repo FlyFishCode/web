@@ -11,11 +11,11 @@ const timePageSelectList = '/team/competitionmenu';
 // 时间表 列表数据
 const timePageList = '/team/confrontationlist';
 // 时间表 日历数据
-const calendarList = '/teamconfrontationinfocalendar';
+const calendarList = '/team/confrontationcalendar';
 
 // 以前结果 列表
-const historyResult = '/teamresult';
+const historyResult = '/team/pastresults';
 
 // 会员 列表
-const vipList = '/teamplayer';
+const vipList = '/team/playerlist';
 export { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList, vipList, historyResult };

@@ -147,11 +147,11 @@
 				</a-col>
 				<a-col :lg="8" :xs="0" class="topBox">
 					<a-col>{{ $t('default.178') }}</a-col>
-					<a-col v-if="item.top4CompetitionRatingRating" class="infoStyle">
-						<a-col>{{ `Rating  ${item.top4CompetitionRatingRating.rating}` }}</a-col
-						>| <a-col>{{ `PPD  ${item.top4CompetitionRatingRating.ppd}` }}</a-col
+					<a-col v-if="item.top4CompetitionRating" class="infoStyle">
+						<a-col>{{ `Rating  ${item.top4CompetitionRating.rating}` }}</a-col
+						>| <a-col>{{ `PPD  ${item.top4CompetitionRating.ppd}` }}</a-col
 						>|
-						<a-col>{{ `MPR  ${item.top4CompetitionRatingRating.mpr}` }}</a-col>
+						<a-col>{{ `MPR  ${item.top4CompetitionRating.mpr}` }}</a-col>
 					</a-col>
 				</a-col>
 				<a-col :lg="2" :xs="0" class="vipBox">

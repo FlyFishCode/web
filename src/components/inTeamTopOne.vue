@@ -118,14 +118,17 @@ export default {
 			}
 		});
 		const getTeamDetails = () => {
-			teamdetailsHttp({ teamId: 46 || ROUTE.query.teamId }).then((res) => {
+			teamdetailsHttp({ teamId: ROUTE.query.teamId }).then((res) => {
 				res.data.data.resultList = [];
 				for (const [key, value] of Object.entries(res.data.data)) {
 					switch (key) {
 						case 'bestPlayer' && value:
 							res.data.data.resultList.push(Object.assign(value, { title: key }));
 							break;
-						case 'leagueRating' && value:
+						case 'competitionRating' && value:
+							res.data.data.resultList.push(Object.assign(value, { title: key }));
+							break;
+						case 'top4CompetitionRating' && value:
 							res.data.data.resultList.push(Object.assign(value, { title: key }));
 							break;
 						default:

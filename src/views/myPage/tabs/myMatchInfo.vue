@@ -128,31 +128,29 @@ export default defineComponent({
 				{ value: 2018, label: 2018 }
 			],
 			teamList: [{ flag: false, record: [] }],
-			changeFlag: (matchId = 0, index: number) => {
-				console.log(matchId);
-				// if (matchId) {
-				const obj = {
-					memberId: Number(userId),
-					competitionId: 148
-				};
-				myMatchMoreHttp(obj).then((res) => {
-					if (res.data.data) {
-						data.teamList[index].record = res.data.data;
-					}
-				});
-				// }
+			changeFlag: (matchId: number, index: number) => {
+				if (matchId) {
+					const obj = {
+						memberId: Number(userId),
+						competitionId: matchId
+					};
+					myMatchMoreHttp(obj).then((res) => {
+						if (res.data.data) {
+							data.teamList[index].record = res.data.data;
+						}
+					});
+				}
 				data.teamList[index].flag = !data.teamList[index].flag;
 			},
-			getMatchList: (year = data.year, currentPage = data.currentPage, pageSize = data.pageSize) => {
+			getMatchList: () => {
 				// 年份，当前页数，显示页码
 				const obj = {
-					// memberId: Number(userId),
-					memberId: 22703,
-					countryId: 617,
+					memberId: Number(userId),
+					countryId: sessionStorage.getItem('countryId'),
 					sort: 1,
-					date: year,
-					pageIndex: currentPage,
-					pageSize: pageSize
+					date: data.year,
+					pageIndex: data.currentPage,
+					pageSize: data.pageSize
 				};
 				myMatchInfoHttp(obj).then((res) => {
 					if (res.data.data) {
@@ -177,14 +175,14 @@ export default defineComponent({
 					}
 				});
 			},
-			yearChange: (value: number) => {
-				data.getMatchList(value, undefined, undefined);
+			yearChange: () => {
+				data.getMatchList();
 			},
-			onShowSizeChange: (current: number, size: number) => {
-				data.getMatchList(undefined, undefined, size);
+			onShowSizeChange: () => {
+				data.getMatchList();
 			},
-			pageChange: (page: number) => {
-				data.getMatchList(undefined, page, undefined);
+			pageChange: () => {
+				data.getMatchList();
 			}
 		});
 		onMounted(() => {

@@ -10,29 +10,19 @@
 				</a-button>
 			</a-col>
 			<a-col :lg="3" :xs="8" class="buttonBox">
-				<a-button @click="deleteAll">
-					{{ $t('default.113') }}
-				</a-button>
-			</a-col>
-			<a-col :lg="3" :xs="8" class="buttonBox">
 				<div class="titleStyle setting" @click="showDlalog"><SettingFilled /> {{ $t('default.114') }}</div>
 			</a-col>
-			<a-col :lg="{ span: 2, offset: 9 }" :xs="8" class="titleStyle">
-				{{ $t('default.119') }}
+			<!-- <a-col :lg="{ span: 2, offset: 9 }" :xs="8" class="titleStyle">
+				{{ $t('default.59') }}
 			</a-col>
-			<a-col :lg="2" :xs="8">
-				<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+			<a-col :lg="3" :xs="8">
+				<a-select v-model:value="type" @change="typeChange" class="selectBox">
+					<a-select-option v-for="item in typeList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
 				</a-select>
-			</a-col>
-			<a-col :lg="2" :xs="8">
-				<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
-				</a-select>
-			</a-col>
+			</a-col> -->
 		</a-row>
 		<a-row class="inPhoneTableDisplay">
-			<a-table :row-selection="rowSelection" :columns="columns" :data-source="data" bordered :pagination="paginationProps">
+			<a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" bordered :pagination="false">
 				<template v-slot:title="{ text }">
 					<a>{{ text }}</a>
 				</template>
@@ -43,7 +33,7 @@
 		</a-row>
 
 		<a-row class="showPhoneTable">
-			<a-table :row-selection="rowSelection" :columns="inPhoneColumns" :data-source="data" bordered :pagination="paginationProps">
+			<a-table :row-selection="rowSelection" :columns="inPhoneColumns" :data-source="tableList" bordered :pagination="false">
 				<template v-slot:title="{ text }">
 					<a>{{ text }}</a>
 				</template>
@@ -59,7 +49,7 @@
 				<a-col style="textAlign:center">{{ $t('default.241') }}</a-col>
 			</a-row>
 			<a-row class="rowStyle">
-				<a-row type="flex" justify="space-around">
+				<a-row type="flex" justify="space-around" class="rowStyle">
 					<a-col :span="10">{{ $t('default.115') }}</a-col>
 					<a-col :span="3">
 						<a-switch v-model:checked="checked">
@@ -85,8 +75,34 @@
 						</a-switch>
 					</a-col>
 				</a-row>
-				<a-row type="flex" justify="space-around">
+				<a-row type="flex" justify="space-around" class="rowStyle">
+					<a-col :span="10">{{ $t('default.289') }}</a-col>
+					<a-col :span="3">
+						<a-switch v-model:checked="checked">
+							<template v-slot:checkedChildren>
+								<check-outlined />
+							</template>
+							<template v-slot:unCheckedChildren>
+								<close-outlined />
+							</template>
+						</a-switch>
+					</a-col>
+				</a-row>
+				<a-row type="flex" justify="space-around" class="rowStyle">
 					<a-col :span="10">{{ $t('default.117') }}</a-col>
+					<a-col :span="3">
+						<a-switch v-model:checked="checked">
+							<template v-slot:checkedChildren>
+								<check-outlined />
+							</template>
+							<template v-slot:unCheckedChildren>
+								<close-outlined />
+							</template>
+						</a-switch>
+					</a-col>
+				</a-row>
+				<a-row type="flex" justify="space-around" class="rowStyle">
+					<a-col :span="10">{{ $t('default.288') }}</a-col>
 					<a-col :span="3">
 						<a-switch v-model:checked="checked">
 							<template v-slot:checkedChildren>
@@ -122,10 +138,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import entryList from '@/components/common/entryList.vue';
 import { useRouter } from 'vue-router';
 import { SettingFilled, CheckOutlined, CloseOutlined } from '@ant-design/icons-vue';
+import { myMessageHttp } from '@/axios/api';
 // interface TableRenderProps {
 //   text: string;
 //   index: number;
@@ -142,25 +159,19 @@ export default defineComponent({
 		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/myPage',
-			colSpan: 5,
-			total: 100,
+			total: 1,
+			pageNum: 1,
+			pageSize: 10,
 			visible: false,
 			checked: false,
 			matchType: 2020,
 			matchTypeList: [{ value: 2020, label: '2020' }],
-			paginationProps: {
-				showSizeChanger: true,
-				showQuickJumper: false,
-				showTotal: () => `共${data.total}条`,
-				pageSize: 10,
-				current: 1,
-				onShowSizeChange: (current: number, pageSize: number) => {
-					console.log(current, pageSize);
-				},
-				onChange: (current: number) => {
-					console.log(current);
-				}
-			},
+			type: 0,
+			typeList: [
+				{ value: 0, label: 'default.120' },
+				{ value: 1, label: 'default.121' },
+				{ value: 2, label: 'default.122' }
+			],
 			rowSelection: {
 				onChange: (selectedRowKeys: number, selectedRows: string) => {
 					console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
@@ -212,54 +223,11 @@ export default defineComponent({
 					width: 80
 				}
 			],
-			data: [
-				{
-					key: '1',
-					name: 'John Brown',
-					age: 32,
-					address: 'New York No. 1 Lake Park'
-				},
-				{
-					key: '2',
-					name: 'Jim Green',
-					age: 42,
-					address: 'London No. 1 Lake Park'
-				},
-				{
-					key: '3',
-					name: 'Joe Black',
-					age: 32,
-					address: 'Sidney No. 1 Lake Park'
-				},
-				{
-					key: '4',
-					name: 'Disabled User',
-					age: 99,
-					address: 'Sidney No. 1 Lake Park'
-				}
-			],
-			getDate: () => {
-				return '2020-10-17';
-			},
-			handleMenuClick: () => {
-				console.log(11);
-			},
+			tableList: [],
 			deleteMsg: () => {
 				console.log(1);
 			},
-			deleteAll: () => {
-				console.log(1);
-			},
-			calendarlChange: (value: string) => {
-				console.log(value);
-			},
-			onSelect: (value: string) => {
-				console.log(value);
-			},
 			Gohistory: () => {
-				ROUTER.push('/teamIndex');
-			},
-			goPlay: () => {
 				ROUTER.push('/teamIndex');
 			},
 			showDlalog: () => {
@@ -270,10 +238,21 @@ export default defineComponent({
 			},
 			save: () => {
 				console.log('save');
-			},
-			matchTypeChange: (value: number) => {
-				console.log(value);
 			}
+		});
+		const getTableList = () => {
+			const obj = {
+				playerId: sessionStorage.getItem('userId'),
+				type: data.type,
+				pageNum: data.pageNum,
+				pageSize: data.pageNum
+			};
+			myMessageHttp(obj).then((res) => {
+				console.log(res);
+			});
+		};
+		onMounted(() => {
+			getTableList();
 		});
 		return {
 			...toRefs(data)

@@ -448,8 +448,17 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTimeTableList();
 			},
-			showMatch: (value: any) => {
+			showMatch: (value: any, state: number) => {
 				data.confrontationId = value;
+				switch (state) {
+					case 1:
+						data.ready = true;
+						break;
+					case 2:
+					default:
+						data.ready = false;
+						break;
+				}
 				data.ismatchTablePage = true;
 			},
 			readyClick: (id: number, row: any) => {

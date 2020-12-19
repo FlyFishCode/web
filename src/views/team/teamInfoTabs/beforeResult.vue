@@ -121,7 +121,7 @@ export default defineComponent({
 						{ title: '胜', dataIndex: 'matchResult.wins', key: 12, width: 40 },
 						{ title: '败', dataIndex: 'matchResult.losses', key: 13, width: 40 },
 						{ title: '和', dataIndex: 'matchResult.draws', key: 14, width: 40 },
-						{ title: '胜率', dataIndex: 'matchResult.winProbability', key: 15, width: 40 }
+						{ title: '胜率', dataIndex: 'matchResult.winProbability', key: 15, width: 70 }
 					]
 				},
 				{
@@ -132,7 +132,7 @@ export default defineComponent({
 						{ title: '胜', dataIndex: 'setResult.wins', key: '2', width: 40 },
 						{ title: '败', dataIndex: 'setResult.losses', key: '2', width: 40 },
 						{ title: '和', dataIndex: 'setResult.draws', key: '2', width: 40 },
-						{ title: '胜率', dataIndex: 'setResult.winProbability', key: '2', width: 40 }
+						{ title: '胜率', dataIndex: 'setResult.winProbability', key: '2', width: 70 }
 					]
 				},
 				{

@@ -29,10 +29,6 @@
 				</a-col>
 				<a-col :lg="4" :xs="15" class="infoClass">
 					<div class="teamStyle" @click="entryPage(item.teamId)">{{ item.teamName }}</div>
-					<div class="placeStyle">
-						<div class="overStyle">{{ item.countryName }}/</div>
-						<div class="counyStyle">{{ item.areaName }}</div>
-					</div>
 					<div>{{ item.captainName }}</div>
 				</a-col>
 				<a-col :lg="{ span: 3, offset: 5 }" :xs="4" class="vipBox">
@@ -41,12 +37,12 @@
 				</a-col>
 				<a-col :lg="8" :xs="0" class="topBox">
 					<div>{{ $t('default.178') }}</div>
-					<div class="infoStyle">
-						<div>{{ `Rating  ${item.rating}` }}</div>
+					<div v-if="item.top4CompetitionRating" class="infoStyle">
+						<div>{{ `Rating  ${item.top4CompetitionRating.rating}` }}</div>
 						|
-						<div>{{ `PPD  ${item.ppd}` }}</div>
+						<div>{{ `PPD  ${item.top4CompetitionRating.ppd}` }}</div>
 						|
-						<div>{{ `MPR  ${item.mpr}` }}</div>
+						<div>{{ `MPR  ${item.top4CompetitionRating.mpr}` }}</div>
 					</div>
 				</a-col>
 			</a-row>
@@ -169,6 +165,7 @@ export default defineComponent({
 	cursor: pointer;
 }
 .infoClass {
+	height: 100%;
 	text-align: left;
 	display: flex;
 	flex-direction: column;

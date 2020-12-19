@@ -386,46 +386,58 @@ export default defineComponent({
 			let str = '';
 			switch (type) {
 				case 1:
-					str = '301 Game';
+					str = 'default.290';
 					break;
 				case 2:
-					str = '501 Game';
+					str = 'default.291';
 					break;
 				case 3:
-					str = '701 Game';
+					str = 'default.292';
 					break;
 				case 4:
-					str = '901 Game';
+					str = 'default.293';
 					break;
 				case 5:
-					str = '1101 Game';
+					str = 'default.294';
 					break;
 				case 6:
-					str = '1501 Game';
+					str = 'default.295';
 					break;
 				case 7:
-					str = 'StandardCricket';
+					str = 'default.296';
 					break;
 				case 8:
-					str = 'Cut-ThroatCricket';
+					str = 'default.297';
 					break;
 				case 9:
-					str = 'Count-Up';
+					str = 'default.298';
 					break;
 				case 10:
-					str = 'Timing';
+					str = 'default.299';
 					break;
 				case 11:
-					str = 'HalfIt';
+					str = 'default.300';
 					break;
 				case 12:
-					str = 'BigBull';
+					str = 'default.301';
 					break;
 				case 13:
-					str = 'EaglesEye';
+					str = 'default.302';
+					break;
+				case 14:
+					str = 'default.303';
+					break;
+				case 20:
+					str = 'default.304';
+					break;
+				case 21:
+					str = 'default.305';
+					break;
+				case 22:
+					str = 'default.306';
 					break;
 				default:
-					str = 'CricketCount-up';
+					str = '';
 					break;
 			}
 			return str;

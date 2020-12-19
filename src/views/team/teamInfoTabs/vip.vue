@@ -294,7 +294,7 @@ export default defineComponent({
 		});
 		const getDataList = () => {
 			const obj = {
-				teamId: 63 || ROUTE.query.teamId,
+				teamId: ROUTE.query.teamId,
 				sort: data.sort,
 				pageIndex: data.pageNum,
 				pageSize: data.pageSize

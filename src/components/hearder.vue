@@ -267,7 +267,7 @@ export default defineComponent({
 				ROUTER.push({
 					path: 'calendar',
 					query: {
-						stageId: id
+						competitionId: id
 					}
 				});
 			},

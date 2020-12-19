@@ -9,7 +9,7 @@ import { message } from 'ant-design-vue';
 import { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCitylist, indexNewslist, newslist, newsInfo, indexCarousel } from './index/index';
 
 // 我的页面
-import { myPageInfo, myMatchInfo, myMatchInfoMore, myBattleSelectList, myBattleDataList, myBattleDateList, myTeamList } from './myPage/index';
+import { myPageInfo, myMatchInfo, myMatchInfoMore, myBattleSelectList, myBattleDataList, myBattleDateList, myTeamList, myMessage } from './myPage/index';
 
 // 联赛
 import {
@@ -161,6 +161,10 @@ const myMatchInfoHttp = (data: any = null) => {
 //  我的页面 我的比赛信息下拉请求
 const myMatchMoreHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(myMatchInfoMore, data));
+};
+//  我的页面 消息列表
+const myMessageHttp = (data: any = null) => {
+	return Axios.post(myMessage, data);
 };
 //  我的页面 我的对战下拉列表
 const myBattleSelectHttp = (data: any = null) => {
@@ -449,5 +453,6 @@ export {
 	plauerRewardListHttp,
 	playerHistoryHttp,
 	playerRewardDropDownHttp,
-	playerInfoHttp
+	playerInfoHttp,
+	myMessageHttp
 };

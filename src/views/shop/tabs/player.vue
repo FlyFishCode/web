@@ -31,12 +31,12 @@
 				</a-col>
 				<a-col :lg="8" :xs="12" class="topBox">
 					<div>{{ $t('default.184') }}</div>
-					<div class="infoStyle">
-						<div>{{ `Rating  ${item.rating}` }}</div>
+					<div v-if="item.playerRating" class="infoStyle">
+						<div>{{ `Rating  ${item.playerRating.rating}` }}</div>
 						|
-						<div>{{ `PPD  ${item.ppd}` }}</div>
+						<div>{{ `PPD  ${item.playerRating.ppd}` }}</div>
 						|
-						<div>{{ `MPR  ${item.mpr}` }}</div>
+						<div>{{ `MPR  ${item.playerRating.mpr}` }}</div>
 					</div>
 				</a-col>
 			</a-row>

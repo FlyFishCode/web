@@ -145,7 +145,7 @@ export default defineComponent({
 				}
 			},
 			info: (row: any) => {
-				ctx.emit('show-match', row.confrontationInfoId);
+				ctx.emit('show-match', row.confrontationInfoId, row.state);
 			}
 		});
 		const getList = () => {

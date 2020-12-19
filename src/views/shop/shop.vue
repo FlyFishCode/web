@@ -145,11 +145,11 @@
 				<a-col :lg="4" :xs="0" class="vipBox">
 					<div>{{ $t('default.250') }}</div>
 					<div class="infoStyle">
-						<div>{{ item.competitionList.length }}</div>
+						<div v-if="item.competitionList">{{ item.competitionList.length }}</div>
 					</div>
 				</a-col>
 				<a-col :lg="2" :xs="2" class="iconFont">
-					<div v-if="item.competitionList.length">
+					<div v-if="item.competitionList && item.competitionList.length">
 						<div v-if="item.flag" @click="changeFlag(index)">
 							<DownCircleOutlined />
 						</div>

@@ -159,7 +159,7 @@
 					</template>
 				</a-table-column>
 				<template #expandedRowRender="{record}">
-					<a-table :columns="innerColumns" :data-source="record.list" :pagination="false" bordered></a-table>
+					<a-table :columns="innerColumns" :data-source="record.list" :pagination="false" rowkey="set" bordered></a-table>
 				</template>
 			</a-table>
 
@@ -171,7 +171,7 @@
 					</template>
 				</a-table-column>
 				<template #expandedRowRender="{record}">
-					<a-table :columns="inPhoneColumns" :data-source="record.list" :pagination="false" bordered></a-table>
+					<a-table :columns="inPhoneColumns" :data-source="record.list" :pagination="false" rowkey="set" bordered></a-table>
 				</template>
 			</a-table>
 		</a-row>
@@ -179,7 +179,7 @@
 	</div>
 </template>
 <script>
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
 import { matchInfoHttp, matchInfoTableListHttp } from '@/axios/api';
 import entryList from '@/components/common/entryList.vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -190,6 +190,7 @@ export default defineComponent({
 	setup(prop, ctx) {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
+		const instance = getCurrentInstance();
 		const data = reactive({
 			entryPath: '/league',
 			infoData: {
@@ -254,7 +255,7 @@ export default defineComponent({
 					// }
 				},
 				{ title: 'Leg', dataIndex: 'leg', key: 'name', width: 80 },
-				{ title: 'Game', dataIndex: 'game', key: 'name', width: 100 },
+				{ title: 'Game', dataIndex: 'game', key: 'name', width: 100, slots: { customRender: 'game' } },
 				{
 					title: 'Game Mode',
 					dataIndex: 'gameMode',
@@ -440,7 +441,7 @@ export default defineComponent({
 					str = '';
 					break;
 			}
-			return str;
+			return instance.parent.ctx.$t(str);
 		};
 		const getMode = (type) => {
 			let str = '';

@@ -273,14 +273,14 @@ export default defineComponent({
 			},
 			showPersonBox: () => {
 				data.showBox = true;
-				myPageInfoHttp({ memberId: sessionStorage.getItem('userId') }).then((res) => {
+				myPageInfoHttp({ playerId: sessionStorage.getItem('userId') }).then((res) => {
 					if (res.data.data) {
 						data.myInfo = res.data.data;
 						data.myInfo.name = sessionStorage.getItem('userName') || '';
 					}
 				});
 				const obj = {
-					memberId: sessionStorage.getItem('userId'),
+					playerId: sessionStorage.getItem('userId'),
 					countryId: 617,
 					sort: 1,
 					date: 2020,

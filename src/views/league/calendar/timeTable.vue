@@ -21,7 +21,7 @@
 		<!-- 对战表 排阵-->
 		<div v-if="ismatchTablePage">
 			<a-row>
-				<inMatchTable :confrontationId="confrontationId" />
+				<inMatchTable :confrontationId="objectionId" />
 			</a-row>
 
 			<a-row class="rowStyle">
@@ -30,7 +30,7 @@
 						<matchResult :confrontationId="confrontationId" />
 					</a-tab-pane>
 					<a-tab-pane v-if="ready" key="2" :tab="$t('default.41')">
-						<matchTable :confrontationId="confrontationId" :isHome="isHome" :teamId="playerListId" />
+						<matchTable :confrontationId="objectionId" :isHome="isHome" :teamId="playerListId" />
 					</a-tab-pane>
 					<a-tab-pane v-else key="3" tab="AWARD">
 						<award :confrontationId="confrontationId" />
@@ -182,6 +182,7 @@ import { message } from 'ant-design-vue';
 import { useRoute, useRouter } from 'vue-router';
 
 interface DataProps {
+	objectionId: any;
 	dialogColumns: Array<any>;
 	tableList: Array<any>;
 	dialogList: Array<any>;
@@ -223,11 +224,16 @@ export default defineComponent({
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
+		const userId = sessionStorage.getItem('userId');
 		let currentSelectList: Array<any> = [];
+		// 因为后端id不统一，使用flag变量标注 传参id
+		// 1:使用confrontationId 为对战详情id
+		// 0:使用competitionId  为对战详情id
 		const data: DataProps = reactive({
 			entryPath: '/league',
 			currentKey: '1',
 			confrontationId: ROUTE.query.competitionId,
+			objectionId: ROUTE.query.flag ? ROUTE.query.confrontationId : ROUTE.query.competitionId,
 			visible: false,
 			isHome: 0,
 			playerListId: 0,
@@ -290,7 +296,6 @@ export default defineComponent({
 			],
 			dialogList: [],
 			getTypeBtn: (row: any) => {
-				const userId = Number(sessionStorage.getItem('userId'));
 				if ((row.homeCaptainId === userId || row.visitingCaptainId === userId) && row.status === 1) {
 					return true;
 				} else {
@@ -448,8 +453,9 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTimeTableList();
 			},
-			showMatch: (value: any, state: number) => {
+			showMatch: (value: any, state: number, isHome: number, teamId: number) => {
 				data.confrontationId = value;
+				data.objectionId = value;
 				switch (state) {
 					case 1:
 						data.ready = true;
@@ -459,10 +465,11 @@ export default defineComponent({
 						data.ready = false;
 						break;
 				}
+				data.isHome = isHome;
+				data.playerListId = teamId;
 				data.ismatchTablePage = true;
 			},
 			readyClick: (id: number, row: any) => {
-				const userId = sessionStorage.getItem('userId');
 				if (row.homeCaptainId === Number(userId)) {
 					data.isHome = 1;
 					data.playerListId = row.homeTeamId;
@@ -474,11 +481,13 @@ export default defineComponent({
 				data.ismatchTablePage = true;
 				data.ready = true;
 				data.confrontationId = id;
+				data.objectionId = id;
 			},
 			finishClick: (id: number) => {
 				data.ismatchTablePage = true;
 				data.ready = false;
 				data.confrontationId = id;
+				data.objectionId = id;
 			},
 			Gohistory: () => {
 				console.log('111');
@@ -559,13 +568,22 @@ export default defineComponent({
 				data.pageTotal = res.data.data.totalCount;
 			});
 		};
-		onMounted(() => {
-			if (ROUTE.query.ismatchTablePage) {
+		const init = (queryObj: any) => {
+			if (queryObj.ismatchTablePage) {
 				data.ismatchTablePage = true;
 			}
-			if (ROUTE.query.currentKey) {
-				data.currentKey = ROUTE.query.currentKey;
+			if (queryObj.currentKey) {
+				data.currentKey = queryObj.currentKey;
 			}
+			if (queryObj.ready) {
+				data.ready = Boolean(queryObj.ready);
+			}
+			if (queryObj.teamId) {
+				data.playerListId = queryObj.teamId;
+			}
+		};
+		onMounted(() => {
+			init(ROUTE.query);
 			getSelectList();
 			getDialogList();
 		});

@@ -7,65 +7,65 @@
 				</a-col>
 				<a-col :span="12" class="firstClass FONT">
 					<div class="teamIcon"><img :src="infoData.countryIcon" alt="" /></div>
-					<div class="teamName" @click="showTeamInfo">{{ infoData.memberName }}</div>
+					<div class="teamName" @click="showTeamInfo">{{ infoData.playerName }}</div>
 					<div class="disabledClass">
 						<a-select v-model:value="selectTeamName" class="selectBox" size="small" @change="handleChange">
 							<a-select-option v-for="item in infoData.teamList" :key="item.teamId" :value="item.teamId">{{ item.teamName }}</a-select-option>
 						</a-select>
 					</div>
-					<div class="disabledClass">
-						{{ infoData.place }}
+					<div v-if="infoData.shop" class="disabledClass">
+						{{ infoData.shop.shopAddress }}
 						<span @click="showDetail" class="icon">
 							<EnvironmentOutlined />
 						</span>
 					</div>
-					<div class="disabledClass">{{ `${infoData.countryName}>${infoData.areaName}` }}</div>
+					<div class="disabledClass">{{ `${infoData.playerCountryName}>${infoData.playerAreaName}` }}</div>
 				</a-col>
 			</a-col>
-			<a-col :lg="7" :xs="0">
+			<a-col v-if="infoData.generalRating" :lg="7" :xs="0">
 				<div class="title">{{ $t('default.238') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="infoData.competitionRating || 0" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.generalRating.rating || 0" />
 				<div class="myProgress">
 					<div class="myProgressBox">
 						<div>
-							<a-progress :percent="infoData.ppd" strokeColor="red" />
+							<a-progress :percent="infoData.generalRating.ppd" strokeColor="red" />
 						</div>
 						<div class="typeBox">
 							<span>{{ 'PPD' }}</span
-							><span>{{ `${infoData.ppd}` }}</span>
+							><span>{{ `${infoData.generalRating.ppd}` }}</span>
 						</div>
 					</div>
 					<div class="myProgressBox">
 						<div>
-							<a-progress :percent="infoData.mpr" strokeColor="red" />
+							<a-progress :percent="infoData.generalRating.mpr" strokeColor="red" />
 						</div>
 						<div class="typeBox">
 							<span>{{ 'MPR' }}</span
-							><span>{{ `${infoData.mpr}` }}</span>
+							><span>{{ `${infoData.generalRating.mpr}` }}</span>
 						</div>
 					</div>
 				</div>
 			</a-col>
-			<a-col :lg="7" :xs="0">
+			<a-col v-if="infoData.playerRating" :lg="7" :xs="0">
 				<div class="title">{{ $t('default.184') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="75" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.playerRating.rating" />
 				<div class="myProgress">
 					<div class="myProgressBox">
 						<div>
-							<a-progress :percent="infoData.ppd" strokeColor="red" />
+							<a-progress :percent="infoData.playerRating.ppd" strokeColor="red" />
 						</div>
 						<div class="typeBox">
 							<span>{{ 'PPD' }}</span
-							><span>{{ `${infoData.ppd}` }}</span>
+							><span>{{ `${infoData.playerRating.ppd}` }}</span>
 						</div>
 					</div>
 					<div class="myProgressBox">
 						<div>
-							<a-progress :percent="infoData.ppd" strokeColor="red" />
+							<a-progress :percent="infoData.playerRating.mpr" strokeColor="red" />
 						</div>
 						<div class="typeBox">
-							<span>{{ 'PPD' }}</span
-							><span>{{ `${infoData.ppd}` }}</span>
+							<span>{{ 'MPR' }}</span
+							><span>{{ `${infoData.playerRating.mpr}` }}</span>
 						</div>
 					</div>
 				</div>

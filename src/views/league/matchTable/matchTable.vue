@@ -54,7 +54,7 @@
 							<div class="legBox">
 								<div class="legIndexBox">{{ legIndex + 1 }}</div>
 							</div>
-							<div class="legBox">{{ leg.gameNameStr }}</div>
+							<div class="legBox">{{ $t(getGameName(leg.gameName)) }}</div>
 						</a-col>
 						<!-- <a-col :span="5" class="playerStyle" v-for="playerBox in new Array(leg.maxPlayer).fill(leg.maxPlayer)" :key="playerBox.index"> -->
 						<a-col :span="5" class="playerStyle" v-for="(playerBox, playerIndex) in leg.playerList" :key="playerBox.index">
@@ -107,6 +107,66 @@ export default defineComponent({
 				second: 0
 			},
 			matchTableList: [],
+			getGameName: (id) => {
+				let str = '';
+				switch (id) {
+					case 1:
+						str = 'default.290';
+						break;
+					case 2:
+						str = 'default.291';
+						break;
+					case 3:
+						str = 'default.292';
+						break;
+					case 4:
+						str = 'default.293';
+						break;
+					case 5:
+						str = 'default.294';
+						break;
+					case 6:
+						str = 'default.295';
+						break;
+					case 7:
+						str = 'default.296';
+						break;
+					case 8:
+						str = 'default.297';
+						break;
+					case 9:
+						str = 'default.298';
+						break;
+					case 10:
+						str = 'default.299';
+						break;
+					case 11:
+						str = 'default.300';
+						break;
+					case 12:
+						str = 'default.301';
+						break;
+					case 13:
+						str = 'default.302';
+						break;
+					case 14:
+						str = 'default.303';
+						break;
+					case 20:
+						str = 'default.304';
+						break;
+					case 21:
+						str = 'default.305';
+						break;
+					case 22:
+						str = 'default.306';
+						break;
+					default:
+						str = '';
+						break;
+				}
+				return str;
+			},
 			getPlayerType: (type) => {
 				let str = '';
 				switch (type) {

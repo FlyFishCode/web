@@ -1,19 +1,25 @@
 // 获取 会员信息
-const myPageInfo = '/memberinfo';
+const myPageInfo = '/my/memberinfo';
 
 // 我的比赛信息ore
-const myMatchInfo = '/mycompetition';
+const myMatchInfo = '/player/entryrecord';
 // 我的比赛信息 下拉更多接口
-const myMatchInfoMore = '/competitionteaminfo';
+const myMatchInfoMore = '/player/entryrecordteam';
 
 // 我的对战 下拉框数据获取
-const myBattleSelectList = '/mycompetitionmenu';
+const myBattleSelectList = '/my/competitionmenu';
 // 我的对战 查看列表数据
-const myBattleDataList = '/myconfrontationinfolist';
+const myBattleDataList = '/my/confrontationlist';
 // 我的对战 查日历表数据
-const myBattleDateList = '/myconfrontationinfocalendar';
+const myBattleDateList = '/my/confrontationcalendar';
 // 我的队伍列表数据
-const myTeamList = '/myteam';
+const myTeamList = '/my/teamlist';
 // 消息
 const myMessage = '/noticeList';
-export { myPageInfo, myMatchInfo, myMatchInfoMore, myBattleSelectList, myBattleDataList, myBattleDateList, myTeamList, myMessage };
+// 消息设置列表
+const messageSetList = '/getleaguenoticesetupbyid';
+// 设置消息列表
+const messageListSet = '/addleaguenoticesetup';
+// 设置消息删除
+const messageListDelete = '/delnotice';
+export { myPageInfo, myMatchInfo, myMatchInfoMore, myBattleSelectList, myBattleDataList, myBattleDateList, myTeamList, myMessage, messageSetList, messageListSet, messageListDelete };

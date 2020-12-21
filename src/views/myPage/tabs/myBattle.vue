@@ -87,7 +87,7 @@
 				</template>
 				<template v-slot:status="{ record }">
 					<div class="stateBox">
-						<div v-if="record.status === 1" class="inPlay" @click="goPlay(record.id)">{{ $t('default.41') }}</div>
+						<div v-if="getTypeBtn(record)" class="inPlay" @click="goPlay(record)">{{ $t('default.41') }}</div>
 						<div v-if="record.status === 2">{{ $t('default.104') }}</div>
 						<div v-if="record.status === 3">{{ $t('default.244') }}</div>
 					</div>
@@ -113,11 +113,11 @@
 						<div v-if="record.winOrLose === 3" class="winBox">{{ 'Win' }}</div>
 					</div>
 				</template>
-				<template v-slot:status="{ text }">
+				<template v-slot:status="{ record }">
 					<div class="stateBox">
-						<div v-if="text === 1" class="inPlay" @click="goPlay">{{ $t('default.41') }}</div>
-						<div v-if="text === 2">{{ $t('default.104') }}</div>
-						<div v-if="text === 3">{{ $t('default.244') }}</div>
+						<div v-if="getTypeBtn(record)" class="inPlay" @click="goPlay(record)">{{ $t('default.41') }}</div>
+						<div v-if="record.status === 2">{{ $t('default.104') }}</div>
+						<div v-if="record.status === 3">{{ $t('default.244') }}</div>
 					</div>
 				</template>
 				<template v-slot:move>
@@ -166,7 +166,7 @@ export default defineComponent({
 	},
 	setup() {
 		const ROUTER = useRouter();
-		const memberId = Number(sessionStorage.getItem('userId'));
+		const playerId = Number(sessionStorage.getItem('userId'));
 		const data = reactive({
 			entryPath: '/myPage',
 			colSpan: 5,
@@ -188,6 +188,13 @@ export default defineComponent({
 			matchTypeList: [{ value: 2020, label: '2020' }],
 			dataList: [],
 			dateList: [],
+			getTypeBtn: (row: any) => {
+				if ((row.homeCaptainId === playerId || row.visitingCaptainId === playerId) && row.status === 1) {
+					return true;
+				} else {
+					return false;
+				}
+			},
 			getListData: (value: any) => {
 				let month = '0';
 				let day = '0';
@@ -325,14 +332,29 @@ export default defineComponent({
 			Gohistory: () => {
 				ROUTER.push('/teamIndex');
 			},
-			goPlay: (id: number) => {
+			goPlay: (row: any) => {
+				let isHome = 0;
+				let teamId = 0;
+				if (row.homeCaptainId === playerId) {
+					isHome = 1;
+					teamId = row.homeTeamId;
+				}
+				if (row.visitingCaptainId === playerId) {
+					isHome = 2;
+					teamId = row.visitingTeamId;
+				}
 				ROUTER.push({
 					path: '/calendar',
 					query: {
 						activeKey: '2',
 						currentKey: '2',
 						ismatchTablePage: '1',
-						teamId: id
+						isHome,
+						teamId,
+						flag: 1,
+						ready: 1,
+						competitionId: data.leagueId,
+						confrontationId: row.confrontationId
 					}
 				});
 			},
@@ -356,7 +378,7 @@ export default defineComponent({
 		});
 		const getSelectList = () => {
 			const obj = {
-				memberId: 75408,
+				playerId,
 				countryId: sessionStorage.getItem('countryId'),
 				year: data.year
 			};
@@ -374,7 +396,7 @@ export default defineComponent({
 		const getDataList = () => {
 			const obj = {
 				competitionId: data.leagueId,
-				memberId: 75408,
+				playerId,
 				status: data.status,
 				pageIndex: 1,
 				pageSize: 10
@@ -389,7 +411,7 @@ export default defineComponent({
 		const getCalendarList = (year = data.year, month = data.month) => {
 			const obj = {
 				competitionId: data.leagueId,
-				memberId,
+				playerId,
 				status: data.status,
 				year: year,
 				month: month

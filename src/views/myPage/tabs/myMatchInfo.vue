@@ -82,13 +82,13 @@
 								<div>{{ 'Set 败' }}</div>
 							</div>
 							<div class="tableBox Content">
-								<div>{{ recordInfo.ranking }}</div>
-								<div>{{ recordInfo.rating }}</div>
-								<div>{{ recordInfo.ppd }}</div>
-								<div>{{ recordInfo.mpr }}</div>
-								<div>{{ recordInfo.winCount }}</div>
-								<div>{{ recordInfo.drawCount }}</div>
-								<div>{{ recordInfo.loseCount }}</div>
+								<div>{{ recordInfo.sort }}</div>
+								<div>{{ recordInfo.competitionRating.rating }}</div>
+								<div>{{ recordInfo.competitionRating.ppd }}</div>
+								<div>{{ recordInfo.competitionRating.mpr }}</div>
+								<div>{{ recordInfo.setResult.wins }}</div>
+								<div>{{ recordInfo.setResult.draws }}</div>
+								<div>{{ recordInfo.setResult.losses }}</div>
 							</div>
 						</a-col>
 					</a-row>
@@ -131,12 +131,12 @@ export default defineComponent({
 			changeFlag: (matchId: number, index: number) => {
 				if (matchId) {
 					const obj = {
-						memberId: Number(userId),
+						playerId: Number(userId),
 						competitionId: matchId
 					};
 					myMatchMoreHttp(obj).then((res) => {
 						if (res.data.data) {
-							data.teamList[index].record = res.data.data;
+							data.teamList[index].record = [res.data.data];
 						}
 					});
 				}
@@ -145,10 +145,10 @@ export default defineComponent({
 			getMatchList: () => {
 				// 年份，当前页数，显示页码
 				const obj = {
-					memberId: Number(userId),
+					playerId: Number(userId),
 					countryId: sessionStorage.getItem('countryId'),
 					sort: 1,
-					date: data.year,
+					year: data.year,
 					pageIndex: data.currentPage,
 					pageSize: data.pageSize
 				};

@@ -13,11 +13,11 @@
 				</a-col>
 				<a-col :lg="4" :xs="10" class="infoClass">
 					<div class="teamStyle" @click="entryPage">{{ item.teamName }}</div>
-					<div class="placeStyle">
-						<div>{{ item.countryName }}</div>
+					<div v-if="item.shop" class="placeStyle">
+						<div>{{ item.shop.countryName }}</div>
 						/
-						<div class="counyStyle">{{ item.areaName }}</div>
-						<span @click="showDetail(item)">
+						<div class="counyStyle">{{ item.shop.areaName }}</div>
+						<span @click="showDetail(item.shop)">
 							<EnvironmentOutlined />
 						</span>
 					</div>
@@ -29,12 +29,12 @@
 				</a-col>
 				<a-col :lg="8" :xs="0" class="topBox">
 					<div>{{ topInfoTitle }}</div>
-					<div class="infoStyle">
-						<div>{{ `Rating  ${item.rating}` }}</div>
+					<div v-if="item.top4CompetitionRating" class="infoStyle">
+						<div>{{ `Rating  ${item.top4CompetitionRating.rating}` }}</div>
 						|
-						<div>{{ `PPD  ${item.ppd}` }}</div>
+						<div>{{ `PPD  ${item.top4CompetitionRating.ppd}` }}</div>
 						|
-						<div>{{ `MPR  ${item.mpr}` }}</div>
+						<div>{{ `MPR  ${item.top4CompetitionRating.mpr}` }}</div>
 					</div>
 				</a-col>
 				<a-col :lg="3" :xs="0" class="vipBox">
@@ -153,7 +153,7 @@ export default defineComponent({
 		const getList = () => {
 			const obj = {
 				countryId: sessionStorage.getItem('countryId'),
-				memberId: sessionStorage.getItem('userId'),
+				playerId: sessionStorage.getItem('userId'),
 				pageIndex: 1,
 				pageSize: 10
 			};

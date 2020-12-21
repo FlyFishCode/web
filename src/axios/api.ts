@@ -9,7 +9,19 @@ import { message } from 'ant-design-vue';
 import { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCitylist, indexNewslist, newslist, newsInfo, indexCarousel } from './index/index';
 
 // 我的页面
-import { myPageInfo, myMatchInfo, myMatchInfoMore, myBattleSelectList, myBattleDataList, myBattleDateList, myTeamList, myMessage } from './myPage/index';
+import {
+	myPageInfo,
+	myMatchInfo,
+	myMatchInfoMore,
+	myBattleSelectList,
+	myBattleDataList,
+	myBattleDateList,
+	myTeamList,
+	myMessage,
+	messageSetList,
+	messageListSet,
+	messageListDelete
+} from './myPage/index';
 
 // 联赛
 import {
@@ -164,7 +176,7 @@ const myMatchMoreHttp = (data: any = null) => {
 };
 //  我的页面 消息列表
 const myMessageHttp = (data: any = null) => {
-	return Axios.post(myMessage, data);
+	return Axios.get(getNewUrl(myMessage, data));
 };
 //  我的页面 我的对战下拉列表
 const myBattleSelectHttp = (data: any = null) => {
@@ -178,6 +190,19 @@ const myBattleDataListHttp = (data: any = null) => {
 const myBattleDateListHttp = (data: any = null) => {
 	return Axios.post(myBattleDateList, data);
 };
+// 我的页面 消息设置列表
+const myMessageSetList = (data: any = null) => {
+	return Axios.get(getNewUrl(messageSetList, data));
+};
+// 我的页面 消息设置
+const myMessageListSet = (data: any = null) => {
+	return Axios.post(messageListSet, data);
+};
+// 我的页面 消息删除
+const messageListDeleteHttp = (data: any) => {
+	return Axios.post(messageListDelete, data);
+};
+
 //  弹框 组件 信息
 const dialogInfoHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(dialogInfo, data));
@@ -454,5 +479,8 @@ export {
 	playerHistoryHttp,
 	playerRewardDropDownHttp,
 	playerInfoHttp,
-	myMessageHttp
+	myMessageHttp,
+	myMessageSetList,
+	myMessageListSet,
+	messageListDeleteHttp
 };

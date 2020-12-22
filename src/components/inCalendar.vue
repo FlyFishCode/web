@@ -72,7 +72,7 @@ export default defineComponent({
 	props: ['stageId'],
 	emits: ['show-match'],
 	setup(prop: any, ctx) {
-		const userId = sessionStorage.getItem('userId');
+		const userId = Number(sessionStorage.getItem('userId'));
 		const data = reactive({
 			stageId: prop.stageId,
 			direction: false,
@@ -146,13 +146,14 @@ export default defineComponent({
 				}
 			},
 			info: (row: any) => {
+				debugger;
 				let isHome = 0;
 				let teamId = 0;
-				if (row.homeCaptainId === Number(userId)) {
+				if (row.homeCaptainId === userId) {
 					isHome = 1;
 					teamId = row.homeTeamId;
 				}
-				if (row.visitingCaptainId === Number(userId)) {
+				if (row.visitingCaptainId === userId) {
 					isHome = 2;
 					teamId = row.visitingTeamId;
 				}

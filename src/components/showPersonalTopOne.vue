@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs, ref, watch } from 'vue';
+import { reactive, toRefs, ref, watch, onMounted } from 'vue';
 import { EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
 
 interface DataProps {
@@ -181,6 +181,9 @@ export default {
 				data.infoData = getNewData(val);
 			}
 		);
+		onMounted(() => {
+			data.infoData = getNewData(prop.playerObj);
+		});
 		return {
 			...toRefs(data),
 			currentIndex

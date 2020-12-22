@@ -76,10 +76,14 @@ export default defineComponent({
 		});
 		const getInfo = () => {
 			leagueInfoHttp({ competitionId: ROUTE.query.competitionId }).then((res) => {
+				if (res.data.data) {
+					data.info = res.data.data;
+				} else {
+					return;
+				}
 				if (!res.data.data.setResult) {
 					res.data.data.setResult = {};
 				}
-				data.info = res.data.data;
 			});
 		};
 		onMounted(() => {

@@ -148,7 +148,7 @@ import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import entryList from '@/components/common/entryList.vue';
 import { useRouter } from 'vue-router';
 import { SettingFilled, CheckOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { myMessageHttp, myMessageSetList, myMessageListSet, messageListDeleteHttp } from '@/axios/api';
+import { myMessageHttp, myMessageSetList, myMessageListSet, messageListDeleteHttp, messageListDeleteAllHttp } from '@/axios/api';
 import { message } from 'ant-design-vue';
 // interface TableRenderProps {
 //   text: string;
@@ -186,7 +186,6 @@ export default defineComponent({
 			rowSelection: {
 				onChange: (selectedRowKeys: number, selectedRows: any) => {
 					selectList = selectedRows.map((i: any) => i.noticeId);
-					console.log(selectList);
 				}
 			},
 			columns: [
@@ -236,6 +235,10 @@ export default defineComponent({
 				getTableList();
 			},
 			deleteMessage: () => {
+				if (!selectList.length) {
+					message.warning('请选择数据');
+					return false;
+				}
 				messageListDeleteHttp({ playerId: userId, noticeIdList: selectList }).then((res) => {
 					message.warning(res.data.msg);
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -243,7 +246,11 @@ export default defineComponent({
 				});
 			},
 			deleteAll: () => {
-				console.log(1);
+				messageListDeleteAllHttp({ playerId: userId }).then((res) => {
+					message.warning(res.data.msg);
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getTableList();
+				});
 			},
 			Gohistory: () => {
 				ROUTER.push('/teamIndex');

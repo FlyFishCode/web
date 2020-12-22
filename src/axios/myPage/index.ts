@@ -22,4 +22,19 @@ const messageSetList = '/getleaguenoticesetupbyid';
 const messageListSet = '/addleaguenoticesetup';
 // 设置消息删除
 const messageListDelete = '/delnotice';
-export { myPageInfo, myMatchInfo, myMatchInfoMore, myBattleSelectList, myBattleDataList, myBattleDateList, myTeamList, myMessage, messageSetList, messageListSet, messageListDelete };
+// 设置消息全部删除
+const messageListDeleteAll = '/delallnotice';
+export {
+	myPageInfo,
+	myMatchInfo,
+	myMatchInfoMore,
+	myBattleSelectList,
+	myBattleDataList,
+	myBattleDateList,
+	myTeamList,
+	myMessage,
+	messageSetList,
+	messageListSet,
+	messageListDelete,
+	messageListDeleteAll
+};

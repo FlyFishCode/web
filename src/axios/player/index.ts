@@ -10,4 +10,6 @@ const playerRewardList = '/player/award';
 const playerRewardDropDown = '/player/entryrecordteam';
 // 玩家等级页面
 const playerInfo = '/player/rating';
-export { theBestPlayer, playerList, playerRewardList, playerHistory, playerRewardDropDown, playerInfo };
+// 玩家详情
+const playerDetails = '/player/details';
+export { theBestPlayer, playerList, playerRewardList, playerHistory, playerRewardDropDown, playerInfo, playerDetails };

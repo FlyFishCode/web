@@ -95,9 +95,9 @@
 					</div>
 				</template>
 				<template v-slot:status="{ record }">
-					<div v-if="record.status === 1">{{ $t('default.64') }}</div>
-					<a-button v-if="record.status === 2" type="link" size="small" @click="entryCalendar(record.id, 1)">{{ $t('default.104') }}</a-button>
-					<a-button v-if="record.status === 3" type="link" size="small" @click="entryCalendar(record.id, 2)">{{ $t('default.244') }}</a-button>
+					<a-button v-if="record.status === 1" type="link" size="small" @click="entryCalendar(record, 1)">{{ $t('default.64') }}</a-button>
+					<a-button v-if="record.status === 2" type="link" size="small">{{ $t('default.104') }}</a-button>
+					<a-button v-if="record.status === 3" type="link" size="small" @click="entryCalendar(record, 2)">{{ $t('default.244') }}</a-button>
 				</template>
 			</a-table>
 			<a-table class="showPhoneTable" :columns="inPhoneColumns" :data-source="dataList" :pagination="false" rowKey="id" bordered>
@@ -367,12 +367,11 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getList();
 			},
-			entryCalendar: (id: number, type: number) => {
+			entryCalendar: (row: any, type: number) => {
 				ROUTER.push({
 					path: 'calendar',
-					query: { id, activeKey: type, ismatchTablePage: 1 }
+					query: { activeKey: type, competitionId: data.league, divisionId: row.divisionId, confrontationInfoId: row.confrontationInfoId, ismatchTablePage: 1 }
 				});
-				console.log(id, type);
 			},
 			Gohistory: () => {
 				ROUTER.push({

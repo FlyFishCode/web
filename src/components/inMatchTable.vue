@@ -2,7 +2,7 @@
 	<div class="rowStyle">
 		<a-row class="matchTeamBox">
 			<a-col :span="8" class="matchTeamLeftBox">
-				<div class="matchTeamState">
+				<div v-show="matchTeam" class="matchTeamState">
 					<div v-if="matchTeam.homeManageStatus === 0" class="teamStateStyle">{{ $t('default.60') }}</div>
 					<div v-if="matchTeam.homeManageStatus === 1" class="teamStateStyle">{{ $t('default.287') }}</div>
 					<div v-if="matchTeam.homeManageStatus === 2" class="teamStateStyle">{{ $t('default.61') }}</div>
@@ -91,14 +91,14 @@ import { matchTeamInfoHttp } from '@/axios/api';
 // }
 export default defineComponent({
 	name: 'inMatchTable',
-	props: ['confrontationId'],
+	props: ['confrontationInfoId'],
 	components: {},
 	setup(prop) {
 		const data = reactive({
 			matchTeam: {}
 		});
 		const getMatchTeam = () => {
-			matchTeamInfoHttp({ confrontationInfoId: prop.confrontationId }).then((res) => {
+			matchTeamInfoHttp({ confrontationInfoId: prop.confrontationInfoId }).then((res) => {
 				data.matchTeam = res.data.data;
 			});
 		};

@@ -25,8 +25,8 @@
 						<a-col :span="20" class="matchInfo">
 							<div class="teamStyle" @click="showShopInfo(item.competitionId)">{{ item.competitionName }}</div>
 							<div class="divBox">
-								<div v-for="disition in item.divisionList" :key="disition.divisionId">
-									<a-button type="danger" size="small" @click="entrtPage(disition.divisionId)">{{ disition.divisionName }}</a-button>
+								<div v-for="div in item.divisionList" :key="div.divisionId">
+									<a-button type="danger" size="small" @click="entryPage(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
 								</div>
 							</div>
 						</a-col>
@@ -101,14 +101,21 @@ export default defineComponent({
 					data.total = res.data.data.totalPage;
 				});
 			},
-			entrtPage: (id: number) => {
-				console.log(id);
-			},
-			showShopInfo: (league: number) => {
+			entryPage: (competitionId: number, divisionId: number) => {
 				ROUTER.push({
 					path: '/calendar',
-					query: { activeKey: '1', league }
+					query: {
+						competitionId,
+						divisionId
+					}
 				});
+			},
+			showShopInfo: (competitionId: number) => {
+				console.log(competitionId)
+				// ROUTER.push({
+				// 	path: '/calendar',
+				// 	query: { activeKey: '1', competitionId }
+				// });
 			}
 		});
 		onMounted(() => {

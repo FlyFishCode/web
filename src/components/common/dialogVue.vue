@@ -241,12 +241,12 @@ export default defineComponent({
 						{
 							sort: res.data.data.sort,
 							score: res.data.data.score,
-							matchWin: res.data.data.matchResult.wins,
-							matchLosse: res.data.data.matchResult.losses,
-							matchDraw: res.data.data.matchResult.draws,
-							setWin: res.data.data.setResult.wins,
-							setLosse: res.data.data.setResult.losses,
-							setDraw: res.data.data.setResult.draws,
+							matchWin: res.data.data.matchResult && res.data.data.matchResult.wins,
+							matchLosse: res.data.data.matchResult && res.data.data.matchResult.losses,
+							matchDraw: res.data.data.matchResult && res.data.data.matchResult.draws,
+							setWin: res.data.data.setResult && res.data.data.setResult.wins,
+							setLosse: res.data.data.setResult && res.data.data.setResult.losses,
+							setDraw: res.data.data.setResult && res.data.data.setResult.draws,
 							winScore: res.data.data.winScore,
 							penaltyPoint: res.data.data.penaltyPoint
 						}

@@ -86,7 +86,7 @@ import { useRoute } from 'vue-router';
 // }
 export default defineComponent({
 	name: 'matchTable',
-	props: ['teamId', 'isHome', 'confrontationId'],
+	props: ['teamId', 'isHome', 'confrontationInfoId'],
 	components: {
 		SettingFilled,
 		emptyList
@@ -216,19 +216,21 @@ export default defineComponent({
 				if (data.matchTableList[setIndex].gender !== 3) {
 					const gender = data.matchTableList[setIndex].gender;
 					const genderNum = data.matchTableList[setIndex].genderNum;
-					const flag = currentSetPlayerList.every((i) => i);
+					const flag = currentLegPlayerList.every((i) => i);
 					if (flag) {
 						if (gender === 1) {
-							if (currentSetPlayerList.filter((i) => i.playerGender === 1).length < genderNum) {
+							if (currentLegPlayerList.filter((i) => i.playerGender === 1).length < genderNum) {
 								message.warning(`男性玩家需要${data.matchTableList[setIndex].genderNum}`);
+								data.matchTableList[setIndex].legGameList[legIndex].playerList[playerIndex].playerId = '';
+								return;
 							}
 						} else {
-							if (currentSetPlayerList.filter((i) => i.playerGender === 2).length < genderNum) {
+							if (currentLegPlayerList.filter((i) => i.playerGender === 0).length < genderNum) {
 								message.warning(`女性玩家需要${data.matchTableList[setIndex].genderNum}`);
+								data.matchTableList[setIndex].legGameList[legIndex].playerList[playerIndex].playerId = '';
+								return;
 							}
 						}
-						data.matchTableList[setIndex].legGameList[legIndex].playerList[playerIndex].playerId = '';
-						return;
 					}
 				}
 				// 校验leg人员不能相同
@@ -369,18 +371,25 @@ export default defineComponent({
 						clearInterval(timer);
 					} else {
 						data.matchTable.day -= 1;
+						data.matchTable.hours = 23;
+						data.matchTable.minute = 59;
+						data.matchTable.second = 59;
+						return false;
 					}
 				} else {
 					data.matchTable.hours -= 1;
 					data.matchTable.minute = 59;
+					data.matchTable.second = 59;
+					return false;
 				}
 			} else {
 				data.matchTable.minute -= 1;
-				data.matchTable.second = 59;
+				data.matchTable.second = 10;
+				return false;
 			}
 		};
 		const init = () => {
-			matchDateHttp({ confrontationInfoId: prop.confrontationId || '' }).then((res) => {
+			matchDateHttp({ confrontationInfoId: prop.confrontationInfoId || '' }).then((res) => {
 				if (!res.data.data) return;
 				const date = new Date();
 				let surplusDay = 0;
@@ -429,20 +438,24 @@ export default defineComponent({
 				res.data.data.day = surplusDay;
 				res.data.data.hours = surplusHours;
 				res.data.data.minute = surplusMinutes;
-				res.data.data.second = 59;
+				if (res.data.data.day || res.data.data.hours || res.data.data.minute) {
+					res.data.data.second = 59;
+					const timer = setInterval(() => {
+						data.matchTable.second--;
+						if (!data.matchTable.second && !res.data.data.day && !res.data.data.hours && !res.data.data.minute) {
+							clearInterval(timer);
+						} else if (!data.matchTable.second) {
+							reduce(timer);
+						}
+					}, 1000);
+				}
 				data.matchTable = res.data.data;
-				const timer = setInterval(() => {
-					data.matchTable.second -= 1;
-					if (!data.matchTable.second) {
-						reduce(timer);
-					}
-				}, 1000);
 			});
 		};
 		const getTeamLineU = () => {
 			const obj = {
 				teamId: prop.teamId || '',
-				confrontationInfoId: prop.confrontationId || ''
+				confrontationInfoId: prop.confrontationInfoId || ''
 			};
 			timeTableLineHttp(obj).then((res) => {
 				if (!res.data.data) return;

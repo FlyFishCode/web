@@ -20,7 +20,8 @@ import {
 	myMessage,
 	messageSetList,
 	messageListSet,
-	messageListDelete
+	messageListDelete,
+	messageListDeleteAll
 } from './myPage/index';
 
 // 联赛
@@ -56,7 +57,7 @@ import {
 import { theBestTeam, teamList, teamdetails, timePageSelectList, timePageList, calendarList, vipList, historyResult } from '@/axios/team/index';
 
 // 玩家
-import { theBestPlayer, playerList, playerRewardList, playerHistory, playerRewardDropDown, playerInfo } from '@/axios/player/index';
+import { theBestPlayer, playerList, playerRewardList, playerHistory, playerRewardDropDown, playerInfo, playerDetails } from '@/axios/player/index';
 
 // 店铺
 import { shopList, shopdetails, historyList, shopTeamList, shopPlayerList } from '@/axios/shop';
@@ -199,8 +200,12 @@ const myMessageListSet = (data: any = null) => {
 	return Axios.post(messageListSet, data);
 };
 // 我的页面 消息删除
-const messageListDeleteHttp = (data: any) => {
+const messageListDeleteAllHttp = (data: any) => {
 	return Axios.post(messageListDelete, data);
+};
+// 我的页面 消息全部删除
+const messageListDeleteHttp = (data: any) => {
+	return Axios.get(getNewUrl(messageListDeleteAll, data));
 };
 
 //  弹框 组件 信息
@@ -366,6 +371,10 @@ const playerListHttp = (data: any = null) => {
 const playerInfoHttp = (data: any = null) => {
 	return Axios.get(getNewUrl(playerInfo, data));
 };
+// 玩家 详情
+const playerDetailsHttp = (data: any = null) => {
+	return Axios.get(getNewUrl(playerDetails, data));
+};
 
 // 店铺 店铺列表
 const shopListHttp = (data: any = null) => {
@@ -482,5 +491,7 @@ export {
 	myMessageHttp,
 	myMessageSetList,
 	myMessageListSet,
-	messageListDeleteHttp
+	messageListDeleteHttp,
+	messageListDeleteAllHttp,
+	playerDetailsHttp
 };

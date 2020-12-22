@@ -109,8 +109,8 @@
 						</a-col>
 						<a-col :lg="2" :offset="4" :xs="0" class="titleStyle"> <ClusterOutlined />{{ $t('default.140') }} </a-col>
 						<a-col :lg="3" :xs="0">
-							<a-select v-model:value="leagueId" @change="leagueChange" class="selectBox">
-								<a-select-option v-for="item in leagueList" :key="item.teamId" :value="item.teamId">{{ item.teamName }}</a-select-option>
+							<a-select v-model:value="teamId" @change="leagueChange" class="selectBox">
+								<a-select-option v-for="item in teamList" :key="item.teamId" :value="item.teamId">{{ item.teamName }}</a-select-option>
 							</a-select>
 						</a-col>
 						<a-col :lg="3" :offset="6" :xs="0">
@@ -175,7 +175,7 @@ interface DataProps {
 	stageId: string | number;
 	league: string | number;
 	stageList: [{ stageId: string; teamList: Array<any> }];
-	leagueList: [{ teamId: string }];
+	teamList: [{ teamId: string }];
 	divisitonList: [{ divisionId: string; stageList: Array<any> }];
 }
 export default defineComponent({
@@ -206,12 +206,11 @@ export default defineComponent({
 			playerPageSize: 10,
 			monthList: [],
 			stateList: [],
-			teamId: 1,
+			teamId: '',
 			competitionId: ROUTE.query.competitionId,
 			stageId: '',
 			divisiton: '',
-			leagueId: '',
-			leagueList: [{ teamId: '' }],
+			teamList: [{ teamId: '' }],
 			stageList: [{ stageId: '', teamList: [] }],
 			divisitonList: [{ divisionId: '', stageList: [] }],
 			teamObj: { teamId: 0 },
@@ -360,7 +359,7 @@ export default defineComponent({
 			],
 			playerTableList: [{ playerId: 0 }],
 			tableList: [{ captainId: 0 }],
-			showDialog: (value: number) => {
+			showDialog: (value: string) => {
 				data.teamId = value;
 				data.visible = true;
 			},
@@ -388,23 +387,23 @@ export default defineComponent({
 				if (data.stageList.length) {
 					data.stageId = data.stageList[0].stageId;
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					data.leagueList = data.stageList.find((i) => i.stageId === data.stageId)!.teamList;
-					if (data.leagueList.length) {
-						data.leagueId = data.leagueList[0].teamId;
+					data.teamList = data.stageList.find((i) => i.stageId === data.stageId)!.teamList;
+					if (data.teamList.length) {
+						data.teamId = data.teamList[0].teamId;
 					}
 				} else {
 					data.stageId = '';
-					data.leagueList = [];
-					data.leagueId = '';
+					data.teamList = [];
+					data.teamId = '';
 				}
 			},
 			stageChange: (value: any) => {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				data.leagueList = data.stageList.find((i) => i.stageId === value)!.teamList;
-				if (data.leagueList.length) {
-					data.leagueId = data.leagueList[0].teamId;
+				data.teamList = data.stageList.find((i) => i.stageId === value)!.teamList;
+				if (data.teamList.length) {
+					data.teamId = data.teamList[0].teamId;
 				} else {
-					data.leagueId = '';
+					data.teamId = '';
 				}
 				data.leagueChange();
 			},
@@ -432,7 +431,7 @@ export default defineComponent({
 		const getPlayerList = () => {
 			const obj = {
 				stageId: data.stageId,
-				teamId: data.leagueId,
+				teamId: data.teamId,
 				pageIndex: data.playerPageNum,
 				pageSize: data.playerPageSize
 			};
@@ -485,8 +484,8 @@ export default defineComponent({
 				data.divisiton = res.data.data[0].divisionId;
 				data.stageList = res.data.data[0].stageList;
 				data.stageId = res.data.data[0].stageList[0].stageId;
-				data.leagueList = res.data.data[0].stageList[0].teamList;
-				data.leagueId = res.data.data[0].stageList[0].teamList[0].teamId;
+				data.teamList = res.data.data[0].stageList[0].teamList;
+				data.teamId = res.data.data[0].stageList[0].teamList[0].teamId;
 				getPlayerList();
 				getLeagueList();
 				getRewardList();

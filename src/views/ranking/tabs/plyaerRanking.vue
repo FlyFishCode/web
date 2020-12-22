@@ -413,19 +413,11 @@ export default defineComponent({
 			});
 		};
 		const getDataList = () => {
-			// const obj = {
-			// 	year: data.year,
-			// 	gender: data.gender,
-			// 	areaId: data.countryId,
-			// 	countryId: data.areaId,
-			// 	pageIndex: data.pageNum,
-			// 	pageSize: data.pageSize
-			// };
 			const obj = {
 				year: data.year,
 				gender: data.gender,
-				countryId: data.countryId,
-				areaId: '',
+				areaId: data.countryId,
+				countryId: data.areaId,
 				pageIndex: data.pageNum,
 				pageSize: data.pageSize
 			};

@@ -3,24 +3,35 @@
 		<a-row class="rowStyle">
 			<a-col :lg="10" :xs="24" class="allBox">
 				<a-col :span="10" class="firstClass">
-					<img class="imgBg" :src="playerData.img" alt="" />
+					<img class="imgBg" :src="playerInfo.playerImg" alt="" />
 				</a-col>
 				<a-col :span="14" class="firstClass FONT">
-					<div class="teamName" @click="showTeamInfo">{{ playerData.teamName }}</div>
-					<div class="disabledClass">{{ playerData.captainName }}</div>
-					<div class="disabledClass">
-						{{ playerData.place }}
+					<div class="teamName" @click="showTeamInfo">{{ playerInfo.playerName }}</div>
+					<div v-if="playerInfo.team" class="disabledClass">{{ playerInfo.team.teamName }}</div>
+					<div v-if="playerInfo.shop" class="disabledClass">
+						{{ playerInfo.shop.shopAddress }}
 						<span @click="showDetail" class="icon">
 							<EnvironmentOutlined />
 						</span>
 					</div>
-					<div class="disabledClass">{{ playerData.country }}</div>
+					<div v-if="playerInfo.shop" class="disabledClass">
+						<span>{{ playerInfo.shop.countryName }}</span>
+						<span v-if="playerInfo.shop.areaName">{{ ` > ${playerInfo.shop.areaName}` }}</span>
+					</div>
 				</a-col>
 			</a-col>
 			<a-col :lg="14" :xs="24" class="scoreBox">
-				<a-col :span="7" :offset="1" v-for="(item, index) in playerData.scoreList" :key="index" :class="{ currentScore: index === 1 }">
-					<div class="scoreName">{{ $t(item.name) }}</div>
-					<div class="inPhonePlayer"><a-progress type="circle" strokeColor="red" :percent="item.score" /></div>
+				<a-col :span="7" :offset="1">
+					<div class="scoreName">{{ $t('default.311') }}</div>
+					<div v-if="playerInfo.generalRating" class="inPhonePlayer"><a-progress type="circle" strokeColor="red" :percent="playerInfo.generalRating.rating" /></div>
+				</a-col>
+				<a-col :span="7" :offset="1">
+					<div class="scoreName">{{ $t('default.252') }}</div>
+					<div v-if="playerInfo.playerRating" class="inPhonePlayer"><a-progress type="circle" strokeColor="red" :percent="playerInfo.playerRating.rating" /></div>
+				</a-col>
+				<a-col :span="7" :offset="1">
+					<div class="scoreName">{{ $t('default.185') }}</div>
+					<div v-if="playerInfo.setResult" class="inPhonePlayer"><a-progress type="circle" strokeColor="red" :percent="playerInfo.setResult.winProbabilityDouble" /></div>
 				</a-col>
 			</a-col>
 		</a-row>
@@ -28,44 +39,21 @@
 </template>
 
 <script lang="ts">
-import { useRoute } from 'vue-router';
 import { reactive, toRefs, onMounted } from 'vue';
 import { EnvironmentOutlined } from '@ant-design/icons-vue';
+import { playerDetailsHttp } from '@/axios/api';
+import { useRoute } from 'vue-router';
+
 export default {
 	name: 'inPlayerTopOne',
 	components: {
 		EnvironmentOutlined
 	},
 	setup() {
-		const route = useRoute();
+		const ROUTE = useRoute();
 		const data = reactive({
-			playerData: {
-				img: require('@/assets/1.jpg'),
-				teamName: '上海市消防总队黄埔支队嵩山中队',
-				captainName: '李逍遥',
-				place: '李逍遥',
-				country: '山东',
-				allScore: '总分数',
-				scoreNumber: 59,
-				ppdNumber: 51,
-				mprNumber: 65,
-				scoreList: [
-					{
-						id: 1,
-						name: 'default.255',
-						score: 25
-					},
-					{
-						id: 1,
-						name: 'default.252',
-						score: 55
-					},
-					{
-						id: 1,
-						name: 'default.185',
-						score: 85
-					}
-				]
+			playerInfo: {
+				resultList: [{}]
 			},
 			showTeamInfo: () => {
 				console.log('111');
@@ -74,8 +62,13 @@ export default {
 				console.log('222');
 			}
 		});
+		const getPlayerDetails = () => {
+			playerDetailsHttp({ playerId: ROUTE.query.playerId }).then((res) => {
+				data.playerInfo = res.data.data;
+			});
+		};
 		onMounted(() => {
-			console.log(route.query);
+			getPlayerDetails();
 		});
 		return {
 			...toRefs(data)
@@ -121,7 +114,6 @@ export default {
 }
 .disabledClass {
 	color: #eee;
-	cursor: pointer;
 }
 .icon {
 	position: relative;

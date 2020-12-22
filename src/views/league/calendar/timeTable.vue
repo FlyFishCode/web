@@ -10,7 +10,7 @@
 				</a-select>
 			</a-col>
 			<a-col :lg="3" :xs="12">
-				<a-select v-model:value="stageId" @change="stageChange" class="selectBox">
+				<a-select v-model:value="stageId" @change="stageIdChange" class="selectBox">
 					<a-select-option v-for="item in stageList" :key="item.stageId" :value="item.stageId">{{ item.stageName }}</a-select-option>
 				</a-select>
 			</a-col>
@@ -21,19 +21,19 @@
 		<!-- 对战表 排阵-->
 		<div v-if="ismatchTablePage">
 			<a-row>
-				<inMatchTable :confrontationId="objectionId" />
+				<inMatchTable :confrontationInfoId="confrontationInfoId" />
 			</a-row>
 
 			<a-row class="rowStyle">
 				<a-tabs type="card" v-model:activeKey="currentKey">
-					<a-tab-pane key="1" :tab="$t('default.62')">
-						<matchResult :confrontationId="confrontationId" />
+					<a-tab-pane v-if="!ready" key="1" :tab="$t('default.62')">
+						<matchResult :confrontationInfoId="confrontationInfoId" />
 					</a-tab-pane>
 					<a-tab-pane v-if="ready" key="2" :tab="$t('default.41')">
-						<matchTable :confrontationId="objectionId" :isHome="isHome" :teamId="playerListId" />
+						<matchTable :confrontationInfoId="confrontationInfoId" :isHome="isHome" :teamId="playerListId" />
 					</a-tab-pane>
-					<a-tab-pane v-else key="3" tab="AWARD">
-						<award :confrontationId="confrontationId" />
+					<a-tab-pane v-if="!ready" key="3" tab="AWARD">
+						<award :confrontationInfoId="confrontationInfoId" />
 					</a-tab-pane>
 				</a-tabs>
 			</a-row>
@@ -84,7 +84,7 @@
 			</a-row>
 			<!-- 表格 -->
 			<a-row class="inPhoneTableDisplay">
-				<a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey="confrontationId" :customHeaderRow="customHeaderRow">
+				<a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey="confrontationInfoId" :customHeaderRow="customHeaderRow">
 					<template v-slot:homeTeam="{ record }">
 						<div class="winnerBox">
 							<div v-if="record.winOrLose === 1" class="winnerTeam">{{ 'Win' }}</div>
@@ -102,16 +102,16 @@
 					</template>
 					<template v-slot:status="{ record }">
 						<div class="tableState">
-							<div v-if="getTypeBtn(record)" class="plan" @click="readyClick(record.confrontationId, record)">{{ $t('default.41') }}</div>
-							<div v-if="record.status === 2">{{ 'Ready' }}</div>
-							<div v-if="record.status === 3" @click="finishClick(record.confrontationId)">{{ 'Finished' }}</div>
+							<div v-if="getTypeBtn(record)" class="plan" @click="readyClick(record)">{{ $t('default.41') }}</div>
+							<div v-if="record.status === 2">{{ $t('default.104') }}</div>
+							<div v-if="record.status === 3" class="plan" @click="finishClick(record.confrontationInfoId)">{{ $t('default.244') }}</div>
 						</div>
 					</template>
 				</a-table>
 			</a-row>
 			<!-- 移动端 -->
 			<a-row class="showPhoneTable">
-				<a-table :columns="inPhoneColumns" :data-source="tableList" :pagination="false" bordered rowKey="confrontationId">
+				<a-table :columns="inPhoneColumns" :data-source="tableList" :pagination="false" bordered rowKey="confrontationInfoId">
 					<template v-slot:date>
 						<div>{{ $t('default.52') }}</div>
 					</template>
@@ -182,7 +182,8 @@ import { message } from 'ant-design-vue';
 import { useRoute, useRouter } from 'vue-router';
 
 interface DataProps {
-	objectionId: any;
+	confrontationId: any;
+	competitionId: any;
 	dialogColumns: Array<any>;
 	tableList: Array<any>;
 	dialogList: Array<any>;
@@ -199,7 +200,7 @@ interface DataProps {
 	pageNum: number;
 	pageSize: number;
 	pageTotal: number;
-	confrontationId: any;
+	confrontationInfoId: any;
 	state: string;
 	currentKey: any;
 	secrchType: string;
@@ -224,16 +225,14 @@ export default defineComponent({
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
-		const userId = sessionStorage.getItem('userId');
+		const userId = Number(sessionStorage.getItem('userId'));
 		let currentSelectList: Array<any> = [];
-		// 因为后端id不统一，使用flag变量标注 传参id
-		// 1:使用confrontationId 为对战详情id
-		// 0:使用competitionId  为对战详情id
 		const data: DataProps = reactive({
 			entryPath: '/league',
 			currentKey: '1',
-			confrontationId: ROUTE.query.competitionId,
-			objectionId: ROUTE.query.flag ? ROUTE.query.confrontationId : ROUTE.query.competitionId,
+			competitionId: ROUTE.query.competitionId,
+			confrontationId: ROUTE.query.confrontationId,
+			confrontationInfoId: ROUTE.query.confrontationInfoId,
 			visible: false,
 			isHome: 0,
 			playerListId: 0,
@@ -430,7 +429,7 @@ export default defineComponent({
 					slots: { title: 'awayTeamName' }
 				}
 			],
-			tableList: [{ confrontationId: 1 }],
+			tableList: [{ confrontationInfoId: 1 }],
 			teamChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTimeTableList();
@@ -454,40 +453,40 @@ export default defineComponent({
 				getTimeTableList();
 			},
 			showMatch: (value: any, state: number, isHome: number, teamId: number) => {
-				data.confrontationId = value;
-				data.objectionId = value;
+				data.confrontationInfoId = value;
 				switch (state) {
 					case 1:
 						data.ready = true;
+						data.currentKey = '2';
 						break;
 					case 2:
 					default:
 						data.ready = false;
 						break;
 				}
+				debugger;
 				data.isHome = isHome;
 				data.playerListId = teamId;
 				data.ismatchTablePage = true;
 			},
-			readyClick: (id: number, row: any) => {
-				if (row.homeCaptainId === Number(userId)) {
+			readyClick: (row: any) => {
+				if (row.homeCaptainId === userId) {
 					data.isHome = 1;
 					data.playerListId = row.homeTeamId;
 				}
-				if (row.visitingCaptainId === Number(userId)) {
+				if (row.visitingCaptainId === userId) {
 					data.isHome = 2;
 					data.playerListId = row.visitingTeamId;
 				}
 				data.ismatchTablePage = true;
 				data.ready = true;
-				data.confrontationId = id;
-				data.objectionId = id;
+				data.currentKey = '2';
+				data.confrontationInfoId = row.confrontationInfoId;
 			},
-			finishClick: (id: number) => {
+			finishClick: (confrontationInfoId: number) => {
+				data.confrontationInfoId = confrontationInfoId;
 				data.ismatchTablePage = true;
 				data.ready = false;
-				data.confrontationId = id;
-				data.objectionId = id;
 			},
 			Gohistory: () => {
 				console.log('111');
@@ -508,7 +507,7 @@ export default defineComponent({
 					data.stageId = '';
 				}
 			},
-			stageChange: (value: number) => {
+			stageIdChange: (value: number, option: any) => {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				data.teamList = data.stageList.find((i) => i.stageId === value)!.teamList;
 				if (data.teamList.length) {
@@ -516,10 +515,14 @@ export default defineComponent({
 				} else {
 					data.teamId = '';
 				}
+				debugger;
+				console.log(option);
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDialogList(option);
 			}
 		});
-		const getDialogList = () => {
-			matchtableHttp({ confrontationId: data.confrontationId }).then((res) => {
+		const getDialogList = (confrontationId: any) => {
+			matchtableHttp({ confrontationId }).then((res) => {
 				const teamObj: any = {};
 				res.data.data.loopSurfaceList.forEach((i: any) => {
 					i.matchTableList.forEach((j: any) => {
@@ -538,18 +541,20 @@ export default defineComponent({
 		};
 		const getSelectList = () => {
 			const obj = {
-				competitionId: data.confrontationId,
+				competitionId: data.competitionId,
 				teamFlag: true
 			};
 			leagueSelectHttp(obj).then((res) => {
 				data.divisitonList = res.data.data;
-				data.divisiton = res.data.data[0].divisionId;
-				data.stageList = res.data.data[0].stageList;
-				data.stageId = res.data.data[0].stageList[0].stageId;
-				data.teamList = res.data.data[0].stageList[0].teamList;
-				data.teamId = res.data.data[0].stageList[0].teamList[0].teamId;
+				data.divisiton = data.divisitonList.find((i) => i.divisionId === Number(ROUTE.query.divisionId)).divisionId;
+				data.stageList = data.divisitonList[0].stageList;
+				data.stageId = data.divisitonList[0].stageList[0].stageId;
+				data.teamList = data.divisitonList[0].stageList[0].teamList;
+				data.teamId = data.divisitonList[0].stageList[0].teamList[0].teamId;
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTimeTableList();
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDialogList(data.stageList[0].confrontationId);
 			});
 		};
 		const getTimeTableList = () => {
@@ -585,7 +590,6 @@ export default defineComponent({
 		onMounted(() => {
 			init(ROUTE.query);
 			getSelectList();
-			getDialogList();
 		});
 		return {
 			...toRefs(data)

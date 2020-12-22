@@ -74,7 +74,7 @@ import emptyList from '@/components/common/emptyList.vue';
 // import { DOM } from '@/type/interface';
 export default defineComponent({
 	name: 'matchResult',
-	props: ['confrontationId'],
+	props: ['confrontationInfoId'],
 	components: {
 		SettingFilled,
 		emptyList
@@ -127,10 +127,10 @@ export default defineComponent({
 			});
 		};
 		onMounted(() => {
-			getMatchResultList(prop.confrontationId);
+			getMatchResultList(prop.confrontationInfoId);
 		});
 		watch(
-			() => prop.confrontationId,
+			() => prop.confrontationInfoId,
 			(val) => {
 				getMatchResultList(val);
 			}

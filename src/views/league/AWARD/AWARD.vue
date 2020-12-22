@@ -121,7 +121,7 @@ interface DataProps {
 
 export default defineComponent({
 	name: 'templete',
-	props: ['confrontationId'],
+	props: ['confrontationInfoId'],
 	components: {
 		SettingFilled,
 		DownOutlined,
@@ -356,7 +356,7 @@ export default defineComponent({
 			}
 		});
 		const getAwardData = () => {
-			awardInfoHttp({ confrontationId: prop.confrontationId }).then((res) => {
+			awardInfoHttp({ confrontationInfoId: prop.confrontationInfoId }).then((res) => {
 				if (!res.data.data) return;
 				const { homeTeam, visitingTeam } = res.data.data;
 				const obj = {
@@ -400,7 +400,7 @@ export default defineComponent({
 		};
 		const getHomeList = (teamId: number) => {
 			const obj = {
-				confrontationId: prop.confrontationId,
+				confrontationInfoId: prop.confrontationInfoId,
 				sort: '',
 				teamId
 			};
@@ -410,7 +410,7 @@ export default defineComponent({
 		};
 		const getAwayList = (teamId: number) => {
 			const obj = {
-				confrontationId: prop.confrontationId,
+				confrontationInfoId: prop.confrontationInfoId,
 				sort: '',
 				teamId
 			};

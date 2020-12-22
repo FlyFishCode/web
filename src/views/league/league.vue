@@ -243,12 +243,12 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getMyLeagueList();
 			},
-			entryPage: (competitionId: number, stageId: number) => {
+			entryPage: (competitionId: number, divisionId: number) => {
 				Router.push({
 					path: '/calendar',
 					query: {
 						competitionId,
-						stageId
+						divisionId
 					}
 				});
 			},

@@ -116,7 +116,7 @@
 						<div class="divBg">
 							<div>{{ item.competitionName }}</div>
 							<div class="divClass" v-for="div in item.divisionList" :key="div.divisionId">
-								<a-button type="danger" size="small" @click="showLeagueInfo(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
+								<a-button type="danger" size="small" @click="entryPage(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
 							</div>
 						</div>
 					</a-col>
@@ -494,7 +494,7 @@ export default defineComponent({
 					}
 				});
 			},
-			showLeagueInfo: (competitionId: any, divisionId: number) => {
+			entryPage: (competitionId: any, divisionId: number) => {
 				ROUTER.push({
 					path: '/calendar',
 					query: {

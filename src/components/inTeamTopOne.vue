@@ -25,24 +25,27 @@
 				</a-col>
 				<a-col class="center animate__backOutRight" id="Box">
 					<div v-for="item in infoData.resultList" :key="item.id" class="centerBox">
-						<div class="progressStyle">
+						<div v-if="item.playerName">
 							<div class="title">{{ item.title }}</div>
-							<a-progress type="circle" class="myYuan" :percent="75" />
+							<div class="imgBox">
+								<img :src="item.playerImg" alt="" />
+							</div>
+							<div class="playerBox">{{ item.playerName }}</div>
+						</div>
+						<div v-else class="progressStyle">
+							<div class="title">{{ item.title }}</div>
+							<a-progress type="circle" class="myYuan" :percent="item.rating" :format="(percent) => `${percent}`" />
 						</div>
 						<div class="matchBox">
 							<div class="fontStyle">
 								<div class="left">
-									<div v-if="item.rating">
-										{{ 'RATING' }}
-										<a-progress :percent="item.rating" strokeColor="red" />
-									</div>
-									<div v-if="item.ppd">
+									<div>
 										{{ 'PPD' }}
-										<a-progress :percent="item.ppd" strokeColor="red" />
+										<a-progress :percent="item.ppd" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
-									<div v-if="item.mpr">
+									<div>
 										{{ 'MPR' }}
-										<a-progress :percent="item.mpr" strokeColor="red" />
+										<a-progress :percent="item.mpr" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 								</div>
 							</div>
@@ -67,6 +70,7 @@ import { useRoute } from 'vue-router';
 import { reactive, toRefs, onMounted, ref } from 'vue';
 import { teamdetailsHttp } from '@/axios/api';
 import { EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+
 export default {
 	name: 'inTeamTopOne',
 	components: {
@@ -122,20 +126,21 @@ export default {
 				res.data.data.resultList = [];
 				for (const [key, value] of Object.entries(res.data.data)) {
 					switch (key) {
-						case 'bestPlayer' && value:
-							res.data.data.resultList.push(Object.assign(value, { title: key }));
+						case 'bestPlayer':
+							res.data.data.resultList.push(Object.assign(value, { title: 'Highest Rating Player' }));
 							break;
-						case 'competitionRating' && value:
-							res.data.data.resultList.push(Object.assign(value, { title: key }));
+						case 'competitionRating':
+							res.data.data.resultList.push(Object.assign(value, { title: 'League Rating' }));
 							break;
-						case 'top4CompetitionRating' && value:
-							res.data.data.resultList.push(Object.assign(value, { title: key }));
+						case 'top4CompetitionRating':
+							res.data.data.resultList.push(Object.assign(value, { title: 'Top(4)Rating' }));
 							break;
 						default:
 							break;
 					}
 				}
 				data.infoData = res.data.data;
+				console.dir(res.data.data.resultList);
 			});
 		};
 		onMounted(() => {
@@ -287,16 +292,28 @@ export default {
 }
 .progressStyle {
 	height: 90%;
-	/* width: 60%; */
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
 }
 .left {
-	width: 80%;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
 	color: #000;
+}
+.imgBox {
+	width: 100px;
+	height: 100px;
+	margin: 0 auto;
+}
+.imgBox img {
+	width: 100%;
+	height: 100%;
+}
+.playerBox {
+	color: #fff;
 }
 </style>

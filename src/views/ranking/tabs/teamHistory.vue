@@ -30,7 +30,7 @@
 						<div>{{ item.captainName }}</div>
 					</div>
 					<div class="info">{{ item.playerCount }}</div>
-					<div v-if="item.top4GeneralRating" class="plainList">
+					<div v-show="item.top4GeneralRating" class="plainList">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.top4GeneralRating.rating">
 								<template v-slot:format="percent">
@@ -59,7 +59,7 @@
 							</div>
 						</div>
 					</div>
-					<div v-if="item.top4CompetitionRating" class="plainList">
+					<div v-show="item.top4CompetitionRating" class="plainList">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.top4CompetitionRating.rating">
 								<template v-slot:format="percent">
@@ -89,7 +89,7 @@
 						</div>
 					</div>
 					<div class="info">{{ item.competitionCount }}</div>
-					<div v-if="item.setWinProbability" class="chanceBox">
+					<div v-show="item.setWinProbability" class="chanceBox">
 						<div>
 							<a-progress type="circle" status="exception" :percent="parseInt(item.setWinProbability)" :width="80">
 								<template v-slot:format="percent">

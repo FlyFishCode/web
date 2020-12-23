@@ -41,7 +41,7 @@
 		<!-- 对战表列表 -->
 		<div v-else>
 			<a-row class="inPhoneTableDisplay">
-				<lunboGundong :stageId="stageId" @show-match="showMatch" />
+				<lunboGundong :stageId="stageId" @show-match="showMatch" @change-list="changelist" />
 			</a-row>
 
 			<a-row>
@@ -208,6 +208,7 @@ interface DataProps {
 	stageList: Array<any>;
 	divisitonList: Array<any>;
 	teamList: Array<any>;
+	tableDataList: Array<any>;
 }
 export default defineComponent({
 	name: 'timeTable',
@@ -239,6 +240,7 @@ export default defineComponent({
 			ready: false,
 			searchValue: '',
 			ismatchTablePage: false,
+			tableDataList: [],
 			pageNum: 1,
 			pageSize: 10,
 			pageTotal: 1,
@@ -247,7 +249,13 @@ export default defineComponent({
 			stageList: [{ stageId: '' }],
 			divisitonList: [{ divisionId: 0, stageList: [] }],
 			year: 2020,
-			yearList: [{ value: 2020, label: 2020 }],
+			yearList: [
+				{ value: 2020, label: 2020 },
+				{ value: 2021, label: 2021 },
+				{ value: 2022, label: 2022 },
+				{ value: 2023, label: 2023 },
+				{ value: 2024, label: 2024 }
+			],
 			state: '',
 			stateList: [
 				{ value: '', label: 'ALL' },
@@ -441,9 +449,6 @@ export default defineComponent({
 			showMatchTable: () => {
 				data.visible = true;
 			},
-			handleMenuClick: () => {
-				console.log('1');
-			},
 			onSearch: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTimeTableList();
@@ -468,6 +473,23 @@ export default defineComponent({
 				data.isHome = isHome;
 				data.playerListId = teamId;
 				data.ismatchTablePage = true;
+			},
+			changelist: (date: string) => {
+				const [year, month] = date.split('-');
+				const obj = {
+					stageId: data.stageId,
+					year: year,
+					month: parseInt(month),
+					teamId: data.teamId,
+					status: data.state,
+					[data.secrchType]: data.searchValue,
+					pageIndex: data.pageNum,
+					pageSize: data.pageSize
+				};
+				timeTableDataListHttp(obj).then((res) => {
+					data.tableDataList = res.data.data.list;
+					data.tableList = data.tableDataList.filter((i) => i.date.includes(date));
+				});
 			},
 			readyClick: (row: any) => {
 				if (row.homeCaptainId === userId) {
@@ -570,6 +592,7 @@ export default defineComponent({
 			};
 			timeTableDataListHttp(obj).then((res) => {
 				data.tableList = res.data.data.list;
+				data.tableDataList = res.data.data.list;
 				data.pageTotal = res.data.data.totalCount;
 			});
 		};

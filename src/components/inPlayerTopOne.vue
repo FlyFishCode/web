@@ -23,11 +23,11 @@
 			<a-col :lg="14" :xs="24" class="scoreBox">
 				<a-col :span="7" :offset="1">
 					<div class="scoreName">{{ $t('default.311') }}</div>
-					<div v-if="playerInfo.generalRating" class="inPhonePlayer"><a-progress type="circle" strokeColor="red" :percent="playerInfo.generalRating.rating" /></div>
+					<div v-if="playerInfo.generalRating" class="inPhonePlayer"><a-progress type="circle" strokeColor="red" :percent="playerInfo.generalRating.rating" :format="(percent) => `${percent}`" /></div>
 				</a-col>
 				<a-col :span="7" :offset="1">
 					<div class="scoreName">{{ $t('default.252') }}</div>
-					<div v-if="playerInfo.playerRating" class="inPhonePlayer"><a-progress type="circle" strokeColor="red" :percent="playerInfo.playerRating.rating" /></div>
+					<div v-if="playerInfo.playerRating" class="inPhonePlayer"><a-progress type="circle" strokeColor="red" :percent="playerInfo.playerRating.rating" :format="(percent) => `${percent}`" /></div>
 				</a-col>
 				<a-col :span="7" :offset="1">
 					<div class="scoreName">{{ $t('default.185') }}</div>

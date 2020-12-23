@@ -416,28 +416,25 @@ export default defineComponent({
 					surplusDay = oldDAay - day;
 				}
 				if (oldHours - hours > 0) {
-					surplusDay = oldHours - hours;
-				} else {
-					if (surplusDay) {
-						surplusDay -= 1;
-						oldHours += 24;
-						surplusHours = oldHours - hours;
-					}
+					surplusHours = oldHours - hours;
 				}
 				if (oldMinutes - minutes > 0) {
-					surplusDay = oldMinutes - minutes;
-				} else {
-					if (!oldHours) {
-						surplusDay -= 1;
-						oldHours += 24;
-					}
-					oldHours -= 1;
-					oldMinutes += 60;
 					surplusMinutes = oldMinutes - minutes;
+				}
+				if (oldMinutes - minutes < 0) {
+					if (surplusHours) {
+						surplusHours -= 1;
+						surplusMinutes = 60 - Math.abs(oldMinutes - minutes);
+					} else if (surplusDay) {
+						surplusDay -= 1;
+						surplusHours = 23;
+						surplusMinutes = 60 - Math.abs(oldMinutes - minutes);
+					}
 				}
 				res.data.data.day = surplusDay;
 				res.data.data.hours = surplusHours;
 				res.data.data.minute = surplusMinutes;
+
 				if (res.data.data.day || res.data.data.hours || res.data.data.minute) {
 					res.data.data.second = 59;
 					const timer = setInterval(() => {

@@ -19,17 +19,17 @@
 			</a-col>
 			<a-col :span="9">
 				<div class="title">{{ 'Rating' }}</div>
-				<a-progress type="circle" class="myYuan" :percent="infoData.rating" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.rating" :format="(percent) => `${percent}`" />
 				<div class="myProgress">
 					<div class="myProgressBox">
 						<div>
-							<a-progress :percent="infoData.ppd" strokeColor="red" />
+							<a-progress :percent="infoData.ppd" strokeColor="red" :format="(percent) => `${percent}`" />
 						</div>
 						<div>{{ `PPD    ${infoData.ppd}` }}</div>
 					</div>
 					<div class="myProgressBox">
 						<div>
-							<a-progress :percent="infoData.mpr" strokeColor="red" />
+							<a-progress :percent="infoData.mpr" strokeColor="red" :format="(percent) => `${percent}`" />
 						</div>
 						<div>{{ `MPR    ${infoData.mpr}` }}</div>
 					</div>
@@ -53,7 +53,7 @@
 								</div>
 								<div class="right">
 									<div v-for="value of Object.values(item)" :key="value">
-										<div v-if="typeof value !== 'string'"><a-progress :percent="value" strokeColor="red" /></div>
+										<div v-if="typeof value !== 'string'"><a-progress :percent="value" strokeColor="red" :format="(percent) => `${percent}`" /></div>
 									</div>
 								</div>
 							</div>

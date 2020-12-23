@@ -30,7 +30,7 @@
 						</div>
 						<div class="newContentStyle">
 							<div class="newTitle">{{ news.title }}</div>
-							<div :title="news.contents" class="newContent">{{ news.contents }}</div>
+							<div :title="news.contents" class="newContent" v-html="news.contents"></div>
 							<div class="newIcon">
 								<span> <ScheduleOutlined /> {{ news.date }} </span>
 								<span> <EyeOutlined /> {{ news.visitCount }} </span>
@@ -83,19 +83,19 @@
 					<AimOutlined style="fontSize:20px" />
 				</a-col>
 				<a-col :lg="4" :xs="4" class="MlineStyle">{{ $t('default.27') }}</a-col>
-				<a-col :lg="6" :xs="8">
+				<a-col :lg="9" :xs="8">
 					<a-select v-model:value="countryId" @change="countryChange" class="selectBox">
 						<a-select-option v-for="item in countryList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 					</a-select>
 				</a-col>
-				<a-col :lg="6" :xs="8">
+				<a-col :lg="9" :xs="8">
 					<a-select v-model:value="areaId" @change="areaChange" class="selectBox">
 						<a-select-option v-for="item in areaList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 					</a-select>
 				</a-col>
 			</a-col>
 
-			<a-col :lg="{ span: 8, offset: 7 }" :xs="24" class="titleCol">
+			<a-col :lg="{ span: 8, offset: 8 }" :xs="24" class="titleCol">
 				<a-col :lg="3" :xs="3" class="titleStyle">
 					<SearchOutlined style="fontSize:20px" />
 				</a-col>
@@ -674,7 +674,7 @@ export default defineComponent({
 }
 .noFirst {
 	display: flex;
-	height: 60px;
+	min-height: 60px;
 	padding-left: 25px;
 }
 .noFirst .current {

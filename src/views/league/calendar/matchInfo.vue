@@ -379,6 +379,7 @@ export default defineComponent({
 		const getMatchInfo = () => {
 			matchInfoHttp({ competitionId: ROUTE.query.competitionId || '' }).then((res) => {
 				if (res.data.data) {
+					debugger;
 					data.infoData = res.data.data;
 				}
 			});

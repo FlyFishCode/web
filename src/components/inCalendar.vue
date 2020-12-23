@@ -8,7 +8,7 @@
 			</a-col>
 			<a-col :span="22" class="centerBox">
 				<div class="center">
-					<div v-for="(item, index) in topList" :key="index" class="DIV" :class="{ currentDiv: current === index }" @click="changeDate(item.confrontationDate)">
+					<div v-for="(item, index) in topList" :key="index" class="DIV" :class="{ currentDiv: current === index }" @click="changeDate(item.confrontationDate, item)">
 						{{ item.confrontationDate }}
 						<span v-if="item.matchList" class="divAfter">{{ item.matchList && item.matchList.length }}</span>
 					</div>
@@ -36,12 +36,12 @@
 									<div>{{ item.homeTeamName }}</div>
 								</div>
 								<div class="bg">
-									<div>{{ `${item.homeTeamResult} VS ${item.visitingTeamResult}` }}</div>
+									<div>{{ `${item.homeTeamResult || '-'} VS ${item.visitingTeamResult || '-'}` }}</div>
 									<div>{{ item.confrontationDate }}</div>
 								</div>
 								<div class="bg">
 									<div class="imgBox"><img :src="item.visitingTeamImg" /></div>
-									<div>{{ item.homeTeamName }}</div>
+									<div>{{ item.visitingTeamName }}</div>
 								</div>
 								<span v-if="item.state === 1" class="stateStyle N">{{ $t('default.64') }}</span>
 								<span v-if="item.state === 2" class="stateStyle I">{{ $t('default.104') }}</span>
@@ -60,7 +60,7 @@
 	</div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, watch, nextTick } from 'vue';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { timetablecustomHttp } from '@/axios/api';
 export default defineComponent({
@@ -70,7 +70,7 @@ export default defineComponent({
 		RightOutlined
 	},
 	props: ['stageId'],
-	emits: ['show-match'],
+	emits: ['show-match', 'change-list'],
 	setup(prop: any, ctx) {
 		const userId = Number(sessionStorage.getItem('userId'));
 		const data = reactive({
@@ -81,7 +81,7 @@ export default defineComponent({
 			buttomPositon: 0,
 			current: 0,
 			currentDiv: 0,
-			topList: [],
+			topList: [{ confrontationDate: '' }],
 			detailList: [{ matchList: [] }],
 			init: () => {
 				data.detailList = data.detailList[0].matchList;
@@ -129,7 +129,7 @@ export default defineComponent({
 					div.style.left = this.buttomPositon + 'px';
 				}
 			},
-			changeDate(date: string) {
+			changeDate(date: string, item: any) {
 				let obj: any = '';
 				const div = document.getElementsByClassName('directionCenterBox')[0] as HTMLElement;
 				data.buttomPositon = 0;
@@ -144,20 +144,24 @@ export default defineComponent({
 				} else {
 					data.hasData = false;
 				}
+				ctx.emit('change-list', item.confrontationDate);
 			},
 			info: (row: any) => {
-				debugger;
 				let isHome = 0;
 				let teamId = 0;
-				if (row.homeCaptainId === userId) {
-					isHome = 1;
-					teamId = row.homeTeamId;
+				if (row.state === 1 || row.state === 3) {
+					if (row.homeCaptainId === userId) {
+						isHome = 1;
+						teamId = row.homeTeamId;
+					}
+					if (row.visitingCaptainId === userId) {
+						isHome = 2;
+						teamId = row.visitingTeamId;
+					}
+					if (userId) {
+						ctx.emit('show-match', row.confrontationInfoId, row.state, isHome, teamId);
+					}
 				}
-				if (row.visitingCaptainId === userId) {
-					isHome = 2;
-					teamId = row.visitingTeamId;
-				}
-				ctx.emit('show-match', row.confrontationInfoId, row.state, isHome, teamId);
 			}
 		});
 		const getList = () => {
@@ -165,6 +169,9 @@ export default defineComponent({
 				if (res.data.data) {
 					data.topList = res.data.data;
 					data.detailList = res.data.data[0].matchList;
+					nextTick(() => {
+						ctx.emit('change-list', data.topList[0].confrontationDate);
+					});
 				}
 			});
 		};

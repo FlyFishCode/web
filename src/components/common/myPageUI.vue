@@ -24,7 +24,7 @@
 			</a-col>
 			<a-col v-if="infoData.generalRating" :lg="7" :xs="0">
 				<div class="title">{{ $t('default.238') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="infoData.generalRating.rating || 0" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.generalRating.rating || 0" :format="(percent) => `${percent}`" />
 				<div class="myProgress">
 					<div class="myProgressBox">
 						<div>
@@ -48,7 +48,7 @@
 			</a-col>
 			<a-col v-if="infoData.playerRating" :lg="7" :xs="0">
 				<div class="title">{{ $t('default.184') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="infoData.playerRating.rating" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.playerRating.rating" :format="(percent) => `${percent}`" />
 				<div class="myProgress">
 					<div class="myProgressBox">
 						<div>

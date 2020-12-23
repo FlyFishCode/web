@@ -17,15 +17,15 @@
 			</a-col>
 			<a-col :span="3" class="progressBox">
 				<div class="title">{{ $t('default.184') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="infoData.rating" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.rating" :format="(percent) => `${percent}`" />
 			</a-col>
 			<a-col :span="3" class="progressBox">
 				<div class="title">{{ $t('default.169') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="infoData.ppd" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.ppd" :format="(percent) => `${percent}`" />
 			</a-col>
 			<a-col :span="3" class="progressBox">
 				<div class="title">{{ $t('default.170') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="infoData.mpr" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.mpr" :format="(percent) => `${percent}`" />
 			</a-col>
 			<!-- // 左侧按钮 -->
 			<a-col :span="7" class="carousel">
@@ -45,16 +45,20 @@
 								</div>
 								<div class="right">
 									<div>
-										<a-progress :percent="item.win" strokeColor="red" />
+										<a-progress :percent="item.win" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.draw" strokeColor="red" />
+										<a-progress :percent="item.draw" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.lost" strokeColor="red" />
+										<a-progress :percent="item.lost" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.probability" strokeColor="red" />
+										<a-progress :percent="item.probability" strokeColor="red">
+											<template v-slot:format="percent">
+												{{ percent }}
+											</template>
+										</a-progress>
 									</div>
 								</div>
 							</div>
@@ -167,6 +171,9 @@ export default {
 			},
 			showTeamInfo: () => {
 				console.log('111');
+			},
+			handleOk: () => {
+				console.log(1);
 			},
 			showDetail: (obj: any) => {
 				data.dialogObj.title = obj.shopName;

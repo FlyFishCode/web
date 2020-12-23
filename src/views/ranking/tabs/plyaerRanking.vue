@@ -1,7 +1,7 @@
 <template>
 	<div class="content">
 		<a-row>
-			<a-col :span="12" class="smallTitle"> <SettingFilled /> {{ $t('default.67') }} </a-col>
+			<a-col :span="12" class="smallTitle"> <SettingFilled /> {{ $t('default.68') }} </a-col>
 		</a-row>
 		<a-row class="rowStyle rowSearchBox">
 			<a-col :lg="3" :xs="12">
@@ -416,8 +416,8 @@ export default defineComponent({
 			const obj = {
 				year: data.year,
 				gender: data.gender,
-				areaId: data.countryId,
-				countryId: data.areaId,
+				areaId: data.areaId,
+				countryId: data.countryId,
 				pageIndex: data.pageNum,
 				pageSize: data.pageSize
 			};

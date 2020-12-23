@@ -23,7 +23,7 @@
 			</a-col>
 			<a-col :span="4" class="progressBox">
 				<div class="title">{{ 'League Rating' }}</div>
-				<a-progress type="circle" class="myYuan" :percent="infoData.rating" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.rating" :format="(percent) => `${percent}`" />
 			</a-col>
 			<a-col :span="4" class="progressBox">
 				<div class="title">{{ '胜率(Set)' }}</div>
@@ -47,16 +47,20 @@
 								</div>
 								<div class="right">
 									<div>
-										<a-progress :percent="item.win" strokeColor="red" />
+										<a-progress :percent="item.win" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.draw" strokeColor="red" />
+										<a-progress :percent="item.draw" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.lost" strokeColor="red" />
+										<a-progress :percent="item.lost" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.winProbability" strokeColor="red" />
+										<a-progress :percent="item.winProbability" strokeColor="red">
+											<template v-slot:format="percent">
+												{{ percent }}
+											</template>
+										</a-progress>
 									</div>
 								</div>
 							</div>

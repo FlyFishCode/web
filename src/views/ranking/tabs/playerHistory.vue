@@ -25,7 +25,7 @@
 					</div>
 					<div class="info">{{ item.countryName }}</div>
 					<div class="info">{{ item.shopName }}</div>
-					<div v-if="item.generalRating" class="plainList">
+					<div v-show="item.generalRating" class="plainList">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.generalRating.rating">
 								<template v-slot:format="percent">
@@ -55,7 +55,7 @@
 							</div>
 						</div>
 					</div>
-					<div v-if="item.competitionRating" class="plainList">
+					<div v-show="item.competitionRating" class="plainList">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.competitionRating.rating">
 								<template v-slot:format="percent">
@@ -85,7 +85,7 @@
 							</div>
 						</div>
 					</div>
-					<div v-if="item.matchRating" class="plainList">
+					<div v-show="item.matchRating" class="plainList">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.matchRating">
 								<template v-slot:format="percent">
@@ -115,7 +115,7 @@
 							</div>
 						</div>
 					</div>
-					<div v-if="item.setWinProbability" class="chanceBox">
+					<div v-show="item.setWinProbability" class="chanceBox">
 						<div>
 							<a-progress type="circle" status="exception" :percent="parseInt(item.setWinProbability)" :width="80">
 								<template v-slot:format="percent">
@@ -142,7 +142,7 @@
 					</div>
 					<div class="info">{{ item.place }}</div>
 					<div class="info">{{ item.address }}</div>
-					<div v-if="item.plainRating" class="plainList">
+					<div v-show="item.plainRating" class="plainList">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.plainRating">
 								<template v-slot:format="percent">
@@ -172,7 +172,7 @@
 							</div>
 						</div>
 					</div>
-					<div v-if="item.plainRating" class="plainList">
+					<div v-show="item.plainRating" class="plainList">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.plainRating">
 								<template v-slot:format="percent">
@@ -347,7 +347,7 @@ export default defineComponent({
 				{ id: 3, title: 'default.91' },
 				{ id: 4, title: 'default.187' },
 				{ id: 5, title: 'default.188' },
-				{ id: 6, title: 'default.219' },
+				// { id: 6, title: 'default.219' },
 				{ id: 7, title: 'default.185' }
 				// { id: 8, title: "default.220" },
 				// { id: 9, title: "default.221" },

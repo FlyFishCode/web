@@ -231,5 +231,6 @@ export default defineComponent({
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	max-height: 30px;
 }
 </style>

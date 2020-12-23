@@ -41,16 +41,20 @@
 								</div>
 								<div class="right">
 									<div>
-										<a-progress :percent="item.win" strokeColor="red" />
+										<a-progress :percent="item.win" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.draw" strokeColor="red" />
+										<a-progress :percent="item.draw" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.lost" strokeColor="red" />
+										<a-progress :percent="item.lost" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.probability" strokeColor="red" />
+										<a-progress :percent="item.probability" strokeColor="red">
+											<template v-slot:format="percent">
+												{{ percent }}
+											</template>
+										</a-progress>
 									</div>
 								</div>
 							</div>
@@ -68,17 +72,17 @@
 			</a-col>
 			<a-col :span="7">
 				<div class="title">{{ $t('default.183') }}</div>
-				<a-progress type="circle" class="myYuan" :percent="infoData.rating" />
+				<a-progress type="circle" class="myYuan" :percent="infoData.rating" :format="(percent) => `${percent}`" />
 				<div class="myProgress">
 					<div class="myProgressBox">
 						<div>
-							<a-progress :percent="infoData.ppd" strokeColor="red" />
+							<a-progress :percent="infoData.ppd" strokeColor="red" :format="(percent) => `${percent}`" />
 						</div>
 						<div>{{ `PPD    ${infoData.ppd}` }}</div>
 					</div>
 					<div class="myProgressBox">
 						<div>
-							<a-progress :percent="infoData.mpr" strokeColor="red" />
+							<a-progress :percent="infoData.mpr" strokeColor="red" :format="(percent) => `${percent}`" />
 						</div>
 						<div>{{ `MPR    ${infoData.mpr}` }}</div>
 					</div>

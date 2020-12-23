@@ -278,12 +278,12 @@ export default defineComponent({
 			Gohistory: () => {
 				ROUTER.push('/teamIndex');
 			},
-			entryPage: (type: number, id: number) => {
+			entryPage: (type: number, playerId: number) => {
 				ROUTER.push({
 					path: '/playerInfo',
 					query: {
 						activeKey: type,
-						id
+						playerId
 					}
 				});
 			},

@@ -28,7 +28,7 @@
 							<div>{{ news.date }}</div>
 						</div>
 						<div class="newsTitle">{{ news.title }}</div>
-						<div class="newContent">{{ news.contents }}</div>
+						<div class="newContent" v-html="news.contents"></div>
 					</div>
 				</div>
 				<div v-if="total" class="pagination">

@@ -32,7 +32,7 @@ app.config.globalProperties.$filters = {
 	// 添加全局时间过滤器
 	filterDate(value: string) {
 		if (value) {
-			const [first, center] = value.split('T');
+			const [first, center] = value.split(' ');
 			const last = center.split('.')[0];
 			return `${first}  ${last}`;
 		}

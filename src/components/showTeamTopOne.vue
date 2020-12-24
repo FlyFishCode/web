@@ -104,9 +104,9 @@ const getNewData = (obj: any) => {
 		address: obj.shop && obj.shop.shopAddress,
 		country: obj.shop && obj.shop.countryName,
 		score: obj.score,
-		rating: obj.competitionRating.rating,
-		ppd: obj.competitionRating.ppd,
-		mpr: obj.competitionRating.mpr,
+		rating: obj.competitionRating && obj.competitionRating.rating,
+		ppd: obj.competitionRating && obj.competitionRating.ppd,
+		mpr: obj.competitionRating && obj.competitionRating.mpr,
 		resultList: [
 			{
 				title: 'Set 结果',
@@ -146,7 +146,10 @@ export default {
 		const currentIndex = ref(0);
 		const data: DataProps = reactive({
 			infoData: {
-				resultList: []
+				resultList: [],
+				rating: 0,
+				ppd: 0,
+				mpr: 0
 			},
 			showTeamInfo: () => {
 				console.log('111');

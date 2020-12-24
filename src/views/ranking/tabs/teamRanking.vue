@@ -148,7 +148,7 @@ export default defineComponent({
 			visible: false,
 			dialogObj: {
 				title: '',
-				img: require('@/assets/3.jpg'),
+				img: '',
 				shopName: '',
 				phone: '',
 				address: ''
@@ -290,6 +290,7 @@ export default defineComponent({
 			},
 			showDialog: (item: any) => {
 				data.dialogObj.title = item.place;
+				data.dialogObj.img = item.img;
 				data.dialogObj.shopName = item.shopName;
 				data.dialogObj.phone = item.phoneNumber;
 				data.dialogObj.address = item.address;

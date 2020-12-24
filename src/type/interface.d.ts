@@ -1,7 +1,8 @@
 declare interface DOM {
-  e:HTMLElement | EventTarget
+	e: HTMLElement | EventTarget;
 }
 
 declare interface Window {
-  load:() => void
+	load: () => void;
+	baiduLoad: (res) => void;
 }

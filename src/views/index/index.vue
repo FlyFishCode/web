@@ -546,11 +546,7 @@ export default defineComponent({
 				data.newsList = res.data.data;
 			});
 		};
-		onMounted(() => {
-			getTeamList();
-			getPlayerList();
-			getNewsList();
-			getCarouselList();
+		const getCountryList = () => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
 					data.countryList = res.data.data;
@@ -558,6 +554,13 @@ export default defineComponent({
 					data.countryChange(data.countryList[0]['countryId']);
 				}
 			});
+		};
+		onMounted(() => {
+			getTeamList();
+			getPlayerList();
+			getNewsList();
+			getCarouselList();
+			getCountryList();
 		});
 		return {
 			...toRefs(data)

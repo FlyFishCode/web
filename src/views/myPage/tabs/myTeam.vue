@@ -68,7 +68,7 @@
 							</div>
 							<div class="btnBox">
 								<div v-for="div in info.divisionList" :key="div.divisionId">
-									<a-button type="danger" size="small" @click="showInfo(div.divisionId)">{{ div.divisionName }}</a-button>
+									<a-button type="danger" size="small" @click="showInfo(info.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
 								</div>
 							</div>
 						</a-col>
@@ -143,8 +143,15 @@ export default defineComponent({
 			entryVipPage: () => {
 				ROUTER.push('/');
 			},
-			showInfo: (id: number) => {
-				console.log(id);
+			showInfo: (competitionId: number, divisionId: number) => {
+				debugger;
+				ROUTER.push({
+					path: '/calendar',
+					query: {
+						competitionId,
+						divisionId
+					}
+				});
 			},
 			entryPage: () => {
 				ROUTER.push('teamInfo');

@@ -333,6 +333,7 @@ export default defineComponent({
 				ROUTER.push('/teamIndex');
 			},
 			goPlay: (row: any) => {
+				debugger;
 				let isHome = 0;
 				let teamId = 0;
 				if (row.homeCaptainId === playerId) {
@@ -354,7 +355,7 @@ export default defineComponent({
 						flag: 1,
 						ready: 1,
 						competitionId: data.leagueId,
-						confrontationId: row.confrontationId
+						confrontationInfoId: row.confrontationInfoId
 					}
 				});
 			},

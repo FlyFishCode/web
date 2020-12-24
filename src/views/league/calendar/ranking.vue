@@ -452,6 +452,7 @@ export default defineComponent({
 				pageSize: data.leaguePageSize
 			};
 			rakingLeagueListHttp(obj).then((res) => {
+				debugger;
 				data.leagueTableList = res.data.data.list;
 				if (res.data.data.list.length) {
 					data.isChange = false;

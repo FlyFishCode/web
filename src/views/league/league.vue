@@ -149,7 +149,7 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { indexCountryHttp, indexCityHttp, leagueAllListHttp, leagueMyListHttp } from '@/axios/api';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { SearchOutlined, SettingFilled, EnvironmentOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 import emptyList from '@/components/common/emptyList.vue';
 interface HTMLInputEvent {
@@ -170,7 +170,8 @@ export default defineComponent({
 	name: 'league',
 	components: { EnvironmentOutlined, SearchOutlined, SettingFilled, emptyList, DownOutlined, UpOutlined },
 	setup() {
-		const Router = useRouter();
+		const ROUTE = useRoute();
+		const ROUTER = useRouter();
 		const data = reactive({
 			isUp: true,
 			all: 'ALL',
@@ -244,7 +245,7 @@ export default defineComponent({
 				getMyLeagueList();
 			},
 			entryPage: (competitionId: number, divisionId: number) => {
-				Router.push({
+				ROUTER.push({
 					path: '/calendar',
 					query: {
 						competitionId,
@@ -291,7 +292,7 @@ export default defineComponent({
 				getMyLeagueList();
 			}
 		});
-		const getAllLeagueList = () => {
+		const getAllLeagueList = (value = data.inputValue) => {
 			const obj = {
 				sort: data.isUp ? 1 : 2,
 				year: data.year,
@@ -299,7 +300,7 @@ export default defineComponent({
 				countryId: data.countryId,
 				areaId: data.areaId,
 				status: data.status,
-				competitionName: data.inputValue,
+				competitionName: value,
 				pageIndex: data.AllPageNum,
 				pageSize: data.AllPageSize
 			};
@@ -309,7 +310,7 @@ export default defineComponent({
 				data.AllTotal = res.data.data.totalCount;
 			});
 		};
-		const getMyLeagueList = () => {
+		const getMyLeagueList = (value = data.inputValue) => {
 			const obj = {
 				sort: data.isUp ? 1 : 2,
 				year: data.year,
@@ -318,7 +319,7 @@ export default defineComponent({
 				areaId: data.areaId,
 				status: data.status,
 				memberId: sessionStorage.getItem('userId'),
-				competitionName: data.inputValue,
+				competitionName: value,
 				pageIndex: data.MyPageNum,
 				pageSize: data.MyPageSize
 			};
@@ -327,19 +328,19 @@ export default defineComponent({
 				data.MyTotal = res.data.data.totalCount;
 			});
 		};
-		const getCountryList = () => {
+		const getCountryList = (value: any) => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
 					data.countryList = res.data.data;
 					data.countryId = data.countryList[0]['countryId'];
 					data.areaChange(data.countryList[0]['countryId']);
-					getAllLeagueList();
-					getMyLeagueList();
+					getAllLeagueList(value);
+					getMyLeagueList(value);
 				}
 			});
 		};
 		onMounted(() => {
-			getCountryList();
+			getCountryList(ROUTE.query.value);
 		});
 		return {
 			...toRefs(data)

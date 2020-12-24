@@ -178,7 +178,7 @@
 						</a-col>
 						<a-col :span="20" class="countBox">
 							<div class="recordInfoStyle inPhoneTableStyle">
-								<div class="recordInfoFont" @click="entryCalendar(1, recordInfo.competitionId)">{{ recordInfo.competitionName }}</div>
+								<div class="recordInfoFont" @click="entryCalendar(1, recordInfo.competitionId, recordInfo.divisionList[0].divisionId)">{{ recordInfo.competitionName }}</div>
 								<div class="tableDate">
 									<div>{{ recordInfo.date }}</div>
 									<!-- <div>{{ recordInfo.place }}</div> -->
@@ -186,7 +186,7 @@
 							</div>
 							<div class="btnBox">
 								<div v-for="disition in recordInfo.divisionList" :key="disition.divisionId">
-									<a-button type="danger" size="small" @click="entryCalendar(2, disition.divisionId)">{{ disition.divisionName }}</a-button>
+									<a-button type="danger" size="small" @click="entryCalendar(2, recordInfo.competitionId, disition.divisionId)">{{ disition.divisionName }}</a-button>
 								</div>
 							</div>
 						</a-col>
@@ -226,7 +226,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { teamBestListHttp, teamListHttp, indexCityHttp, indexCountryHttp } from '@/axios/api';
 import divTitle from '@/components/DividingLine.vue';
 import emptyList from '@/components/common/emptyList.vue';
@@ -250,6 +250,7 @@ export default defineComponent({
 		emptyList
 	},
 	setup() {
+		const ROUTE = useRoute();
 		const ROUTER = useRouter();
 		const data = reactive({
 			title: 'default.9',
@@ -324,12 +325,13 @@ export default defineComponent({
 					}
 				});
 			},
-			entryCalendar: (activeKey: string, id: number) => {
+			entryCalendar: (activeKey: string, competitionId: number, divisionId: number) => {
 				ROUTER.push({
 					path: '/calendar',
 					query: {
 						activeKey,
-						teamId: id
+						competitionId,
+						divisionId
 					}
 				});
 			},
@@ -341,7 +343,7 @@ export default defineComponent({
 				data.dialogObj.address = item.shopAddress;
 				data.visible = true;
 			},
-			countryChange: (value: number) => {
+			countryChange: (value: number, inputValue: any) => {
 				indexCityHttp({ countryId: value }).then((res) => {
 					data.cityList = res.data.data;
 					if (data.cityList.length) {
@@ -350,7 +352,7 @@ export default defineComponent({
 						data.areaId = null;
 					}
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
-					getTeamList();
+					getTeamList(undefined, inputValue);
 				});
 			},
 			areaChange: () => {
@@ -370,7 +372,7 @@ export default defineComponent({
 				}
 			});
 		};
-		const getTeamList = (max = 30) => {
+		const getTeamList = (max = 30, inputValue = data.inputValue) => {
 			let str = '';
 			switch (data.matchType) {
 				case 1:
@@ -386,7 +388,7 @@ export default defineComponent({
 			const obj = {
 				countryId: data.countryId,
 				areaId: data.areaId,
-				[str]: data.inputValue,
+				[str]: inputValue,
 				minRating: 0,
 				maxRating: max,
 				sort: data.isUp ? 1 : 2,
@@ -403,17 +405,17 @@ export default defineComponent({
 				data.total = res.data.data.totalPage;
 			});
 		};
-		const getCountry = () => {
+		const getCountry = (value: any) => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
 					data.areaList = res.data.data;
 					data.countryId = data.areaList[0]['countryId'];
-					data.countryChange(data.areaList[0]['countryId']);
+					data.countryChange(data.areaList[0]['countryId'], value);
 				}
 			});
 		};
 		onMounted(() => {
-			getCountry();
+			getCountry(ROUTE.query.value);
 			getBestTeamList();
 		});
 		return {

@@ -159,6 +159,7 @@ export default defineComponent({
 .tableDate {
 	display: flex;
 	justify-content: center;
+	margin: 0 5px;
 }
 /* 弹出框样式 */
 .dialogBox {

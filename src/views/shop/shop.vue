@@ -177,7 +177,7 @@
 							</div>
 							<div class="btnBox">
 								<div v-for="disition in recordInfo.divisionList" :key="disition.divisionId">
-									<a-button type="danger" size="small" @click="entrtPage(disition.divisionId)">{{ disition.divisionName }}</a-button>
+									<a-button type="danger" size="small" @click="entryPage(recordInfo.competitionId, disition.divisionId)">{{ disition.divisionName }}</a-button>
 								</div>
 							</div>
 						</a-col>
@@ -222,7 +222,7 @@ import emptyList from '@/components/common/emptyList.vue';
 import { indexCityHttp, indexCountryHttp, shopListHttp } from '@/axios/api';
 import { message } from 'ant-design-vue';
 import { SettingFilled, EnvironmentOutlined, PhoneOutlined, DownCircleOutlined, UpCircleOutlined } from '@ant-design/icons-vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 export default defineComponent({
 	name: 'shop',
 	components: {
@@ -235,6 +235,7 @@ export default defineComponent({
 		emptyList
 	},
 	setup() {
+		const ROUTE = useRoute();
 		const ROUTER = useRouter();
 		let MAP = null;
 		const loadMap = () => {
@@ -425,7 +426,7 @@ export default defineComponent({
 					query: { shopId }
 				});
 			},
-			countryChange: (value) => {
+			countryChange: (value, searchValue) => {
 				if (!value) return false;
 				indexCityHttp({ countryId: value }).then((res) => {
 					data.cityList = res.data.data;
@@ -435,15 +436,21 @@ export default defineComponent({
 						data.areaId = null;
 					}
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
-					getShopList();
+					getShopList(searchValue);
 				});
 			},
 			areaChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getShopList();
 			},
-			entrtPage: (id) => {
-				console.log(id);
+			entryPage: (competitionId, divisionId) => {
+				ROUTER.push({
+					path: '/calendar',
+					query: {
+						competitionId,
+						divisionId
+					}
+				});
 			},
 			showDetail: (item) => {
 				data.dialogObj.title = item.shopAddress;
@@ -456,20 +463,20 @@ export default defineComponent({
 				console.log(1);
 			}
 		});
-		const getCountry = () => {
+		const getCountry = (searchValue) => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
 					data.areaList = res.data.data;
 					data.countryId = data.areaList[0]['countryId'];
-					data.countryChange(data.areaList[0]['countryId']);
+					data.countryChange(data.areaList[0]['countryId'], searchValue);
 				}
 			});
 		};
-		const getShopList = () => {
+		const getShopList = (value = data.shopName) => {
 			const obj = {
 				countryId: data.countryId,
 				areaId: data.areaId,
-				shopName: data.shopName,
+				shopName: value,
 				competition: data.league,
 				a1: data.a1,
 				w1: data.w1,
@@ -500,7 +507,7 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			showMap();
-			getCountry();
+			getCountry(ROUTE.query.value);
 			loadMap();
 		});
 		return {

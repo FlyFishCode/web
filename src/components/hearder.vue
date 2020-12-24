@@ -64,7 +64,7 @@
 				<a-col :lg="4" :xs="4">{{ $t('default.4') }}</a-col>
 				<a-col :lg="5" :xs="5">
 					<a-select v-model:value="$i18n.locale" style="width: 100%" size="small">
-						<a-select-option v-for="item in languageList" :key="item.key" :value="item.key">{{ $t(item.label) }}</a-select-option>
+						<a-select-option v-for="item in languageList" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
 					</a-select>
 				</a-col>
 			</a-col>
@@ -135,11 +135,11 @@
 									<div>{{ item.date }}</div>
 								</div>
 							</div>
-							<div class="moreStyle" @click="entryMaPage"><PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}</div>
+							<div class="moreStyle" @click="entryMyPage"><PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}</div>
 						</div>
 						<div v-else>
 							<a-select v-model:value="leagueId" style="width: 100%" @change="leagueIdChange">
-								<a-select-option v-for="item in leagueList" :key="item.competitionId" :value="item.competitionId">{{ $t(item.competitionName) }}</a-select-option>
+								<a-select-option v-for="item in leagueList" :key="item.competitionId" :value="item.competitionId">{{ item.competitionName }}</a-select-option>
 							</a-select>
 							<div v-for="item in matchTimeTable" :key="item.index" class="centerBox">
 								<div>
@@ -162,7 +162,7 @@
 									<div>{{ item.visitingTeamScore }}</div>
 								</div>
 							</div>
-							<div class="moreStyle"><PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}</div>
+							<div class="moreStyle" @click="entryMoPage"><PlusCircleOutlined twoToneColor="#ff5122" /> {{ $t('default.25') }}</div>
 						</div>
 					</div>
 				</div>
@@ -206,12 +206,13 @@ export default defineComponent({
 	setup() {
 		const ROUTER = useRouter();
 		// const Store = useStore();
+		const userId = sessionStorage.getItem('userId');
 		const data = reactive({
 			showPhoneTabs: false,
 			collapsed: true,
 			activeKey: 'league',
 			leagueId: '',
-			leagueList: [],
+			leagueList: [{ competitionId: '' }],
 			isLogin: false,
 			imputValue: '',
 			visible: false,
@@ -238,9 +239,12 @@ export default defineComponent({
 			matchTimeTable: [],
 			countryList: [],
 			languageList: [
-				{ key: 'zh-cn', label: 'default.130' },
-				{ key: 'zh-tw', label: 'default.131' },
-				{ key: 'en-us', label: 'default.132' }
+				// { key: 'zh-cn', label: 'default.130' },
+				// { key: 'zh-tw', label: 'default.131' },
+				// { key: 'en-us', label: 'default.132' }
+				{ key: 'zh-cn', label: '简体中文' },
+				{ key: 'zh-tw', label: '繁体中文' },
+				{ key: 'en-us', label: '英文' }
 			],
 			type: 'league',
 			typeList: [
@@ -259,7 +263,10 @@ export default defineComponent({
 			onSearch: () => {
 				data.activeKey = data.type;
 				ROUTER.push({
-					path: data.type
+					path: data.type,
+					query: {
+						value: data.imputValue
+					}
 				});
 			},
 			infoPage: (id: number) => {
@@ -273,14 +280,14 @@ export default defineComponent({
 			},
 			showPersonBox: () => {
 				data.showBox = true;
-				myPageInfoHttp({ playerId: sessionStorage.getItem('userId') }).then((res) => {
+				myPageInfoHttp({ playerId: userId }).then((res) => {
 					if (res.data.data) {
 						data.myInfo = res.data.data;
 						data.myInfo.name = sessionStorage.getItem('userName') || '';
 					}
 				});
 				const obj = {
-					playerId: sessionStorage.getItem('userId'),
+					playerId: userId,
 					countryId: 617,
 					sort: 1,
 					date: 2020,
@@ -344,17 +351,27 @@ export default defineComponent({
 				data.showPhoneTabs = false;
 				ROUTER.push(path);
 			},
+			leagueIdChange: () => {
+				const obj = {
+					competitionId: data.leagueId,
+					playerId: userId,
+					pageIndex: 1,
+					pageSize: 5
+				};
+				myBattleDataListHttp(obj).then((res) => {
+					if (res.data.data) {
+						data.matchTimeTable = res.data.data.list;
+					}
+				});
+			},
 			myMatchClick: () => {
 				data.isMyMatch = true;
-			},
-			leagueIdChange: () => {
-				console.log(1);
 			},
 			matchTableClick: () => {
 				data.isMyMatch = false;
 				const first = new Promise((resolve) => {
 					const obj = {
-						memberId: 75408,
+						playerId: userId,
 						countryId: sessionStorage.getItem('countryId'),
 						year: 2020
 					};
@@ -369,7 +386,7 @@ export default defineComponent({
 					data.leagueId = res[0].competitionId;
 					const obj = {
 						competitionId: data.leagueId,
-						memberId: 75408,
+						playerId: userId,
 						pageIndex: 1,
 						pageSize: 5
 					};
@@ -380,23 +397,68 @@ export default defineComponent({
 					});
 				});
 			},
-			entryMaPage: () => {
+			entryMyPage: () => {
 				data.showBox = false;
 				ROUTER.push('/myPage');
+			},
+			entryMoPage: () => {
+				data.showBox = false;
+				const list: any = data.leagueList.find((i) => i.competitionId == data.leagueId);
+				const divisionId = list.divisionList[0].divisionId;
+				ROUTER.push({
+					path: '/calendar',
+					query: {
+						competitionId: data.leagueId,
+						divisionId
+					}
+				});
 			}
 		});
-		onMounted(() => {
-			if (sessionStorage.getItem('userId')) {
-				data.isLogin = true;
-				data.userName = sessionStorage.getItem('userName') as string;
-			}
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		const onLoad = () => {
+			window.baiduLoad = (res) => {
+				console.log('当前地为：', res.address.split('|')[0]);
+			};
+			const url = 'http://api.map.baidu.com/location/ip?ak=Vw4wPMMRNNnuMVj1Woc4AAK8DIDHRIt5&ip=&coor=bd09ll&callback=baiduLoad';
+			const jsapi = document.createElement('script');
+			jsapi.charset = 'utf-8';
+			jsapi.src = url;
+			document.head.appendChild(jsapi);
+		};
+		const init = () => {
+			data.isLogin = true;
+			data.userName = sessionStorage.getItem('userName') as string;
 			indexCountryHttp().then((res) => {
-				data.countryList = res.data.data;
-				data.country = res.data.data[0]['countryId'];
-				// 保存玩家国家id至vuex
-				// Store.dispatch("chanageCountry", data.country);
-				sessionStorage.setItem('countryId', data.country);
+				if (res.data.data) {
+					data.countryList = res.data.data;
+					// if (navigator.geolocation) {
+					// 	// 获取经纬度
+					// 	navigator.geolocation.getCurrentPosition((position) => {
+					// 		const latitude = position.coords.latitude.toFixed(5);
+					// 		const longitude = position.coords.longitude.toFixed(5);
+					// 		// baiduLoad = (res: any) => {
+					// 		// 	debugger;
+					// 		// 	console.log(res);
+					// 		// };
+					// 		// Axios.get(`https://restapi.amap.com/v3/assistant/coordinate/convert?key=a9cef5218eebe10876a9bedfe7207454&locations=${latitude},${longitude}`).then((res) => {
+					// 		// 	console.log(res);
+					// 		// });
+					// 		console.log('维度：', latitude);
+					// 		console.log('经度：', longitude);
+					// 	});
+					// } else {
+					// 	window.alert('当前浏览器不支持定位');
+					// }
+					data.country = res.data.data[0]['countryId'];
+					sessionStorage.setItem('countryId', data.country);
+				}
 			});
+		};
+		onMounted(() => {
+			if (userId) {
+				onLoad();
+				init();
+			}
 		});
 		return {
 			...toRefs(data)

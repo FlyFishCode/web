@@ -110,6 +110,9 @@ export default defineComponent({
 			getGameName: (id) => {
 				let str = '';
 				switch (id) {
+					case 0:
+						str = 'default.201';
+						break;
 					case 1:
 						str = 'default.290';
 						break;

@@ -131,7 +131,7 @@
 						<img class="matchImg" :src="item.playerImg" alt="" />
 					</div>
 				</a-col>
-				<a-col :lg="{ span: 4, offset: 0 }" :xs="{ span: 10, offset: 4 }" class="infoClass">
+				<a-col :lg="{ span: 7, offset: 0 }" :xs="{ span: 10, offset: 4 }" class="infoClass">
 					<div class="teamStyle" @click="entryPage(item.playerId)">{{ item.playerName }}</div>
 					<div v-if="item.shop" class="placeStyle">
 						<div>{{ item.shop.shopName }}</div>
@@ -140,11 +140,12 @@
 							<EnvironmentOutlined />
 						</span>
 					</div>
+					<div v-if="item.team">{{ `${$t('default.55')}：${item.team.teamName}` }}</div>
 				</a-col>
-				<a-col :lg="3" :xs="4" class="vipBox">
+				<!-- <a-col :lg="3" :xs="4" class="vipBox">
 					<div>{{ $t('default.55') }}</div>
-					<div>{{ item.teamName }}</div>
-				</a-col>
+					<div v-if="item.team">{{ item.team.teamName }}</div>
+				</a-col> -->
 				<a-col :span="8" class="topBox inPhoneTableDisplay">
 					<div>{{ topInfoTitle }}</div>
 					<div v-if="item.playerRating" class="infoStyle">
@@ -181,8 +182,8 @@
 							<div class="recordInfoStyle inPhoneTableStyle">
 								<div class="recordInfoFont" @click="entryCalendar(2, recordInfo.competitionId)">{{ recordInfo.competitionName }}</div>
 								<div class="tableDate">
-									<div>{{ recordInfo.date }}</div>
-									<div>{{ recordInfo.countryName }}</div>
+									<div v-if="recordInfo.date">{{ `  / ${recordInfo.date}` }}</div>
+									<div v-if="recordInfo.countryName">{{ `  / ${recordInfo.countryName}` }}</div>
 								</div>
 							</div>
 							<div class="btnBox">
@@ -228,7 +229,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { playerBestListHttp, playerListHttp, indexCountryHttp, indexCityHttp } from '@/axios/api';
 import divTitle from '@/components/DividingLine.vue';
 import emptyList from '@/components/common/emptyList.vue';
@@ -248,6 +249,7 @@ export default defineComponent({
 		emptyList
 	},
 	setup() {
+		const ROUTE = useRoute();
 		const ROUTER = useRouter();
 		const data = reactive({
 			title: 'default.10',
@@ -288,13 +290,13 @@ export default defineComponent({
 					query: { playerId }
 				});
 			},
-			entryCalendar: (activeKey: string, competitionId: number, id: number) => {
+			entryCalendar: (activeKey: string, competitionId: number, divisionId: number) => {
 				ROUTER.push({
 					path: '/calendar',
 					query: {
 						activeKey,
 						competitionId,
-						teamId: id
+						divisionId
 					}
 				});
 			},
@@ -328,7 +330,7 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getPlayerList();
 			},
-			countryChange: (value: number) => {
+			countryChange: (value: number, inputValue: any) => {
 				indexCityHttp({ countryId: value }).then((res) => {
 					data.cityList = res.data.data;
 					if (data.cityList.length) {
@@ -337,7 +339,7 @@ export default defineComponent({
 						data.areaId = null;
 					}
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
-					getPlayerList();
+					getPlayerList(undefined, inputValue);
 				});
 			},
 			areaChange: () => {
@@ -367,7 +369,7 @@ export default defineComponent({
 				}
 			});
 		};
-		const getPlayerList = (max = 30) => {
+		const getPlayerList = (max = 30, inputValue = data.inputValue) => {
 			let str = '';
 			switch (data.matchType) {
 				case 1:
@@ -383,7 +385,7 @@ export default defineComponent({
 			const obj = {
 				countryId: data.countryId,
 				areaId: data.areaId,
-				[str]: data.inputValue,
+				[str]: inputValue,
 				minRating: 0,
 				maxRating: max,
 				sort: data.isUp ? 1 : 2,
@@ -401,17 +403,17 @@ export default defineComponent({
 				data.totalCount = res.data.data.totalCount;
 			});
 		};
-		const getCountry = () => {
+		const getCountry = (inputValue: any) => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
 					data.areaList = res.data.data;
 					data.countryId = data.areaList[0]['countryId'];
-					data.countryChange(data.areaList[0]['countryId']);
+					data.countryChange(data.areaList[0]['countryId'], inputValue);
 				}
 			});
 		};
 		onMounted(() => {
-			getCountry();
+			getCountry(ROUTE.query.value);
 			getBestTeamList();
 		});
 		return {

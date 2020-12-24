@@ -297,7 +297,7 @@ export default defineComponent({
 					slots: { customRender: 'awayTeam' }
 				}
 			],
-			dataList: [{ id: 1 }],
+			dataList: [],
 			getDate: () => {
 				return '2020-10-17';
 			},
@@ -325,10 +325,12 @@ export default defineComponent({
 				console.log(1);
 			},
 			stateChange: () => {
-				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getList();
-				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getCalendarList();
+				if (data.league) {
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getList();
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getCalendarList();
+				}
 			},
 			showList: () => {
 				data.isCalendar = false;
@@ -424,11 +426,11 @@ export default defineComponent({
 				data.leagueList = res.data.data;
 				if (data.leagueList.length) {
 					data.league = data.leagueList[0]['competitionId'];
+					getList();
+					getCalendarList();
 				} else {
 					data.league = '';
 				}
-				getList();
-				getCalendarList();
 			});
 		};
 		onMounted(() => {

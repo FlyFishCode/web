@@ -341,6 +341,7 @@ export default defineComponent({
 				});
 			},
 			selectPlayer: (value: number) => {
+				debugger;
 				data.dataList.forEach((i) => {
 					if (i.teamId === value) {
 						// dialog table 设置数据已被选择

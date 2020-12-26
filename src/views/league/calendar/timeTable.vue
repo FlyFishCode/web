@@ -179,7 +179,7 @@ import lunboGundong from '@/components/inCalendar.vue';
 import inMatchTable from '@/components/inMatchTable.vue';
 import entryList from '@/components/common/entryList.vue';
 import { message } from 'ant-design-vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 
 interface DataProps {
 	confrontationId: any;
@@ -610,6 +610,14 @@ export default defineComponent({
 				data.playerListId = queryObj.teamId;
 			}
 		};
+		onBeforeRouteUpdate((to: any, from: any, next: any) => {
+			data.competitionId = to.query.competitionId;
+			if (to.query.confrontationInfoId) {
+				data.confrontationInfoId = to.query.confrontationInfoId;
+			}
+			getSelectList();
+			next();
+		});
 		onMounted(() => {
 			init(ROUTE.query);
 			getSelectList();

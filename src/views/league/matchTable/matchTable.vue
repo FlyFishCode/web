@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance, watch } from 'vue';
 import { timeTableLineHttp, matchPlayerListHttp, submitMatchTableHttp, matchDateHttp } from '@/axios/api';
 import emptyList from '@/components/common/emptyList';
 import { SettingFilled } from '@ant-design/icons-vue';
@@ -452,10 +452,10 @@ export default defineComponent({
 				data.matchTable = res.data.data;
 			});
 		};
-		const getTeamLineU = () => {
+		const getTeamLineU = (confrontationInfoId = prop.confrontationInfoId) => {
 			const obj = {
 				teamId: prop.teamId || '',
-				confrontationInfoId: prop.confrontationInfoId || ''
+				confrontationInfoId
 			};
 			timeTableLineHttp(obj).then((res) => {
 				if (!res.data.data) return;
@@ -505,6 +505,13 @@ export default defineComponent({
 				}
 			});
 		};
+		watch(
+			() => prop.confrontationInfoId,
+			(val) => {
+				debugger;
+				getTeamLineU(val);
+			}
+		);
 		onMounted(() => {
 			init();
 			getPlayerList();

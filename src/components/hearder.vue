@@ -131,7 +131,7 @@
 									<img :src="item.competitionImg" alt="" />
 								</div>
 								<div class="myMatchRight">
-									<div class="myMatchName" @click="infoPage(item.competitionId)">{{ item.competitionName }}</div>
+									<div class="myMatchName" @click="infoPage(item.competitionId, item.divisionList[0].divisionId)">{{ item.competitionName }}</div>
 									<div>{{ item.date }}</div>
 								</div>
 							</div>
@@ -141,7 +141,7 @@
 							<a-select v-model:value="leagueId" style="width: 100%" @change="leagueIdChange">
 								<a-select-option v-for="item in leagueList" :key="item.competitionId" :value="item.competitionId">{{ item.competitionName }}</a-select-option>
 							</a-select>
-							<div v-for="item in matchTimeTable" :key="item.index" class="centerBox">
+							<div v-for="item in matchTimeTable" :key="item.index" class="centerBox" @click="entryMatchTablePage(item)">
 								<div>
 									<div>{{ 'Round' + item.type }}</div>
 									<div>{{ item.homeTeamName }}</div>
@@ -206,13 +206,12 @@ export default defineComponent({
 	setup() {
 		const ROUTER = useRouter();
 		// const Store = useStore();
-		const userId = sessionStorage.getItem('userId');
 		const data = reactive({
 			showPhoneTabs: false,
 			collapsed: true,
 			activeKey: 'league',
 			leagueId: '',
-			leagueList: [{ competitionId: '' }],
+			leagueList: [{ competitionId: '', divisionList: [{ divisionId: 0 }] }],
 			isLogin: false,
 			imputValue: '',
 			visible: false,
@@ -265,40 +264,83 @@ export default defineComponent({
 				ROUTER.push({
 					path: data.type,
 					query: {
-						value: data.imputValue
+						searchValue: data.imputValue
 					}
 				});
 			},
-			infoPage: (id: number) => {
+			infoPage: (competitionId: number, divisionId: number) => {
 				data.showBox = false;
 				ROUTER.push({
 					path: 'calendar',
 					query: {
-						competitionId: id
+						competitionId,
+						divisionId
 					}
 				});
 			},
+			entryPage: (path: string) => {
+				if (data.isLogin) {
+					data.showPhoneTabs = false;
+					ROUTER.push(path);
+				} else {
+					data.visible = true;
+				}
+			},
 			showPersonBox: () => {
-				data.showBox = true;
-				myPageInfoHttp({ playerId: userId }).then((res) => {
-					if (res.data.data) {
-						data.myInfo = res.data.data;
-						data.myInfo.name = sessionStorage.getItem('userName') || '';
+				if (data.isLogin) {
+					data.showBox = true;
+					if (data.matchTimeTable.length) {
+						return false;
 					}
-				});
-				const obj = {
-					playerId: userId,
-					countryId: 617,
-					sort: 1,
-					date: 2020,
-					pageIndex: 1,
-					pageSize: 5
-				};
-				myMatchInfoHttp(obj).then((res) => {
-					if (res.data.data) {
-						data.matchList = res.data.data.list;
-					}
-				});
+					const userId = sessionStorage.getItem('userId');
+					myPageInfoHttp({ playerId: userId }).then((res) => {
+						if (res.data.data) {
+							data.myInfo = res.data.data;
+							data.myInfo.name = sessionStorage.getItem('userName') || '';
+						}
+					});
+					const obj = {
+						playerId: userId,
+						countryId: sessionStorage.getItem('countryId'),
+						sort: 1,
+						date: 2020,
+						pageIndex: 1,
+						pageSize: 5
+					};
+					myMatchInfoHttp(obj).then((res) => {
+						if (res.data.data) {
+							data.matchList = res.data.data.list;
+						}
+					});
+					const first = new Promise((resolve) => {
+						const obj = {
+							playerId: sessionStorage.getItem('userId'),
+							year: 2020
+						};
+						myBattleSelectHttp(obj).then((res) => {
+							if (res.data.data) {
+								resolve(res.data.data);
+							}
+						});
+					});
+					first.then((res: any) => {
+						data.leagueList = res;
+						data.leagueId = res[0].competitionId;
+						const obj = {
+							competitionId: data.leagueId,
+							playerId: sessionStorage.getItem('userId'),
+							pageIndex: 1,
+							pageSize: 5
+						};
+						myBattleDataListHttp(obj).then((res) => {
+							if (res.data.data) {
+								data.matchTimeTable = res.data.data.list;
+							}
+						});
+					});
+				} else {
+					data.visible = true;
+				}
 			},
 			tabClick: (e: string) => {
 				ROUTER.push(e);
@@ -334,6 +376,8 @@ export default defineComponent({
 						data.userName = res.data.data.username;
 						data.isLogin = true;
 						data.visible = false;
+						// eslint-disable-next-line @typescript-eslint/no-use-before-define
+						// onLoad();
 						ROUTER.push('myPage');
 					} else {
 						message.warning(res.data.msg);
@@ -347,14 +391,42 @@ export default defineComponent({
 				sessionStorage.removeItem('userName');
 				ROUTER.push('/');
 			},
-			entryPage: (path: string) => {
-				data.showPhoneTabs = false;
-				ROUTER.push(path);
+			entryMatchTablePage: (item: any) => {
+				const currentUserId = Number(sessionStorage.getItem('userId'));
+				const divisionId = data.leagueList[0].divisionList[0].divisionId;
+				let teamId = '';
+				let ready = 0;
+				let currentKey = '1';
+				if (item.status === 1) {
+					ready = 1;
+					currentKey = '2';
+				}
+				if (item.homeCaptainId === currentUserId) {
+					teamId = item.homeTeamId;
+				}
+				if (item.visitingTeamShopId === currentUserId) {
+					teamId = item.visitingTeamId;
+				}
+				if (teamId && divisionId) {
+					data.showBox = false;
+					ROUTER.push({
+						path: 'calendar',
+						query: {
+							teamId: teamId,
+							ismatchTablePage: '1',
+							ready: ready,
+							currentKey: currentKey,
+							competitionId: data.leagueId,
+							divisionId,
+							confrontationInfoId: item.confrontationInfoId
+						}
+					});
+				}
 			},
 			leagueIdChange: () => {
 				const obj = {
 					competitionId: data.leagueId,
-					playerId: userId,
+					playerId: sessionStorage.getItem('userId'),
 					pageIndex: 1,
 					pageSize: 5
 				};
@@ -369,33 +441,6 @@ export default defineComponent({
 			},
 			matchTableClick: () => {
 				data.isMyMatch = false;
-				const first = new Promise((resolve) => {
-					const obj = {
-						playerId: userId,
-						countryId: sessionStorage.getItem('countryId'),
-						year: 2020
-					};
-					myBattleSelectHttp(obj).then((res) => {
-						if (res.data.data) {
-							resolve(res.data.data);
-						}
-					});
-				});
-				first.then((res: any) => {
-					data.leagueList = res;
-					data.leagueId = res[0].competitionId;
-					const obj = {
-						competitionId: data.leagueId,
-						playerId: userId,
-						pageIndex: 1,
-						pageSize: 5
-					};
-					myBattleDataListHttp(obj).then((res) => {
-						if (res.data.data) {
-							data.matchTimeTable = res.data.data.list;
-						}
-					});
-				});
 			},
 			entryMyPage: () => {
 				data.showBox = false;
@@ -415,18 +460,18 @@ export default defineComponent({
 			}
 		});
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		const onLoad = () => {
-			window.baiduLoad = (res) => {
-				console.log('当前地为：', res.address.split('|')[0]);
-			};
-			const url = 'http://api.map.baidu.com/location/ip?ak=Vw4wPMMRNNnuMVj1Woc4AAK8DIDHRIt5&ip=&coor=bd09ll&callback=baiduLoad';
-			const jsapi = document.createElement('script');
-			jsapi.charset = 'utf-8';
-			jsapi.src = url;
-			document.head.appendChild(jsapi);
-		};
+		// const onLoad = () => {
+		// 	window.baiduLoad = (res) => {
+		// 		console.log('当前地为：', res.address.split('|')[0]);
+		// 	};
+		// 	const url = 'http://api.map.baidu.com/location/ip?ak=Vw4wPMMRNNnuMVj1Woc4AAK8DIDHRIt5&ip=&coor=bd09ll&callback=baiduLoad';
+		// 	const jsapi = document.createElement('script');
+		// 	jsapi.charset = 'utf-8';
+		// 	jsapi.src = url;
+		// 	document.head.appendChild(jsapi);
+		// };
 		const init = () => {
-			data.isLogin = true;
+			// data.isLogin = true;
 			data.userName = sessionStorage.getItem('userName') as string;
 			indexCountryHttp().then((res) => {
 				if (res.data.data) {
@@ -455,10 +500,7 @@ export default defineComponent({
 			});
 		};
 		onMounted(() => {
-			if (userId) {
-				onLoad();
-				init();
-			}
+			init();
 		});
 		return {
 			...toRefs(data)

@@ -380,7 +380,6 @@ export default defineComponent({
 		const getSelectList = () => {
 			const obj = {
 				playerId,
-				countryId: sessionStorage.getItem('countryId'),
 				year: data.year
 			};
 			myBattleSelectHttp(obj).then((res) => {

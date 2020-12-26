@@ -48,7 +48,7 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { leagueInfoHttp } from '@/axios/api';
-import { useRoute } from 'vue-router';
+import { useRoute, onBeforeRouteUpdate } from 'vue-router';
 import matchInfo from '@/views/league/calendar/matchInfo.vue';
 import timeTable from '@/views/league/calendar/timeTable.vue';
 import ranking from '@/views/league/calendar/ranking.vue';
@@ -74,8 +74,8 @@ export default defineComponent({
 				data.activeKey = key;
 			}
 		});
-		const getInfo = () => {
-			leagueInfoHttp({ competitionId: ROUTE.query.competitionId }).then((res) => {
+		const getInfo = (competitionId = ROUTE.query.competitionId) => {
+			leagueInfoHttp({ competitionId }).then((res) => {
 				if (res.data.data) {
 					data.info = res.data.data;
 				} else {
@@ -86,6 +86,10 @@ export default defineComponent({
 				}
 			});
 		};
+		onBeforeRouteUpdate((to: any, from: any, next: any) => {
+			getInfo(to.query.competitionId);
+			next();
+		});
 		onMounted(() => {
 			data.activeKey = ROUTE.query.activeKey as string;
 			getInfo();

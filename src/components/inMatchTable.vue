@@ -83,7 +83,7 @@
 	</div>
 </template>
 <script>
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
 import { matchTeamInfoHttp } from '@/axios/api';
 // import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 // interface DataProps {
@@ -97,14 +97,20 @@ export default defineComponent({
 		const data = reactive({
 			matchTeam: {}
 		});
-		const getMatchTeam = () => {
-			matchTeamInfoHttp({ confrontationInfoId: prop.confrontationInfoId }).then((res) => {
+		const getMatchTeam = (confrontationInfoId = prop.confrontationInfoId) => {
+			matchTeamInfoHttp({ confrontationInfoId }).then((res) => {
 				data.matchTeam = res.data.data;
 			});
 		};
 		onMounted(() => {
 			getMatchTeam();
 		});
+		watch(
+			() => prop.confrontationInfoId,
+			(val) => {
+				getMatchTeam(val);
+			}
+		);
 		return {
 			...toRefs(data)
 		};

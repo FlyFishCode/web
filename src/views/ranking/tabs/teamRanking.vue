@@ -4,7 +4,7 @@
 			<a-col :span="12" class="smallTitle"> <SettingFilled /> {{ $t('default.67') }} </a-col>
 		</a-row>
 		<a-row class="rowStyle rowSearchBox">
-			<a-col :lg="3" :xs="12">
+			<a-col :lg="3" :xs="6">
 				<a-select v-model:value="year" @change="matchTypeChange" class="selectBox">
 					<a-select-option v-for="item in yearList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 				</a-select>

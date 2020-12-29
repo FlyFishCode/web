@@ -337,7 +337,7 @@ export default defineComponent({
 					key: '4',
 					children: [
 						{ title: 'Total', dataIndex: 'setResult.total', width: 80 },
-						{ title: '胜率', dataIndex: 'setResult.winProbability', width: 80 },
+						{ title: '胜率', dataIndex: 'setResult.winProbability', width: 90 },
 						{ title: '胜', dataIndex: 'setResult.wins', width: 80 },
 						{ title: '和', dataIndex: 'setResult.draws', width: 80 },
 						{ title: '败', dataIndex: 'setResult.losses', width: 80 }
@@ -436,6 +436,7 @@ export default defineComponent({
 				pageSize: data.playerPageSize
 			};
 			rankingPlayerHttp(obj).then((res) => {
+				debugger;
 				data.playerTableList = res.data.data.list;
 				data.playerTotal = res.data.data.totalCount;
 				if (res.data.data.list.length) {

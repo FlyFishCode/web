@@ -102,4 +102,7 @@
     .recordBox {
         padding: 0px!important;
     }
+    .inphoneHeight {
+        height: 137px;
+    }
 }

@@ -137,14 +137,14 @@
 						<div class="closeBox">
 							<CloseCircleFilled class="closeIcon" @click="inPhonebySpliceIndex(index)" />
 						</div>
-						<div class="img"><img :src="item.img" alt="" /></div>
-						<div>{{ item.captain }}</div>
+						<div class="img"><img :src="item.playerImg" alt="" /></div>
+						<div>{{ item.playerName }}</div>
 					</div>
-					<div class="info">{{ item.place }}</div>
-					<div class="info">{{ item.address }}</div>
-					<div v-show="item.plainRating" class="plainList">
+					<div class="info">{{ item.countryName }}</div>
+					<div class="info overStyle">{{ item.shopName }}</div>
+					<div v-show="item.generalRating" class="plainList">
 						<div>
-							<a-progress type="circle" status="exception" :percent="item.plainRating">
+							<a-progress type="circle" status="exception" :percent="item.generalRating.rating">
 								<template v-slot:format="percent">
 									<div class="rankingScore">{{ percent }}</div>
 									<div class="rankingBox">{{ $t('default.168') }}</div>
@@ -155,26 +155,26 @@
 							<div>
 								<div class="score">
 									<div>{{ $t('default.169') }}</div>
-									<div>{{ item.plainPPD }}</div>
+									<div>{{ item.generalRating.ppd }}</div>
 								</div>
 								<div class="progress">
-									<a-progress status="exception" :percent="item.plainPPD" />
+									<a-progress status="exception" :percent="item.generalRating.ppd" />
 								</div>
 							</div>
 							<div>
 								<div class="score">
 									<div>{{ $t('default.169') }}</div>
-									<div>{{ item.plainMPR }}</div>
+									<div>{{ item.generalRating.mpr }}</div>
 								</div>
 								<div class="progress">
-									<a-progress status="exception" :percent="item.plainMPR" />
+									<a-progress status="exception" :percent="item.generalRating.mpr" />
 								</div>
 							</div>
 						</div>
 					</div>
-					<div v-show="item.plainRating" class="plainList">
+					<div v-show="item.competitionRating" class="plainList">
 						<div>
-							<a-progress type="circle" status="exception" :percent="item.plainRating">
+							<a-progress type="circle" status="exception" :percent="item.competitionRating.rating">
 								<template v-slot:format="percent">
 									<div class="rankingScore">{{ percent }}</div>
 									<div class="rankingBox">{{ $t('default.168') }}</div>
@@ -185,24 +185,24 @@
 							<div>
 								<div class="score">
 									<div>{{ $t('default.169') }}</div>
-									<div>{{ item.plainPPD }}</div>
+									<div>{{ item.competitionRating.ppd }}</div>
 								</div>
 								<div class="progress">
-									<a-progress status="exception" :percent="item.plainPPD" />
+									<a-progress status="exception" :percent="item.competitionRating.ppd" />
 								</div>
 							</div>
 							<div>
 								<div class="score">
 									<div>{{ $t('default.169') }}</div>
-									<div>{{ item.plainMPR }}</div>
+									<div>{{ item.competitionRating.mpr }}</div>
 								</div>
 								<div class="progress">
-									<a-progress status="exception" :percent="item.plainMPR" />
+									<a-progress status="exception" :percent="item.competitionRating.mpr" />
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="plainList">
+					<!-- <div class="plainList">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.matchRating">
 								<template v-slot:format="percent">
@@ -231,7 +231,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<div class="playerChance">
 						<div>
 							<a-progress type="circle" status="exception" :percent="item.chanceSet" :width="80">
@@ -377,17 +377,18 @@ export default defineComponent({
 						});
 					}
 				});
-				// data.dataList.forEach((i) => {
-				// 	if (i.playerId === value) {
-				// 		// dialog table 设置数据已被选择
-				// 		i.flag = true;
-				// 		//  展示表格显示填充数据
-				// 		// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				// 		addTeam([value]).then((response: any) => {
-				// 			data.teamList.fill(response, data.currentIndex, data.currentIndex + 1);
-				// 		});
-				// 	}
-				// });
+				data.dataList.forEach((i) => {
+					if (i.playerId === value) {
+						// dialog table 设置数据已被选择
+						i.flag = true;
+						//  展示表格显示填充数据
+						// eslint-disable-next-line @typescript-eslint/no-use-before-define
+						addTeam([value]).then((response: any) => {
+							data.inPhoneTeamList.fill(response, data.currentIndex, data.currentIndex + 1);
+						});
+					}
+				});
+				console.log(data.inPhoneTeamList);
 				data.visible = false;
 			},
 			pageChange: () => {

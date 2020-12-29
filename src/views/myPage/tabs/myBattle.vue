@@ -4,7 +4,7 @@
 			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ $t('default.107') }} </a-col>
 		</a-row>
 		<a-row class="rowStyle">
-			<a-col :lg="3" :xs="6">
+			<a-col :lg="3" :xs="8">
 				<a-select v-model:value="year" @change="matchTypeChange" class="selectBox">
 					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 				</a-select>
@@ -14,12 +14,12 @@
 					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 				</a-select>
 			</a-col> -->
-			<a-col :lg="3" :xs="6">
+			<a-col :lg="3" :xs="8">
 				<a-select v-model:value="leagueId" @change="leagueChange" class="selectBox">
 					<a-select-option v-for="item in leagueList" :key="item.competitionId" :value="item.competitionId">{{ item.competitionName }}</a-select-option>
 				</a-select>
 			</a-col>
-			<a-col :lg="0" :xs="6">
+			<a-col :lg="0" :xs="8">
 				<a-select v-model:value="status" @change="statusChange" class="selectBox">
 					<a-select-option v-for="item in statusList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
 				</a-select>

@@ -234,4 +234,19 @@ export default defineComponent({
 	white-space: nowrap;
 	max-height: 30px;
 }
+/* #diaLogTable >>> .ant-table-body .ant-table-thead > tr > th {
+	text-align: center;
+} */
+#diaLogTable > .ant-table-content .ant-table-body .ant-table-thead > tr > th {
+	text-align: center;
+}
+#diaLogTable > .ant-table-content .ant-table-body .ant-table-tbody > tr > td {
+	text-align: center;
+}
+.dialogAwayClass {
+	text-align: right;
+}
+.dialogHomeClass {
+	text-align: left;
+}
 </style>

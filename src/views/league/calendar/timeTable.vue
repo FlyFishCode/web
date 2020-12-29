@@ -121,6 +121,10 @@
 					<template v-slot:homeTeamName>
 						<div>{{ $t('default.55') }}</div>
 					</template>
+					<template v-slot:VS="{ record }">
+						<div v-if="record.homeTeamScore">{{ `${record.homeTeamScore}:${record.visitingTeamScore}` }}</div>
+						<div v-if="getTypeBtn(record)" class="plan" @click="readyClick(record)">{{ $t('default.41') }}</div>
+					</template>
 					<template v-slot:awayTeamName>
 						<div>{{ $t('default.55') }}</div>
 					</template>
@@ -139,28 +143,35 @@
 				<a-row>
 					<a-col :span="6">
 						<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-							<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+							<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
 						</a-select>
 					</a-col>
 					<a-col :span="6">
 						<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-							<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+							<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
 						</a-select>
 					</a-col>
 				</a-row>
-				<!-- <a-row class="dialogRow" v-for="item in dialogList" :key="item.index">
-					<a-table id="diaLogTable" :columns="dialogColumns" :data-source="item.matchTableList" :pagination="false" width="70%" bordered>
+				<a-row class="dialogRow" v-for="item in dialogList" :key="item.index">
+					<a-table id="diaLogTable" :columns="dialogColumns" :data-source="item.matchTableList" rowkey="round" :pagination="false" bordered width="70%">
 						<template #customTitle>
 							<div class="columnsBox">
-								<div class="awayClass">{{ 'Away' }}</div>
-								<div class="homeClass">{{ 'Home' }}</div>
+								<div class="dialogAwayClass">{{ 'Away' }}</div>
+								<div class="dialogHomeClass">{{ 'Home' }}</div>
 							</div>
 						</template>
 						<template #homeTeamName="{ text }">
 							<div>{{ text }}</div>
 						</template>
+						<template #getInfo="{ record }">
+							<div class="infoClass" @click="entryInfoPage(record)">
+								<div>{{ record.confrontationDate }}</div>
+								<div>{{ record.homeTeamId }}:{{ record.visitingTeamId }}</div>
+								<div>{{ `WIN ${record.winner === 1 ? record.homeTeamName : record.visitingTeamName}` }}</div>
+							</div>
+						</template>
 					</a-table>
-				</a-row> -->
+				</a-row>
 			</a-modal>
 		</div>
 	</div>
@@ -296,12 +307,11 @@ export default defineComponent({
 			dialogColumns: [
 				{
 					dataIndex: 'homeTeamName',
-					key: 'homeTeamName',
 					width: 150,
 					slots: { title: 'customTitle', customRender: 'homeTeamName' }
 				}
 			],
-			dialogList: [],
+			dialogList: [{ round: 0 }],
 			getTypeBtn: (row: any) => {
 				if ((row.homeCaptainId === userId || row.visitingCaptainId === userId) && row.status === 1) {
 					return true;
@@ -417,24 +427,24 @@ export default defineComponent({
 			],
 			inPhoneColumns: [
 				{
-					dataIndex: 'data',
-					key: 'name',
-					slots: { title: 'date' }
+					dataIndex: 'date',
+					title: '日期',
+					width: 90
 				},
 				{
-					dataIndex: 'homaName',
-					key: 'homaName',
-					slots: { title: 'homeTeamName' }
+					dataIndex: 'homeTeamName',
+					title: 'HomeTeam',
+					width: 240
 				},
 				{
 					title: 'VS',
-					dataIndex: 'homaName',
-					key: 'homaName'
+					width: 90,
+					slots: { customRender: 'VS' }
 				},
 				{
-					dataIndex: 'awayName',
-					key: 'awayName',
-					slots: { title: 'awayTeamName' }
+					dataIndex: 'visitingTeamName',
+					title: 'AwayTeam',
+					width: 240
 				}
 			],
 			tableList: [{ confrontationInfoId: 1 }],
@@ -510,6 +520,9 @@ export default defineComponent({
 				data.ismatchTablePage = true;
 				data.ready = false;
 			},
+			entryInfoPage: (row: any) => {
+				console.log(row);
+			},
 			Gohistory: () => {
 				console.log('111');
 			},
@@ -552,7 +565,8 @@ export default defineComponent({
 							teamObj[j.visitingTeamName] = true;
 							const obj = {
 								title: j.visitingTeamName,
-								dataIndex: 'visitingTeamName'
+								dataIndex: 'visitingTeamName',
+								slots: { customRender: 'getInfo' }
 							};
 							data.dialogColumns.push(obj);
 						}
@@ -594,6 +608,7 @@ export default defineComponent({
 				data.tableList = res.data.data.list;
 				data.tableDataList = res.data.data.list;
 				data.pageTotal = res.data.data.totalCount;
+				console.log(data.tableList);
 			});
 		};
 		const init = (queryObj: any) => {
@@ -642,11 +657,12 @@ export default defineComponent({
 .showPhoneTable {
 	display: none;
 }
+.showPhoneTable >>> .ant-table-tbody > tr > td {
+	padding: 0;
+	text-align: center;
+}
 .dialogRow {
 	margin: 10px 0;
-}
-.awayClass {
-	text-align: right;
 }
 .winnerBox {
 	display: flex;
@@ -656,5 +672,8 @@ export default defineComponent({
 	background: #ff4e00;
 	color: #fff;
 	padding: 0 3px;
+}
+.infoClass {
+	cursor: pointer;
 }
 </style>

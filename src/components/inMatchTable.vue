@@ -36,15 +36,15 @@
 					</div>
 				</div>
 				<div class="teamMsg">
-					<div class="msgScore">{{ matchTeam.homeResult || '-' }}</div>
+					<div class="msgScore inphoneHeight">{{ matchTeam.homeResult || '-' }}</div>
 					<div class="msgTitle">
-						<div>{{ 'READY' }}</div>
-						<div class="titleStyle">{{ 'MADE UP' }}</div>
+						<div class="inPhoneTableDisplay">{{ 'READY' }}</div>
+						<div class="titleStyle inPhoneTableDisplay">{{ 'MADE UP' }}</div>
 						<div class="titleCenter">{{ 'VS' }}</div>
-						<div class="titleStyle">{{ 'IN PLAY' }}</div>
-						<div>{{ 'ENDED' }}</div>
+						<div class="titleStyle inPhoneTableDisplay">{{ 'IN PLAY' }}</div>
+						<div class="inPhoneTableDisplay">{{ 'ENDED' }}</div>
 					</div>
-					<div class="msgScore">{{ matchTeam.visitingResult || '-' }}</div>
+					<div class="msgScore inphoneHeight">{{ matchTeam.visitingResult || '-' }}</div>
 				</div>
 				<div class="bottomScore">
 					<div class="homeScoreStyle">{{ matchTeam.homeResult || '-' }}</div>
@@ -252,7 +252,6 @@ export default defineComponent({
 	position: relative;
 }
 .matchTeamBox {
-	height: 250px;
 	color: #fff;
 	background: #404040;
 }
@@ -338,14 +337,16 @@ export default defineComponent({
 	justify-content: space-around;
 }
 .centerTime div {
-	width: 40%;
 	text-align: center;
 	margin: 0 auto;
 }
 .typeStyle {
+	width: 50%;
 	border-radius: 10px;
 	color: #000;
 	background: #febc0b;
+	display: flex;
+	align-items: center;
 }
 .teamMsg {
 	display: flex;

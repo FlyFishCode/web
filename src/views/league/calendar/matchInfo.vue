@@ -26,7 +26,7 @@
 					<div>{{ $t('default.17') }}</div>
 				</a-col>
 				<a-col :lg="8" :xs="14" class="tableContentValue">
-					<div>{{ `${$filters.filterDate(infoData.startSchedule)}~${$filters.filterDate(infoData.endSchedule)}` }}</div>
+					<div class="overStyle">{{ `${$filters.filterDate(infoData.startSchedule)}~${$filters.filterDate(infoData.endSchedule)}` }}</div>
 				</a-col>
 				<a-col :lg="4" :xs="10" class="tableContent">
 					<div>{{ $t('default.30') }}</div>
@@ -43,7 +43,7 @@
 					<div>{{ $t('default.29') }}</div>
 				</a-col>
 				<a-col :lg="8" :xs="14" class="tableContentValue">
-					<div>{{ `${$filters.filterDate(infoData.startSignUpPeriod)}~${$filters.filterDate(infoData.endSignUpPeriod)}` }}</div>
+					<div class="overStyle">{{ `${$filters.filterDate(infoData.startSignUpPeriod)}~${$filters.filterDate(infoData.endSignUpPeriod)}` }}</div>
 				</a-col>
 				<a-col :lg="4" :xs="10" class="tableContent">
 					<div>{{ $t('default.31') }}</div>

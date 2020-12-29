@@ -1,20 +1,20 @@
 <template>
 	<div class="content">
 		<a-row>
-			<a-col :span="2" class="smallTitle"> <SettingFilled /> {{ $t('default.41') }} </a-col>
-			<a-col :span="3" :offset="14">
+			<a-col :lg="{ span: 2 }" :xs="{ span: 0 }" class="smallTitle"> <SettingFilled /> {{ $t('default.41') }} </a-col>
+			<a-col :lg="{ span: 4, offset: 12 }" :xs="{ span: 8 }">
 				<a-button>{{ $t('default.118') }}</a-button>
 			</a-col>
-			<a-col :span="3">
+			<a-col :lg="{ span: 3 }" :xs="{ span: 8 }">
 				<a-button @click="submitMatchTable(1)">{{ $t('default.143') }}</a-button>
 			</a-col>
-			<a-col :span="2">
+			<a-col :lg="{ span: 3 }" :xs="{ span: 8 }">
 				<a-button type="primary" @click="submitMatchTable(2)">{{ $t('default.144') }}</a-button>
 			</a-col>
 		</a-row>
 		<a-row class="timeBox">
-			<a-col :span="6">{{ `${$t('default.145')}：${matchTable.lineupDeadLine}` }}</a-col>
-			<a-col :span="6" :offset="2">
+			<a-col :lg="{ span: 6 }" :xs="{ span: 24 }">{{ `${$t('default.145')}：${matchTable.lineupDeadLine}` }}</a-col>
+			<a-col :lg="{ span: 6, offset: 2 }" :xs="{ span: 24 }">
 				<div class="surplusBox">
 					<div>{{ $t('default.146') }}</div>
 					<div class="timeStyle">{{ matchTable.day }}</div>
@@ -26,7 +26,7 @@
 					<div class="timeStyle">{{ matchTable.second }}</div>
 				</div>
 			</a-col>
-			<a-col :span="7" :offset="3">{{ `${$t('default.148')}：${matchTable.maxSetCount} / ${$t('default.149')}：${matchTable.maxModeCount}` }}</a-col>
+			<a-col :lg="{ span: 7, offset: 3 }" :xs="{ span: 24 }">{{ `${$t('default.148')}：${matchTable.maxSetCount} / ${$t('default.149')}：${matchTable.maxModeCount}` }}</a-col>
 		</a-row>
 		<a-row class="rowStyle" v-if="matchTableList.length">
 			<a-row v-for="(item, setIndex) in matchTableList" :key="setIndex">
@@ -41,7 +41,7 @@
 						<div>{{ `${$t('default.150')} ${item.genderNum}` }}</div>
 					</div>
 				</a-row>
-				<a-row class="setStyle">
+				<a-row class="setStyle inPhoneTableDisplay">
 					<a-row class="setTitle">
 						<a-col :span="4">{{ `Set ${setIndex + 1}` }}</a-col>
 						<a-col :span="5">{{ 'player 1' }}</a-col>
@@ -66,6 +66,32 @@
 						</a-col>
 					</a-row>
 				</a-row>
+				<!--  移动端显示 -->
+				<div class="showPhoneTable">
+					<a-row v-for="(leg, legIndex) in item.legGameList" :key="legIndex">
+						<a-row class="inphoneTitle">
+							<a-col :span="12">{{ `Set ${setIndex + 1}` }}</a-col>
+							<a-col :span="12">{{ 'player' }}</a-col>
+						</a-row>
+						<a-row class="inphoneTitle inphoneBox">
+							<a-col :span="12" class="inphoneSet">
+								<div class="legBox">
+									<div class="legIndexBox">{{ legIndex + 1 }}</div>
+								</div>
+								<div class="legBox">{{ $t(getGameName(leg.gameName)) }}</div>
+							</a-col>
+							<a-col :span="12" class="inphonePlayerClass">
+								<div v-for="(playerBox, playerIndex) in leg.playerList" :key="playerBox.index">
+									<a-select v-model:value="playerBox.playerId" class="playerBox" @change="playerChange($event, setIndex, legIndex, playerIndex)">
+										<a-select-option v-for="player in playerList" :key="player.playerId" :value="player.playerId">{{
+											`[${player.playerGender ? $t('default.203') : $t('default.204')}]  ${player.playerName}`
+										}}</a-select-option>
+									</a-select>
+								</div>
+							</a-col>
+						</a-row>
+					</a-row>
+				</div>
 			</a-row>
 		</a-row>
 		<a-row class="rowStyle" v-else>
@@ -395,6 +421,7 @@ export default defineComponent({
 			matchDateHttp({ confrontationInfoId: prop.confrontationInfoId || '' }).then((res) => {
 				if (!res.data.data) return;
 				const date = new Date();
+				let flag = true;
 				let surplusDay = 0;
 				let surplusHours = 0;
 				let surplusMinutes = 0;
@@ -411,18 +438,33 @@ export default defineComponent({
 				];
 				if (oldYear - year > 0) {
 					oldMonth += 12;
+				} else {
+					flag = false;
+					return;
 				}
 				if (oldMonth - month > 0) {
 					oldDAay += 30;
+				} else {
+					flag = false;
+					return;
 				}
 				if (oldDAay - day > 0) {
 					surplusDay = oldDAay - day;
+				} else {
+					flag = false;
+					return;
 				}
 				if (oldHours - hours > 0) {
 					surplusHours = oldHours - hours;
+				} else {
+					flag = false;
+					return;
 				}
 				if (oldMinutes - minutes > 0) {
 					surplusMinutes = oldMinutes - minutes;
+				} else {
+					flag = false;
+					return;
 				}
 				if (oldMinutes - minutes < 0) {
 					if (surplusHours) {
@@ -439,15 +481,22 @@ export default defineComponent({
 				res.data.data.minute = surplusMinutes;
 
 				if (res.data.data.day || res.data.data.hours || res.data.data.minute) {
-					res.data.data.second = 59;
-					const timer = setInterval(() => {
-						data.matchTable.second--;
-						if (!data.matchTable.second && !res.data.data.day && !res.data.data.hours && !res.data.data.minute) {
-							clearInterval(timer);
-						} else if (!data.matchTable.second) {
-							reduce(timer);
-						}
-					}, 1000);
+					if (flag) {
+						res.data.data.second = 59;
+						const timer = setInterval(() => {
+							data.matchTable.second--;
+							if (!data.matchTable.second && !res.data.data.day && !res.data.data.hours && !res.data.data.minute) {
+								clearInterval(timer);
+							} else if (!data.matchTable.second) {
+								reduce(timer);
+							}
+						}, 1000);
+					} else {
+						res.data.data.day = 0;
+						res.data.data.hours = 0;
+						res.data.data.minute = 0;
+						res.data.data.second = 0;
+					}
 				}
 				data.matchTable = res.data.data;
 			});
@@ -602,6 +651,10 @@ export default defineComponent({
 	display: flex;
 	padding: 0 4px;
 }
+.setTitle div {
+	background: #f1f0ed;
+	border: 1px solid #5a5a5a;
+}
 .setBox {
 	display: flex;
 	padding: 0 4px;
@@ -609,10 +662,6 @@ export default defineComponent({
 }
 .setBox div {
 	background: #f1f0ed;
-}
-.setTitle div {
-	background: #f1f0ed;
-	border: 1px solid #5a5a5a;
 }
 .legStyle {
 	height: 80px;
@@ -640,5 +689,26 @@ export default defineComponent({
 }
 .playerBox {
 	width: 100%;
+}
+.showPhoneTable {
+	display: none;
+}
+.inphonePlayerClass {
+	display: flex;
+	flex-direction: column;
+}
+.inphoneTitle {
+	border: 1px solid #666;
+}
+.inphoneSet {
+	display: flex;
+	height: 100%;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-right: 1px solid #666;
+}
+.inphoneBox {
+	height: 130px;
 }
 </style>

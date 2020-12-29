@@ -426,7 +426,7 @@ export default defineComponent({
 					query: { shopId }
 				});
 			},
-			countryChange: (value, searchValue) => {
+			countryChange: (value, searchValue = data.shopName) => {
 				if (!value) return false;
 				indexCityHttp({ countryId: value }).then((res) => {
 					data.cityList = res.data.data;
@@ -441,7 +441,7 @@ export default defineComponent({
 			},
 			areaChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getShopList();
+				getShopList(data.shopName);
 			},
 			entryPage: (competitionId, divisionId) => {
 				ROUTER.push({
@@ -472,11 +472,11 @@ export default defineComponent({
 				}
 			});
 		};
-		const getShopList = (value = data.shopName) => {
+		const getShopList = (searchValue) => {
 			const obj = {
 				countryId: data.countryId,
 				areaId: data.areaId,
-				shopName: value,
+				shopName: searchValue,
 				competition: data.league,
 				a1: data.a1,
 				w1: data.w1,
@@ -507,7 +507,7 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			showMap();
-			getCountry(ROUTE.query.value);
+			getCountry(ROUTE.query.searchValue);
 			loadMap();
 		});
 		return {

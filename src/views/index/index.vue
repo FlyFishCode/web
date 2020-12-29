@@ -75,7 +75,7 @@
 			</a-col>
 		</a-row>
 
-		<divTitle :msg="title" :span="colSpan" :lastDate="getDate()" :showMore="true" :path="leaguePath" />
+		<divTitle :msg="title" :span="colSpan" :showMore="true" :path="leaguePath" />
 
 		<a-row class="bg">
 			<a-col :lg="8" :xs="24" class="titleCol">
@@ -112,7 +112,7 @@
 					<a-col :span="4">
 						<img class="matchImg" :src="item.competitionImg" />
 					</a-col>
-					<a-col :span="20">
+					<a-col :span="18">
 						<div class="divBg">
 							<div>{{ item.competitionName }}</div>
 							<div class="divClass" v-for="div in item.divisionList" :key="div.divisionId">
@@ -127,7 +127,7 @@
 				</a-col>
 				<a-col :lg="8" :xs="10">
 					<a-col class="rightStyle">
-						<a-col :lg="20" :xs="16" class="fontDisplay">{{ $t('default.17') }}</a-col>
+						<a-col :lg="18" :xs="16" class="fontDisplay">{{ $t('default.17') }}</a-col>
 						<a-col :lg="4" :xs="8" class="matchState I" v-if="item.status === 1">{{ $t('default.243') }}</a-col>
 						<a-col :lg="4" :xs="8" class="matchState R" v-if="item.status === 2">{{ $t('default.104') }}</a-col>
 						<a-col :lg="4" :xs="8" class="matchState F" v-if="item.status === 3">{{ $t('default.244') }}</a-col>
@@ -141,7 +141,7 @@
 			<emptyList />
 		</div>
 
-		<divTitle :msg="matchTitle" :span="colSpan" :lastDate="getDate()" :showMore="true" :path="rankingPath" />
+		<divTitle :msg="matchTitle" :span="colSpan" :showMore="true" :path="rankingPath" />
 
 		<a-row class="rowStyle inPhoneTableDisplay">
 			<a-tabs class="tabsBox" type="card">
@@ -555,12 +555,59 @@ export default defineComponent({
 				}
 			});
 		};
-		onMounted(() => {
+		const init = () => {
 			getTeamList();
 			getPlayerList();
 			getNewsList();
 			getCarouselList();
 			getCountryList();
+			// const pending = 'pending',
+			// 	success = 'success',
+			// 	failed = 'failed';
+			// class Mypromise {
+			// 	status = pending;
+			// 	value: any;
+			// 	errer: any;
+			// 	constructor(C: any) {
+			// 		const resolve = (value: any) => {
+			// 			if (this.status === 'pending') {
+			// 				this.status = success;
+			// 				this.value = value;
+			// 			}
+			// 		};
+			// 		const reject = (errer: any) => {
+			// 			if (this.status === 'pending') {
+			// 				this.status = failed;
+			// 				this.errer = errer;
+			// 			}
+			// 		};
+			// 		C(resolve, reject);
+			// 	}
+			// 	then(onSuccess: Function, onFailed: Function) {
+			// 		if (this.status === 'success') {
+			// 			onSuccess(this.value);
+			// 		}
+			// 		if (this.status === 'failed') {
+			// 			onFailed(this.errer);
+			// 		}
+			// 	}
+			// }
+			// const promise = new Mypromise((resolve: any, reject: any) => {
+			// 	console.log('This is MyPromise');
+			// 	// resolve('成功');
+			// 	reject('失败');
+			// });
+			// promise.then(
+			// 	(res: string) => {
+			// 		console.log(res);
+			// 	},
+			// 	(error: string) => {
+			// 		console.log(error);
+			// 	}
+			// );
+		};
+		onMounted(() => {
+			init();
 		});
 		return {
 			...toRefs(data)

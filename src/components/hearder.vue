@@ -378,6 +378,7 @@ export default defineComponent({
 						data.visible = false;
 						// eslint-disable-next-line @typescript-eslint/no-use-before-define
 						// onLoad();
+						data.showPhoneTabs = false;
 						ROUTER.push('myPage');
 					} else {
 						message.warning(res.data.msg);

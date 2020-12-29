@@ -39,7 +39,7 @@
 			</a-row>
 
 			<a-row>
-				<a-col :lg="5" :xs="10" class="centerFont"> <SettingFilled /> {{ $t('default.224') + `(${matchTotal})` }} </a-col>
+				<a-col :lg="5" :xs="14" class="centerFont"> <SettingFilled /> {{ $t('default.224') + `(${matchTotal})` }} </a-col>
 			</a-row>
 			<a-row class="rowStyle inPhoneBtnBox">
 				<a-col :span="3" @click="showALLleague" class="buttonBox">
@@ -69,7 +69,7 @@
 							<a-col :span="4" class="matchImgBox">
 								<img class="matchImg" :src="item.competitionImg" />
 							</a-col>
-							<a-col :span="20">
+							<a-col :span="18">
 								<div>
 									<div>{{ item.competitionName }}</div>
 									<div class="divClass">
@@ -110,7 +110,7 @@
 							<a-col :span="4" class="matchImgBox">
 								<img class="matchImg" :src="item.competitionImg" />
 							</a-col>
-							<a-col :span="20">
+							<a-col :span="18">
 								<div>
 									<div>{{ item.competitionName }}</div>
 									<div class="divClass">

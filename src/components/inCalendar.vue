@@ -158,7 +158,7 @@ export default defineComponent({
 						isHome = 2;
 						teamId = row.visitingTeamId;
 					}
-					if (userId) {
+					if (teamId) {
 						ctx.emit('show-match', row.confrontationInfoId, row.state, isHome, teamId);
 					}
 				}

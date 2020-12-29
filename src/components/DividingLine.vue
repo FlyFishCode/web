@@ -2,8 +2,8 @@
 	<div>
 		<a-row class="line">
 			<a-col :lg="{ span: span, offset: 0 }" :xs="{ span: span, offset: 0 }" class="fontStyle">{{ $t(msg) }}</a-col>
-			<a-col v-if="lastDate" :lg="{ span: 8, offset: 4 }" :xs="{ span: 21 - span, offset: 3 }" class="timeStyle">{{ `${$t('default.19')} :${lastDate}` }}</a-col>
-			<a-col v-if="showMore" :lg="{ span: 3, offset: 5 }" :xs="{ span: 5, offset: 3 }" class="shwoMoreBox">
+			<!-- <a-col v-if="lastDate" :lg="{ span: 8, offset: 4 }" :xs="{ span: 21 - span, offset: 3 }" class="timeStyle">{{ `${$t('default.19')} :${lastDate}` }}</a-col> -->
+			<a-col v-if="showMore" :lg="{ span: 2, offset: 17 }" :xs="{ span: 5, offset: 14 }" class="shwoMoreBox">
 				<div class="showMore" @click="entryPage">{{ $t('default.133') }}</div>
 			</a-col>
 		</a-row>

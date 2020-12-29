@@ -85,43 +85,44 @@ interface DataProps {
 
 const getNewData = (obj: any) => {
 	const data = {
-		img: obj.playerImg,
-		playerName: obj.playerName,
-		shopName: obj.shop.shopName,
-		shopAddress: obj.shop.shopAddress,
-		country: obj.shop.countryName,
-		rating: obj.playerRating.rating,
-		ppd: obj.playerRating.ppd,
-		mpr: obj.playerRating.mpr,
+		img: obj.playerImg || '',
+		playerName: obj.playerName || '',
+		shopName: obj.shop.shopName || '',
+		shopAddress: obj.shop.shopAddress || '',
+		country: obj.shop.countryName || '',
+		rating: obj.playerRating.rating || 0,
+		ppd: obj.playerRating.ppd || 0,
+		mpr: obj.playerRating.mpr || 0,
 		resultList: [
 			{
 				title: 'Award 01',
-				LT: obj.playerResultDetails.lowTon,
-				HT: obj.playerResultDetails.highTon,
-				'LT.OFF': obj.playerResultDetails.lowTonOut,
-				'HT.OFF': obj.playerResultDetails.highTonOut
+				LT: obj.playerResultDetails.lowTon || 0,
+				HT: obj.playerResultDetails.highTon || 0,
+				'LT.OFF': obj.playerResultDetails.lowTonOut || 0,
+				'HT.OFF': obj.playerResultDetails.highTonOut || 0
 			},
 			{
 				title: 'Award 02',
-				HAT: obj.playerResultDetails.lowTon,
-				BED: obj.playerResultDetails.highTon,
-				180: obj.playerResultDetails.lowTonOut,
-				EYE: obj.playerResultDetails.highTonOut
+				HAT: obj.playerResultDetails.lowTon || 0,
+				BED: obj.playerResultDetails.highTon || 0,
+				180: obj.playerResultDetails.lowTonOut || 0,
+				EYE: obj.playerResultDetails.highTonOut || 0
 			},
 			{
 				title: 'Award 03',
-				'5M': obj.playerResultDetails.fiveMarks,
-				'6M': obj.playerResultDetails.sixMarks,
-				'7M': obj.playerResultDetails.sevenMarks,
-				'8M': obj.playerResultDetails.eightMarks
+				'5M': obj.playerResultDetails.fiveMarks || 0,
+				'6M': obj.playerResultDetails.sixMarks || 0,
+				'7M': obj.playerResultDetails.sevenMarks || 0,
+				'8M': obj.playerResultDetails.eightMarks || 0
 			},
 			{
 				title: 'Award 04',
-				'9M': obj.playerResultDetails.nineMarks,
-				WH: obj.playerResultDetails.whiteHorse
+				'9M': obj.playerResultDetails.nineMarks || 0,
+				WH: obj.playerResultDetails.whiteHorse || 0
 			}
 		]
 	};
+	debugger;
 	return data;
 };
 
@@ -300,7 +301,7 @@ export default {
 }
 .centerBox {
 	width: 280px;
-	margin: 0 8px;
+	margin: 0 10px;
 }
 .animate__backOutRight {
 	transition: all 1s ease;

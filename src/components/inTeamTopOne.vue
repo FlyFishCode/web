@@ -127,13 +127,13 @@ export default {
 				for (const [key, value] of Object.entries(res.data.data)) {
 					switch (key) {
 						case 'bestPlayer':
-							res.data.data.resultList.push(Object.assign(value, { title: 'Highest Rating Player' }));
+							res.data.data.resultList.push(Object.assign(value || '', { title: 'Highest Rating Player' }));
 							break;
 						case 'competitionRating':
-							res.data.data.resultList.push(Object.assign(value, { title: 'League Rating' }));
+							res.data.data.resultList.push(Object.assign(value || '', { title: 'League Rating' }));
 							break;
 						case 'top4CompetitionRating':
-							res.data.data.resultList.push(Object.assign(value, { title: 'Top(4)Rating' }));
+							res.data.data.resultList.push(Object.assign(value || '', { title: 'Top(4)Rating' }));
 							break;
 						default:
 							break;

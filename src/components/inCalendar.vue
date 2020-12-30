@@ -149,7 +149,8 @@ export default defineComponent({
 			info: (row: any) => {
 				let isHome = 0;
 				let teamId = 0;
-				if (row.state === 1 || row.state === 3) {
+				debugger;
+				if (row.state === 1) {
 					if (row.homeCaptainId === userId) {
 						isHome = 1;
 						teamId = row.homeTeamId;
@@ -161,6 +162,12 @@ export default defineComponent({
 					if (teamId) {
 						ctx.emit('show-match', row.confrontationInfoId, row.state, isHome, teamId);
 					}
+				}
+				if (row.state === 3) {
+					teamId = 3;
+				}
+				if (teamId) {
+					ctx.emit('show-match', row.confrontationInfoId, row.state, isHome, teamId);
 				}
 			}
 		});

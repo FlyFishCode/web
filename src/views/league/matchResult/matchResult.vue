@@ -25,7 +25,7 @@
 						<a-col :span="3">{{ 'PPD' }}</a-col>
 						<a-col :span="3">{{ $t('default.58') }}</a-col>
 						<a-col :span="4">
-							<div>{{ `legResultList ${legIndex + 1} ${getGameMode(leg.mode)}` }}</div>
+							<div>{{ `leg  ${legIndex + 1} ${getGameMode(leg.gameName)}` }}</div>
 						</a-col>
 						<a-col :span="3">{{ $t('default.58') }}</a-col>
 						<a-col :span="3">{{ 'PPD' }}</a-col>
@@ -40,14 +40,14 @@
 								<div class="playerName">{{ player.homePlayerName }}</div>
 							</div>
 						</a-col>
-						<a-col :span="3">{{ player.homePpd }}</a-col>
-						<a-col :span="3">{{ player.homeScore }}</a-col>
+						<a-col :span="3">{{ player.homePpd || '-' }}</a-col>
+						<a-col :span="3">{{ player.homeScore || '-' }}</a-col>
 						<a-col :span="4" class="winStyle">
 							<div class="WinStyle WinBox">{{ leg.homeIsWin === 1 ? 'win' : 'lose' }}</div>
 							<div class="WinStyle">{{ leg.homeIsWin === 2 ? 'win' : 'lose' }}</div>
 						</a-col>
-						<a-col :span="3">{{ player.visitingScore }}</a-col>
-						<a-col :span="3">{{ player.visitingPpd }}</a-col>
+						<a-col :span="3">{{ player.visitingScore || '-' }}</a-col>
+						<a-col :span="3">{{ player.visitingPpd || '-' }}</a-col>
 						<a-col :span="4">
 							<div class="playerImg">
 								<div class="playerImgBox">

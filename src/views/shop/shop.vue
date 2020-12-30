@@ -403,7 +403,7 @@ export default defineComponent({
 			markerList: [],
 			dialogObj: {
 				title: '',
-				img: require('@/assets/3.jpg'),
+				img: '',
 				shopName: '',
 				phone: '',
 				address: ''
@@ -454,6 +454,7 @@ export default defineComponent({
 			},
 			showDetail: (item) => {
 				data.dialogObj.title = item.shopAddress;
+				data.dialogObj.img = item.shopImg;
 				data.dialogObj.shopName = item.shopName;
 				data.dialogObj.phone = item.shopPhone;
 				data.dialogObj.address = item.shopAddress;

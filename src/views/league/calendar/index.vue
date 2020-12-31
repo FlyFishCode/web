@@ -8,15 +8,15 @@
 						<div class="point">
 							<div class="point">
 								<div class="title">{{ 'W' }}</div>
-								<div class="titleValue">{{ info.setResult.wins }}</div>
+								<div class="titleValue">{{ info.competitionSet.winPoint }}</div>
 							</div>
 							<div class="point">
 								<div class="title">{{ 'D' }}</div>
-								<div class="titleValue">{{ info.setResult.draws }}</div>
+								<div class="titleValue">{{ info.competitionSet.drawnPoint }}</div>
 							</div>
 							<div class="point">
 								<div class="title">{{ 'L' }}</div>
-								<div class="titleValue">{{ info.setResult.losses }}</div>
+								<div class="titleValue">{{ info.competitionSet.losePoint }}</div>
 							</div>
 						</div>
 					</div>
@@ -64,10 +64,10 @@ export default defineComponent({
 			info: {
 				date: '',
 				competitionName: '',
-				setResult: {
-					wins: 0,
-					draws: 0,
-					losses: 0
+				competitionSet: {
+					winPoint: 0,
+					drawnPoint: 0,
+					losePoint: 0
 				}
 			},
 			changeActiveKey: (key: string) => {

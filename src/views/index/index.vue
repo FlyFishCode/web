@@ -568,17 +568,21 @@ export default defineComponent({
 			// 	status = pending;
 			// 	value: any;
 			// 	errer: any;
+			// 	public onSuccessCallBacks: Array<any> = [];
+			// 	public onErrorCallBacks: Array<any> = [];
 			// 	constructor(C: any) {
 			// 		const resolve = (value: any) => {
 			// 			if (this.status === 'pending') {
 			// 				this.status = success;
 			// 				this.value = value;
+			// 				this.onSuccessCallBacks.forEach((fn) => fn());
 			// 			}
 			// 		};
 			// 		const reject = (errer: any) => {
 			// 			if (this.status === 'pending') {
 			// 				this.status = failed;
 			// 				this.errer = errer;
+			// 				this.onErrorCallBacks.forEach((fn) => fn());
 			// 			}
 			// 		};
 			// 		C(resolve, reject);
@@ -590,19 +594,38 @@ export default defineComponent({
 			// 		if (this.status === 'failed') {
 			// 			onFailed(this.errer);
 			// 		}
+			// 		if (this.status === 'pending') {
+			// 			this.onSuccessCallBacks.push(() => {
+			// 				onSuccess(this.value);
+			// 			});
+			// 			this.onErrorCallBacks.push(() => {
+			// 				onFailed(this.errer);
+			// 			});
+			// 		}
 			// 	}
 			// }
 			// const promise = new Mypromise((resolve: any, reject: any) => {
 			// 	console.log('This is MyPromise');
 			// 	// resolve('成功');
-			// 	reject('失败');
+			// 	setTimeout(() => {
+			// 		// resolve('成功');
+			// 		reject('失败');
+			// 	}, 1000);
 			// });
 			// promise.then(
 			// 	(res: string) => {
-			// 		console.log(res);
+			// 		console.log('1:', res);
 			// 	},
 			// 	(error: string) => {
-			// 		console.log(error);
+			// 		console.log('1:', error);
+			// 	}
+			// );
+			// promise.then(
+			// 	(res: string) => {
+			// 		console.log('2:', res);
+			// 	},
+			// 	(error: string) => {
+			// 		console.log('2:', error);
 			// 	}
 			// );
 		};

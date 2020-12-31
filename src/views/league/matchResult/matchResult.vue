@@ -4,10 +4,10 @@
 			<a-col :span="4" class="smallTitle"> <SettingFilled /> {{ $t('default.62') }} </a-col>
 		</a-row>
 		<div v-if="tableList.length">
-			<a-row v-for="(set, setIndex) in tableList" :key="setIndex">
+			<div v-for="(set, setIndex) in tableList" :key="setIndex">
 				<a-row class="title">
 					<a-col :span="3" class="winnerBox">
-						<div class="winner" v-show="set.homeIsWin === 1">{{ 'Win' }}</div>
+						<div :class="{ winner: set.homeIsWin === 1, loseer: set.homeIsWin === 2 }">{{ set.homeIsWin === 1 ? 'win' : 'lose' }}</div>
 					</a-col>
 					<a-col :span="9" class="leftBox">
 						<div class="left">{{ `SET ${setIndex + 1}` }}</div>
@@ -16,10 +16,62 @@
 						<div class="right">{{ getGameType(set.mode) }}</div>
 					</a-col>
 					<a-col :span="3" class="winnerBox">
-						<div class="winner" v-show="set.homeIsWin === 2">{{ 'Win' }}</div>
+						<div :class="{ winner: set.homeIsWin === 2, loseer: set.homeIsWin === 1 }">{{ set.homeIsWin === 2 ? 'win' : 'lose' }}</div>
 					</a-col>
 				</a-row>
-				<a-row v-for="(leg, legIndex) in set.legResultList" :key="legIndex">
+				<a-row v-for="(leg, legIndex) in set.legResultList" :key="legIndex" id="table">
+					<!-- <a-row class="legBox">
+						<a-col :span="4">{{ $t('default.10') }}</a-col>
+						<a-col :span="3">{{ 'PPD' }}</a-col>
+						<a-col :span="3">{{ $t('default.58') }}</a-col>
+						<a-col :span="4">
+							<div>{{ `leg  ${legIndex + 1} ${getGameMode(leg.gameName)}` }}</div>
+						</a-col>
+						<a-col :span="3">{{ $t('default.58') }}</a-col>
+						<a-col :span="3">{{ 'PPD' }}</a-col>
+						<a-col :span="4">{{ $t('default.10') }}</a-col>
+					</a-row> -->
+					<a-table :columns="columns" :data-source="leg.playerResultList" rowkey="mode" :pagination="false" bordered>
+						<!-- <template #gameNameTitle="{ record }"> -->
+						<template #gameNameTitle>
+							<span>{{ `leg  ${legIndex + 1} ${getGameMode(leg.gameName)}` }}</span>
+						</template>
+						<template v-slot:homePlayerInfo="{ record }">
+							<div class="playerbox">
+								<div class="playerImgBox">
+									<img :src="record.homePlayerPortrait" alt="" />
+								</div>
+								<div>{{ record.homePlayerName }}</div>
+							</div>
+						</template>
+						<template v-slot:awayPlayerInfo="{ record }">
+							<div class="playerbox">
+								<div>{{ record.visitingPlayerName }}</div>
+								<div class="playerImgBox">
+									<img :src="record.visitingPlayerPortrait" alt="" />
+								</div>
+							</div>
+						</template>
+					</a-table>
+				</a-row>
+			</div>
+
+			<!-- <a-row v-for="(set, setIndex) in tableList" :key="setIndex">
+				<a-row class="title">
+					<a-col :span="3" class="winnerBox">
+						<div class="winner">{{ set.homeIsWin === 1 ? 'win' : 'lose' }}</div>
+					</a-col>
+					<a-col :span="9" class="leftBox">
+						<div class="left">{{ `SET ${setIndex + 1}` }}</div>
+					</a-col>
+					<a-col :span="9" class="rightBox">
+						<div class="right">{{ getGameType(set.mode) }}</div>
+					</a-col>
+					<a-col :span="3" class="winnerBox">
+						<div class="winner">{{ set.homeIsWin === 2 ? 'win' : 'lose' }}</div>
+					</a-col>
+				</a-row>
+				<a-row v-for="(leg, legIndex) in set.legResultList" :key="legIndex" :data-index="legIndex">
 					<a-row class="legBox">
 						<a-col :span="4">{{ $t('default.10') }}</a-col>
 						<a-col :span="3">{{ 'PPD' }}</a-col>
@@ -40,13 +92,13 @@
 								<div class="playerName">{{ player.homePlayerName }}</div>
 							</div>
 						</a-col>
-						<a-col :span="3">{{ player.homePpd || '-' }}</a-col>
+						<a-col :span="3">{{ player.homePpd === null ? '-' : player.homePpd }}</a-col>
 						<a-col :span="3">{{ player.homeScore || '-' }}</a-col>
 						<a-col :span="4" class="winStyle">
-							<div class="WinStyle WinBox">{{ leg.homeIsWin === 1 ? 'win' : 'lose' }}</div>
-							<div class="WinStyle">{{ leg.homeIsWin === 2 ? 'win' : 'lose' }}</div>
+							<div class="WinStyle home WinBox">{{ leg.homeIsWin === 1 ? 'win' : 'lose' }}</div>
+							<div class="WinStyle away">{{ leg.homeIsWin === 2 ? 'win' : 'lose' }}</div>
 						</a-col>
-						<a-col :span="3">{{ player.visitingScore || '-' }}</a-col>
+						<a-col :span="3">{{ player.visitingScore === null ? '-' : player.visitingScore }}</a-col>
 						<a-col :span="3">{{ player.visitingPpd || '-' }}</a-col>
 						<a-col :span="4">
 							<div class="playerImg">
@@ -58,7 +110,7 @@
 						</a-col>
 					</a-row>
 				</a-row>
-			</a-row>
+			</a-row> -->
 		</div>
 		<div v-else>
 			<emptyList />
@@ -81,7 +133,65 @@ export default defineComponent({
 	},
 	setup(prop: any) {
 		const data = reactive({
-			tableList: [],
+			tableList: [{ legResultList: [{ playerResultList: [] }] }],
+			columns: [
+				{
+					title: '玩家',
+					dataIndex: 'homePlayerName',
+					slots: { customRender: 'homePlayerInfo' }
+				},
+				{
+					title: 'PPD',
+					dataIndex: 'homePpd'
+				},
+				{
+					title: '分数',
+					dataIndex: 'homeScore'
+				},
+				{
+					colSpan: 2,
+					slots: { title: 'gameNameTitle' },
+					customRender: (text: any) => {
+						const obj = {
+							children: text.text.homeIsWin === 1 ? 'win' : 'lose',
+							attrs: {
+								rowSpan: 0
+							}
+						};
+						// eslint-disable-next-line @typescript-eslint/no-use-before-define
+						obj.attrs.rowSpan = mergeCells(text.text.homeIsWin, text.record.dataIndex, 'homeIsWin', text.index, text.record.legIndex);
+						return obj;
+					}
+				},
+				{
+					colSpan: 0,
+					customRender: (text: any) => {
+						console.log(text);
+						const obj = {
+							children: text.text.homeIsWin === 2 ? 'win' : 'lose',
+							attrs: {
+								rowSpan: 0
+							}
+						};
+						// eslint-disable-next-line @typescript-eslint/no-use-before-define
+						obj.attrs.rowSpan = mergeCells(text.text.homeIsWin, text.record.dataIndex, 'homeIsWin', text.index, text.record.legIndex);
+						return obj;
+					}
+				},
+				{
+					title: '分数',
+					dataIndex: 'visitingScore'
+				},
+				{
+					title: 'PPD',
+					dataIndex: 'visitingPpd'
+				},
+				{
+					title: '玩家',
+					dataIndex: 'visitingPlayerName',
+					slots: { customRender: 'awayPlayerInfo' }
+				}
+			],
 			getGameMode: (mode: number) => {
 				let str = '';
 				switch (mode) {
@@ -119,10 +229,36 @@ export default defineComponent({
 				return str;
 			}
 		});
+		const mergeCells = (text: any, dataIndex: any, key: any, index: number, jndex: number) => {
+			debugger;
+			// 上一行该列数据是否一样
+			if (index !== 0 && text === data.tableList[dataIndex]['legResultList'][jndex]['playerResultList'][index - 1][key]) {
+				return 0;
+			}
+			let rowSpan = 1;
+			// 判断下一行是否相等
+			for (let i = index + 1; i < data.tableList[dataIndex]['legResultList'][jndex]['playerResultList'].length; i++) {
+				if (text !== data.tableList[dataIndex]['legResultList'][jndex]['playerResultList'][i][key]) {
+					break;
+				}
+				rowSpan++;
+			}
+			return rowSpan;
+		};
 		const getMatchResultList = (confrontationInfoId: any = '') => {
 			matchResultHttp({ confrontationInfoId }).then((res) => {
 				if (res.data.data) {
+					res.data.data.forEach((i: any, index: number) => {
+						i.legResultList.forEach((j: any, jndex: number) => {
+							j.playerResultList.forEach((k: any) => {
+								k.dataIndex = index;
+								k.legIndex = jndex;
+								k.homeIsWin = j.homeIsWin;
+							});
+						});
+					});
 					data.tableList = res.data.data;
+					console.log(data.tableList);
 				}
 			});
 		};
@@ -150,6 +286,13 @@ export default defineComponent({
 }
 .winner {
 	background: #ff4e00;
+	width: 60px;
+	height: 30px;
+	line-height: 30px;
+	border-radius: 5px;
+}
+.loseer {
+	background: #303032;
 	width: 60px;
 	height: 30px;
 	line-height: 30px;
@@ -192,6 +335,11 @@ export default defineComponent({
 .legBox .ant-col {
 	border: 1px solid #999;
 }
+.playerbox {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
 .playerImgBox {
 	width: 50px;
 	height: 50px;
@@ -228,5 +376,11 @@ export default defineComponent({
 }
 .WinBox {
 	border-right: 1px solid #999;
+}
+#table >>> .ant-table-thead > tr > th {
+	text-align: center;
+}
+#table >>> .ant-table-tbody > tr > td {
+	text-align: center;
 }
 </style>

@@ -18,7 +18,14 @@
 					<div>{{ $t('default.39') }}</div>
 				</a-col>
 				<a-col :lg="8" :xs="14" class="tableContentValue">
-					<div>{{ infoData.operator }}</div>
+					<div>
+						{{
+							infoData.operator
+								.trim()
+								.split(' ')
+								.join('；')
+						}}
+					</div>
 				</a-col>
 			</a-row>
 			<a-row>
@@ -31,7 +38,7 @@
 				<a-col :lg="4" :xs="10" class="tableContent">
 					<div>{{ $t('default.30') }}</div>
 				</a-col>
-				<a-col :lg="8" :xs="14" class="countryBox">
+				<a-col :lg="8" :xs="14" class="overStyle countryClass">
 					<div v-for="item in infoData.hostingRegion" :key="item">
 						<span>{{ item.countryName }}</span>
 						<span v-if="item.areaName">{{ ` > ${item.areaName}；` }}</span>
@@ -132,7 +139,7 @@
 					</div>
 					<div class="decisionBox">
 						<div>{{ $t(returnWay(infoData.lineUp)) }}</div>
-						<div>{{ `对战时间 + ${infoData.deadline} Min` }}</div>
+						<div>{{ `开赛前 - ${infoData.deadline} Min` }}</div>
 					</div>
 				</div>
 			</a-col>
@@ -151,7 +158,7 @@
 			</a-col>
 		</a-row>
 		<a-row class="rowStyle" id="dataListBox">
-			<a-table :data-source="tableList" class="components-table-demo-nested inPhoneTableDisplay" rowkey="set" :pagination="false">
+			<a-table :data-source="tableList" class="components-table-demo-nested inPhoneTableDisplay" rowkey="divisionId" :pagination="false">
 				<a-table-column data-index="stageName" />
 				<a-table-column key="other" class="dataTimeStyle">
 					<template v-slot="{ text: data }">
@@ -163,7 +170,7 @@
 				</template>
 			</a-table>
 
-			<a-table :data-source="tableList" class="components-table-demo-nested showPhoneTable" rowkey="set" :pagination="false">
+			<a-table :data-source="tableList" class="components-table-demo-nested showPhoneTable" rowkey="divisionId" :pagination="false">
 				<a-table-column data-index="stageName" />
 				<a-table-column key="other" class="dataTimeStyle">
 					<template v-slot="{ text: data }">
@@ -242,17 +249,19 @@ export default defineComponent({
 					title: 'Set Point',
 					dataIndex: 'setPoint',
 					key: 'name',
-					width: 150
-					// customRender: (text) => {
-					// 	const obj = {
-					// 		children: text.text !== null ? text.text : '',
-					// 		attrs: {
-					// 			rowSpan: 0
-					// 		}
-					// 	};
-					// 	obj.attrs.rowSpan = mergeCells(text.text, data.innerData, 'setPoint', text.index);
-					// 	return obj;
-					// }
+					width: 150,
+					customRender: (text) => {
+						debugger;
+						const obj = {
+							children: text.text !== null ? text.text : '',
+							attrs: {
+								rowSpan: 0
+							}
+						};
+						// eslint-disable-next-line @typescript-eslint/no-use-before-define
+						obj.attrs.rowSpan = mergeCells(text.text, text.record.dataIndex, 'setPoint', text.index);
+						return obj;
+					}
 				},
 				{ title: 'Leg', dataIndex: 'leg', key: 'name', width: 80 },
 				{ title: 'Game', dataIndex: 'game', key: 'name', width: 100, slots: { customRender: 'game' } },
@@ -292,18 +301,23 @@ export default defineComponent({
 			],
 			tableList: [
 				{
-					set: '',
-					setPoint: '',
-					game: '',
-					gameMode: '',
-					round: '',
-					in: '',
-					out: '',
-					bull: '',
-					freeze: '',
-					option: '',
-					overKill: '',
-					cricket: ''
+					divisionId: 0,
+					list: [
+						{
+							set: '',
+							setPoint: '',
+							game: '',
+							gameMode: '',
+							round: '',
+							in: '',
+							out: '',
+							bull: '',
+							freeze: '',
+							option: '',
+							overKill: '',
+							cricket: ''
+						}
+					]
 				}
 			],
 			returnType: (type) => {
@@ -379,12 +393,12 @@ export default defineComponent({
 		const getMatchInfo = () => {
 			matchInfoHttp({ competitionId: ROUTE.query.competitionId || '' }).then((res) => {
 				if (res.data.data) {
-					debugger;
 					data.infoData = res.data.data;
 				}
 			});
 		};
 		const getGameName = (type) => {
+			if (!type) return;
 			let str = '';
 			switch (type) {
 				case 1:
@@ -490,16 +504,16 @@ export default defineComponent({
 					str = 'None';
 					break;
 				case 2:
-					str = 'MASTEROUT';
+					str = 'DOUBLEIN';
 					break;
 				case 3:
-					str = 'DOUBLEOUT';
+					str = 'MASTERIN';
 					break;
 				case 4:
-					str = 'MASTER NO BULLOUT';
+					str = 'MASTER NO BULLIN';
 					break;
 				default:
-					str = 'DOUBLE NO BULLOUT ';
+					str = 'DOUBLE NO BULLIN';
 					break;
 			}
 			return str;
@@ -511,10 +525,10 @@ export default defineComponent({
 					str = 'None';
 					break;
 				case 2:
-					str = 'DOUBLEIN';
+					str = 'MASTEROUT';
 					break;
 				case 3:
-					str = 'MASTERIN';
+					str = 'DOUBLEOUT';
 					break;
 				case 4:
 					str = 'MASTER NO BULLOUT';
@@ -588,10 +602,11 @@ export default defineComponent({
 	line-height: 40px;
 	border: 0.5px solid #d5d5d5;
 }
-.countryBox {
+.countryClass {
 	height: 40px;
 	line-height: 40px;
 	display: flex;
+	justify-content: center;
 }
 .decision {
 	display: flex;

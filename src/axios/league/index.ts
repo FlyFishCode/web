@@ -1,7 +1,7 @@
 // 联赛信息
-const leagueInfo = '/competitionoverview';
+const leagueInfo = '/competition/overview';
 // 联赛下拉列表
-const leagueSelect = '/divisionandstage';
+const leagueSelect = '/competition/divisionandstage';
 // 联赛 时间表 获取排阵
 const timeTableList = '/getTeamLineU';
 // 联赛 获取对阵信息
@@ -13,9 +13,9 @@ const matchtable = '/getMatchTableFightInfo';
 // 提交排阵玩家
 const submitMatchTable = '/playerIntoLeg';
 // 联赛 队伍
-const leagueTeam = '/competitionteam';
+const leagueTeam = '/competition/teamlist';
 // 联赛 排名记录 玩家排名
-const rankingPlayer = '/competitionplayerranking';
+const rankingPlayer = '/competition/playerranking';
 // 联赛 比赛信息
 const matchInfo = '/information';
 // 联赛 比赛信息下表格

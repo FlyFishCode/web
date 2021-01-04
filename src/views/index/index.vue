@@ -363,7 +363,7 @@
 	</div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
 import {
 	AimOutlined,
 	SearchOutlined,
@@ -403,6 +403,7 @@ export default defineComponent({
 	name: 'index',
 	setup() {
 		const ROUTER = useRouter();
+		const instance: any = getCurrentInstance();
 		const data = reactive({
 			isTeam: true,
 			leaguePath: 'league',
@@ -631,6 +632,10 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			init();
+			instance.ctx.$bus.$on('on-country-change', (val: any) => {
+				sessionStorage.setItem('countryId',val)
+				init()
+			});
 		});
 		return {
 			...toRefs(data)

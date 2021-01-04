@@ -147,7 +147,7 @@
 	</div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
 import { indexCountryHttp, indexCityHttp, leagueAllListHttp, leagueMyListHttp } from '@/axios/api';
 import { useRoute, useRouter } from 'vue-router';
 import { SearchOutlined, SettingFilled, EnvironmentOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
@@ -342,6 +342,13 @@ export default defineComponent({
 		onMounted(() => {
 			getCountryList(ROUTE.query.value);
 		});
+		watch(
+			() => sessionStorage.getItem('countryId'),
+			(val) => {
+				debugger;
+				console.log(val);
+			}
+		);
 		return {
 			...toRefs(data)
 		};

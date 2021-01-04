@@ -3,6 +3,8 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import { createI18n } from 'vue-i18n';
+// mitt => Bus
+import bus from './bus';
 
 const i18n = createI18n({
 	legacy: true,
@@ -27,7 +29,7 @@ const app = createApp(App);
 
 // 不需要添加全局 需要使用的地方直接$i18n.locale
 app.config.globalProperties.$i18n = i18n;
-
+app.config.globalProperties.$bus = bus;
 app.config.globalProperties.$filters = {
 	// 添加全局时间过滤器
 	filterDate(value: string) {

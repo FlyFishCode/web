@@ -57,7 +57,7 @@
 				</a-col>
 				<a-col :lg="4" :xs="4">{{ $t('default.3') }}</a-col>
 				<a-col :lg="5" :xs="5">
-					<a-select v-model:value="country" style="width: 100%" size="small">
+					<a-select v-model:value="country" @change="countryChange" style="width: 100%" size="small">
 						<a-select-option v-for="item in countryList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 					</a-select>
 				</a-col>
@@ -186,7 +186,7 @@
 	</div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
 // import { useStore } from "vuex";
 import { useRouter } from 'vue-router';
 import { loginHttp, indexCountryHttp, myMatchInfoHttp, myPageInfoHttp, myBattleDataListHttp, myBattleSelectHttp } from '@/axios/api';
@@ -205,6 +205,7 @@ export default defineComponent({
 	},
 	setup() {
 		const ROUTER = useRouter();
+		const instance: any = getCurrentInstance();
 		// const Store = useStore();
 		const data = reactive({
 			showPhoneTabs: false,
@@ -255,6 +256,9 @@ export default defineComponent({
 			toggleCollapsed: () => {
 				data.collapsed = !data.collapsed;
 				data.showPhoneTabs = !data.showPhoneTabs;
+			},
+			countryChange: () => {
+				instance.ctx.$bus.$emit('on-country-change', data.country);
 			},
 			typeChange: (value: number) => {
 				console.log(value);

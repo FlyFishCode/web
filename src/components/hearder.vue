@@ -258,7 +258,8 @@ export default defineComponent({
 				data.showPhoneTabs = !data.showPhoneTabs;
 			},
 			countryChange: () => {
-				instance.ctx.$bus.$emit('on-country-change', data.country);
+				debugger;
+				instance.appContext.config.globalProperties.$bus.emit('on-country-change', data.country);
 			},
 			typeChange: (value: number) => {
 				console.log(value);
@@ -480,26 +481,49 @@ export default defineComponent({
 			data.userName = sessionStorage.getItem('userName') as string;
 			indexCountryHttp().then((res) => {
 				if (res.data.data) {
+					let currentCountry = '';
 					data.countryList = res.data.data;
-					// if (navigator.geolocation) {
-					// 	// 获取经纬度
-					// 	navigator.geolocation.getCurrentPosition((position) => {
-					// 		const latitude = position.coords.latitude.toFixed(5);
-					// 		const longitude = position.coords.longitude.toFixed(5);
-					// 		// baiduLoad = (res: any) => {
-					// 		// 	debugger;
-					// 		// 	console.log(res);
-					// 		// };
-					// 		// Axios.get(`https://restapi.amap.com/v3/assistant/coordinate/convert?key=a9cef5218eebe10876a9bedfe7207454&locations=${latitude},${longitude}`).then((res) => {
-					// 		// 	console.log(res);
-					// 		// });
-					// 		console.log('维度：', latitude);
-					// 		console.log('经度：', longitude);
-					// 	});
-					// } else {
-					// 	window.alert('当前浏览器不支持定位');
-					// }
-					data.country = res.data.data[0]['countryId'];
+					if (navigator.geolocation) {
+						// 获取经纬度
+						navigator.geolocation.getCurrentPosition((position) => {
+							const latitude = position.coords.latitude.toFixed(5);
+							const longitude = position.coords.longitude.toFixed(5);
+							// baiduLoad = (res: any) => {
+							// 	debugger;
+							// 	console.log(res);
+							// };
+							// Axios.get(`https://restapi.amap.com/v3/assistant/coordinate/convert?key=a9cef5218eebe10876a9bedfe7207454&locations=${latitude},${longitude}`).then((res) => {
+							// 	console.log(res);
+							// });
+							console.log('经度：', longitude);
+							console.log('维度：', latitude);
+						});
+					} else {
+						window.alert('当前浏览器不支持定位');
+					}
+					// 根据浏览器语言来确定国家区域
+					switch (navigator.language) {
+						case 'zh-CN':
+							currentCountry = '中国';
+							break;
+						case 'en':
+							currentCountry = 'USA';
+							break;
+						case 'zh-TW':
+							currentCountry = 'HONG KONG';
+							break;
+						case 'ja':
+							currentCountry = 'Japan';
+							break;
+						default:
+							currentCountry = 'Malaysia';
+							break;
+					}
+					data.countryList.forEach((i: any) => {
+						if (i.countryName === currentCountry) {
+							data.country = i.countryId;
+						}
+					});
 					sessionStorage.setItem('countryId', data.country);
 				}
 			});

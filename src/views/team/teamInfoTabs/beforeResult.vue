@@ -58,7 +58,10 @@ export default defineComponent({
 			pageNum: 1,
 			pageSize: 10,
 			total: 1,
-			yearList: [{ value: 2020, label: '2020' }],
+			yearList: [
+				{ value: 2020, label: 2020 },
+				{ value: 2021, label: 2021 }
+			],
 			inPhoneColumns: [
 				{
 					title: '年',

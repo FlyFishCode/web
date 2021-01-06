@@ -23,7 +23,7 @@
 		<a-row class="rowStyle inPhoneTableDisplay">
 			<a-col :span="3" class="dropdown">
 				<a-select v-model:value="year" class="selectBox" @change="yearChange">
-					<a-select-option v-for="yaer in yearLiat" :key="yaer.value" :value="yaer.value">{{ yaer.label }}</a-select-option>
+					<a-select-option v-for="yaer in yearList" :key="yaer.value" :value="yaer.value">{{ yaer.label }}</a-select-option>
 				</a-select>
 			</a-col>
 		</a-row>
@@ -101,7 +101,7 @@ export default defineComponent({
 				xAxis: {
 					type: 'category',
 					boundaryGap: false,
-					data: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']
+					data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
 				},
 				yAxis: {
 					type: 'value'
@@ -123,12 +123,10 @@ export default defineComponent({
 		const data = reactive({
 			entryPath: '/players',
 			playerId: ROUTE.query.playerId,
-			year: 2000,
-			yearLiat: [
-				{ value: 1998, label: 1998 },
-				{ value: 1999, label: 1999 },
-				{ value: 2000, label: 2000 },
-				{ value: 2001, label: 2001 }
+			year: 2020,
+			yearList: [
+				{ value: 2020, label: 2020 },
+				{ value: 2021, label: 2021 }
 			],
 			inPhoneList: [
 				{ title: 'League Rating', Rating: 12, PPD: 52, MRP: 29 },
@@ -252,11 +250,11 @@ export default defineComponent({
 				data.levelTableList = dataObj.ratingPeridoList;
 				data.echarsList.monthRating = dataObj.monthRating;
 				data.echarsList.totalRating = dataObj.totalRating;
+				echarsInit(data.echarsList);
 			});
 		};
 		onMounted(() => {
 			getDataInfo();
-			echarsInit(data.echarsList);
 		});
 		return {
 			...toRefs(data)

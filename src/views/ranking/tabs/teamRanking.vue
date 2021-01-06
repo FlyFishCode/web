@@ -140,7 +140,10 @@ export default defineComponent({
 			dataObj: {
 				teamId: 0
 			},
-			yearList: [{ value: 2020, label: '2020' }],
+			yearList: [
+				{ value: 2020, label: 2020 },
+				{ value: 2021, label: 2021 }
+			],
 			areaId: null,
 			countryId: null,
 			areaList: [],

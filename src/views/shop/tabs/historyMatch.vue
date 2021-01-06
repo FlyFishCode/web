@@ -86,7 +86,7 @@ export default defineComponent({
 			shopId: '',
 			yearList: [
 				{ value: 2020, label: 2020 },
-				{ value: 2019, label: 2019 }
+				{ value: 2021, label: 2021 }
 			],
 			leagueList: [],
 			yearChange: (year = 2020) => {
@@ -111,7 +111,7 @@ export default defineComponent({
 				});
 			},
 			showShopInfo: (competitionId: number) => {
-				console.log(competitionId)
+				console.log(competitionId);
 				// ROUTER.push({
 				// 	path: '/calendar',
 				// 	query: { activeKey: '1', competitionId }

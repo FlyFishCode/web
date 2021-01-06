@@ -124,8 +124,7 @@ export default defineComponent({
 			total: 1,
 			yearList: [
 				{ value: 2020, label: 2020 },
-				{ value: 2019, label: 2019 },
-				{ value: 2018, label: 2018 }
+				{ value: 2021, label: 2021 }
 			],
 			teamList: [{ flag: false, record: [] }],
 			changeFlag: (matchId: number, index: number) => {

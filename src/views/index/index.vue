@@ -404,7 +404,7 @@ export default defineComponent({
 	setup() {
 		const ROUTER = useRouter();
 		const instance: any = getCurrentInstance();
-		const data = reactive({
+		const data: any = reactive({
 			isTeam: true,
 			leaguePath: 'league',
 			rankingPath: 'ranking',
@@ -424,7 +424,7 @@ export default defineComponent({
 				address: ''
 			},
 			countryId: null,
-			areaId: null,
+			areaId: '',
 			newsList: [],
 			countryList: [],
 			areaList: [],
@@ -433,13 +433,6 @@ export default defineComponent({
 			matchList: [],
 			teamList: [],
 			playerList: [],
-			getDate: () => {
-				return data.time;
-				// const year = new Date().getFullYear();
-				// const month = new Date().getMonth() + 1;
-				// const day = new Date().getDay();
-				// return `${year}-${month}-${day}`;
-			},
 			entryRanking: (path: string, value: string) => {
 				ROUTER.push({
 					path,
@@ -447,15 +440,8 @@ export default defineComponent({
 				});
 			},
 			onSearch: () => {
-				const obj = {
-					countryId: data.countryId,
-					areaId: data.areaId,
-					number: 5,
-					competitionName: data.leagueName
-				};
-				leagueListHttp(obj).then((res) => {
-					data.matchList = res.data.data;
-				});
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getLeagueList();
 			},
 			infoNews: () => {
 				ROUTER.push('/news');
@@ -510,13 +496,13 @@ export default defineComponent({
 					if (data.areaList.length) {
 						data.areaId = data.areaList[0]['areaId'];
 					} else {
-						data.areaId = null;
+						data.areaId = '';
 					}
-					data.onSearch();
 				});
 			},
 			areaChange: () => {
-				data.onSearch();
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getLeagueList();
 			},
 			showTeamBox: () => {
 				data.isTeam = true;
@@ -556,16 +542,27 @@ export default defineComponent({
 				}
 			});
 		};
+		const getLeagueList = (countryId = data.countryId) => {
+			const obj = {
+				countryId,
+				areaId: data.areaId,
+				number: 5,
+				competitionName: data.leagueName
+			};
+			leagueListHttp(obj).then((res) => {
+				data.matchList = res.data.data;
+			});
+		};
 		const init = () => {
 			getTeamList();
 			getPlayerList();
 			getNewsList();
 			getCarouselList();
 			getCountryList();
+			getLeagueList(sessionStorage.getItem('countryId'));
 		};
 		onMounted(() => {
 			init();
-			debugger;
 			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
 				sessionStorage.setItem('countryId', val);
 				init();
@@ -635,7 +632,7 @@ export default defineComponent({
 	color: #797878;
 }
 .first .teamImgBox {
-	height: 100px;
+	height: 80px;
 }
 .noFirst .teamImgBox {
 	height: 60px;

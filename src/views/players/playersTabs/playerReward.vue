@@ -44,7 +44,10 @@ export default defineComponent({
 			title: '玩家奖励',
 			year: 2020,
 			matchType: 2020,
-			yearList: [{ value: 2020, label: '2020' }],
+			yearList: [
+				{ value: 2020, label: 2020 },
+				{ value: 2021, label: 2021 }
+			],
 			matchTypeList: [{ value: 2020, label: '2020' }],
 			columns: [
 				{

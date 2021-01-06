@@ -194,7 +194,10 @@ export default defineComponent({
 			countryList: [],
 			areaList: [],
 			matchTypeList: [{ value: 2020, label: '2020' }],
-			yearList: [{ value: 2020, label: 2020 }],
+			yearList: [
+				{ value: 2020, label: 2020 },
+				{ value: 2021, label: 2021 }
+			],
 			monthList: [
 				{ value: ' ', label: 'ALL' },
 				{ value: 1, label: 1 },

@@ -172,7 +172,10 @@ export default defineComponent({
 			total: 1,
 			pageNum: 1,
 			pageSize: 10,
-			yearList: [{ value: 2020, label: '2020' }],
+			yearList: [
+				{ value: 2020, label: 2020 },
+				{ value: 2021, label: 2021 }
+			],
 			matchType: 1,
 			areaId: null,
 			countryId: null,

@@ -98,7 +98,7 @@ export default defineComponent({
 				xAxis: {
 					type: 'category',
 					boundaryGap: false,
-					data: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']
+					data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
 				},
 				yAxis: {
 					type: 'value'
@@ -107,12 +107,12 @@ export default defineComponent({
 					{
 						name: '累计',
 						type: 'line',
-						data: obj.addUp
+						data: obj.monthRating
 					},
 					{
 						name: '周期',
 						type: 'line',
-						data: obj.cycle
+						data: obj.totalRating
 					}
 				]
 			});
@@ -121,7 +121,7 @@ export default defineComponent({
 			year: 2020,
 			yearList: [
 				{ value: 2020, label: 2020 },
-				{ value: 2019, label: 2019 }
+				{ value: 2021, label: 2021 }
 			],
 			echarsList: {
 				monthRating: [],
@@ -239,10 +239,10 @@ export default defineComponent({
 				data.levelTableList = dataObj.ratingPeridoList;
 				data.echarsList.monthRating = dataObj.monthRating;
 				data.echarsList.totalRating = dataObj.totalRating;
+				echarsInit(data.echarsList);
 			});
 		};
 		onMounted(() => {
-			echarsInit(data.echarsList);
 			getDataInfo();
 		});
 		return {

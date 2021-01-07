@@ -423,7 +423,7 @@ export default defineComponent({
 				phone: '',
 				address: ''
 			},
-			countryId: null,
+			countryId: '',
 			areaId: '',
 			newsList: [],
 			countryList: [],
@@ -539,12 +539,14 @@ export default defineComponent({
 					data.countryList = res.data.data;
 					data.countryId = data.countryList[0]['countryId'];
 					data.countryChange(data.countryList[0]['countryId']);
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getLeagueList();
 				}
 			});
 		};
-		const getLeagueList = (countryId = data.countryId) => {
+		const getLeagueList = () => {
 			const obj = {
-				countryId,
+				countryId: data.countryId,
 				areaId: data.areaId,
 				number: 5,
 				competitionName: data.leagueName
@@ -553,19 +555,23 @@ export default defineComponent({
 				data.matchList = res.data.data;
 			});
 		};
-		const init = () => {
+		const init = (flag = false) => {
 			getTeamList();
 			getPlayerList();
 			getNewsList();
 			getCarouselList();
+			if (flag) {
+				getLeagueList();
+				return;
+			}
 			getCountryList();
-			getLeagueList(sessionStorage.getItem('countryId'));
 		};
 		onMounted(() => {
 			init();
 			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
 				sessionStorage.setItem('countryId', val);
-				init();
+				data.countryId = val;
+				init(true);
 			});
 		});
 		return {

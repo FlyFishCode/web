@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<a-row type="flex" justify="end">
-			<a-col :lg="12" :xs="24" class="lineStyle">
+			<a-col :lg="14" :xs="24" class="lineStyle">
 				<a-col :lg="3" :xs="3" v-show="!isLogin">
 					<a-button type="link" size="small" @click="showLoginBox">{{ $t('default.0') }}</a-button>
 					<a-modal id="loginBox" v-model:visible="visible" :title="$t('default.0')" centered>
@@ -55,14 +55,14 @@
 				<a-col :lg="3" :xs="3" v-show="isLogin">
 					<a-button type="link" size="small" @click="loginOut">{{ $t('default.126') }}</a-button>
 				</a-col>
-				<a-col :lg="4" :xs="4">{{ $t('default.3') }}</a-col>
+				<a-col :lg="5" :xs="4">{{ `${$t('default.3')}(${$t('default.260')})` }}</a-col>
 				<a-col :lg="5" :xs="5">
 					<a-select v-model:value="country" @change="countryChange" style="width: 100%" size="small">
 						<a-select-option v-for="item in countryList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 					</a-select>
 				</a-col>
 				<a-col :lg="4" :xs="4">{{ $t('default.4') }}</a-col>
-				<a-col :lg="5" :xs="5">
+				<a-col :lg="4" :xs="5">
 					<a-select v-model:value="$i18n.locale" style="width: 100%" size="small">
 						<a-select-option v-for="item in languageList" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
 					</a-select>

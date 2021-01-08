@@ -11,7 +11,7 @@
 				<template v-slot:count="{ record }">
 					<div class="countBox">
 						<div>{{ record.count }}</div>
-						<a-button type="danger" size="small" @click="showInfo(record.key)">{{ $t('default.166') }}</a-button>
+						<a-button type="danger" size="small" @click="showInfo(record)">{{ $t('default.166') }}</a-button>
 					</div>
 				</template>
 			</a-table>
@@ -75,7 +75,8 @@ export default defineComponent({
 		SettingFilled,
 		entryList
 	},
-	setup() {
+	emits: ['show-info-data'],
+	setup(prop: any, ctx: any) {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
 		const echarsInit = (obj: { [key: string]: number[] }) => {
@@ -210,7 +211,7 @@ export default defineComponent({
 				console.log(value);
 			},
 			showInfo: (key: number) => {
-				console.log(key);
+				ctx.emit('show-info-data', key);
 			},
 			goHistory: () => {
 				ROUTER.push('/players');

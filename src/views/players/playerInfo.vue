@@ -7,7 +7,7 @@
 		<a-row>
 			<a-tabs type="card" v-model:activeKey="activeKey" class="tabsBox">
 				<a-tab-pane key="1" :tab="$t('default.254')">
-					<rating />
+					<rating @show-info-data="showInfoData" />
 				</a-tab-pane>
 				<a-tab-pane key="2" :tab="$t('default.102')">
 					<matchRecord />
@@ -43,7 +43,11 @@ export default defineComponent({
 		const data = reactive({
 			title: 'default.10',
 			colSpan: 4,
-			activeKey: '1'
+			activeKey: '1',
+			showInfoData: (key: any) => {
+				console.log(key);
+				data.activeKey = '2';
+			}
 		});
 		onMounted(() => {
 			data.activeKey = ROUTE.query.activeKey as string;

@@ -176,6 +176,7 @@ export default {
 				console.log(1);
 			},
 			showDetail: (obj: any) => {
+				debugger;
 				data.dialogObj.title = obj.shopName;
 				data.dialogObj.img = obj.playerImg;
 				data.dialogObj.shopName = obj.shopName;

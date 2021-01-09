@@ -386,9 +386,9 @@ export default defineComponent({
 			showDialog: (item: any) => {
 				data.dialogObj.title = item.shopName;
 				data.dialogObj.img = item.shopImg;
-				data.dialogObj.shopName = item.shopName;
-				data.dialogObj.phone = item.shopPhone;
-				data.dialogObj.address = item.shopAddress;
+				data.dialogObj.shopName = item.shopName || '-';
+				data.dialogObj.phone = item.shopPhone || '-';
+				data.dialogObj.address = item.shopAddress || '-';
 				data.visible = true;
 			},
 			handleOk: () => {

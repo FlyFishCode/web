@@ -34,7 +34,7 @@
 					<a-table :columns="columns" :data-source="leg.playerResultList" rowkey="mode" :pagination="false" bordered>
 						<!-- <template #gameNameTitle="{ record }"> -->
 						<template #gameNameTitle>
-							<span>{{ `leg  ${legIndex + 1} ${getGameMode(leg.gameName)}` }}</span>
+							<span>{{ `leg  ${legIndex + 1} (${getGameMode(leg.gameName)})` }}</span>
 						</template>
 						<template v-slot:homePlayerInfo="{ record }">
 							<div class="playerbox">

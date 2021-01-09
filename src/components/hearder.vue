@@ -258,7 +258,6 @@ export default defineComponent({
 				data.showPhoneTabs = !data.showPhoneTabs;
 			},
 			countryChange: () => {
-				debugger;
 				instance.appContext.config.globalProperties.$bus.emit('on-country-change', data.country);
 			},
 			typeChange: (value: number) => {

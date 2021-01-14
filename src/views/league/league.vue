@@ -281,6 +281,10 @@ export default defineComponent({
 						data.areaId = null;
 					}
 				});
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getAllLeagueList();
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getMyLeagueList();
 			},
 			cityChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define

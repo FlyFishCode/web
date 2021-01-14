@@ -51,10 +51,11 @@
 					</a-row>
 					<a-row v-for="(leg, legIndex) in item.legGameList" :key="legIndex" class="setBox">
 						<a-col :span="4" class="legStyle">
-							<div class="legBox">
+							<div class="legGameSet">
 								<div class="legIndexBox">{{ legIndex + 1 }}</div>
+								<div>{{ $t(getGameName(leg.gameName)) }}</div>
 							</div>
-							<div class="legBox">{{ $t(getGameName(leg.gameName)) }}</div>
+							<div>{{ `(${getBeginGameSet(leg.gameIn)} / ${getEndGameSet(leg.gameOut)})` }}</div>
 						</a-col>
 						<!-- <a-col :span="5" class="playerStyle" v-for="playerBox in new Array(leg.maxPlayer).fill(leg.maxPlayer)" :key="playerBox.index"> -->
 						<a-col :span="5" class="playerStyle" v-for="(playerBox, playerIndex) in leg.playerList" :key="playerBox.index">
@@ -192,6 +193,48 @@ export default defineComponent({
 						break;
 					default:
 						str = '';
+						break;
+				}
+				return str;
+			},
+			getBeginGameSet: (id) => {
+				let str = '';
+				switch (id) {
+					case 1:
+						str = 'None';
+						break;
+					case 2:
+						str = 'DOUBLEIN';
+						break;
+					case 3:
+						str = 'MASTERIN';
+						break;
+					case 4:
+						str = 'MASTER NO BULLIN';
+						break;
+					default:
+						str = 'DOUBLE NO BULLIN';
+						break;
+				}
+				return str;
+			},
+			getEndGameSet: (id) => {
+				let str = '';
+				switch (id) {
+					case 1:
+						str = 'None';
+						break;
+					case 2:
+						str = 'MASTEROUT';
+						break;
+					case 3:
+						str = 'DOUBLEOUT';
+						break;
+					case 4:
+						str = 'MASTER NO BULLOUT';
+						break;
+					default:
+						str = 'DOUBLE NO BULLOUT';
 						break;
 				}
 				return str;
@@ -413,7 +456,7 @@ export default defineComponent({
 				}
 			} else {
 				data.matchTable.minute -= 1;
-				data.matchTable.second = 10;
+				data.matchTable.second = 59;
 				return false;
 			}
 		};
@@ -436,37 +479,39 @@ export default defineComponent({
 					parseInt(oldDays.split(':')[1]),
 					parseInt(oldDays.split(':')[2])
 				];
+
 				if (oldYear - year > 0) {
 					oldMonth += 12;
-				} else {
+				} else if (oldYear - year < 0) {
 					flag = false;
 					return;
 				}
 				if (oldMonth - month > 0) {
 					oldDAay += 30;
-				} else {
+				} else if (oldMonth - month < 0) {
 					flag = false;
 					return;
 				}
 				if (oldDAay - day > 0) {
 					surplusDay = oldDAay - day;
-				} else {
+				} else if (oldDAay - day < 0) {
 					flag = false;
 					return;
 				}
 				if (oldHours - hours > 0) {
 					surplusHours = oldHours - hours;
-				} else {
-					flag = false;
-					return;
+				} else if (oldDAay - day < 0) {
+					if (surplusDay) {
+						surplusDay -= 1;
+						surplusHours = surplusHours + 24 - hours;
+					} else {
+						flag = false;
+						return;
+					}
 				}
 				if (oldMinutes - minutes > 0) {
 					surplusMinutes = oldMinutes - minutes;
-				} else {
-					flag = false;
-					return;
-				}
-				if (oldMinutes - minutes < 0) {
+				} else if (oldMinutes - minutes < 0) {
 					if (surplusHours) {
 						surplusHours -= 1;
 						surplusMinutes = 60 - Math.abs(oldMinutes - minutes);
@@ -664,13 +709,13 @@ export default defineComponent({
 	background: #f1f0ed;
 }
 .legStyle {
-	height: 80px;
+	height: 106px;
 	display: flex;
+	flex-direction: column;
 	text-align: center;
 	border: 1px solid #5a5a5a;
 }
 .playerStyle {
-	height: 80px;
 	text-align: center;
 	border: 1px solid #5a5a5a;
 }
@@ -679,6 +724,11 @@ export default defineComponent({
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+.legGameSet{
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
 }
 .legIndexBox {
 	width: 60px;

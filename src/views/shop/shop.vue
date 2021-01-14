@@ -123,7 +123,7 @@
 				</a-col>
 				<a-col :lg="{ span: 8, offset: 0 }" :xs="{ span: 16, offset: 2 }" class="infoClass">
 					<div class="teamStyle" @click="showShopInfo(item.shopId)">{{ item.shopName }}</div>
-					<div class="placeStyle">
+					<div v-if="item.shopAddress" class="placeStyle">
 						<div>{{ item.shopAddress }}</div>
 						/
 						<div class="counyStyle">{{ item.couny }}</div>
@@ -426,7 +426,7 @@ export default defineComponent({
 					query: { shopId }
 				});
 			},
-			countryChange: (value, searchValue = data.shopName) => {
+			countryChange: (value) => {
 				if (!value) return false;
 				indexCityHttp({ countryId: value }).then((res) => {
 					data.cityList = res.data.data;
@@ -435,9 +435,9 @@ export default defineComponent({
 					} else {
 						data.areaId = null;
 					}
-					// eslint-disable-next-line @typescript-eslint/no-use-before-define
-					getShopList(searchValue);
 				});
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getShopList();
 			},
 			areaChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -469,7 +469,9 @@ export default defineComponent({
 				if (res.data.data.length) {
 					data.areaList = res.data.data;
 					data.countryId = data.areaList[0]['countryId'];
-					data.countryChange(data.areaList[0]['countryId'], searchValue);
+					data.countryChange(data.areaList[0]['countryId']);
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getShopList(searchValue);
 				}
 			});
 		};

@@ -264,8 +264,8 @@ export default defineComponent({
 			total: 1,
 			colSpan: 4,
 			matchType: 1,
-			countryId: null,
-			areaId: null,
+			countryId: '',
+			areaId: '',
 			monthList: [],
 			stateList: [],
 			areaList: [],
@@ -343,17 +343,17 @@ export default defineComponent({
 				data.dialogObj.address = item.shopAddress;
 				data.visible = true;
 			},
-			countryChange: (value: number, inputValue: any) => {
+			countryChange: (value: number) => {
 				indexCityHttp({ countryId: value }).then((res) => {
 					data.cityList = res.data.data;
 					if (data.cityList.length) {
 						data.areaId = data.cityList[0]['areaId'];
 					} else {
-						data.areaId = null;
+						data.areaId = '';
 					}
-					// eslint-disable-next-line @typescript-eslint/no-use-before-define
-					getTeamList(undefined, inputValue);
 				});
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTeamList();
 			},
 			areaChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -410,7 +410,9 @@ export default defineComponent({
 				if (res.data.data.length) {
 					data.areaList = res.data.data;
 					data.countryId = data.areaList[0]['countryId'];
-					data.countryChange(data.areaList[0]['countryId'], value);
+					data.countryChange(data.areaList[0]['countryId']);
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getTeamList(undefined, value);
 				}
 			});
 		};

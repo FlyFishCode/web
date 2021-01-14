@@ -330,7 +330,7 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getPlayerList();
 			},
-			countryChange: (value: number, inputValue: any) => {
+			countryChange: (value: number) => {
 				indexCityHttp({ countryId: value }).then((res) => {
 					data.cityList = res.data.data;
 					if (data.cityList.length) {
@@ -338,9 +338,9 @@ export default defineComponent({
 					} else {
 						data.areaId = null;
 					}
-					// eslint-disable-next-line @typescript-eslint/no-use-before-define
-					getPlayerList(undefined, inputValue);
 				});
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getPlayerList();
 			},
 			areaChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -408,7 +408,9 @@ export default defineComponent({
 				if (res.data.data.length) {
 					data.areaList = res.data.data;
 					data.countryId = data.areaList[0]['countryId'];
-					data.countryChange(data.areaList[0]['countryId'], inputValue);
+					data.countryChange(data.areaList[0]['countryId']);
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getPlayerList(undefined, inputValue);
 				}
 			});
 		};

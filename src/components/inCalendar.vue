@@ -7,12 +7,14 @@
 				</div>
 			</a-col>
 			<a-col :span="22" class="centerBox">
-				<div class="center">
-					<div v-for="(item, index) in topList" :key="index" class="DIV" :class="{ currentDiv: current === index }" @click="changeDate(item.confrontationDate, item)">
-						{{ item.confrontationDate }}
-						<span v-if="item.matchList" class="divAfter">{{ item.matchList && item.matchList.length }}</span>
+				<transition enter-active-class="animate__animated animate__fadeInLeft">
+					<div class="center">
+						<div v-for="(item, index) in topList" :key="index" class="DIV" :class="{ currentDiv: current === index }" @click="changeDate(item.confrontationDate, item)">
+							{{ item.confrontationDate }}
+							<span v-if="item.matchList" class="divAfter">{{ item.matchList && item.matchList.length }}</span>
+						</div>
 					</div>
-				</div>
+				</transition>
 			</a-col>
 			<a-col :span="1">
 				<div v-if="direction" class="direction" @click="rightClick">
@@ -105,13 +107,13 @@ export default defineComponent({
 			rightClick() {
 				const div = document.getElementsByClassName('center')[0] as HTMLElement;
 				data.currentDiv++;
-				const ohterDiv = data.detailList.length - 6;
-				if (div.style.left < `-${ohterDiv * 142}px` || div.style.left === '0px') {
+				const ohterDiv = data.topList.length;
+				if (!div.style.left || Math.abs(parseInt(div.style.left)) < ohterDiv * 142) {
 					data.position -= 180;
-					div.style.left = this.position + 'px';
+					div.style.left = data.position + 'px';
 				}
-				if (this.currentDiv === data.detailList.length) {
-					this.currentDiv = data.detailList.length - 1;
+				if (this.currentDiv === data.topList.length) {
+					this.currentDiv = data.topList.length - 1;
 				}
 			},
 			directionLeftClick() {
@@ -175,6 +177,9 @@ export default defineComponent({
 			timetablecustomHttp({ stageId: prop.stageId }).then((res) => {
 				if (res.data.data) {
 					data.topList = res.data.data;
+					if (data.topList.length > 6) {
+						data.direction = true;
+					}
 					data.detailList = res.data.data[0].matchList;
 					nextTick(() => {
 						ctx.emit('change-list', data.topList[0].confrontationDate);
@@ -239,6 +244,7 @@ export default defineComponent({
 	display: flex;
 	justify-content: space-between;
 	position: absolute;
+	transition: all 0.5s ease;
 }
 .DIV {
 	height: 30px;

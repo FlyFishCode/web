@@ -275,7 +275,7 @@ export default {
 	'278': '最大',
 	// '279': 'Set point',
 	// '280': 'Winning Point',
-	'281': 'Web',
+	'281': 'Web&app',
 	'282': 'Machine',
 	'283': '拍卡排阵',
 	'284': '主队先手',

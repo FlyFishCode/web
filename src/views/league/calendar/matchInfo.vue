@@ -40,7 +40,7 @@
 				</a-col>
 				<a-col :lg="8" :xs="14" class="overStyle countryClass">
 					<div v-for="item in infoData.hostingRegion" :key="item">
-						<span>{{ item.countryName }}</span>
+						<span>{{ item.countryName +'；' }}</span>
 						<span v-if="item.areaName">{{ ` > ${item.areaName}；` }}</span>
 					</div>
 				</a-col>

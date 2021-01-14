@@ -1,9 +1,9 @@
 <template>
   <a-row class="row">
-    <a-col :span="4" class="imgBox">
-      <img :src="img" alt="">
+    <a-col :span="10">
+      <div @click="entryIndex"  class="imgBox"><img :src="img" alt="" /></div>
     </a-col>
-    <a-col :span="17" class="center">
+    <a-col :span="10" class="center">
       <div class="other">
         <div class="firstBox">{{ $t('default.162') }}</div>|
         <div class="textBox">{{ $t('default.22') }}</div>|
@@ -11,7 +11,7 @@
       </div>
       <div>asdasdasdsadsadasdsadasdsadadsadsadsadas</div>
     </a-col>
-    <a-col :span="3" class="btnBG">
+    <a-col :span="4" class="btnBG">
       <a-select v-model:value="value" class="selectBox" @change="valueChange">
         <a-select-option v-for="item in selectList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
       </a-select>
@@ -20,12 +20,14 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Afooter",
   components: {
   },
   setup() {
+    const ROUTER = useRouter()
     const data = reactive({
       img: require("@/assets/logo.png"),
       value:1,
@@ -36,7 +38,10 @@ export default defineComponent({
       ],
       valueChange:(value: number) => {
         console.log(value)
-      }
+      },
+      entryIndex: () => {
+				ROUTER.push('/');
+			},
     });
     return {
       ...toRefs(data),
@@ -53,7 +58,7 @@ export default defineComponent({
 .imgBox {
   height: 100px;
 }
-.row img {
+.imgBox img {
   height: 100%;
 }
 .other {

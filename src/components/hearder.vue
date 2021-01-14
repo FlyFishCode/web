@@ -1,6 +1,9 @@
 <template>
 	<div>
-		<a-row type="flex" justify="end">
+		<a-row type="flex" justify="end" class="lineBox">
+			<a-col :lg="{ span: 10, offset: 0 }" :xs="{ span: 8, offset: 4 }">
+				<div class="imgBox" @click="entryIndex"><img :src="img" alt="" /></div>
+			</a-col>
 			<a-col :lg="14" :xs="24" class="lineStyle">
 				<a-col :lg="3" :xs="3" v-show="!isLogin">
 					<a-button type="link" size="small" @click="showLoginBox">{{ $t('default.0') }}</a-button>
@@ -67,21 +70,18 @@
 						<a-select-option v-for="item in languageList" :key="item.key" :value="item.key">{{ item.label }}</a-select-option>
 					</a-select>
 				</a-col>
-			</a-col>
-		</a-row>
-		<a-row class="lineBox">
-			<a-col :lg="{ span: 8, offset: 0 }" :xs="{ span: 8, offset: 4 }">
-				<div class="imgBox" @click="entryIndex"><img :src="img" alt="" /></div>
-			</a-col>
-			<a-col :lg="{ span: 8, offset: 8 }" :xs="{ span: 12 }">
-				<a-col :lg="6" :xs="10">
-					<a-select v-model:value="type" style="width: 100%" @change="typeChange">
-						<a-select-option v-for="item in typeList" :key="item.key" :value="item.key">{{ $t(item.label) }}</a-select-option>
-					</a-select>
-				</a-col>
-				<a-col :lg="18" :xs="14">
-					<a-input-search v-model:value="imputValue" style="width: 100%" @search="onSearch" />
-				</a-col>
+				<a-row class="searchLine">
+					<a-col :lg="{ span: 16, offset: 8 }" :xs="{ span: 12 }">
+						<a-col :lg="6" :xs="10">
+							<a-select v-model:value="type" style="width: 100%" @change="typeChange">
+								<a-select-option v-for="item in typeList" :key="item.key" :value="item.key">{{ $t(item.label) }}</a-select-option>
+							</a-select>
+						</a-col>
+						<a-col :lg="18" :xs="14">
+							<a-input-search v-model:value="imputValue" style="width: 100%" @search="onSearch" />
+						</a-col>
+					</a-col>
+				</a-row>
 			</a-col>
 		</a-row>
 		<a-row class="rowStyle boxBG">
@@ -605,6 +605,9 @@ export default defineComponent({
 .personalMsg {
 	display: flex;
 }
+.searchLine {
+	margin-top: 50px;
+}
 .contentImgBox {
 	height: 140px;
 	width: 140px;
@@ -651,7 +654,6 @@ export default defineComponent({
 	cursor: pointer;
 }
 .lineBox {
-	padding: 15px 0;
 	border-bottom: 2px solid #4b4b4b;
 }
 .phoneTabsBg {

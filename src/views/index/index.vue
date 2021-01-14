@@ -13,7 +13,9 @@
 						<RightCircleOutlined />
 					</div>
 				</template>
-				<div v-for="item in mainList" :key="item.id" @click="intoPhoto(item.link)" class="photoLink"><img :src="item.image" /></div>
+				<div v-for="(item, index) in mainList" :key="item.id" @click="intoPhoto(mainList,index)" class="photoLink">
+					<img :src="item.image" />
+				</div>
 			</a-carousel>
 		</div>
 		<a-row class="rowStyle" type="flex" justify="space-between">
@@ -55,21 +57,12 @@
 								<RightCircleOutlined />
 							</div>
 						</template>
-						<div v-for="item in viceList" :key="item.id" @click="intoPhoto(item.link)" class="photoLink"><img :src="item.image" /></div>
+						<div v-for="(item, index) in viceList" :key="item.id" @click="intoPhoto(viceList,index)" class="photoLink"><img :src="item.image" /></div>
 					</a-carousel>
 				</div>
 				<div class="otherSrcBox">
-					<div>
-						<QqOutlined />
-					</div>
-					<div>
-						<WechatOutlined />
-					</div>
-					<div>
-						<ZhihuOutlined />
-					</div>
-					<div>
-						<AppleOutlined />
+					<div v-for="(item,index) in photoList" :key="item">
+						<div @click="intoPhoto(photoList,index)"><img :src="item.img" /></div>
 					</div>
 				</div>
 			</a-col>
@@ -364,19 +357,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
-import {
-	AimOutlined,
-	SearchOutlined,
-	EyeOutlined,
-	ScheduleOutlined,
-	EnvironmentOutlined,
-	QqOutlined,
-	WechatOutlined,
-	ZhihuOutlined,
-	AppleOutlined,
-	LeftCircleOutlined,
-	RightCircleOutlined
-} from '@ant-design/icons-vue';
+import { AimOutlined, SearchOutlined, EyeOutlined, ScheduleOutlined, EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
 import divTitle from '@/components/DividingLine.vue';
 import { indexTeamHttp, indexPlayerHttp, indexCountryHttp, indexCityHttp, indexNewsHttp, indexCarouselHttp, leagueListHttp } from '@/axios/api';
 import emptyList from '@/components/common/emptyList.vue';
@@ -392,10 +373,6 @@ export default defineComponent({
 		ScheduleOutlined,
 		divTitle,
 		EnvironmentOutlined,
-		QqOutlined,
-		WechatOutlined,
-		ZhihuOutlined,
-		AppleOutlined,
 		LeftCircleOutlined,
 		RightCircleOutlined,
 		emptyList
@@ -416,6 +393,7 @@ export default defineComponent({
 			time: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
 			colSpan: 4,
 			visible: false,
+			photoList: [{ img: require('@/assets/icon.png') }, { img: require('@/assets/icon.png') }, { img: require('@/assets/icon.png') }, { img: require('@/assets/icon.png') }],
 			dialogObj: {
 				title: '',
 				img: '',
@@ -452,8 +430,8 @@ export default defineComponent({
 					query: { value: id }
 				});
 			},
-			intoPhoto: (value: string) => {
-				console.log(value);
+			intoPhoto: (list: any, index: number) => {
+				window.open(list[index].link,list[index].target === 1 ? '_blank' : '_self');
 			},
 			showDetail: (item: any) => {
 				data.dialogObj.title = item.shopAddress;
@@ -499,6 +477,8 @@ export default defineComponent({
 						data.areaId = '';
 					}
 				});
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getLeagueList();
 			},
 			areaChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -814,6 +794,10 @@ export default defineComponent({
 	background: #eee;
 	border-radius: 10px;
 	margin-top: 5px;
+}
+.otherSrcBox div img {
+	width: 100%;
+	height: 100%;
 }
 .divisionBox {
 	display: flex;

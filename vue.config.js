@@ -13,13 +13,14 @@
 module.exports = {
     publicPath: '/leaguefront/',
     outputDir: 'leaguefront',
+    productionSourceMap: false,
     devServer: {
         port: 8011,
         proxy: {
             '/apw': {
-                target: 'http://adartstest.adarts-cn.com:9090/web', // 后端-曾
+                // target: 'http://adartstest.adarts-cn.com:9090/web', // 后端-曾
                 // target: "http://192.168.2.105:9091/darts", // 后端-廖
-                // target: 'http://127.0.0.1:9090/web', // 部署地址
+                target: 'http://127.0.0.1:9090/web', // 部署地址
                 changeOrigin: true,
                 ws: true,
                 pathRewrite: {

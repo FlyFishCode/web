@@ -463,6 +463,7 @@ export default defineComponent({
 		const init = () => {
 			matchDateHttp({ confrontationInfoId: prop.confrontationInfoId || '' }).then((res) => {
 				if (!res.data.data) return;
+				data.matchTable = res.data.data;
 				const date = new Date();
 				let flag = true;
 				let surplusDay = 0;
@@ -543,7 +544,6 @@ export default defineComponent({
 						res.data.data.second = 0;
 					}
 				}
-				data.matchTable = res.data.data;
 			});
 		};
 		const getTeamLineU = (confrontationInfoId = prop.confrontationInfoId) => {
@@ -560,6 +560,7 @@ export default defineComponent({
 								i.mode = 1;
 								break;
 							case 2:
+							case 5:
 								i.mode = 2;
 								break;
 							case 3:
@@ -567,9 +568,6 @@ export default defineComponent({
 								break;
 							case 4:
 								i.mode = 4;
-								break;
-							case 5:
-								i.mode = 2;
 								break;
 							default:
 								i.mode = 4;
@@ -725,7 +723,7 @@ export default defineComponent({
 	justify-content: center;
 	align-items: center;
 }
-.legGameSet{
+.legGameSet {
 	display: flex;
 	align-items: center;
 	justify-content: space-around;

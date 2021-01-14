@@ -25,6 +25,10 @@ import '@/assets/css/inPhone.css';
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 
+// 引入Element 组件
+import ElementPlus from 'element-plus';
+import 'element-plus/lib/theme-chalk/index.css';
+
 const app = createApp(App);
 
 // 不需要添加全局 需要使用的地方直接$i18n.locale
@@ -43,6 +47,7 @@ app.config.globalProperties.$filters = {
 
 app.use(store);
 app.use(Antd);
+app.use(ElementPlus);
 app.use(i18n);
 app.use(router);
 app.mount('#app');

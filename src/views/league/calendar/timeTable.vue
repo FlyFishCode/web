@@ -139,7 +139,53 @@
 		</div>
 		<entryList :entryPath="entryPath" />
 		<div>
-			<a-modal v-model:visible="visible" centered width="800px" :footer="null" :title="$t('default.157')">
+			<el-dialog v-model="visible" :title="$t('default.151')">
+				<!-- <el-row>
+					<el-col :span="6">
+						<el-select v-model="matchType" @change="matchTypeChange" class="selectBox">
+							<el-option v-for="item in matchTypeList" :key="item.value" :label="$t(item.label)" :value="item.value"> </el-option>
+						</el-select>
+					</el-col>
+					<a-col :span="6">
+						<el-select v-model="matchType" @change="matchTypeChange" class="selectBox">
+							<el-option v-for="item in matchTypeList" :key="item.value" :label="$t(item.label)" :value="item.value"> </el-option>
+						</el-select>
+					</a-col>
+				</el-row> -->
+				<div v-for="(item, itemIndex) in dialogList" :key="itemIndex">
+					<el-table border :data="item">
+						<el-table-column v-for="(header, index) in tableHeader" :key="index" :property="String(header.id)" :label="header.visitingTeamName" min-width="110px">
+							<template v-slot="scope">
+								<template v-if="index === 0">
+									<div>{{ scope.row.homeTeamName }}</div>
+								</template>
+								<template v-if="index !== 0">
+									<div v-if="showData(index, scope.$index + 1, itemIndex).state === 1">{{ $t('default.64') }}</div>
+									<div v-if="showData(index, scope.$index + 1, itemIndex).state === 2">{{ $t('default.104') }}</div>
+									<div v-if="showData(index, scope.$index + 1, itemIndex).state === 3" @click="entryPage(scope.row)">
+										<div>{{ showData(index, scope.$index + 1, itemIndex).confrontationDate.split(' ')[0] }}</div>
+										<div>{{ showData(index, scope.$index + 1, itemIndex).homeTeamName }}</div>
+										<div>{{ showData(index, scope.$index + 1, itemIndex).visitingTeamName }}</div>
+										<div>{{ showData(index, scope.$index + 1, itemIndex).week }}</div>
+									</div>
+									<!-- <div>
+										<el-button v-if="showData(index, scope.$index + 1, itemIndex).state === 1" size="mini" @click="showTopBox(showData(index, scope.$index + 1, itemIndex))">{{
+											$t('all.tip334')
+										}}</el-button>
+										<el-button v-if="showData(index, scope.$index + 1, itemIndex).state === 2" size="mini" type="primary" @click="showTopBox(showData(index, scope.$index + 1, itemIndex))">{{
+											$t('all.tip288')
+										}}</el-button>
+										<el-button v-if="showData(index, scope.$index + 1, itemIndex).state === 3" size="mini" type="danger" @click="showTopBox(showData(index, scope.$index + 1, itemIndex))">{{
+											$t('all.tip333')
+										}}</el-button>
+									</div> -->
+								</template>
+							</template>
+						</el-table-column>
+					</el-table>
+				</div>
+			</el-dialog>
+			<!-- <a-modal v-model:visible="visible" centered width="800px" :footer="null" :title="$t('default.157')">
 				<a-row>
 					<a-col :span="6">
 						<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
@@ -172,7 +218,7 @@
 						</template>
 					</a-table>
 				</a-row>
-			</a-modal>
+			</a-modal> -->
 		</div>
 	</div>
 </template>
@@ -193,6 +239,8 @@ import { message } from 'ant-design-vue';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 
 interface DataProps {
+	allMatchTableData: Array<any>;
+	tableHeader: Array<any>;
 	confrontationId: any;
 	competitionId: any;
 	dialogColumns: Array<any>;
@@ -252,6 +300,8 @@ export default defineComponent({
 			searchValue: '',
 			ismatchTablePage: false,
 			tableDataList: [],
+			tableHeader: [{ index: 0 }],
+			allMatchTableData: [],
 			pageNum: 1,
 			pageSize: 10,
 			pageTotal: 1,
@@ -308,7 +358,21 @@ export default defineComponent({
 					slots: { title: 'customTitle', customRender: 'homeTeamName' }
 				}
 			],
-			dialogList: [{ round: 0 }],
+			dialogList: [],
+			entryPage: (row: any) => {
+				console.log(row);
+				data.visible = false;
+				data.ismatchTablePage = true;
+				data.ready = false;
+				ROUTER.push({
+					path: '/calendar',
+					query: {
+						activeKey: '2',
+						competitionId: row.confrontationInfoId,
+						divisionId: row.confrontationInfoId
+					}
+				});
+			},
 			getTypeBtn: (row: any) => {
 				if ((row.homeCaptainId === userId || row.visitingCaptainId === userId) && row.status === 1) {
 					return true;
@@ -445,6 +509,22 @@ export default defineComponent({
 				}
 			],
 			tableList: [{ confrontationInfoId: 1 }],
+			showData(x: any, y: any, index: any) {
+				// 横坐标，纵坐标，第几个数组
+				let obj = {};
+				obj = data.allMatchTableData[index].find((i: any) => i.homeSeedNumber === x && i.visitingSeedNumber === y);
+				if (obj) {
+					return obj;
+				}
+				return {
+					confrontationDate: '',
+					homeTeamName: '',
+					visitingTeamName: '',
+					state: '',
+					week: '',
+					id: ''
+				};
+			},
 			teamChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTimeTableList();
@@ -553,25 +633,50 @@ export default defineComponent({
 				getDialogList(option);
 			}
 		});
-		const getDialogList = (confrontationId: any) => {
-			matchtableHttp({ confrontationId }).then((res) => {
-				const teamObj: any = {};
-				res.data.data.loopSurfaceList.forEach((i: any) => {
-					i.matchTableList.forEach((j: any) => {
-						if (!teamObj[j.visitingTeamName]) {
-							teamObj[j.visitingTeamName] = true;
-							const obj = {
-								title: j.visitingTeamName,
-								dataIndex: 'visitingTeamName',
-								slots: { customRender: 'getInfo' }
-							};
-							data.dialogColumns.push(obj);
-						}
+		const getDialogList = (id: any) => {
+			matchtableHttp({ confrontationId: id }).then((res) => {
+				if (res.data.data) {
+					const homeObj: any = {};
+					const awayObj: any = {};
+					const list: any = [];
+					res.data.data.loopSurfaceList.forEach((i: any) => {
+						const arr = Object.assign(i.matchTableList, []);
+						i.matchTableList.forEach((j: any) => {
+							if (!awayObj[j.homeTeamId]) {
+								awayObj[j.homeTeamId] = true;
+								data.tableHeader.push(j);
+							}
+							if (!homeObj[j.visitingTeamId]) {
+								homeObj[j.visitingTeamId] = true;
+								list.push(j);
+							}
+						});
+						debugger;
+						data.dialogList.push(list);
+						data.allMatchTableData.push(arr);
 					});
-				});
-				data.dialogList = res.data.data.loopSurfaceList;
+				}
 			});
 		};
+		// const getDialogList = (confrontationId: any) => {
+		// 	matchtableHttp({ confrontationId }).then((res) => {
+		// 		const teamObj: any = {};
+		// 		res.data.data.loopSurfaceList.forEach((i: any) => {
+		// 			i.matchTableList.forEach((j: any) => {
+		// 				if (!teamObj[j.visitingTeamName]) {
+		// 					teamObj[j.visitingTeamName] = true;
+		// 					const obj = {
+		// 						title: j.visitingTeamName,
+		// 						dataIndex: 'visitingTeamName',
+		// 						slots: { customRender: 'getInfo' }
+		// 					};
+		// 					data.dialogColumns.push(obj);
+		// 				}
+		// 			});
+		// 		});
+		// 		data.dialogList = res.data.data.loopSurfaceList;
+		// 	});
+		// };
 		const getSelectList = () => {
 			const obj = {
 				competitionId: data.competitionId,

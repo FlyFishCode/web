@@ -20,26 +20,15 @@
 					</a-col>
 				</a-row>
 				<a-row v-for="(leg, legIndex) in set.legResultList" :key="legIndex" id="table">
-					<!-- <a-row class="legBox">
-						<a-col :span="4">{{ $t('default.10') }}</a-col>
-						<a-col :span="3">{{ 'PPD' }}</a-col>
-						<a-col :span="3">{{ $t('default.58') }}</a-col>
-						<a-col :span="4">
-							<div>{{ `leg  ${legIndex + 1} ${getGameMode(leg.gameName)}` }}</div>
-						</a-col>
-						<a-col :span="3">{{ $t('default.58') }}</a-col>
-						<a-col :span="3">{{ 'PPD' }}</a-col>
-						<a-col :span="4">{{ $t('default.10') }}</a-col>
-					</a-row> -->
 					<a-table :columns="columns" :data-source="leg.playerResultList" rowkey="mode" :pagination="false" bordered>
-						<!-- <template #gameNameTitle="{ record }"> -->
 						<template #gameNameTitle>
 							<span>{{ `leg  ${legIndex + 1} (${getGameMode(leg.gameName)})` }}</span>
 						</template>
 						<template v-slot:homePlayerInfo="{ record }">
 							<div class="playerbox">
 								<div class="playerImgBox">
-									<img :src="record.homePlayerPortrait" alt="" />
+									<span v-if="record.homePlayerPortrait"><img :src="record.homePlayerPortrait" alt=""></span>
+									<span v-else><img :src="defaultTeamImg" alt=""></span>
 								</div>
 								<div>{{ record.homePlayerName }}</div>
 							</div>
@@ -48,7 +37,8 @@
 							<div class="playerbox">
 								<div>{{ record.visitingPlayerName }}</div>
 								<div class="playerImgBox">
-									<img :src="record.visitingPlayerPortrait" alt="" />
+									<span v-if="record.homePlayerPortrait"><img :src="record.visitingPlayerPortrait" alt=""></span>
+									<span v-else><img :src="defaultTeamImg" alt=""></span>
 								</div>
 							</div>
 						</template>
@@ -134,6 +124,7 @@ export default defineComponent({
 	setup(prop: any) {
 		const data = reactive({
 			tableList: [{ legResultList: [{ playerResultList: [] }] }],
+			defaultTeamImg:require('@/assets/icon.png') ,
 			columns: [
 				{
 					title: '玩家',

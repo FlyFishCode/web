@@ -8,7 +8,8 @@
 					<div v-if="matchTeam.homeManageStatus === 2" class="teamStateStyle">{{ $t('default.61') }}</div>
 				</div>
 				<div class="matchImgBox">
-					<img :src="matchTeam.homeImgUrl" alt="" />
+					<span v-if="matchTeam.homeImgUrl"><img :src="matchTeam.homeImgUrl" alt=""/></span>
+					<span v-else><img :src="defaultTeamImg" alt=""/></span>
 				</div>
 				<div class="teamName">{{ matchTeam.homeTeamName }}</div>
 				<div class="teamTopStyle">{{ matchTeam.homeRanking }} <span>th</span></div>
@@ -60,7 +61,8 @@
 					<div v-if="matchTeam.visitingManageStatus === 2" class="teamStateStyle">{{ $t('default.61') }}</div>
 				</div>
 				<div class="matchImgBox">
-					<img :src="matchTeam.visitingImgUrl" alt="" />
+					<span v-if="matchTeam.visitingImgUrl"><img :src="matchTeam.visitingImgUrl" alt=""/></span>
+					<span v-else><img :src="defaultTeamImg" alt=""/></span>
 				</div>
 				<div class="teamName">{{ matchTeam.visitingTeamName }}</div>
 				<div class="teamTopStyle">{{ matchTeam.visitingRanking }} <span>th</span></div>
@@ -95,7 +97,8 @@ export default defineComponent({
 	components: {},
 	setup(prop) {
 		const data = reactive({
-			matchTeam: {}
+			matchTeam: {},
+			defaultTeamImg: require('@/assets/icon.png')
 		});
 		const getMatchTeam = (confrontationInfoId = prop.confrontationInfoId) => {
 			matchTeamInfoHttp({ confrontationInfoId }).then((res) => {

@@ -9,11 +9,11 @@
 					<a-select-option v-for="item in yearList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 				</a-select>
 			</a-col>
-			<a-col :span="3" :xs="0">
+			<!-- <a-col :span="3" :xs="0">
 				<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
 					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 				</a-select>
-			</a-col>
+			</a-col> -->
 		</a-row>
 		<a-table :columns="columns" :scroll="{ x: 600 }" :data-source="dataList" bordered rowKey="lowTon" :pagination="false">
 			<template v-slot:index="{ index }">
@@ -48,7 +48,6 @@ export default defineComponent({
 				{ value: 2020, label: 2020 },
 				{ value: 2021, label: 2021 }
 			],
-			matchTypeList: [{ value: 2020, label: '2020' }],
 			columns: [
 				{
 					title: 'MONTH',

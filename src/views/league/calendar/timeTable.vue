@@ -103,7 +103,7 @@
 					<template v-slot:status="{ record }">
 						<div class="tableState">
 							<div v-if="getTypeBtn(record)" class="plan" @click="readyClick(record)">{{ $t('default.41') }}</div>
-							<div v-if="record.status === 2">{{ $t('default.104') }}</div>
+							<div v-if="record.status === 2" class="plan" @click="finishClick(record.confrontationInfoId)">{{ $t('default.104') }}</div>
 							<div v-if="record.status === 3" class="plan" @click="finishClick(record.confrontationInfoId)">{{ $t('default.244') }}</div>
 						</div>
 					</template>
@@ -154,71 +154,26 @@
 				</el-row> -->
 				<div v-for="(item, itemIndex) in dialogList" :key="itemIndex">
 					<el-table border :data="item">
-						<el-table-column v-for="(header, index) in tableHeader" :key="index" :property="String(header.id)" :label="header.visitingTeamName" min-width="110px">
+						<el-table-column v-for="(header, index) in tableHeader" :key="index" :property="String(header.id)" :label="header.homeTeamName" align="center" min-width="110px">
 							<template v-slot="scope">
 								<template v-if="index === 0">
-									<div>{{ scope.row.homeTeamName }}</div>
+									<div>{{ scope.row.visitingTeamName }}</div>
 								</template>
 								<template v-if="index !== 0">
-									<div v-if="showData(index, scope.$index + 1, itemIndex).state === 1">{{ $t('default.64') }}</div>
-									<div v-if="showData(index, scope.$index + 1, itemIndex).state === 2">{{ $t('default.104') }}</div>
-									<div v-if="showData(index, scope.$index + 1, itemIndex).state === 3" @click="entryPage(scope.row)">
-										<div>{{ showData(index, scope.$index + 1, itemIndex).confrontationDate.split(' ')[0] }}</div>
-										<div>{{ showData(index, scope.$index + 1, itemIndex).homeTeamName }}</div>
-										<div>{{ showData(index, scope.$index + 1, itemIndex).visitingTeamName }}</div>
-										<div>{{ showData(index, scope.$index + 1, itemIndex).week }}</div>
+									<div>{{ showData(header.homeTeamId, scope.row.visitingTeamId, itemIndex).confrontationDate.split(' ')[0] }}</div>
+									<div v-if="showData(header.homeTeamId, scope.row.visitingTeamId, itemIndex).state === 1">{{ $t('default.64') }}</div>
+									<div v-if="showData(header.homeTeamId, scope.row.visitingTeamId, itemIndex).state === 2">{{ $t('default.104') }}</div>
+									<div v-if="showData(header.homeTeamId, scope.row.visitingTeamId, itemIndex).state === 3" @click="entryPage(scope.row)">
+										<div>{{ showData(header.homeTeamId, scope.row.visitingTeamId, itemIndex).homeTeamName }}</div>
+										<div>{{ showData(header.homeTeamId, scope.row.visitingTeamId, itemIndex).visitingTeamName }}</div>
+										<div>{{ showData(header.homeTeamId, scope.row.visitingTeamId, itemIndex).week }}</div>
 									</div>
-									<!-- <div>
-										<el-button v-if="showData(index, scope.$index + 1, itemIndex).state === 1" size="mini" @click="showTopBox(showData(index, scope.$index + 1, itemIndex))">{{
-											$t('all.tip334')
-										}}</el-button>
-										<el-button v-if="showData(index, scope.$index + 1, itemIndex).state === 2" size="mini" type="primary" @click="showTopBox(showData(index, scope.$index + 1, itemIndex))">{{
-											$t('all.tip288')
-										}}</el-button>
-										<el-button v-if="showData(index, scope.$index + 1, itemIndex).state === 3" size="mini" type="danger" @click="showTopBox(showData(index, scope.$index + 1, itemIndex))">{{
-											$t('all.tip333')
-										}}</el-button>
-									</div> -->
 								</template>
 							</template>
 						</el-table-column>
 					</el-table>
 				</div>
 			</el-dialog>
-			<!-- <a-modal v-model:visible="visible" centered width="800px" :footer="null" :title="$t('default.157')">
-				<a-row>
-					<a-col :span="6">
-						<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-							<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
-						</a-select>
-					</a-col>
-					<a-col :span="6">
-						<a-select v-model:value="matchType" @change="matchTypeChange" class="selectBox">
-							<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
-						</a-select>
-					</a-col>
-				</a-row>
-				<a-row class="dialogRow" v-for="item in dialogList" :key="item.index">
-					<a-table id="diaLogTable" :columns="dialogColumns" :data-source="item.matchTableList" rowkey="round" :pagination="false" bordered width="70%">
-						<template #customTitle>
-							<div class="columnsBox">
-								<div class="dialogAwayClass">{{ 'Away' }}</div>
-								<div class="dialogHomeClass">{{ 'Home' }}</div>
-							</div>
-						</template>
-						<template #homeTeamName="{ text }">
-							<div>{{ text }}</div>
-						</template>
-						<template #getInfo="{ record }">
-							<div class="infoClass" @click="entryInfoPage(record)">
-								<div>{{ record.confrontationDate }}</div>
-								<div>{{ record.homeTeamId }}:{{ record.visitingTeamId }}</div>
-								<div>{{ `WIN ${record.winner === 1 ? record.homeTeamName : record.visitingTeamName}` }}</div>
-							</div>
-						</template>
-					</a-table>
-				</a-row>
-			</a-modal> -->
 		</div>
 	</div>
 </template>
@@ -236,6 +191,7 @@ import lunboGundong from '@/components/inCalendar.vue';
 import inMatchTable from '@/components/inMatchTable.vue';
 import entryList from '@/components/common/entryList.vue';
 import { message } from 'ant-design-vue';
+import { yearList } from '@/components/common/public';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 
 interface DataProps {
@@ -254,7 +210,7 @@ interface DataProps {
 	teamId: string;
 	isHome: number;
 	playerListId: number;
-	year: number;
+	year: any;
 	month: string | number;
 	pageNum: number;
 	pageSize: number;
@@ -309,11 +265,8 @@ export default defineComponent({
 			divisiton: '',
 			stageList: [{ stageId: '' }],
 			divisitonList: [{ divisionId: 0, stageList: [] }],
-			year: 2020,
-			yearList: [
-				{ value: 2020, label: 2020 },
-				{ value: 2021, label: 2021 }
-			],
+			year: '',
+			yearList,
 			state: '',
 			stateList: [
 				{ value: '', label: 'ALL' },
@@ -367,7 +320,6 @@ export default defineComponent({
 				ROUTER.push({
 					path: '/calendar',
 					query: {
-						activeKey: '2',
 						competitionId: row.confrontationInfoId,
 						divisionId: row.confrontationInfoId
 					}
@@ -509,10 +461,10 @@ export default defineComponent({
 				}
 			],
 			tableList: [{ confrontationInfoId: 1 }],
-			showData(x: any, y: any, index: any) {
+			showData(x: number, y: number, index: number) {
 				// 横坐标，纵坐标，第几个数组
 				let obj = {};
-				obj = data.allMatchTableData[index].find((i: any) => i.homeSeedNumber === x && i.visitingSeedNumber === y);
+				obj = data.allMatchTableData[index].find((i: any) => i.homeTeamId === x && i.visitingTeamId === y);
 				if (obj) {
 					return obj;
 				}
@@ -567,7 +519,7 @@ export default defineComponent({
 					stageId: data.stageId,
 					year: year,
 					month: parseInt(month),
-					teamId: data.teamId,
+					teamId: '',
 					status: data.state,
 					[data.secrchType]: data.searchValue,
 					pageIndex: data.pageNum,
@@ -639,6 +591,7 @@ export default defineComponent({
 					const homeObj: any = {};
 					const awayObj: any = {};
 					const list: any = [];
+					// data.tableHeader = [{ index: 0 }]
 					res.data.data.loopSurfaceList.forEach((i: any) => {
 						const arr = Object.assign(i.matchTableList, []);
 						i.matchTableList.forEach((j: any) => {

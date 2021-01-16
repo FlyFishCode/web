@@ -5,8 +5,8 @@
 		</a-row>
 		<a-row class="rowStyle">
 			<a-col :lg="3" :xs="8">
-				<a-select v-model:value="year" @change="matchTypeChange" class="selectBox">
-					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+				<a-select v-model:value="year" @change="yearChange" class="selectBox">
+					<a-select-option v-for="item in yearList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 				</a-select>
 			</a-col>
 			<!-- <a-col :lg="3" :xs="6">
@@ -185,7 +185,10 @@ export default defineComponent({
 				{ value: 2, label: 'default.104' },
 				{ value: 3, label: 'default.244' }
 			],
-			matchTypeList: [{ value: 2020, label: '2020' }],
+			yearList: [
+				{ value: 2020, label: 2020 },
+				{ value: 2021, label: 2021 }
+			],
 			dataList: [],
 			dateList: [],
 			getTypeBtn: (row: any) => {
@@ -359,8 +362,9 @@ export default defineComponent({
 					}
 				});
 			},
-			matchTypeChange: (value: number) => {
-				console.log(value);
+			yearChange: () => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getSelectList()
 			},
 			entryPage: () => {
 				ROUTER.push({

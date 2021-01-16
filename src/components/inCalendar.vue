@@ -164,8 +164,7 @@ export default defineComponent({
 					if (teamId) {
 						ctx.emit('show-match', row.confrontationInfoId, row.state, isHome, teamId);
 					}
-				}
-				if (row.state === 3) {
+				} else {
 					teamId = 3;
 				}
 				if (teamId) {

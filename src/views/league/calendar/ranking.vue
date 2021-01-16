@@ -140,7 +140,7 @@
 									<img class="tableImg" :src="record.playerImg" alt="" />
 									<div>
 										<div>{{ record.playerName }}</div>
-										<div class="link" @click="showDialog(record.teamId)">{{ record.shop.shopName }}</div>
+										<div v-if="record.shop" class="link" @click="showDialog(record.teamId)">{{ record.shop.shopName }}</div>
 									</div>
 								</div>
 							</template>

@@ -87,38 +87,38 @@ const getNewData = (obj: any) => {
 	const data = {
 		img: obj.playerImg || '',
 		playerName: obj.playerName || '',
-		shopName: obj.shop.shopName || '',
-		shopAddress: obj.shop.shopAddress || '',
-		country: obj.shop.countryName || '',
-		rating: obj.playerRating.rating || 0,
-		ppd: obj.playerRating.ppd || 0,
-		mpr: obj.playerRating.mpr || 0,
+		shopName: obj.shop && obj.shop.shopName || '',
+		shopAddress: obj.shop && obj.shop.shopAddress || '',
+		country: obj.shop && obj.shop.countryName || '',
+		rating: obj.shop && obj.playerRating.rating || 0,
+		ppd: obj.shop && obj.playerRating.ppd || 0,
+		mpr: obj.shop && obj.playerRating.mpr || 0,
 		resultList: [
 			{
 				title: 'Award 01',
-				LT: obj.playerResultDetails.lowTon || 0,
-				HT: obj.playerResultDetails.highTon || 0,
-				'LT.OFF': obj.playerResultDetails.lowTonOut || 0,
-				'HT.OFF': obj.playerResultDetails.highTonOut || 0
+				LT: obj.playerResultDetails && obj.playerResultDetails.lowTon || 0,
+				HT: obj.playerResultDetails && obj.playerResultDetails.highTon || 0,
+				'LT.OFF': obj.playerResultDetails && obj.playerResultDetails.lowTonOut || 0,
+				'HT.OFF': obj.playerResultDetails && obj.playerResultDetails.highTonOut || 0
 			},
 			{
 				title: 'Award 02',
-				HAT: obj.playerResultDetails.lowTon || 0,
-				BED: obj.playerResultDetails.highTon || 0,
-				180: obj.playerResultDetails.lowTonOut || 0,
-				EYE: obj.playerResultDetails.highTonOut || 0
+				HAT: obj.playerResultDetails && obj.playerResultDetails.lowTon || 0,
+				BED: obj.playerResultDetails && obj.playerResultDetails.highTon || 0,
+				180: obj.playerResultDetails && obj.playerResultDetails.lowTonOut || 0,
+				EYE: obj.playerResultDetails && obj.playerResultDetails.highTonOut || 0
 			},
 			{
 				title: 'Award 03',
-				'5M': obj.playerResultDetails.fiveMarks || 0,
-				'6M': obj.playerResultDetails.sixMarks || 0,
-				'7M': obj.playerResultDetails.sevenMarks || 0,
-				'8M': obj.playerResultDetails.eightMarks || 0
+				'5M': obj.playerResultDetails && obj.playerResultDetails.fiveMarks || 0,
+				'6M': obj.playerResultDetails && obj.playerResultDetails.sixMarks || 0,
+				'7M': obj.playerResultDetails && obj.playerResultDetails.sevenMarks || 0,
+				'8M': obj.playerResultDetails && obj.playerResultDetails.eightMarks || 0
 			},
 			{
 				title: 'Award 04',
-				'9M': obj.playerResultDetails.nineMarks || 0,
-				WH: obj.playerResultDetails.whiteHorse || 0
+				'9M': obj.playerResultDetails && obj.playerResultDetails.nineMarks || 0,
+				WH: obj.playerResultDetails && obj.playerResultDetails.whiteHorse || 0
 			}
 		]
 	};

@@ -152,6 +152,7 @@ import { indexCountryHttp, indexCityHttp, leagueAllListHttp, leagueMyListHttp } 
 import { useRoute, useRouter } from 'vue-router';
 import { SearchOutlined, SettingFilled, EnvironmentOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 import emptyList from '@/components/common/emptyList.vue';
+import { yearList } from '@/components/common/public';
 interface HTMLInputEvent {
 	value: HTMLInputElement & EventTarget;
 }
@@ -176,7 +177,7 @@ export default defineComponent({
 			isUp: true,
 			all: 'ALL',
 			my: 'MY',
-			year: 2020,
+			year: '',
 			month: ' ',
 			status: '',
 			inputValue: '',
@@ -193,11 +194,7 @@ export default defineComponent({
 			areaId: null,
 			countryList: [],
 			areaList: [],
-			matchTypeList: [{ value: 2020, label: '2020' }],
-			yearList: [
-				{ value: 2020, label: 2020 },
-				{ value: 2021, label: 2021 }
-			],
+			yearList,
 			monthList: [
 				{ value: ' ', label: 'ALL' },
 				{ value: 1, label: 1 },
@@ -371,7 +368,6 @@ export default defineComponent({
 }
 .tabsBox >>> .ant-tabs-nav-scroll {
 	display: flex;
-	margin: 10px;
 }
 .btnStyle {
 	width: 100%;

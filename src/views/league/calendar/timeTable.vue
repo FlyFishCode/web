@@ -26,13 +26,13 @@
 
 			<a-row class="rowStyle">
 				<a-tabs type="card" v-model:activeKey="currentKey">
-					<a-tab-pane v-if="!ready" key="1" :tab="$t('default.62')">
+					<a-tab-pane v-if="isResult" key="1" :tab="$t('default.62')">
 						<matchResult :confrontationInfoId="confrontationInfoId" />
 					</a-tab-pane>
-					<a-tab-pane v-if="ready" key="2" :tab="$t('default.41')">
+					<a-tab-pane v-if="isMatchTable" key="2" :tab="$t('default.41')">
 						<matchTable :confrontationInfoId="confrontationInfoId" :isHome="isHome" :teamId="playerListId" />
 					</a-tab-pane>
-					<a-tab-pane v-if="!ready" key="3" tab="AWARD">
+					<a-tab-pane v-if="isAward" key="3" tab="AWARD">
 						<award :confrontationInfoId="confrontationInfoId" />
 					</a-tab-pane>
 				</a-tabs>
@@ -103,7 +103,7 @@
 					<template v-slot:status="{ record }">
 						<div class="tableState">
 							<div v-if="getTypeBtn(record)" class="plan" @click="readyClick(record)">{{ $t('default.41') }}</div>
-							<div v-if="record.status === 2" class="plan" @click="finishClick(record.confrontationInfoId)">{{ $t('default.104') }}</div>
+							<div v-if="record.status === 2">{{ $t('default.104') }}</div>
 							<div v-if="record.status === 3" class="plan" @click="finishClick(record.confrontationInfoId)">{{ $t('default.244') }}</div>
 						</div>
 					</template>
@@ -140,20 +140,8 @@
 		<entryList :entryPath="entryPath" />
 		<div>
 			<el-dialog v-model="visible" :title="$t('default.151')">
-				<!-- <el-row>
-					<el-col :span="6">
-						<el-select v-model="matchType" @change="matchTypeChange" class="selectBox">
-							<el-option v-for="item in matchTypeList" :key="item.value" :label="$t(item.label)" :value="item.value"> </el-option>
-						</el-select>
-					</el-col>
-					<a-col :span="6">
-						<el-select v-model="matchType" @change="matchTypeChange" class="selectBox">
-							<el-option v-for="item in matchTypeList" :key="item.value" :label="$t(item.label)" :value="item.value"> </el-option>
-						</el-select>
-					</a-col>
-				</el-row> -->
 				<div v-for="(item, itemIndex) in dialogList" :key="itemIndex">
-					<el-table border :data="item">
+					<el-table border :data="item" class="tableClass">
 						<el-table-column v-for="(header, index) in tableHeader" :key="index" :property="String(header.id)" :label="header.homeTeamName" align="center" min-width="110px">
 							<template v-slot="scope">
 								<template v-if="index === 0">
@@ -179,7 +167,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, nextTick } from 'vue';
 // 排阵页面
 import matchTable from '@/views/league/matchTable/matchTable.vue';
 import matchResult from '@/views/league/matchResult/matchResult.vue';
@@ -195,6 +183,7 @@ import { yearList } from '@/components/common/public';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 
 interface DataProps {
+	cycleNum: any;
 	allMatchTableData: Array<any>;
 	tableHeader: Array<any>;
 	confrontationId: any;
@@ -203,7 +192,9 @@ interface DataProps {
 	tableList: Array<any>;
 	dialogList: Array<any>;
 	visible: boolean;
-	ready: boolean;
+	isResult: boolean;
+	isMatchTable: boolean;
+	isAward: boolean;
 	ismatchTablePage: boolean;
 	stageId: string;
 	divisiton: string;
@@ -217,7 +208,7 @@ interface DataProps {
 	pageTotal: number;
 	confrontationInfoId: any;
 	state: string;
-	currentKey: any;
+	currentKey: string;
 	secrchType: string;
 	searchValue: string;
 	stageList: Array<any>;
@@ -252,11 +243,14 @@ export default defineComponent({
 			visible: false,
 			isHome: 0,
 			playerListId: 0,
-			ready: false,
+			isResult: false,
+			isMatchTable: false,
+			isAward: false,
 			searchValue: '',
 			ismatchTablePage: false,
 			tableDataList: [],
-			tableHeader: [{ index: 0 }],
+			tableHeader: [{ homeTeamName: 'cycle 1' }],
+			cycleNum: 0,
 			allMatchTableData: [],
 			pageNum: 1,
 			pageSize: 10,
@@ -313,10 +307,9 @@ export default defineComponent({
 			],
 			dialogList: [],
 			entryPage: (row: any) => {
-				console.log(row);
 				data.visible = false;
 				data.ismatchTablePage = true;
-				data.ready = false;
+				data.isMatchTable = true;
 				ROUTER.push({
 					path: '/calendar',
 					query: {
@@ -487,6 +480,11 @@ export default defineComponent({
 			},
 			showMatchTable: () => {
 				data.visible = true;
+				nextTick(() => {
+					document.querySelectorAll('.tableClass .el-table__header-wrapper .has-gutter tr th:first-child div').forEach((i: any, index: number) => {
+						i.innerText = `cycle ${index + 1}`;
+					});
+				});
 			},
 			onSearch: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -497,21 +495,24 @@ export default defineComponent({
 				getTimeTableList();
 			},
 			showMatch: (value: any, state: number, isHome: number, teamId: number) => {
-				data.confrontationInfoId = value;
+				if (state === 2) {
+					return;
+				}
 				switch (state) {
 					case 1:
-						data.ready = true;
+						data.isMatchTable = true;
 						data.currentKey = '2';
 						break;
-					case 2:
-					default:
-						data.ready = false;
+					case 3:
+						data.isResult = true;
+						data.isAward = true;
 						break;
 				}
 				debugger;
 				data.isHome = isHome;
 				data.playerListId = teamId;
 				data.ismatchTablePage = true;
+				data.confrontationInfoId = value;
 			},
 			changelist: (date: string) => {
 				const [year, month] = date.split('-');
@@ -540,14 +541,22 @@ export default defineComponent({
 					data.playerListId = row.visitingTeamId;
 				}
 				data.ismatchTablePage = true;
-				data.ready = true;
-				data.currentKey = '2';
+				debugger
+				// 如果是草稿状态/未提交状态，或者有更改选手 可以进入排阵页面。或者去结果页面查看排阵队伍
+				if ((row.homeTeamStatus === 1 || row.visitingTeamStatus === 1 || row.homeTeamChange || row.visitingTeamChange) || !row.homeTeamStatus || !row.visitingTeamStatus) {
+					data.isMatchTable = true;
+					data.currentKey = '2';
+				} else {
+					data.isResult = true;
+					data.currentKey = '1';
+				}
 				data.confrontationInfoId = row.confrontationInfoId;
 			},
 			finishClick: (confrontationInfoId: number) => {
 				data.confrontationInfoId = confrontationInfoId;
 				data.ismatchTablePage = true;
-				data.ready = false;
+				data.isResult = true;
+				data.isAward = true;
 			},
 			entryInfoPage: (row: any) => {
 				console.log(row);
@@ -579,8 +588,6 @@ export default defineComponent({
 				} else {
 					data.teamId = '';
 				}
-				debugger;
-				console.log(option);
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getDialogList(option);
 			}
@@ -591,7 +598,6 @@ export default defineComponent({
 					const homeObj: any = {};
 					const awayObj: any = {};
 					const list: any = [];
-					// data.tableHeader = [{ index: 0 }]
 					res.data.data.loopSurfaceList.forEach((i: any) => {
 						const arr = Object.assign(i.matchTableList, []);
 						i.matchTableList.forEach((j: any) => {
@@ -604,32 +610,12 @@ export default defineComponent({
 								list.push(j);
 							}
 						});
-						debugger;
 						data.dialogList.push(list);
 						data.allMatchTableData.push(arr);
 					});
 				}
 			});
 		};
-		// const getDialogList = (confrontationId: any) => {
-		// 	matchtableHttp({ confrontationId }).then((res) => {
-		// 		const teamObj: any = {};
-		// 		res.data.data.loopSurfaceList.forEach((i: any) => {
-		// 			i.matchTableList.forEach((j: any) => {
-		// 				if (!teamObj[j.visitingTeamName]) {
-		// 					teamObj[j.visitingTeamName] = true;
-		// 					const obj = {
-		// 						title: j.visitingTeamName,
-		// 						dataIndex: 'visitingTeamName',
-		// 						slots: { customRender: 'getInfo' }
-		// 					};
-		// 					data.dialogColumns.push(obj);
-		// 				}
-		// 			});
-		// 		});
-		// 		data.dialogList = res.data.data.loopSurfaceList;
-		// 	});
-		// };
 		const getSelectList = () => {
 			const obj = {
 				competitionId: data.competitionId,
@@ -662,8 +648,7 @@ export default defineComponent({
 			timeTableDataListHttp(obj).then((res) => {
 				data.tableList = res.data.data.list;
 				data.tableDataList = res.data.data.list;
-				data.pageTotal = res.data.data.totalCount;
-				console.log(data.tableList);
+				// data.pageTotal = res.data.data.totalCount;
 			});
 		};
 		const init = (queryObj: any) => {
@@ -674,7 +659,7 @@ export default defineComponent({
 				data.currentKey = queryObj.currentKey;
 			}
 			if (queryObj.ready) {
-				data.ready = Boolean(queryObj.ready);
+				data.isMatchTable = Boolean(queryObj.ready);
 			}
 			if (queryObj.teamId) {
 				data.playerListId = queryObj.teamId;

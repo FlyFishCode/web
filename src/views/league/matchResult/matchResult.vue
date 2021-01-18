@@ -157,7 +157,6 @@ export default defineComponent({
 				{
 					colSpan: 0,
 					customRender: (text: any) => {
-						console.log(text);
 						const obj = {
 							children: text.text.homeIsWin === 2 ? 'win' : 'lose',
 							attrs: {

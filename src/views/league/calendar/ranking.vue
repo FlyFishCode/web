@@ -330,26 +330,26 @@ export default defineComponent({
 					slots: { customRender: 'player' }
 				},
 				{ title: 'Rating', dataIndex: 'playerRating.rating', width: 80 },
-				{ title: 'PPD', dataIndex: 'playerRating.ppd', width: 80 },
-				{ title: 'MPR', dataIndex: 'playerRating.mpr', width: 80 },
+				{ title: 'PPD', dataIndex: 'playerRating.ppd', width: 70 },
+				{ title: 'MPR', dataIndex: 'playerRating.mpr', width: 70 },
 				{
 					title: 'Set',
 					key: '4',
 					children: [
-						{ title: 'Total', dataIndex: 'setResult.total', width: 80 },
-						{ title: '胜率', dataIndex: 'setResult.winProbability', width: 90 },
-						{ title: '胜', dataIndex: 'setResult.wins', width: 80 },
-						{ title: '和', dataIndex: 'setResult.draws', width: 80 },
-						{ title: '败', dataIndex: 'setResult.losses', width: 80 }
+						{ title: 'Total', dataIndex: 'setResult.total', width: 70 },
+						{ title: '胜率', dataIndex: 'setResult.winProbability', width: 75 },
+						{ title: '胜', dataIndex: 'setResult.wins', width: 60 },
+						{ title: '和', dataIndex: 'setResult.draws', width: 60 },
+						{ title: '败', dataIndex: 'setResult.losses', width: 60 }
 					]
 				},
-				{ title: 'LT', dataIndex: 'playerResultDetails.lowTon', width: 80 },
-				{ title: 'HAT', dataIndex: 'playerResultDetails.hatTrick', width: 80 },
-				{ title: 'HT.OFF', dataIndex: 'playerResultDetails.highTonOut', width: 80 },
+				{ title: 'LT', dataIndex: 'playerResultDetails.lowTon', width: 50 },
+				{ title: 'HAT', dataIndex: 'playerResultDetails.hatTrick', width: 70 },
+				{ title: 'HT.OFF', dataIndex: 'playerResultDetails.highTonOut', width: 85 },
 				{ title: 'LT.OFF', dataIndex: 'playerResultDetails.lowTonOut', width: 80 },
-				{ title: 'BED', dataIndex: 'playerResultDetails.threeInBed', width: 60 },
+				{ title: 'BED', dataIndex: 'playerResultDetails.threeInBed', width: 65 },
 				{ title: '180', dataIndex: 'playerResultDetails.ton80', width: 60 },
-				{ title: 'EYE', dataIndex: 'playerResultDetails.threeInBlack	', width: 60 },
+				{ title: 'EYE', dataIndex: 'playerResultDetails.threeInBlack	', width: 65 },
 				{ title: '5M', dataIndex: 'playerResultDetails.fiveMarks', width: 60 },
 				{ title: '6M', dataIndex: 'playerResultDetails.sixMarks', width: 60 },
 				{ title: '7M', dataIndex: 'playerResultDetails.sevenMarks', width: 60 },

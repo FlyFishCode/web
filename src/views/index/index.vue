@@ -144,7 +144,8 @@
 						<div v-for="(item, index) in every.list" :key="index" class="teamBox">
 							<div :class="{ first: !index, noFirst: index }">
 								<div class="teamImgBox">
-									<img :src="item.teamImg" />
+									<span v-if="item.teamImg"><img :src="item.teamImg" /></span>
+									<!-- <span v-else><img :src="defultImg" /></span> -->
 								</div>
 								<div v-if="!index" class="detailStyle">
 									<div class="teamName" @click="entryTeamPage(item.teamId)">{{ item.teamName }}</div>
@@ -389,6 +390,7 @@ export default defineComponent({
 			leagueName: '',
 			title: 'default.134',
 			matchTitle: 'default.18',
+			defultImg:require('@/assets/icon.png'),
 			lastDate: new Date(),
 			time: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
 			colSpan: 4,

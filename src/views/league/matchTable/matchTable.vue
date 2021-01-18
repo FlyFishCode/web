@@ -573,8 +573,8 @@ export default defineComponent({
 								i.mode = 4;
 								break;
 						}
-						if (j.playerList.length < i.mode) {
-							for (let index = 0; index < i.mode; index += 1) {
+						for (let index = 0; index < i.mode; index += 1) {
+							if (j.playerList.length < i.mode) {
 								j.playerList.push({
 									playerId: '',
 									playerName: ''

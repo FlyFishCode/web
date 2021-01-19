@@ -337,7 +337,7 @@ export default defineComponent({
 					key: '4',
 					children: [
 						{ title: 'Total', dataIndex: 'setResult.total', width: 70 },
-						{ title: '胜率', dataIndex: 'setResult.winProbability', width: 75 },
+						{ title: '胜率', dataIndex: 'setResult.winProbability', width: 85 },
 						{ title: '胜', dataIndex: 'setResult.wins', width: 60 },
 						{ title: '和', dataIndex: 'setResult.draws', width: 60 },
 						{ title: '败', dataIndex: 'setResult.losses', width: 60 }
@@ -349,7 +349,7 @@ export default defineComponent({
 				{ title: 'LT.OFF', dataIndex: 'playerResultDetails.lowTonOut', width: 80 },
 				{ title: 'BED', dataIndex: 'playerResultDetails.threeInBed', width: 65 },
 				{ title: '180', dataIndex: 'playerResultDetails.ton80', width: 60 },
-				{ title: 'EYE', dataIndex: 'playerResultDetails.threeInBlack	', width: 65 },
+				{ title: 'EYE', dataIndex: 'playerResultDetails.threeInBlack', width: 65 },
 				{ title: '5M', dataIndex: 'playerResultDetails.fiveMarks', width: 60 },
 				{ title: '6M', dataIndex: 'playerResultDetails.sixMarks', width: 60 },
 				{ title: '7M', dataIndex: 'playerResultDetails.sevenMarks', width: 60 },
@@ -359,8 +359,7 @@ export default defineComponent({
 			],
 			playerTableList: [{ playerId: 0 }],
 			tableList: [{ captainId: 0 }],
-			showDialog: (value: string) => {
-				data.teamId = value;
+			showDialog: () => {
 				data.visible = true;
 			},
 			dialogVisible: (value: boolean) => {
@@ -436,7 +435,6 @@ export default defineComponent({
 				pageSize: data.playerPageSize
 			};
 			rankingPlayerHttp(obj).then((res) => {
-				debugger;
 				data.playerTableList = res.data.data.list;
 				data.playerTotal = res.data.data.totalCount;
 				if (res.data.data.list.length) {
@@ -453,7 +451,6 @@ export default defineComponent({
 				pageSize: data.leaguePageSize
 			};
 			rakingLeagueListHttp(obj).then((res) => {
-				debugger;
 				data.leagueTableList = res.data.data.list;
 				if (res.data.data.list.length) {
 					data.isChange = false;

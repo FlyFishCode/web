@@ -133,7 +133,7 @@
 		<div v-else>
 			<emptyList />
 		</div>
-
+		
 		<divTitle :msg="matchTitle" :span="colSpan" :showMore="true" :path="rankingPath" />
 
 		<a-row class="rowStyle inPhoneTableDisplay">

@@ -9,7 +9,7 @@
 					<div class="teamName" @click="showTeamInfo">{{ infoData.teamName }}</div>
 					<div class="disabledClass">{{ infoData.captainName }}</div>
 					<div class="disabledClass" v-if="infoData.shop">{{ infoData.shop.countryName }} > {{ infoData.shop.areaName }}</div>
-					<div class="disabledClass" v-if="infoData.shop">
+					<div class="disabledClass" v-if="infoData.shop && infoData.shop.shopAddress">
 						{{ infoData.shop.shopAddress }}
 						<span @click="showDetail" class="icon">
 							<EnvironmentOutlined />

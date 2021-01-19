@@ -303,7 +303,7 @@ export default {
 }
 .rightIcon {
 	position: absolute;
-	right: 0px;
+	right: 2px;
 	top: calc(50% - 10px);
 }
 .centerBox {

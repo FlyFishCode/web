@@ -52,7 +52,7 @@
 									</div>
 								</div>
 								<div class="right">
-									<div v-for="value of Object.values(item)" :key="value">
+									<div v-for="value of Object.values(item)" :key="item[value]">
 										<div v-if="typeof value !== 'string'"><a-progress :percent="value" strokeColor="red" :format="(percent) => `${percent}`" /></div>
 									</div>
 								</div>
@@ -90,9 +90,9 @@ const getNewData = (obj: any) => {
 		shopName: obj.shop && obj.shop.shopName || '',
 		shopAddress: obj.shop && obj.shop.shopAddress || '',
 		country: obj.shop && obj.shop.countryName || '',
-		rating: obj.shop && obj.playerRating.rating || 0,
-		ppd: obj.shop && obj.playerRating.ppd || 0,
-		mpr: obj.shop && obj.playerRating.mpr || 0,
+		rating: obj.playerRating && obj.playerRating.rating || 0,
+		ppd: obj.playerRating && obj.playerRating.ppd || 0,
+		mpr: obj.playerRating && obj.playerRating.mpr || 0,
 		resultList: [
 			{
 				title: 'Award 01',
@@ -180,6 +180,7 @@ export default {
 			() => prop.playerObj,
 			(val) => {
 				data.infoData = getNewData(val);
+				console.log(data.infoData)
 			}
 		);
 		onMounted(() => {

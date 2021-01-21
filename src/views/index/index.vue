@@ -13,7 +13,7 @@
 						<RightCircleOutlined />
 					</div>
 				</template>
-				<div v-for="(item, index) in mainList" :key="item.id" @click="intoPhoto(mainList,index)" class="photoLink">
+				<div v-for="(item, index) in mainList" :key="item.id" @click="intoPhoto(mainList, index)" class="photoLink">
 					<img :src="item.image" />
 				</div>
 			</a-carousel>
@@ -57,12 +57,12 @@
 								<RightCircleOutlined />
 							</div>
 						</template>
-						<div v-for="(item, index) in viceList" :key="item.id" @click="intoPhoto(viceList,index)" class="photoLink"><img :src="item.image" /></div>
+						<div v-for="(item, index) in viceList" :key="item.id" @click="intoPhoto(viceList, index)" class="photoLink"><img :src="item.image" /></div>
 					</a-carousel>
 				</div>
 				<div class="otherSrcBox">
-					<div v-for="(item,index) in photoList" :key="item">
-						<div @click="intoPhoto(photoList,index)"><img :src="item.img" /></div>
+					<div v-for="(item, index) in photoList" :key="item">
+						<div @click="intoPhoto(photoList, index)"><img :src="item.img" /></div>
 					</div>
 				</div>
 			</a-col>
@@ -133,7 +133,7 @@
 		<div v-else>
 			<emptyList />
 		</div>
-		
+
 		<divTitle :msg="matchTitle" :span="colSpan" :showMore="true" :path="rankingPath" />
 
 		<a-row class="rowStyle inPhoneTableDisplay">
@@ -143,10 +143,8 @@
 						<div class="gameStyle">{{ every.title }}</div>
 						<div v-for="(item, index) in every.list" :key="index" class="teamBox">
 							<div :class="{ first: !index, noFirst: index }">
-								<div class="teamImgBox">
-									<span v-if="item.teamImg"><img :src="item.teamImg" /></span>
-									<!-- <span v-else><img :src="defultImg" /></span> -->
-								</div>
+								<div v-if="!index" class="teamImgBox"><img :src="item.teamImg" /></div>
+								<div :class="{ topOne: !index }" class="teamImgBox"><img :src="item.defultImg" /></div>
 								<div v-if="!index" class="detailStyle">
 									<div class="teamName" @click="entryTeamPage(item.teamId)">{{ item.teamName }}</div>
 									<div class="name">{{ item.captainName }}</div>
@@ -183,9 +181,8 @@
 						<div class="gameStyle">{{ every.title }}</div>
 						<div v-for="(item, index) in every.list" :key="index" class="teamBox">
 							<div :class="{ first: !index, noFirst: index }">
-								<div class="teamImgBox">
-									<img :src="item.playerImg" alt="" />
-								</div>
+								<div v-if="!index" class="teamImgBox"><img :src="item.playerImg" /></div>
+								<div :class="{ topOne: !index }" class="teamImgBox"><img :src="item.defultImg" /></div>
 								<div v-if="!index" class="detailStyle">
 									<div class="teamName" @click="entryPlayerPage(item.playerId)">{{ item.playerName }}</div>
 									<div class="name">{{ item.name }}</div>
@@ -390,12 +387,13 @@ export default defineComponent({
 			leagueName: '',
 			title: 'default.134',
 			matchTitle: 'default.18',
-			defultImg:require('@/assets/icon.png'),
+			defultImg: require('@/assets/icon.png'),
 			lastDate: new Date(),
 			time: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
 			colSpan: 4,
 			visible: false,
 			photoList: [{ img: require('@/assets/icon.png') }, { img: require('@/assets/icon.png') }, { img: require('@/assets/icon.png') }, { img: require('@/assets/icon.png') }],
+			defaultSortImg: [require('@/assets/01.png'), require('@/assets/02.png'), require('@/assets/03.png'), require('@/assets/04.png'),require('@/assets/05.png')],
 			dialogObj: {
 				title: '',
 				img: '',
@@ -433,7 +431,7 @@ export default defineComponent({
 				});
 			},
 			intoPhoto: (list: any, index: number) => {
-				window.open(list[index].link,list[index].target === 1 ? '_blank' : '_self');
+				window.open(list[index].link, list[index].target === 1 ? '_blank' : '_self');
 			},
 			showDetail: (item: any) => {
 				data.dialogObj.title = item.shopAddress;
@@ -502,11 +500,21 @@ export default defineComponent({
 		};
 		const getTeamList = () => {
 			indexTeamHttp({ countryId: sessionStorage.getItem('countryId') }).then((res) => {
+				res.data.data.forEach((i: any) => {
+					i.list.forEach((i: any, index: number) => {
+						Object.assign(i, { defultImg: data.defaultSortImg[index] });
+					});
+				});
 				data.teamList = res.data.data;
 			});
 		};
 		const getPlayerList = () => {
 			indexPlayerHttp({ countryId: sessionStorage.getItem('countryId') }).then((res) => {
+				res.data.data.forEach((i: any) => {
+					i.list.forEach((i: any, index: number) => {
+						Object.assign(i, { defultImg: data.defaultSortImg[index] });
+					});
+				});
 				data.playerList = res.data.data;
 			});
 		};
@@ -620,13 +628,19 @@ export default defineComponent({
 	color: #797878;
 }
 .first .teamImgBox {
-	height: 80px;
+	height: 100px;
 }
 .noFirst .teamImgBox {
 	height: 60px;
+	width: 60px;
 }
 .teamImgBox img {
 	height: 100%;
+}
+.topOne{
+	position: relative;
+	top: -40px;
+	left: -25px;
 }
 .first {
 	height: 150px;

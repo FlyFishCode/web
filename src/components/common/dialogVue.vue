@@ -101,7 +101,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
+import { defineComponent, reactive, toRefs, watch } from 'vue';
 import { dialogInfoHttp, dialogTeamListHttp, dialogHistoryListHttp } from '@/axios/api';
 // import { SettingFilled }'@ant-design/icons-vue';
 export default defineComponent({
@@ -276,11 +276,11 @@ export default defineComponent({
 				data.historyList = res.data.data.list;
 			});
 		};
-		onMounted(() => {
-			getInfoData();
-			getTeamList();
-			getHistoryList();
-		});
+		// onMounted(() => {
+		// 	getInfoData();
+		// 	getTeamList();
+		// 	getHistoryList();
+		// });
 		watch(
 			() => [props.propsVisible, props.teamId, props.competitionId],
 			([newPropsVisible, newTeamId, newCompetitionId]) => {

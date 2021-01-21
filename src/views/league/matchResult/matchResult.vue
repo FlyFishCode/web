@@ -27,8 +27,8 @@
 						<template v-slot:homePlayerInfo="{ record }">
 							<div class="playerbox">
 								<div class="playerImgBox">
-									<span v-if="record.homePlayerPortrait"><img :src="record.homePlayerPortrait" alt=""></span>
-									<span v-else><img :src="defaultTeamImg" alt=""></span>
+									<span v-if="record.homePlayerPortrait"><img :src="record.homePlayerPortrait" alt=""/></span>
+									<span v-else><img :src="defaultTeamImg" alt=""/></span>
 								</div>
 								<div>{{ record.homePlayerName }}</div>
 							</div>
@@ -37,70 +37,14 @@
 							<div class="playerbox">
 								<div>{{ record.visitingPlayerName }}</div>
 								<div class="playerImgBox">
-									<span v-if="record.homePlayerPortrait"><img :src="record.visitingPlayerPortrait" alt=""></span>
-									<span v-else><img :src="defaultTeamImg" alt=""></span>
+									<span v-if="record.homePlayerPortrait"><img :src="record.visitingPlayerPortrait" alt=""/></span>
+									<span v-else><img :src="defaultTeamImg" alt=""/></span>
 								</div>
 							</div>
 						</template>
 					</a-table>
 				</a-row>
 			</div>
-
-			<!-- <a-row v-for="(set, setIndex) in tableList" :key="setIndex">
-				<a-row class="title">
-					<a-col :span="3" class="winnerBox">
-						<div class="winner">{{ set.homeIsWin === 1 ? 'win' : 'lose' }}</div>
-					</a-col>
-					<a-col :span="9" class="leftBox">
-						<div class="left">{{ `SET ${setIndex + 1}` }}</div>
-					</a-col>
-					<a-col :span="9" class="rightBox">
-						<div class="right">{{ getGameType(set.mode) }}</div>
-					</a-col>
-					<a-col :span="3" class="winnerBox">
-						<div class="winner">{{ set.homeIsWin === 2 ? 'win' : 'lose' }}</div>
-					</a-col>
-				</a-row>
-				<a-row v-for="(leg, legIndex) in set.legResultList" :key="legIndex" :data-index="legIndex">
-					<a-row class="legBox">
-						<a-col :span="4">{{ $t('default.10') }}</a-col>
-						<a-col :span="3">{{ 'PPD' }}</a-col>
-						<a-col :span="3">{{ $t('default.58') }}</a-col>
-						<a-col :span="4">
-							<div>{{ `leg  ${legIndex + 1} ${getGameMode(leg.gameName)}` }}</div>
-						</a-col>
-						<a-col :span="3">{{ $t('default.58') }}</a-col>
-						<a-col :span="3">{{ 'PPD' }}</a-col>
-						<a-col :span="4">{{ $t('default.10') }}</a-col>
-					</a-row>
-					<a-row v-for="(player, playerIndex) in leg.playerResultList" :key="playerIndex" class="playerBox">
-						<a-col :span="4">
-							<div class="playerImg">
-								<div class="playerImgBox">
-									<img :src="player.homeImg" alt="" />
-								</div>
-								<div class="playerName">{{ player.homePlayerName }}</div>
-							</div>
-						</a-col>
-						<a-col :span="3">{{ player.homePpd === null ? '-' : player.homePpd }}</a-col>
-						<a-col :span="3">{{ player.homeScore || '-' }}</a-col>
-						<a-col :span="4" class="winStyle">
-							<div class="WinStyle home WinBox">{{ leg.homeIsWin === 1 ? 'win' : 'lose' }}</div>
-							<div class="WinStyle away">{{ leg.homeIsWin === 2 ? 'win' : 'lose' }}</div>
-						</a-col>
-						<a-col :span="3">{{ player.visitingScore === null ? '-' : player.visitingScore }}</a-col>
-						<a-col :span="3">{{ player.visitingPpd || '-' }}</a-col>
-						<a-col :span="4">
-							<div class="playerImg">
-								<div class="playerImgBox">
-									<img :src="player.homeImg" alt="" />
-								</div>
-								<div class="playerName">{{ player.visitingPlayerName }}</div>
-							</div>
-						</a-col>
-					</a-row>
-				</a-row>
-			</a-row> -->
 		</div>
 		<div v-else>
 			<emptyList />
@@ -124,7 +68,7 @@ export default defineComponent({
 	setup(prop: any) {
 		const data = reactive({
 			tableList: [{ legResultList: [{ playerResultList: [] }] }],
-			defaultTeamImg:require('@/assets/icon.png') ,
+			defaultTeamImg: require('@/assets/icon.png'),
 			columns: [
 				{
 					title: '玩家',
@@ -194,8 +138,38 @@ export default defineComponent({
 					case 3:
 						str = '701 Game';
 						break;
+					case 4:
+						str = '901 Game';
+						break;
+					case 5:
+						str = '1101 Game';
+						break;
+					case 6:
+						str = '1501 Game';
+						break;
+					case 7:
+						str = 'StandardCricket';
+						break;
+					case 8:
+						str = 'Cut-ThroatCricket';
+						break;
+					case 9:
+						str = 'Count-Up';
+						break;
+					case 10:
+						str = 'Timing';
+						break;
+					case 11:
+						str = 'HalfIt';
+						break;
+					case 12:
+						str = 'BigBull';
+						break;
+					case 13:
+						str = 'EaglesEye';
+						break;
 					default:
-						str = 'Standard Cricket';
+						str = 'CricketCount-up';
 						break;
 				}
 				return str;
@@ -220,7 +194,6 @@ export default defineComponent({
 			}
 		});
 		const mergeCells = (text: any, dataIndex: any, key: any, index: number, jndex: number) => {
-			debugger;
 			// 上一行该列数据是否一样
 			if (index !== 0 && text === data.tableList[dataIndex]['legResultList'][jndex]['playerResultList'][index - 1][key]) {
 				return 0;
@@ -236,7 +209,7 @@ export default defineComponent({
 			return rowSpan;
 		};
 		const getMatchResultList = (confrontationInfoId: any = '') => {
-			matchResultHttp({ confrontationInfoId,memberId:sessionStorage.getItem('userId') }).then((res) => {
+			matchResultHttp({ confrontationInfoId, memberId: sessionStorage.getItem('userId') }).then((res) => {
 				if (res.data.data) {
 					res.data.data.forEach((i: any, index: number) => {
 						i.legResultList.forEach((j: any, jndex: number) => {

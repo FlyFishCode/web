@@ -127,7 +127,8 @@
 		<a-row v-for="(item, index) in teamList" :key="item.id">
 			<a-row class="eveyTeam">
 				<a-col :lg="3" :xs="4" class="imgColStyle">
-					<img class="matchImg" :src="item.shopImg" alt="" />
+					<img v-if="item.shopImg" class="matchImg" :src="item.shopImg" alt="" />
+					<img v-else class="matchImg" :src="defaultImg" alt="" />
 				</a-col>
 				<a-col :lg="6" :xs="{ span: 14, offset: 1 }" class="infoClass">
 					<div class="teamStyle" @click="entryPage(1, item.teamId)">{{ item.teamName }}</div>
@@ -174,7 +175,8 @@
 					<div class="matchTitle">{{ $t('default.225') }}</div>
 					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" class="msgBox">
 						<a-col :span="4" class="imgColStyle">
-							<img class="matchImg" :src="recordInfo.competitionImg" alt="" />
+							<img v-if="recordInfo.competitionImg" class="matchImg" :src="recordInfo.competitionImg" alt="" />
+							<img v-else class="matchImg" :src="defaultImg" alt="" />
 						</a-col>
 						<a-col :span="20" class="countBox">
 							<div class="recordInfoStyle inPhoneTableStyle">
@@ -270,6 +272,7 @@ export default defineComponent({
 			stateList: [],
 			areaList: [],
 			cityList: [],
+			defaultImg:require('@/assets/team.png'),
 			matchTypeList: [
 				{ value: 1, label: 'default.55' },
 				{ value: 2, label: 'default.248' },

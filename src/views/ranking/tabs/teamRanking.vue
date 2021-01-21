@@ -41,7 +41,10 @@
 			<a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey="teamId" :customHeaderRow="customHeaderRow">
 				<template v-slot:team="{ record }">
 					<div class="tableBox">
-						<div class="tableImgBox"><img :src="record.teamImg" alt="" /></div>
+						<div class="tableImgBox">
+							<img v-if="record.teamImg" :src="record.teamImg" alt="" />
+							<img v-else :src="defaultImg" alt="" />
+						</div>
 						<div class="tableMsgCentent">
 							<div @click="entryInfoPage(record.teamId)" class="link">{{ record.teamName }}</div>
 							<div v-if="record.shop">
@@ -156,6 +159,7 @@ export default defineComponent({
 				phone: '',
 				address: ''
 			},
+			defaultImg:require('@/assets/team.png'),
 			areaChange: (value: number) => {
 				indexCityHttp({ countryId: value }).then((res) => {
 					data.countryList = res.data.data;
@@ -368,7 +372,6 @@ export default defineComponent({
 	margin: 0 auto;
 }
 .tableImgBox img {
-	width: 100%;
 	height: 100%;
 }
 .imgBox {

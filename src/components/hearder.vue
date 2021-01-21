@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<a-row type="flex" justify="end" class="lineBox">
-			<a-col :lg="{ span: 10, offset: 0 }" :xs="{ span: 8, offset: 4 }">
+			<a-col :lg="{ span: 10, offset: 0 }" :xs="{ span: 8, offset: 0 }">
 				<div class="imgBox" @click="entryIndex"><img :src="img" alt="" /></div>
 			</a-col>
 			<a-col :lg="14" :xs="24" class="lineStyle">

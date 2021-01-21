@@ -25,15 +25,15 @@
 				</a-row>
 				<a-row class="awardRow" id="awardProgress">
 					<a-col :span="11">
-						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `Rating  ${percent}`" :percent="parseInt(awardData.homeRating)"/></a-col>
-						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `PPD  ${percent}`" :percent="parseInt(awardData.homePPD)"/></a-col>
-						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `MPR  ${percent}`" :percent="parseInt(awardData.homeMPR)"/></a-col>
+						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `Rating  ${percent}`" :percent="Number(awardData.homeRating)"/></a-col>
+						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `PPD  ${percent}`" :percent="Number(awardData.homePPD)"/></a-col>
+						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `MPR  ${percent}`" :percent="Number(awardData.homeMPR)"/></a-col>
 					</a-col>
 					<a-col :span="2" class="awardVs">{{ 'VS' }}</a-col>
 					<a-col :span="11">
-						<a-col :span="8"><a-progress type="circle" :format="(percent) => `Rating  ${percent}`" :percent="parseInt(awardData.awayRating)"/></a-col>
-						<a-col :span="8"><a-progress type="circle" :format="(percent) => `PPD  ${percent}`" :percent="parseInt(awardData.awayPPD)"/></a-col>
-						<a-col :span="8"><a-progress type="circle" :format="(percent) => `MPR  ${percent}`" :percent="parseInt(awardData.awayMPR)"/></a-col>
+						<a-col :span="8"><a-progress type="circle" :format="(percent) => `Rating  ${percent}`" :percent="Number(awardData.awayRating)"/></a-col>
+						<a-col :span="8"><a-progress type="circle" :format="(percent) => `PPD  ${percent}`" :percent="Number(awardData.awayPPD)"/></a-col>
+						<a-col :span="8"><a-progress type="circle" :format="(percent) => `MPR  ${percent}`" :percent="Number(awardData.awayMPR)"/></a-col>
 					</a-col>
 				</a-row>
 				<transition enter-active-class="animate__animated animate__fadeInUp">
@@ -369,9 +369,9 @@ export default defineComponent({
 					awayTean: visitingTeam.teamName,
 					awayId: homeTeam.teamId,
 					awayCaptain: visitingTeam.captainName,
-					awayRating: visitingTeam.competitionRating.ppd,
+					awayRating: visitingTeam.competitionRating.rating,
 					awayPPD: visitingTeam.competitionRating.ppd,
-					awayMPR: visitingTeam.competitionRating.ppd,
+					awayMPR: visitingTeam.competitionRating.mpr,
 					list: [
 						{ homeScore: homeTeam.teamResultDetails.lowTon, title: 'LT', awayScore: visitingTeam.teamResultDetails.lowTon },
 						{ homeScore: homeTeam.teamResultDetails.highTon, title: 'HT', awayScore: visitingTeam.teamResultDetails.highTon },

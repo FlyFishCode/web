@@ -76,7 +76,9 @@
 				<template v-slot:WH>{{ $t('default.218') }}</template>
 				<template v-slot:team="{ record }">
 					<div class="tableBox">
-						<div class="tableImgBox"><img :src="record.captainImg" alt="" /></div>
+						<div class="tableImgBox">
+						<img v-if="record.captainImg" :src="record.captainImg" alt="" />
+						<img v-else :src="defaultImg" alt="" /></div>
 						<div class="tableMsgCentent">
 							<div @click="entryInfoPage(record.playerId)" class="link">{{ record.playerName }}</div>
 							<div v-if="record.shop && record.shop.shopName">
@@ -105,7 +107,10 @@
 				<template v-slot:Rating>{{ $t('default.168') }}</template>
 				<template v-slot:team="{ record }">
 					<div class="tableBox">
-						<div class="tableImgBox"><img :src="record.captainImg" alt="" /></div>
+						<div class="tableImgBox">
+							<img v-if="record.captainImg" :src="record.captainImg" alt="" />
+							<img v-else :src="defaultImg" alt="" />
+						</div>
 						<div class="tableMsgCentent">
 							<div @click="entryInfoPage(record.playerId)" class="link">{{ record.playerName }}</div>
 							<div>
@@ -189,6 +194,7 @@ export default defineComponent({
 				phone: '',
 				address: ''
 			},
+			defaultImg:require('@/assets/player.png'),
 			customHeaderRow: () => {
 				return {
 					className: 'selectBox',

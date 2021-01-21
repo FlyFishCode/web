@@ -16,15 +16,15 @@
 				<div class="pkLevel">
 					<div class="matchInfo">
 						<div class="Name">{{ 'W' }}</div>
-						<div class="value">{{ matchTeam.homeWinScore || '-' }}</div>
+						<div class="value">{{ matchTeam.homeWinScore }}</div>
 					</div>
 					<div class="matchInfo">
 						<div class="Name">{{ 'D' }}</div>
-						<div class="value">{{ matchTeam.homeDrawnScore || '-' }}</div>
+						<div class="value">{{ matchTeam.homeDrawnScore }}</div>
 					</div>
 					<div class="matchInfo">
 						<div class="Name">{{ 'L' }}</div>
-						<div class="value">{{ matchTeam.homeLoseScore || '-' }}</div>
+						<div class="value">{{ matchTeam.homeLoseScore }}</div>
 					</div>
 				</div>
 			</a-col>
@@ -37,7 +37,7 @@
 					</div>
 				</div>
 				<div class="teamMsg">
-					<div class="msgScore inphoneHeight">{{ matchTeam.homeResult || '-' }}</div>
+					<div class="msgScore inphoneHeight">{{ matchTeam.homeResult }}</div>
 					<div class="msgTitle">
 						<div class="inPhoneTableDisplay">{{ 'READY' }}</div>
 						<div class="titleStyle inPhoneTableDisplay">{{ 'MADE UP' }}</div>
@@ -45,11 +45,11 @@
 						<div class="titleStyle inPhoneTableDisplay">{{ 'IN PLAY' }}</div>
 						<div class="inPhoneTableDisplay">{{ 'ENDED' }}</div>
 					</div>
-					<div class="msgScore inphoneHeight">{{ matchTeam.visitingResult || '-' }}</div>
+					<div class="msgScore inphoneHeight">{{ matchTeam.visitingResult }}</div>
 				</div>
 				<div class="bottomScore">
-					<div class="homeScoreStyle">{{ matchTeam.homeResult || '-' }}</div>
-					<div>{{ matchTeam.visitingResult || '-' }}</div>
+					<div class="homeScoreStyle">{{ matchTeam.homeResult }}</div>
+					<div>{{ matchTeam.visitingResult }}</div>
 				</div>
 				<div class="bottomIndex">{{ $t('default.70') }}</div>
 				<div>{{ $t('default.66') }}</div>
@@ -69,15 +69,15 @@
 				<div class="pkLevel">
 					<div class="matchInfo">
 						<div class="Name">{{ 'W' }}</div>
-						<div class="value">{{ matchTeam.visitingWinScore || '-' }}</div>
+						<div class="value">{{ matchTeam.visitingWinScore }}</div>
 					</div>
 					<div class="matchInfo">
 						<div class="Name">{{ 'D' }}</div>
-						<div class="value">{{ matchTeam.visitingDrawnScore || '-' }}</div>
+						<div class="value">{{ matchTeam.visitingDrawnScore }}</div>
 					</div>
 					<div class="matchInfo">
 						<div class="Name">{{ 'L' }}</div>
-						<div class="value">{{ matchTeam.visitingLoseScore || '-' }}</div>
+						<div class="value">{{ matchTeam.visitingLoseScore }}</div>
 					</div>
 				</div>
 			</a-col>

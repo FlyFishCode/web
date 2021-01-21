@@ -24,6 +24,20 @@
 						<template #gameNameTitle>
 							<span>{{ `leg  ${legIndex + 1} (${getGameMode(leg.gameName)})` }}</span>
 						</template>
+						<template #homeTitle>
+							<div>{{ getTableTitle(leg.gameName) }}</div>
+						</template>
+						<template #awayTitle>
+							<div>{{ getTableTitle(leg.gameName) }}</div>
+						</template>
+
+						<template v-slot:homeContent="{ record }">
+							<div>{{ getTableContent(leg, record, 1) }}</div>
+						</template>
+						<template v-slot:awayContent="{ record }">
+							<div>{{ getTableContent(leg, record, 2) }}</div>
+						</template>
+
 						<template v-slot:homePlayerInfo="{ record }">
 							<div class="playerbox">
 								<div class="playerImgBox">
@@ -76,8 +90,7 @@ export default defineComponent({
 					slots: { customRender: 'homePlayerInfo' }
 				},
 				{
-					title: 'PPD',
-					dataIndex: 'homePpd'
+					slots: { title: 'homeTitle', customRender: 'homeContent' }
 				},
 				{
 					title: '分数',
@@ -88,7 +101,8 @@ export default defineComponent({
 					slots: { title: 'gameNameTitle' },
 					customRender: (text: any) => {
 						const obj = {
-							children: text.text.homeIsWin === 1 ? 'win' : 'lose',
+							// eslint-disable-next-line @typescript-eslint/no-use-before-define
+							children: getMatchResult(text.text.homeIsWin, 1),
 							attrs: {
 								rowSpan: 0
 							}
@@ -102,7 +116,8 @@ export default defineComponent({
 					colSpan: 0,
 					customRender: (text: any) => {
 						const obj = {
-							children: text.text.homeIsWin === 2 ? 'win' : 'lose',
+							// eslint-disable-next-line @typescript-eslint/no-use-before-define
+							children: getMatchResult(text.text.homeIsWin, 2),
 							attrs: {
 								rowSpan: 0
 							}
@@ -117,8 +132,7 @@ export default defineComponent({
 					dataIndex: 'visitingScore'
 				},
 				{
-					title: 'PPD',
-					dataIndex: 'visitingPpd'
+					slots: { title: 'awayTitle', customRender: 'awayContent' }
 				},
 				{
 					title: '玩家',
@@ -126,6 +140,38 @@ export default defineComponent({
 					slots: { customRender: 'awayPlayerInfo' }
 				}
 			],
+			getTableTitle: (mode: number) => {
+				let str = '';
+				switch (mode) {
+					case 1:
+					case 2:
+					case 3:
+					case 4:
+						str = 'PPD';
+						break;
+					default:
+						str = 'MPR';
+						break;
+				}
+				return str;
+			},
+			getTableContent: (data: any, row: any, type: number) => {
+				let str = '';
+				if (data.gameName <= 4 || data.gameName === 7 || data.gameName === 8) {
+					if (type === 1) {
+						str = row.homePpd;
+					} else {
+						str = row.visitingPpd;
+					}
+				} else {
+					if (type === 1) {
+						str = row.homeMpr;
+					} else {
+						str = row.visitingMpr;
+					}
+				}
+				return str;
+			},
 			getGameMode: (mode: number) => {
 				let str = '';
 				switch (mode) {
@@ -142,34 +188,43 @@ export default defineComponent({
 						str = '901 Game';
 						break;
 					case 5:
-						str = '1101 Game';
+						str = 'Std.CR';
 						break;
 					case 6:
-						str = '1501 Game';
+						str = 'Cut Throw';
 						break;
 					case 7:
-						str = 'StandardCricket';
+						str = 'Std.CUP';
 						break;
 					case 8:
-						str = 'Cut-ThroatCricket';
-						break;
-					case 9:
-						str = 'Count-Up';
-						break;
-					case 10:
 						str = 'Timing';
 						break;
+					case 9:
+						str = 'Half It';
+						break;
+					case 10:
+						str = 'Team.CR';
+						break;
 					case 11:
-						str = 'HalfIt';
+						str = 'Snow 301';
 						break;
 					case 12:
-						str = 'BigBull';
+						str = 'Snow 501';
 						break;
 					case 13:
-						str = 'EaglesEye';
+						str = 'Snow 701';
 						break;
-					default:
-						str = 'CricketCount-up';
+					case 14:
+						str = 'Snow 701';
+						break;
+					case 20:
+						str = "Eagle's Eye";
+						break;
+					case 21:
+						str = 'Big Bull';
+						break;
+					case 22:
+						str = 'CR.CUP';
 						break;
 				}
 				return str;
@@ -193,6 +248,22 @@ export default defineComponent({
 				return str;
 			}
 		});
+		const getMatchResult = (status: number, type: number) => {
+			if (!status) return '-';
+			if (type === 1) {
+				if (status === 1) {
+					return 'win';
+				} else {
+					return 'lose';
+				}
+			} else {
+				if (status === 3) {
+					return 'win';
+				} else {
+					return 'lose';
+				}
+			}
+		};
 		const mergeCells = (text: any, dataIndex: any, key: any, index: number, jndex: number) => {
 			// 上一行该列数据是否一样
 			if (index !== 0 && text === data.tableList[dataIndex]['legResultList'][jndex]['playerResultList'][index - 1][key]) {
@@ -209,7 +280,7 @@ export default defineComponent({
 			return rowSpan;
 		};
 		const getMatchResultList = (confrontationInfoId: any = '') => {
-			matchResultHttp({ confrontationInfoId, memberId: sessionStorage.getItem('userId') }).then((res) => {
+			matchResultHttp({ confrontationInfoId, memberId: sessionStorage.getItem('userId') || 0 }).then((res) => {
 				if (res.data.data) {
 					res.data.data.forEach((i: any, index: number) => {
 						i.legResultList.forEach((j: any, jndex: number) => {
@@ -221,7 +292,6 @@ export default defineComponent({
 						});
 					});
 					data.tableList = res.data.data;
-					console.log(data.tableList);
 				}
 			});
 		};

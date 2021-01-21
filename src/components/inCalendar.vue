@@ -74,7 +74,6 @@ export default defineComponent({
 	props: ['stageId'],
 	emits: ['show-match', 'change-list'],
 	setup(prop: any, ctx) {
-		const userId = Number(sessionStorage.getItem('userId'));
 		const data = reactive({
 			stageId: prop.stageId,
 			direction: false,
@@ -149,27 +148,7 @@ export default defineComponent({
 				ctx.emit('change-list', item.confrontationDate);
 			},
 			info: (row: any) => {
-				let isHome = 0;
-				let teamId = 0;
-				debugger;
-				if (row.state === 1) {
-					if (row.homeCaptainId === userId) {
-						isHome = 1;
-						teamId = row.homeTeamId;
-					}
-					if (row.visitingCaptainId === userId) {
-						isHome = 2;
-						teamId = row.visitingTeamId;
-					}
-					if (teamId) {
-						ctx.emit('show-match', row.confrontationInfoId, row.state, isHome, teamId);
-					}
-				} else {
-					teamId = 3;
-				}
-				if (teamId) {
-					ctx.emit('show-match', row.confrontationInfoId, row.state, isHome, teamId);
-				}
+				ctx.emit('show-match', row);
 			}
 		});
 		const getList = () => {

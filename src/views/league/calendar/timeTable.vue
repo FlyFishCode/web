@@ -494,25 +494,36 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTimeTableList();
 			},
-			showMatch: (value: any, state: number, isHome: number, teamId: number) => {
-				if (state === 2) {
-					return;
-				}
-				switch (state) {
-					case 1:
+			showMatch: (row: any) => {
+				debugger;
+				if (row.state === 2) return;
+				if (row.state === 1) {
+					if (row.homeCaptainId === userId) {
+						data.isHome = 1;
+						data.playerListId = row.homeTeamId;
+					}
+					if (row.visitingCaptainId === userId) {
+						data.isHome = 2;
+						data.playerListId = row.visitingTeamId;
+					}
+					if (!data.playerListId) return;
+					data.ismatchTablePage = true;
+					// 如果是草稿状态/未提交状态，或者有更改选手 可以进入排阵页面。或者去结果页面查看排阵队伍
+					if (row.homeManageStatus <= 1 || row.visitingManageStatus <= 1 || row.playerChangeNumber || row.playerChangeNumber) {
 						data.isMatchTable = true;
 						data.currentKey = '2';
-						break;
-					case 3:
+					} else {
 						data.isResult = true;
-						data.isAward = true;
-						break;
+						data.currentKey = '1';
+					}
+					data.confrontationInfoId = row.confrontationInfoId;
 				}
-				debugger;
-				data.isHome = isHome;
-				data.playerListId = teamId;
-				data.ismatchTablePage = true;
-				data.confrontationInfoId = value;
+				if (row.state === 3) {
+					data.confrontationInfoId = row.confrontationInfoId;
+					data.ismatchTablePage = true;
+					data.isResult = true;
+					data.isAward = true;
+				}
 			},
 			changelist: (date: string) => {
 				const [year, month] = date.split('-');
@@ -541,9 +552,9 @@ export default defineComponent({
 					data.playerListId = row.visitingTeamId;
 				}
 				data.ismatchTablePage = true;
-				debugger
+				debugger;
 				// 如果是草稿状态/未提交状态，或者有更改选手 可以进入排阵页面。或者去结果页面查看排阵队伍
-				if ((row.homeTeamStatus === 1 || row.visitingTeamStatus === 1 || row.homeTeamChange || row.visitingTeamChange) || !row.homeTeamStatus || !row.visitingTeamStatus) {
+				if (row.homeManageStatus <= 1 || row.visitingManageStatus <= 1 || row.playerChangeNumber || row.playerChangeNumber) {
 					data.isMatchTable = true;
 					data.currentKey = '2';
 				} else {

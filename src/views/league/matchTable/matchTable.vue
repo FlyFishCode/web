@@ -55,7 +55,12 @@
 								<div class="legIndexBox">{{ legIndex + 1 }}</div>
 								<div>{{ $t(getGameName(leg.gameName)) }}</div>
 							</div>
-							<div>{{ `(${getBeginGameSet(leg.gameIn)} / ${getEndGameSet(leg.gameOut)})` }}</div>
+							<div>
+								<!-- {{ `(${getBeginGameSet(leg.gameName, leg.gameIn)} / ${getEndGameSet(leg.gameName, leg.gameOut)}) ` }} -->
+								<span v-if="getBeginGameSet(leg.gameName, leg.gameIn)">{{ `(${getBeginGameSet(leg.gameName, leg.gameIn)}` }}</span>
+								<span v-if="getEndGameSet(leg.gameName, leg.gameOut)">{{ ` / ${getEndGameSet(leg.gameName, leg.gameOut)})` }}</span>
+								<div v-if="leg.gameName <= 4">{{ `(Bull:${leg.bull})` }}</div>
+							</div>
 						</a-col>
 						<!-- <a-col :span="5" class="playerStyle" v-for="playerBox in new Array(leg.maxPlayer).fill(leg.maxPlayer)" :key="playerBox.index"> -->
 						<a-col :span="5" class="playerStyle" v-for="(playerBox, playerIndex) in leg.playerList" :key="playerBox.index">
@@ -141,55 +146,55 @@ export default defineComponent({
 						str = 'default.201';
 						break;
 					case 1:
-						str = 'default.290';
+						str = '301 Game';
 						break;
 					case 2:
-						str = 'default.291';
+						str = '501 Game';
 						break;
 					case 3:
-						str = 'default.292';
+						str = '701 Game';
 						break;
 					case 4:
-						str = 'default.293';
+						str = '901 Game';
 						break;
 					case 5:
-						str = 'default.294';
+						str = 'Std.CR';
 						break;
 					case 6:
-						str = 'default.295';
+						str = 'Cut Throw';
 						break;
 					case 7:
-						str = 'default.296';
+						str = 'Std.CUP';
 						break;
 					case 8:
-						str = 'default.297';
+						str = 'Timing';
 						break;
 					case 9:
-						str = 'default.298';
+						str = 'Half It';
 						break;
 					case 10:
-						str = 'default.299';
+						str = 'Team.CR';
 						break;
 					case 11:
-						str = 'default.300';
+						str = 'Snow 301';
 						break;
 					case 12:
-						str = 'default.301';
+						str = 'Snow 501';
 						break;
 					case 13:
-						str = 'default.302';
+						str = 'Snow 701';
 						break;
 					case 14:
-						str = 'default.303';
+						str = 'Snow 701';
 						break;
 					case 20:
-						str = 'default.304';
+						str = "Eagle's Eye";
 						break;
 					case 21:
-						str = 'default.305';
+						str = 'Big Bull';
 						break;
 					case 22:
-						str = 'default.306';
+						str = 'CR.CUP';
 						break;
 					default:
 						str = '';
@@ -197,45 +202,49 @@ export default defineComponent({
 				}
 				return str;
 			},
-			getBeginGameSet: (id) => {
+			getBeginGameSet: (mode, id) => {
 				let str = '';
-				switch (id) {
-					case 1:
-						str = 'None';
-						break;
-					case 2:
-						str = 'DOUBLEIN';
-						break;
-					case 3:
-						str = 'MASTERIN';
-						break;
-					case 4:
-						str = 'MASTER NO BULLIN';
-						break;
-					default:
-						str = 'DOUBLE NO BULLIN';
-						break;
+				if (mode <= 4) {
+					switch (id) {
+						case 1:
+							str = 'Open In';
+							break;
+						case 2:
+							str = 'Double In';
+							break;
+						case 3:
+							str = 'Master In';
+							break;
+						case 4:
+							str = 'Master No Bull In';
+							break;
+						default:
+							str = 'Double No Bull In';
+							break;
+					}
 				}
 				return str;
 			},
-			getEndGameSet: (id) => {
+			getEndGameSet: (mode, id) => {
 				let str = '';
-				switch (id) {
-					case 1:
-						str = 'None';
-						break;
-					case 2:
-						str = 'MASTEROUT';
-						break;
-					case 3:
-						str = 'DOUBLEOUT';
-						break;
-					case 4:
-						str = 'MASTER NO BULLOUT';
-						break;
-					default:
-						str = 'DOUBLE NO BULLOUT';
-						break;
+				if (mode <= 4) {
+					switch (id) {
+						case 1:
+							str = 'Open Out';
+							break;
+						case 2:
+							str = 'Master Out';
+							break;
+						case 3:
+							str = 'Double Out';
+							break;
+						case 4:
+							str = 'Master No Bull Out';
+							break;
+						default:
+							str = 'Double No Bull Out';
+							break;
+					}
 				}
 				return str;
 			},
@@ -464,6 +473,9 @@ export default defineComponent({
 			matchDateHttp({ confrontationInfoId: prop.confrontationInfoId || '' }).then((res) => {
 				if (!res.data.data) return;
 				data.matchTable = res.data.data;
+				const getAllMonthDays = (year, month) => {
+					return new Date(year, month, 0).getDate();
+				};
 				const date = new Date();
 				let flag = true;
 				let surplusDay = 0;
@@ -480,7 +492,6 @@ export default defineComponent({
 					parseInt(oldDays.split(':')[1]),
 					parseInt(oldDays.split(':')[2])
 				];
-
 				if (oldYear - year > 0) {
 					oldMonth += 12;
 				} else if (oldYear - year < 0) {
@@ -488,7 +499,9 @@ export default defineComponent({
 					return;
 				}
 				if (oldMonth - month > 0) {
-					oldDAay += 30;
+					for (let currentMonth = month; currentMonth < oldMonth; currentMonth++) {
+						oldDAay += getAllMonthDays(year, currentMonth);
+					}
 				} else if (oldMonth - month < 0) {
 					flag = false;
 					return;
@@ -600,7 +613,6 @@ export default defineComponent({
 		watch(
 			() => prop.confrontationInfoId,
 			(val) => {
-				debugger;
 				getTeamLineU(val);
 			}
 		);

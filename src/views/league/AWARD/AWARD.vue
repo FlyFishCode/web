@@ -72,7 +72,10 @@
 				</template>
 				<template #player="{record}">
 					<div class="playerInfoBox">
-						<div class="imgBox"><img :src="record.playerImg" alt="" /></div>
+						<div class="imgBox">
+							<span v-if="record.playerImg"><img :src="record.playerImg" alt=""/></span>
+							<span v-else><img :src="defaultPlayerImg" alt=""/></span>
+						</div>
 						<div class="link" @click="showDialog(0)">{{ record.playerName }}</div>
 					</div>
 				</template>
@@ -89,7 +92,10 @@
 				</template>
 				<template #player="{record}">
 					<div class="playerInfoBox">
-						<div class="imgBox"><img :src="record.playerImg" alt="" /></div>
+						<div class="imgBox">
+							<span v-if="record.playerImg"><img :src="record.playerImg" alt=""/></span>
+							<span v-else><img :src="defaultPlayerImg" alt=""/></span>
+						</div>
 						<div class="link" @click="showDialog(1)">{{ record.playerName }}</div>
 					</div>
 				</template>
@@ -136,6 +142,7 @@ export default defineComponent({
 			homeTeamId: 0,
 			awayTeamId: 0,
 			diaVisible: false,
+			defaultPlayerImg: require('@/assets/player.png'),
 			competitionId: ROUTE.query.competitionId,
 			showDialog: (type: number) => {
 				if (type) {

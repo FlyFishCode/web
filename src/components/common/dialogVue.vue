@@ -64,7 +64,10 @@
 					<a-table :columns="playerColumns" :data-source="playerList" :scroll="{ x: 1650 }" :pagination="false" bordered rowKey="playerId">
 						<template #player="{record}">
 							<div class="playerInfoBox">
-								<div class="imgBox"><img :src="record.playerImg" alt="" /></div>
+								<div class="imgBox">
+									<span v-if="record.playerImg"><img :src="record.playerImg" alt=""/></span>
+									<span v-else><img :src="defaultPlayerImg" alt=""/></span>
+								</div>
 								<div class="link" @click="showDialog(record.id)">{{ record.playerName }}</div>
 							</div>
 						</template>
@@ -113,6 +116,7 @@ export default defineComponent({
 			visible: props.propsVisible,
 			teamId: props.teamId,
 			competitionId: props.competitionId,
+			defaultPlayerImg: require('@/assets/player.png'),
 			infoData: {
 				shop: {},
 				latestConfrontation: {}

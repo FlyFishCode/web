@@ -127,8 +127,8 @@
 		<a-row v-for="(item, index) in playerList" :key="item.id">
 			<a-row class="eveyTeam">
 				<a-col :lg="3" :xs="4" class="imgColStyle">
-						<img v-if="item.playerImg" class="matchImg" :src="item.playerImg" alt="" />
-						<img v-else class="matchImg" :src="defaultImg" alt="" />
+					<img v-if="item.playerImg" class="matchImg" :src="item.playerImg" alt="" />
+					<img v-else class="matchImg" :src="defaultImg" alt="" />
 				</a-col>
 				<a-col :lg="{ span: 7, offset: 0 }" :xs="{ span: 10, offset: 4 }" class="infoClass">
 					<div class="teamStyle" @click="entryPage(item.playerId)">{{ item.playerName }}</div>
@@ -228,7 +228,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { playerBestListHttp, playerListHttp, indexCountryHttp, indexCityHttp } from '@/axios/api';
 import divTitle from '@/components/DividingLine.vue';
@@ -251,6 +251,7 @@ export default defineComponent({
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
+		const instance: any = getCurrentInstance();
 		const data = reactive({
 			title: 'default.10',
 			btnType: 1,
@@ -271,7 +272,7 @@ export default defineComponent({
 				phone: '',
 				address: ''
 			},
-			defaultImg:require('@/assets/player.png'),
+			defaultImg: require('@/assets/player.png'),
 			matchTypeList: [
 				{ value: 1, label: 'default.55' },
 				{ value: 2, label: 'default.93' },
@@ -339,9 +340,11 @@ export default defineComponent({
 					} else {
 						data.areaId = null;
 					}
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getBestTeamList();
 				});
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-					getPlayerList();
+				getPlayerList();
 			},
 			areaChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -359,9 +362,7 @@ export default defineComponent({
 			}
 		});
 		const getBestTeamList = () => {
-			playerBestListHttp({
-				countryId: sessionStorage.getItem('countryId')
-			}).then((res: any) => {
+			playerBestListHttp({ countryId: data.countryId }).then((res: any) => {
 				const list: any = [];
 				for (const item in res.data.data) {
 					const obj: any = Object.assign(res.data.data[item], { title: item });
@@ -377,7 +378,7 @@ export default defineComponent({
 					str = 'teamName';
 					break;
 				case 2:
-					str = 'captainName';
+					str = 'playerName';
 					break;
 				default:
 					str = 'shopName';
@@ -412,12 +413,18 @@ export default defineComponent({
 					data.countryChange(data.areaList[0]['countryId']);
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
 					getPlayerList(undefined, inputValue);
+					getBestTeamList();
 				}
 			});
 		};
 		onMounted(() => {
 			getCountry(ROUTE.query.value);
-			getBestTeamList();
+			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
+				data.countryId = val;
+				data.countryChange(val);
+				getBestTeamList();
+				getPlayerList();
+			});
 		});
 		return {
 			...toRefs(data)

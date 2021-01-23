@@ -258,6 +258,7 @@ export default defineComponent({
 				data.showPhoneTabs = !data.showPhoneTabs;
 			},
 			countryChange: () => {
+				sessionStorage.setItem('countryId',data.country)
 				instance.appContext.config.globalProperties.$bus.emit('on-country-change', data.country);
 			},
 			typeChange: (value: number) => {

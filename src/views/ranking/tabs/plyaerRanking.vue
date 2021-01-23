@@ -77,8 +77,9 @@
 				<template v-slot:team="{ record }">
 					<div class="tableBox">
 						<div class="tableImgBox">
-						<img v-if="record.captainImg" :src="record.captainImg" alt="" />
-						<img v-else :src="defaultImg" alt="" /></div>
+							<img v-if="record.captainImg" :src="record.captainImg" alt="" />
+							<img v-else :src="defaultImg" alt="" />
+						</div>
 						<div class="tableMsgCentent">
 							<div @click="entryInfoPage(record.playerId)" class="link">{{ record.playerName }}</div>
 							<div v-if="record.shop && record.shop.shopName">
@@ -148,7 +149,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
 import { SettingFilled, AimOutlined, EnvironmentOutlined } from '@ant-design/icons-vue';
 import { indexCountryHttp, indexCityHttp, playerRankingHttp } from '@/axios/api';
 import playerRanking from '@/components/rankingPlayer.vue';
@@ -164,6 +165,7 @@ export default defineComponent({
 	},
 	setup(prop: any, ctx: any) {
 		const ROUTER = useRouter();
+		const instance: any = getCurrentInstance();
 		let currentSelectList: Array<any> = [];
 		const data = reactive({
 			colSpan: 5,
@@ -194,7 +196,7 @@ export default defineComponent({
 				phone: '',
 				address: ''
 			},
-			defaultImg:require('@/assets/player.png'),
+			defaultImg: require('@/assets/player.png'),
 			customHeaderRow: () => {
 				return {
 					className: 'selectBox',
@@ -380,8 +382,6 @@ export default defineComponent({
 			},
 			areaChange: () => {
 				data.isChange = true;
-				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getDataList();
 			},
 			yearChange: (value: number) => {
 				console.log(value);
@@ -418,6 +418,8 @@ export default defineComponent({
 					data.countryList = res.data.data;
 					data.countryId = data.countryList[0]['countryId'];
 					data.countryChange(data.countryList[0]['countryId']);
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getDataList();
 				}
 			});
 		};
@@ -441,6 +443,11 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountryList();
+			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
+				data.countryId = val;
+				data.countryChange(val);
+				getDataList();
+			});
 		});
 		return {
 			...toRefs(data)

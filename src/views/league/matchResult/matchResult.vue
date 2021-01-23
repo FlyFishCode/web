@@ -2,6 +2,9 @@
 	<div class="content">
 		<a-row>
 			<a-col :span="4" class="smallTitle"> <SettingFilled /> {{ $t('default.62') }} </a-col>
+			<a-col :span="2" :offset="18">
+				<a-button type="danger" @click="changeMatchTable">{{ $t('default.308') }}</a-button>
+			</a-col>
 		</a-row>
 		<div v-if="tableList.length">
 			<div v-for="(set, setIndex) in tableList" :key="setIndex">
@@ -79,7 +82,7 @@ export default defineComponent({
 		SettingFilled,
 		emptyList
 	},
-	setup(prop: any) {
+	setup(prop: any,ctx: any) {
 		const data = reactive({
 			tableList: [{ legResultList: [{ playerResultList: [] }] }],
 			defaultTeamImg: require('@/assets/icon.png'),
@@ -140,6 +143,9 @@ export default defineComponent({
 					slots: { customRender: 'awayPlayerInfo' }
 				}
 			],
+			changeMatchTable:() =>{
+				ctx.emit('enter-matchtable')
+			},
 			getTableTitle: (mode: number) => {
 				let str = '';
 				switch (mode) {

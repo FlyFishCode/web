@@ -16,13 +16,13 @@
 			</a-col> -->
 			<a-col :lg="{ span: 2, offset: 13 }" :xs="{ span: 6, offset: 0 }" class="titleStyle"> <AimOutlined class="fontIcon" />{{ $t('default.27') }} </a-col>
 			<a-col :lg="3" :xs="6">
-				<a-select v-model:value="areaId" @change="areaChange" class="selectBox">
-					<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
+				<a-select v-model:value="countryId" @change="areaChange" class="selectBox">
+					<a-select-option v-for="item in countryList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 				</a-select>
 			</a-col>
 			<a-col :lg="3" :xs="6">
-				<a-select v-model:value="countryId" @change="cityChange" class="selectBox">
-					<a-select-option v-for="item in countryList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
+				<a-select v-model:value="areaId" @change="cityChange" class="selectBox">
+					<a-select-option v-for="item in areaList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 				</a-select>
 			</a-col>
 			<!-- <a-col :lg="3" :xs="6">
@@ -113,7 +113,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
 import { SettingFilled, AimOutlined, EnvironmentOutlined } from '@ant-design/icons-vue';
 import { indexCountryHttp, indexCityHttp, teamRankingHttp } from '@/axios/api';
 import tramRanking from '@/components/rankingTeam.vue';
@@ -129,6 +129,7 @@ export default defineComponent({
 	},
 	setup(prop: any, ctx: any) {
 		const ROUTER = useRouter();
+		const instance: any = getCurrentInstance();
 		let currentSelectList: Array<any> = [];
 		const data = reactive({
 			colSpan: 5,
@@ -149,8 +150,8 @@ export default defineComponent({
 			],
 			areaId: null,
 			countryId: null,
-			areaList: [],
 			countryList: [],
+			areaList: [],
 			visible: false,
 			dialogObj: {
 				title: '',
@@ -159,22 +160,20 @@ export default defineComponent({
 				phone: '',
 				address: ''
 			},
-			defaultImg:require('@/assets/team.png'),
+			defaultImg: require('@/assets/team.png'),
 			areaChange: (value: number) => {
 				indexCityHttp({ countryId: value }).then((res) => {
-					data.countryList = res.data.data;
-					if (data.countryList.length) {
-						data.countryId = data.countryList[0]['areaId'];
+					data.areaList = res.data.data;
+					if (data.areaList.length) {
+						data.areaId = data.areaList[0]['areaId'];
 					} else {
-						data.countryId = null;
+						data.areaId = null;
 					}
 					data.cityChange();
 				});
 			},
 			cityChange: () => {
 				data.isChange = true;
-				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getDataList();
 			},
 			customHeaderRow: () => {
 				return {
@@ -323,17 +322,19 @@ export default defineComponent({
 		const getCountryList = () => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
-					data.areaList = res.data.data;
-					data.areaId = data.areaList[0]['countryId'];
-					data.areaChange(data.areaList[0]['countryId']);
+					data.countryList = res.data.data;
+					data.countryId = data.countryList[0]['countryId'];
+					data.areaChange(data.countryList[0]['countryId']);
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getDataList();
 				}
 			});
 		};
 		const getDataList = () => {
 			const obj = {
 				year: data.year,
-				areaId: data.countryId,
-				countryId: data.areaId,
+				countryId: data.countryId,
+				areaId: data.areaId,
 				pageIndex: data.pageNum,
 				pageSize: data.pageSize
 			};
@@ -348,6 +349,11 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountryList();
+			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
+				data.countryId = val;
+				data.areaChange(val);
+				getDataList();
+			});
 		});
 		return {
 			...toRefs(data)

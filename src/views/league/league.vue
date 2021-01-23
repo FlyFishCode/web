@@ -147,7 +147,7 @@
 	</div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, watch, getCurrentInstance } from 'vue';
 import { indexCountryHttp, indexCityHttp, leagueAllListHttp, leagueMyListHttp } from '@/axios/api';
 import { useRoute, useRouter } from 'vue-router';
 import { SearchOutlined, SettingFilled, EnvironmentOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
@@ -171,6 +171,7 @@ export default defineComponent({
 	name: 'league',
 	components: { EnvironmentOutlined, SearchOutlined, SettingFilled, emptyList, DownOutlined, UpOutlined },
 	setup() {
+		const instance: any = getCurrentInstance();
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
 		const data = reactive({
@@ -345,6 +346,12 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountryList(ROUTE.query.value);
+			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
+				data.countryId = val;
+				getAllLeagueList()
+				getMyLeagueList()
+				data.areaChange(val)
+			});
 		});
 		watch(
 			() => sessionStorage.getItem('countryId'),

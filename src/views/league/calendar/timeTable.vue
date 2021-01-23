@@ -27,7 +27,7 @@
 			<a-row class="rowStyle">
 				<a-tabs type="card" v-model:activeKey="currentKey">
 					<a-tab-pane v-if="isResult" key="1" :tab="$t('default.62')">
-						<matchResult :confrontationInfoId="confrontationInfoId" />
+						<matchResult :confrontationInfoId="confrontationInfoId" @enter-matchtable="changeStates" />
 					</a-tab-pane>
 					<a-tab-pane v-if="isMatchTable" key="2" :tab="$t('default.41')">
 						<matchTable :confrontationInfoId="confrontationInfoId" :isHome="isHome" :teamId="playerListId" />
@@ -183,6 +183,8 @@ import { yearList } from '@/components/common/public';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 
 interface DataProps {
+  handleState: (state: number,playerNumber: number) => void;
+	showChangeBtn: boolean;
 	cycleNum: any;
 	allMatchTableData: Array<any>;
 	tableHeader: Array<any>;
@@ -241,6 +243,7 @@ export default defineComponent({
 			confrontationId: ROUTE.query.confrontationId,
 			confrontationInfoId: ROUTE.query.confrontationInfoId,
 			visible: false,
+			showChangeBtn: false,
 			isHome: 0,
 			playerListId: 0,
 			isResult: false,
@@ -317,6 +320,11 @@ export default defineComponent({
 						divisionId: row.confrontationInfoId
 					}
 				});
+			},
+			changeStates: () => {
+				data.isResult = false;
+				data.isMatchTable = true;
+				data.currentKey = '2';
 			},
 			getTypeBtn: (row: any) => {
 				if ((row.homeCaptainId === userId || row.visitingCaptainId === userId) && row.status === 1) {
@@ -494,28 +502,45 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTimeTableList();
 			},
-			showMatch: (row: any) => {
-				debugger;
+			showMatch: (row: any, playerChangeNumber: number) => {
+				/*1.未登录，不可进入排阵页面。进去结果页面
+				 *2.登录  如果是草稿或者未排阵或者可以更改玩家次数，则进入排阵页面。
+				 *			  如果是已提交状态，进入结果页面
+				 */
 				if (row.state === 2) return;
 				if (row.state === 1) {
+					debugger;
 					if (row.homeCaptainId === userId) {
 						data.isHome = 1;
 						data.playerListId = row.homeTeamId;
+						data.handleState(row.homeManageStatus,playerChangeNumber)
+						// if (row.homeManageStatus <= 1) {
+						// 	data.isMatchTable = true;
+						// 	data.currentKey = '2';
+						// } else {
+						// 	if (playerChangeNumber) {
+						// 		data.showChangeBtn = true;
+						// 	}
+						// 	data.isResult = true;
+						// 	data.currentKey = '1';
+						// }
 					}
 					if (row.visitingCaptainId === userId) {
 						data.isHome = 2;
 						data.playerListId = row.visitingTeamId;
+						data.handleState(row.visitingManageStatus,playerChangeNumber)
+						// if (row.visitingManageStatus <= 1) {
+						// 	data.isMatchTable = true;
+						// 	data.currentKey = '2';
+						// } else {
+						// 	if (playerChangeNumber) {
+						// 		data.showChangeBtn = true;
+						// 	}
+						// 	data.isResult = true;
+						// 	data.currentKey = '1';
+						// }
 					}
-					if (!data.playerListId) return;
 					data.ismatchTablePage = true;
-					// 如果是草稿状态/未提交状态，或者有更改选手 可以进入排阵页面。或者去结果页面查看排阵队伍
-					if (row.homeManageStatus <= 1 || row.visitingManageStatus <= 1 || row.playerChangeNumber || row.playerChangeNumber) {
-						data.isMatchTable = true;
-						data.currentKey = '2';
-					} else {
-						data.isResult = true;
-						data.currentKey = '1';
-					}
 					data.confrontationInfoId = row.confrontationInfoId;
 				}
 				if (row.state === 3) {
@@ -546,21 +571,34 @@ export default defineComponent({
 				if (row.homeCaptainId === userId) {
 					data.isHome = 1;
 					data.playerListId = row.homeTeamId;
+					data.handleState(row.homeManageStatus,row.playerChangeNumber)
+					// if (row.homeManageStatus <= 1) {
+					// 	data.isMatchTable = true;
+					// 	data.currentKey = '2';
+					// } else {
+					// 	if (row.playerChangeNumber) {
+					// 		data.showChangeBtn = true;
+					// 	}
+					// 	data.isResult = true;
+					// 	data.currentKey = '1';
+					// }
 				}
 				if (row.visitingCaptainId === userId) {
 					data.isHome = 2;
 					data.playerListId = row.visitingTeamId;
+					data.handleState(row.visitingManageStatus,row.playerChangeNumber)
+					// if (row.visitingManageStatus <= 1) {
+					// 	data.isMatchTable = true;
+					// 	data.currentKey = '2';
+					// } else {
+					// 	if (row.playerChangeNumber) {
+					// 		data.showChangeBtn = true;
+					// 	}
+					// 	data.isResult = true;
+					// 	data.currentKey = '1';
+					// }
 				}
 				data.ismatchTablePage = true;
-				debugger;
-				// 如果是草稿状态/未提交状态，或者有更改选手 可以进入排阵页面。或者去结果页面查看排阵队伍
-				if (row.homeManageStatus <= 1 || row.visitingManageStatus <= 1 || row.playerChangeNumber || row.playerChangeNumber) {
-					data.isMatchTable = true;
-					data.currentKey = '2';
-				} else {
-					data.isResult = true;
-					data.currentKey = '1';
-				}
 				data.confrontationInfoId = row.confrontationInfoId;
 			},
 			finishClick: (confrontationInfoId: number) => {
@@ -568,6 +606,18 @@ export default defineComponent({
 				data.ismatchTablePage = true;
 				data.isResult = true;
 				data.isAward = true;
+			},
+			handleState: (state: number, playerChangeNumber: number) => {
+				if (state <= 1) {
+					data.isMatchTable = true;
+					data.currentKey = '2';
+				} else {
+					if (playerChangeNumber) {
+						data.showChangeBtn = true;
+					}
+					data.isResult = true;
+					data.currentKey = '1';
+				}
 			},
 			entryInfoPage: (row: any) => {
 				console.log(row);

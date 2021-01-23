@@ -393,7 +393,7 @@ export default defineComponent({
 			colSpan: 4,
 			visible: false,
 			photoList: [{ img: require('@/assets/icon.png') }, { img: require('@/assets/icon.png') }, { img: require('@/assets/icon.png') }, { img: require('@/assets/icon.png') }],
-			defaultSortImg: [require('@/assets/01.png'), require('@/assets/02.png'), require('@/assets/03.png'), require('@/assets/04.png'),require('@/assets/05.png')],
+			defaultSortImg: [require('@/assets/01.png'), require('@/assets/02.png'), require('@/assets/03.png'), require('@/assets/04.png'), require('@/assets/05.png')],
 			dialogObj: {
 				title: '',
 				img: '',
@@ -559,7 +559,6 @@ export default defineComponent({
 		onMounted(() => {
 			init();
 			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
-				sessionStorage.setItem('countryId', val);
 				data.countryId = val;
 				init(true);
 			});
@@ -637,7 +636,7 @@ export default defineComponent({
 .teamImgBox img {
 	height: 100%;
 }
-.topOne{
+.topOne {
 	position: relative;
 	top: -40px;
 	left: -25px;
@@ -837,7 +836,9 @@ export default defineComponent({
 	background: #364d79;
 	overflow: hidden;
 }
-
+.carouselBox .ant-carousel {
+	min-height: 250px;
+}
 .carouselBox .ant-carousel ::v-deep(.slick-arrow.custom-slick-arrow) {
 	width: 25px;
 	height: 25px;

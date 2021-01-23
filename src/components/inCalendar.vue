@@ -31,23 +31,25 @@
 				</a-col>
 				<a-col :span="22" class="centerBg">
 					<div class="directionCenterBox">
-						<div v-for="(item, index) in detailList" :key="index" class="matchBoxBG">
-							<div class="matchBox" @click="info(item)">
-								<div class="bg">
-									<div class="imgBox"><img :src="item.homeTeamImg" /></div>
-									<div>{{ item.homeTeamName }}</div>
+						<div v-for="(every, everyIndex) in detailList" :key="everyIndex" class="matchBoxBG">
+							<div v-for="(item, index) in every.matchList" :key="index">
+								<div class="matchBox" @click="info(item, every.playerChangeNumber)">
+									<div class="bg">
+										<div class="imgBox"><img :src="item.homeTeamImg" /></div>
+										<div>{{ item.homeTeamName }}</div>
+									</div>
+									<div class="bg">
+										<div>{{ `${item.homeTeamResult || '-'} VS ${item.visitingTeamResult || '-'}` }}</div>
+										<div>{{ item.confrontationDate }}</div>
+									</div>
+									<div class="bg">
+										<div class="imgBox"><img :src="item.visitingTeamImg" /></div>
+										<div>{{ item.visitingTeamName }}</div>
+									</div>
+									<span v-if="item.state === 1" class="stateStyle N">{{ $t('default.64') }}</span>
+									<span v-if="item.state === 2" class="stateStyle I">{{ $t('default.104') }}</span>
+									<span v-if="item.state === 3" class="stateStyle F">{{ $t('default.244') }}</span>
 								</div>
-								<div class="bg">
-									<div>{{ `${item.homeTeamResult || '-'} VS ${item.visitingTeamResult || '-'}` }}</div>
-									<div>{{ item.confrontationDate }}</div>
-								</div>
-								<div class="bg">
-									<div class="imgBox"><img :src="item.visitingTeamImg" /></div>
-									<div>{{ item.visitingTeamName }}</div>
-								</div>
-								<span v-if="item.state === 1" class="stateStyle N">{{ $t('default.64') }}</span>
-								<span v-if="item.state === 2" class="stateStyle I">{{ $t('default.104') }}</span>
-								<span v-if="item.state === 3" class="stateStyle F">{{ $t('default.244') }}</span>
 							</div>
 						</div>
 					</div>
@@ -85,8 +87,7 @@ export default defineComponent({
 			topList: [{ confrontationDate: '' }],
 			detailList: [{ matchList: [] }],
 			init: () => {
-				data.detailList = data.detailList[0].matchList;
-				if (data.detailList && data.detailList.length > 3) {
+				if (data.detailList[0].matchList && data.detailList[0].matchList.length > 3) {
 					data.hasData = true;
 				} else {
 					data.hasData = false;
@@ -124,7 +125,7 @@ export default defineComponent({
 			},
 			directionRightClick() {
 				const div = document.getElementsByClassName('directionCenterBox')[0] as HTMLElement;
-				const ohterDiv = this.detailList.length - 3;
+				const ohterDiv = this.detailList[0].matchList.length - 3;
 				if (Number(Math.abs(parseInt(div.style.left))) < Number(`${ohterDiv * 305}`) || div.style.left === '0px' || !div.style.left) {
 					this.buttomPositon -= 305;
 					div.style.left = this.buttomPositon + 'px';
@@ -136,19 +137,19 @@ export default defineComponent({
 				data.buttomPositon = 0;
 				div.style.left = '0px';
 				data.current = data.topList.findIndex((i: any) => i.confrontationDate === date);
-				obj = data.topList.find((i: any) => i.confrontationDate === date);
+				obj = data.topList.filter((i: any) => i.confrontationDate === date);
 				if (obj) {
-					data.detailList = obj.matchList;
+					data.detailList = obj;
 				}
-				if (data.detailList && data.detailList.length > 3) {
+				if (data.detailList[0].matchList && data.detailList[0].matchList.length > 3) {
 					data.hasData = true;
 				} else {
 					data.hasData = false;
 				}
 				ctx.emit('change-list', item.confrontationDate);
 			},
-			info: (row: any) => {
-				ctx.emit('show-match', row);
+			info: (row: any, playerNumber: number) => {
+				ctx.emit('show-match', row, playerNumber);
 			}
 		});
 		const getList = () => {
@@ -158,7 +159,7 @@ export default defineComponent({
 					if (data.topList.length > 6) {
 						data.direction = true;
 					}
-					data.detailList = res.data.data[0].matchList;
+					data.detailList = [res.data.data[0]];
 					nextTick(() => {
 						ctx.emit('change-list', data.topList[0].confrontationDate);
 					});
@@ -315,5 +316,8 @@ export default defineComponent({
 	display: flex;
 	overflow: hidden;
 	position: relative;
+}
+.matchBoxBG {
+	display: flex;
 }
 </style>

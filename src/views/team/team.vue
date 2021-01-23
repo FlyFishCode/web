@@ -227,7 +227,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { teamBestListHttp, teamListHttp, indexCityHttp, indexCountryHttp } from '@/axios/api';
 import divTitle from '@/components/DividingLine.vue';
@@ -254,6 +254,7 @@ export default defineComponent({
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
+		const instance: any = getCurrentInstance();
 		const data = reactive({
 			title: 'default.9',
 			currentValue: 1,
@@ -272,7 +273,7 @@ export default defineComponent({
 			stateList: [],
 			areaList: [],
 			cityList: [],
-			defaultImg:require('@/assets/team.png'),
+			defaultImg: require('@/assets/team.png'),
 			matchTypeList: [
 				{ value: 1, label: 'default.55' },
 				{ value: 2, label: 'default.248' },
@@ -354,6 +355,8 @@ export default defineComponent({
 					} else {
 						data.areaId = '';
 					}
+					// eslint-disable-next-line @typescript-eslint/no-use-before-define
+					getBestTeamList();
 				});
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTeamList();
@@ -364,9 +367,7 @@ export default defineComponent({
 			}
 		});
 		const getBestTeamList = () => {
-			teamBestListHttp({
-				countryId: sessionStorage.getItem('countryId')
-			}).then((res: any) => {
+			teamBestListHttp({ countryId: data.countryId }).then((res: any) => {
 				const list: any = [];
 				for (const item in res.data.data) {
 					const obj: any = Object.assign(res.data.data[item], { title: item });
@@ -416,12 +417,18 @@ export default defineComponent({
 					data.countryChange(data.areaList[0]['countryId']);
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
 					getTeamList(undefined, value);
+					getBestTeamList();
 				}
 			});
 		};
 		onMounted(() => {
 			getCountry(ROUTE.query.value);
-			getBestTeamList();
+			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
+				data.countryId = val;
+				data.countryChange(val);
+				getBestTeamList();
+				getTeamList();
+			});
 		});
 		return {
 			...toRefs(data)

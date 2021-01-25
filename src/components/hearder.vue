@@ -204,6 +204,7 @@ export default defineComponent({
 		MenuFoldOutlined
 	},
 	setup() {
+		const MD5 = require('blueimp-md5');
 		const ROUTER = useRouter();
 		const instance: any = getCurrentInstance();
 		// const Store = useStore();
@@ -258,7 +259,7 @@ export default defineComponent({
 				data.showPhoneTabs = !data.showPhoneTabs;
 			},
 			countryChange: () => {
-				sessionStorage.setItem('countryId',data.country)
+				sessionStorage.setItem('countryId', data.country);
 				instance.appContext.config.globalProperties.$bus.emit('on-country-change', data.country);
 			},
 			typeChange: (value: number) => {
@@ -368,7 +369,7 @@ export default defineComponent({
 			login: () => {
 				const obj = {
 					username: data.userId,
-					password: data.passWord
+					password: MD5(data.passWord + 'kitekey').toUpperCase()
 				};
 				loginHttp(false, obj).then((res) => {
 					if (res.data.code === 100) {

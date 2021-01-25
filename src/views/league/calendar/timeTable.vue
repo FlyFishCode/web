@@ -183,7 +183,7 @@ import { yearList } from '@/components/common/public';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 
 interface DataProps {
-  handleState: (state: number,playerNumber: number) => void;
+	handleState: (state: number, playerNumber: number) => void;
 	showChangeBtn: boolean;
 	cycleNum: any;
 	allMatchTableData: Array<any>;
@@ -513,7 +513,7 @@ export default defineComponent({
 					if (row.homeCaptainId === userId) {
 						data.isHome = 1;
 						data.playerListId = row.homeTeamId;
-						data.handleState(row.homeManageStatus,playerChangeNumber)
+						data.handleState(row.homeManageStatus, playerChangeNumber);
 						// if (row.homeManageStatus <= 1) {
 						// 	data.isMatchTable = true;
 						// 	data.currentKey = '2';
@@ -528,7 +528,7 @@ export default defineComponent({
 					if (row.visitingCaptainId === userId) {
 						data.isHome = 2;
 						data.playerListId = row.visitingTeamId;
-						data.handleState(row.visitingManageStatus,playerChangeNumber)
+						data.handleState(row.visitingManageStatus, playerChangeNumber);
 						// if (row.visitingManageStatus <= 1) {
 						// 	data.isMatchTable = true;
 						// 	data.currentKey = '2';
@@ -571,7 +571,7 @@ export default defineComponent({
 				if (row.homeCaptainId === userId) {
 					data.isHome = 1;
 					data.playerListId = row.homeTeamId;
-					data.handleState(row.homeManageStatus,row.playerChangeNumber)
+					data.handleState(row.homeManageStatus, row.playerChangeNumber);
 					// if (row.homeManageStatus <= 1) {
 					// 	data.isMatchTable = true;
 					// 	data.currentKey = '2';
@@ -586,7 +586,7 @@ export default defineComponent({
 				if (row.visitingCaptainId === userId) {
 					data.isHome = 2;
 					data.playerListId = row.visitingTeamId;
-					data.handleState(row.visitingManageStatus,row.playerChangeNumber)
+					data.handleState(row.visitingManageStatus, row.playerChangeNumber);
 					// if (row.visitingManageStatus <= 1) {
 					// 	data.isMatchTable = true;
 					// 	data.currentKey = '2';

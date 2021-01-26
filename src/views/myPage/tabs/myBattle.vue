@@ -16,7 +16,7 @@
 			</a-col> -->
 			<a-col :lg="3" :xs="8">
 				<a-select v-model:value="leagueId" @change="leagueChange" class="selectBox">
-					<a-select-option v-for="item in leagueList" :key="item.competitionId" :value="item.competitionId">{{ item.competitionName }}</a-select-option>
+					<a-select-option v-for="item in leagueList" :title="item.competitionName" :key="item.competitionId" :value="item.competitionId">{{ item.competitionName }}</a-select-option>
 				</a-select>
 			</a-col>
 			<a-col :lg="0" :xs="8">

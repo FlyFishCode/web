@@ -637,9 +637,9 @@ export default defineComponent({
 	height: 100%;
 }
 .topOne {
-	position: relative;
-	top: -40px;
-	left: -25px;
+	position: absolute;
+	top: 0px;
+	left: -15px;
 }
 .first {
 	height: 150px;

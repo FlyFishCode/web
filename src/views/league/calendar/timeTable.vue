@@ -183,7 +183,7 @@ import { yearList } from '@/components/common/public';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 
 interface DataProps {
-	handleState: (state: number, playerNumber: number) => void;
+	handleState: (state: number, playerNumber: number,row: any) => void;
 	showChangeBtn: boolean;
 	cycleNum: any;
 	allMatchTableData: Array<any>;
@@ -267,9 +267,9 @@ export default defineComponent({
 			state: '',
 			stateList: [
 				{ value: '', label: 'ALL' },
-				{ value: 1, label: '准备中' },
-				{ value: 2, label: '进行中' },
-				{ value: 3, label: '已结束' }
+				{ value: 1, label: 'default.64' },
+				{ value: 2, label: 'default.104' },
+				{ value: 3, label: 'default.244' }
 			],
 			teamId: '',
 			teamList: [],
@@ -513,35 +513,13 @@ export default defineComponent({
 					if (row.homeCaptainId === userId) {
 						data.isHome = 1;
 						data.playerListId = row.homeTeamId;
-						data.handleState(row.homeManageStatus, playerChangeNumber);
-						// if (row.homeManageStatus <= 1) {
-						// 	data.isMatchTable = true;
-						// 	data.currentKey = '2';
-						// } else {
-						// 	if (playerChangeNumber) {
-						// 		data.showChangeBtn = true;
-						// 	}
-						// 	data.isResult = true;
-						// 	data.currentKey = '1';
-						// }
+						data.handleState(row.homeManageStatus, playerChangeNumber,row.confrontationInfoId);
 					}
 					if (row.visitingCaptainId === userId) {
 						data.isHome = 2;
 						data.playerListId = row.visitingTeamId;
-						data.handleState(row.visitingManageStatus, playerChangeNumber);
-						// if (row.visitingManageStatus <= 1) {
-						// 	data.isMatchTable = true;
-						// 	data.currentKey = '2';
-						// } else {
-						// 	if (playerChangeNumber) {
-						// 		data.showChangeBtn = true;
-						// 	}
-						// 	data.isResult = true;
-						// 	data.currentKey = '1';
-						// }
+						data.handleState(row.visitingManageStatus, playerChangeNumber,row.confrontationInfoId);
 					}
-					data.ismatchTablePage = true;
-					data.confrontationInfoId = row.confrontationInfoId;
 				}
 				if (row.state === 3) {
 					data.confrontationInfoId = row.confrontationInfoId;
@@ -571,35 +549,13 @@ export default defineComponent({
 				if (row.homeCaptainId === userId) {
 					data.isHome = 1;
 					data.playerListId = row.homeTeamId;
-					data.handleState(row.homeManageStatus, row.playerChangeNumber);
-					// if (row.homeManageStatus <= 1) {
-					// 	data.isMatchTable = true;
-					// 	data.currentKey = '2';
-					// } else {
-					// 	if (row.playerChangeNumber) {
-					// 		data.showChangeBtn = true;
-					// 	}
-					// 	data.isResult = true;
-					// 	data.currentKey = '1';
-					// }
+					data.handleState(row.homeManageStatus, row.playerChangeNumber,row.confrontationInfoId);
 				}
 				if (row.visitingCaptainId === userId) {
 					data.isHome = 2;
 					data.playerListId = row.visitingTeamId;
-					data.handleState(row.visitingManageStatus, row.playerChangeNumber);
-					// if (row.visitingManageStatus <= 1) {
-					// 	data.isMatchTable = true;
-					// 	data.currentKey = '2';
-					// } else {
-					// 	if (row.playerChangeNumber) {
-					// 		data.showChangeBtn = true;
-					// 	}
-					// 	data.isResult = true;
-					// 	data.currentKey = '1';
-					// }
+					data.handleState(row.visitingManageStatus, row.playerChangeNumber,row.confrontationInfoId);
 				}
-				data.ismatchTablePage = true;
-				data.confrontationInfoId = row.confrontationInfoId;
 			},
 			finishClick: (confrontationInfoId: number) => {
 				data.confrontationInfoId = confrontationInfoId;
@@ -607,7 +563,7 @@ export default defineComponent({
 				data.isResult = true;
 				data.isAward = true;
 			},
-			handleState: (state: number, playerChangeNumber: number) => {
+			handleState: (state: number, playerChangeNumber: number,confrontationInfoId: any) => {
 				if (state <= 1) {
 					data.isMatchTable = true;
 					data.currentKey = '2';
@@ -618,6 +574,8 @@ export default defineComponent({
 					data.isResult = true;
 					data.currentKey = '1';
 				}
+				data.ismatchTablePage = true;
+				data.confrontationInfoId = confrontationInfoId;
 			},
 			entryInfoPage: (row: any) => {
 				console.log(row);

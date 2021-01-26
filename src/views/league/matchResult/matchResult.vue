@@ -10,7 +10,7 @@
 			<div v-for="(set, setIndex) in tableList" :key="setIndex">
 				<a-row class="title">
 					<a-col :span="3" class="winnerBox">
-						<div :class="{ winner: set.homeIsWin === 1, loseer: set.homeIsWin === 3 }">{{ set.homeIsWin === 1 ? 'win' : 'lose' }}</div>
+						<div :class="{ winner: set.homeIsWin === 1, loseer: set.homeIsWin === 3 }">{{ set.homeIsWinset.homeIsWin === 1 ? 'win' : 'lose' }}</div>
 					</a-col>
 					<a-col :span="9" class="leftBox">
 						<div class="left">{{ `SET ${setIndex + 1}` }}</div>
@@ -19,7 +19,7 @@
 						<div class="right">{{ getGameType(set.mode) }}</div>
 					</a-col>
 					<a-col :span="3" class="winnerBox">
-						<div :class="{ winner: set.homeIsWin === 3, loseer: set.homeIsWin === 1 }">{{ set.visitingIsWin === 1 ? 'win' : 'lose' }}</div>
+						<div :class="{ winner: set.homeIsWin === 3, loseer: set.homeIsWin === 1 }">{{ set.visitingIsWin && set.visitingIsWin === 1 ? 'win' : 'lose' }}</div>
 					</a-col>
 				</a-row>
 				<a-row v-for="(leg, legIndex) in set.legResultList" :key="legIndex" id="table">

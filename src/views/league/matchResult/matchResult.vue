@@ -10,7 +10,7 @@
 			<div v-for="(set, setIndex) in tableList" :key="setIndex">
 				<a-row class="title">
 					<a-col :span="3" class="winnerBox">
-						<div :class="{ winner: set.homeIsWin === 1, loseer: set.homeIsWin === 3 }">{{ set.homeIsWinset.homeIsWin === 1 ? 'win' : 'lose' }}</div>
+						<div v-if="set.homeIsWin" :class="{ winner: set.homeIsWin === 1, loseer: set.homeIsWin === 3 }">{{ set.homeIsWin === 1 ? 'win' : 'lose' }}</div>
 					</a-col>
 					<a-col :span="9" class="leftBox">
 						<div class="left">{{ `SET ${setIndex + 1}` }}</div>
@@ -19,7 +19,7 @@
 						<div class="right">{{ getGameType(set.mode) }}</div>
 					</a-col>
 					<a-col :span="3" class="winnerBox">
-						<div :class="{ winner: set.homeIsWin === 3, loseer: set.homeIsWin === 1 }">{{ set.visitingIsWin && set.visitingIsWin === 1 ? 'win' : 'lose' }}</div>
+						<div v-if="set.visitingIsWin" :class="{ winner: set.visitingIsWin === 1, loseer: set.visitingIsWin === 3 }">{{ set.visitingIsWin === 1 ? 'win' : 'lose' }}</div>
 					</a-col>
 				</a-row>
 				<a-row v-for="(leg, legIndex) in set.legResultList" :key="legIndex" id="table">
@@ -54,7 +54,7 @@
 							<div class="playerbox">
 								<div>{{ record.visitingPlayerName }}</div>
 								<div class="playerImgBox">
-									<span v-if="record.homePlayerPortrait"><img :src="record.visitingPlayerPortrait" alt=""/></span>
+									<span v-if="record.visitingPlayerPortrait"><img :src="record.visitingPlayerPortrait" alt=""/></span>
 									<span v-else><img :src="defaultTeamImg" alt=""/></span>
 								</div>
 							</div>
@@ -82,7 +82,7 @@ export default defineComponent({
 		SettingFilled,
 		emptyList
 	},
-	setup(prop: any,ctx: any) {
+	setup(prop: any, ctx: any) {
 		const data = reactive({
 			tableList: [{ legResultList: [{ playerResultList: [] }] }],
 			defaultTeamImg: require('@/assets/icon.png'),
@@ -143,8 +143,8 @@ export default defineComponent({
 					slots: { customRender: 'awayPlayerInfo' }
 				}
 			],
-			changeMatchTable:() =>{
-				ctx.emit('enter-matchtable')
+			changeMatchTable: () => {
+				ctx.emit('enter-matchtable');
 			},
 			getTableTitle: (mode: number) => {
 				let str = '';
@@ -179,6 +179,9 @@ export default defineComponent({
 				return str;
 			},
 			getGameMode: (mode: number) => {
+				if (!mode) {
+					return '';
+				}
 				let str = '';
 				switch (mode) {
 					case 1:
@@ -297,6 +300,7 @@ export default defineComponent({
 							});
 						});
 					});
+					debugger;
 					data.tableList = res.data.data;
 				}
 			});

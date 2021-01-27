@@ -11,7 +11,7 @@
 			</a-col>
 			<a-col :lg="3" :xs="12">
 				<a-select v-model:value="stageId" @change="stageIdChange" class="selectBox">
-					<a-select-option v-for="item in stageList" :key="item.stageId" :value="item.stageId">{{ item.stageName }}</a-select-option>
+					<a-select-option v-for="item in stageList" :title="item.stageName" :key="item.stageId" :value="item.stageId">{{ item.stageName }}</a-select-option>
 				</a-select>
 			</a-col>
 			<a-col :lg="{ span: 3, offset: 15 }" :xs="0">

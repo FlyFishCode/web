@@ -53,13 +53,13 @@
 						<a-col :span="4" class="legStyle">
 							<div class="legGameSet">
 								<div class="legIndexBox">{{ legIndex + 1 }}</div>
-								<div>{{ $t(getGameName(leg.gameName)) }}</div>
+								<div>{{ getGameName(leg.gameName) }}</div>
 							</div>
 							<div>
 								<!-- {{ `(${getBeginGameSet(leg.gameName, leg.gameIn)} / ${getEndGameSet(leg.gameName, leg.gameOut)}) ` }} -->
 								<span v-if="getBeginGameSet(leg.gameName, leg.gameIn)">{{ `(${getBeginGameSet(leg.gameName, leg.gameIn)}` }}</span>
 								<span v-if="getEndGameSet(leg.gameName, leg.gameOut)">{{ ` / ${getEndGameSet(leg.gameName, leg.gameOut)})` }}</span>
-								<div v-if="leg.gameName <= 4">{{ `(Bull:${leg.bull === 1?'25/50':'50/50'})` }}</div>
+								<div v-if="leg.gameName <= 4">{{ `(Bull:${leg.bull === 1 ? '25/50' : '50/50'})` }}</div>
 							</div>
 						</a-col>
 						<!-- <a-col :span="5" class="playerStyle" v-for="playerBox in new Array(leg.maxPlayer).fill(leg.maxPlayer)" :key="playerBox.index"> -->
@@ -84,7 +84,7 @@
 								<div class="legBox">
 									<div class="legIndexBox">{{ legIndex + 1 }}</div>
 								</div>
-								<div class="legBox">{{ $t(getGameName(leg.gameName)) }}</div>
+								<div class="legBox">{{ getGameName(leg.gameName) }}</div>
 							</a-col>
 							<a-col :span="12" class="inphonePlayerClass">
 								<div v-for="(playerBox, playerIndex) in leg.playerList" :key="playerBox.index">
@@ -143,7 +143,7 @@ export default defineComponent({
 				let str = '';
 				switch (id) {
 					case 0:
-						str = 'default.201';
+						str = 'choice';
 						break;
 					case 1:
 						str = '301 Game';
@@ -402,7 +402,7 @@ export default defineComponent({
 							}
 						});
 						for (const [key, value] of Object.entries(legPlayerObj)) {
-							if (key && key!=='null' && value > data.matchTableList[setIndex].entryTypeNum) {
+							if (key && key !== 'null' && value > data.matchTableList[setIndex].entryTypeNum) {
 								message.warning(instance.parent.ctx.$t('default.270') + data.matchTableList[setIndex].entryTypeNum);
 								data.matchTableList[setIndex].legGameList[legIndex].playerList[playerIndex].playerId = '';
 								return;

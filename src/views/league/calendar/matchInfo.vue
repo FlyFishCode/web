@@ -18,7 +18,15 @@
 					<div>{{ $t('default.39') }}</div>
 				</a-col>
 				<a-col :lg="8" :xs="14" class="tableContentValue">
-					<div>
+					<div
+						class="overStyle"
+						:title="
+							infoData.operator
+								.trim()
+								.split(' ')
+								.join('；')
+						"
+					>
 						{{
 							infoData.operator
 								.trim()
@@ -40,7 +48,7 @@
 				</a-col>
 				<a-col :lg="8" :xs="14" class="overStyle countryClass">
 					<div v-for="item in infoData.hostingRegion" :key="item">
-						<span>{{ item.countryName +'；' }}</span>
+						<span>{{ item.countryName + '；' }}</span>
 						<span v-if="item.areaName">{{ ` > ${item.areaName}；` }}</span>
 					</div>
 				</a-col>

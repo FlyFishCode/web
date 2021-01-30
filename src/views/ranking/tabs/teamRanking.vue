@@ -113,12 +113,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { SettingFilled, AimOutlined, EnvironmentOutlined } from '@ant-design/icons-vue';
 import { indexCountryHttp, indexCityHttp, teamRankingHttp } from '@/axios/api';
 import tramRanking from '@/components/rankingTeam.vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
+
+interface DataProps {
+  areaChange: (value: any) => void;
+  countryList: any;
+  pageNum: any;
+  pageSize: any;
+  dataObj: any;
+  total: any;
+  year: any;
+  visible: boolean;
+  dialogObj: any;
+  tableList: any;
+  isChange: boolean;
+  cityChange: () => void;
+  areaId: any;
+  areaList: any;
+	countryId: number|string;
+}
+
 export default defineComponent({
 	name: 'teamRanking',
 	components: {
@@ -129,9 +148,9 @@ export default defineComponent({
 	},
 	setup(prop: any, ctx: any) {
 		const ROUTER = useRouter();
-		const instance: any = getCurrentInstance();
+		// const instance: any = getCurrentInstance();
 		let currentSelectList: Array<any> = [];
-		const data = reactive({
+		const data: DataProps = reactive({
 			colSpan: 5,
 			getDate: () => {
 				return '2020-10-17';
@@ -148,8 +167,8 @@ export default defineComponent({
 				{ value: 2020, label: 2020 },
 				{ value: 2021, label: 2021 }
 			],
-			areaId: null,
-			countryId: null,
+			areaId: '',
+			countryId: '',
 			countryList: [],
 			areaList: [],
 			visible: false,
@@ -167,7 +186,7 @@ export default defineComponent({
 					if (data.areaList.length) {
 						data.areaId = data.areaList[0]['areaId'];
 					} else {
-						data.areaId = null;
+						data.areaId = '';
 					}
 					data.cityChange();
 				});
@@ -197,9 +216,9 @@ export default defineComponent({
 						currentSelectList = selectedRowKeys;
 						const selectIndex: number[] = [];
 						selectedRowKeys.forEach((i) => {
-							selectIndex.push(data.tableList.findIndex((j) => j.teamId === i));
+							selectIndex.push(data.tableList.findIndex((j: { teamId: number }) => j.teamId === i));
 						});
-						data.tableList.forEach((i, index) => {
+						data.tableList.forEach((i: { disabled: boolean }, index: number) => {
 							if (index !== selectIndex[1]) {
 								i.disabled = true;
 							}
@@ -207,7 +226,7 @@ export default defineComponent({
 						const list = data.tableList;
 						data.tableList = [...list];
 					} else {
-						data.tableList.forEach((i) => {
+						data.tableList.forEach((i: { disabled: boolean }) => {
 							i.disabled = false;
 						});
 						const list = data.tableList;
@@ -322,9 +341,10 @@ export default defineComponent({
 		const getCountryList = () => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
+					const id = Number(sessionStorage.getItem('countryId')) || data.areaList[0]['countryId'];
 					data.countryList = res.data.data;
-					data.countryId = data.countryList[0]['countryId'];
-					data.areaChange(data.countryList[0]['countryId']);
+					data.countryId = id;
+					data.areaChange(id);
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
 					getDataList();
 				}
@@ -349,11 +369,11 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountryList();
-			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
-				data.countryId = val;
-				data.areaChange(val);
-				getDataList();
-			});
+			// instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
+			// 	data.countryId = val;
+			// 	data.areaChange(val);
+			// 	getDataList();
+			// });
 		});
 		return {
 			...toRefs(data)

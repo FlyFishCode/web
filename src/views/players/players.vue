@@ -228,12 +228,33 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { playerBestListHttp, playerListHttp, indexCountryHttp, indexCityHttp } from '@/axios/api';
 import divTitle from '@/components/DividingLine.vue';
 import emptyList from '@/components/common/emptyList.vue';
 import { SettingFilled, BankFilled, SearchOutlined, EnvironmentOutlined, DownCircleOutlined, UpCircleOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
+
+interface DataProps {
+	countryChange: (value: any) => void;
+	changeIcon: () => void;
+	areaList: any;
+	totalCount: any;
+	total: any;
+	pageNum: any;
+	inputValue: any;
+	matchType: any;
+	bestPlayers: any;
+	isUp: boolean;
+	btnType: number;
+	areaId: any;
+	cityList: any;
+	playerList: any;
+	visible: boolean;
+	dialogObj: any;
+	countryId: number | string;
+}
+
 export default defineComponent({
 	name: 'players',
 	components: {
@@ -251,8 +272,8 @@ export default defineComponent({
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
-		const instance: any = getCurrentInstance();
-		const data = reactive({
+		// const instance: any = getCurrentInstance();
+		const data: DataProps = reactive({
 			title: 'default.10',
 			btnType: 1,
 			isUp: true,
@@ -278,7 +299,7 @@ export default defineComponent({
 				{ value: 2, label: 'default.93' },
 				{ value: 3, label: 'default.94' }
 			],
-			countryId: null,
+			countryId: '',
 			areaId: null,
 			monthList: [],
 			stateList: [],
@@ -408,9 +429,10 @@ export default defineComponent({
 		const getCountry = (inputValue: any) => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
+					const id = Number(sessionStorage.getItem('countryId')) || data.areaList[0]['countryId'];
 					data.areaList = res.data.data;
-					data.countryId = data.areaList[0]['countryId'];
-					data.countryChange(data.areaList[0]['countryId']);
+					data.countryId = id;
+					data.countryChange(id);
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
 					getPlayerList(undefined, inputValue);
 					getBestTeamList();
@@ -419,12 +441,12 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountry(ROUTE.query.value);
-			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
-				data.countryId = val;
-				data.countryChange(val);
-				getBestTeamList();
-				getPlayerList();
-			});
+			// instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
+			// 	data.countryId = val;
+			// 	data.countryChange(val);
+			// 	getBestTeamList();
+			// 	getPlayerList();
+			// });
 		});
 		return {
 			...toRefs(data)

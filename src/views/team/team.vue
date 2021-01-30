@@ -227,14 +227,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { teamBestListHttp, teamListHttp, indexCityHttp, indexCountryHttp } from '@/axios/api';
 import divTitle from '@/components/DividingLine.vue';
 import emptyList from '@/components/common/emptyList.vue';
 import { SettingFilled, BankFilled, SearchOutlined, EnvironmentOutlined, UserOutlined, DownCircleOutlined, UpCircleOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 interface DataProps {
-	bestTeam: { [key: string]: string };
+	countryChange: (value: any) => void;
+	total: any;
+	areaList: any;
+	pageNum: any;
+	matchType: any;
+	inputValue: any;
+	bestTeam: any;
+	areaId: any;
+	cityList: any;
+	visible: boolean;
+	dialogObj: any;
+	btnType: number;
+	isUp: boolean;
+	teamList: any;
+	countryId: number | string;
 }
 export default defineComponent({
 	name: 'team',
@@ -254,8 +268,8 @@ export default defineComponent({
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
-		const instance: any = getCurrentInstance();
-		const data = reactive({
+		// const instance: any = getCurrentInstance();
+		const data: DataProps = reactive({
 			title: 'default.9',
 			currentValue: 1,
 			btnType: 1,
@@ -412,9 +426,10 @@ export default defineComponent({
 		const getCountry = (value: any) => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
+					const id = Number(sessionStorage.getItem('countryId')) || data.areaList[0]['countryId'];
 					data.areaList = res.data.data;
-					data.countryId = data.areaList[0]['countryId'];
-					data.countryChange(data.areaList[0]['countryId']);
+					data.countryId = id
+					data.countryChange(id);
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
 					getTeamList(undefined, value);
 					getBestTeamList();
@@ -423,12 +438,12 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountry(ROUTE.query.value);
-			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
-				data.countryId = val;
-				data.countryChange(val);
-				getBestTeamList();
-				getTeamList();
-			});
+			// instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
+			// 	data.countryId = val;
+			// 	data.countryChange(val);
+			// 	getBestTeamList();
+			// 	getTeamList();
+			// });
 		});
 		return {
 			...toRefs(data)

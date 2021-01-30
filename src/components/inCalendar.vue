@@ -109,6 +109,8 @@ export default defineComponent({
 				const div = document.getElementsByClassName('center')[0] as HTMLElement;
 				data.currentDiv++;
 				const ohterDiv = data.topList.length;
+				console.log(data.currentDiv);
+				console.log(data.topList.length);
 				if (!div.style.left || Math.abs(parseInt(div.style.left)) < ohterDiv * 142) {
 					data.position -= 180;
 					div.style.left = data.position + 'px';

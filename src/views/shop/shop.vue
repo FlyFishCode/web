@@ -216,7 +216,7 @@
 </template>
 // 此文件不用TS，AMap加载有问题
 <script>
-import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import divTitle from '@/components/DividingLine.vue';
 import emptyList from '@/components/common/emptyList.vue';
 import { indexCityHttp, indexCountryHttp, shopListHttp } from '@/axios/api';
@@ -237,7 +237,7 @@ export default defineComponent({
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
-		const instance = getCurrentInstance();
+		// const instance = getCurrentInstance();
 		let MAP = null;
 		const loadMap = () => {
 			const url = 'https://webapi.amap.com/maps?v=1.4.15&key=4288b5f8c829eba5d80f4664f7e40dcf&callback=load';
@@ -468,9 +468,10 @@ export default defineComponent({
 		const getCountry = (searchValue) => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
+					const id = Number(sessionStorage.getItem('countryId')) || data.areaList[0]['countryId'];
 					data.areaList = res.data.data;
-					data.countryId = data.areaList[0]['countryId'];
-					data.countryChange(data.areaList[0]['countryId']);
+					data.countryId = id;
+					data.countryChange(id);
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
 					getShopList(searchValue);
 				}
@@ -513,11 +514,11 @@ export default defineComponent({
 			showMap();
 			getCountry(ROUTE.query.searchValue);
 			loadMap();
-			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val) => {
-				data.countryId = val;
-				data.countryChange(val);
-				getShopList();
-			});
+			// instance.appContext.config.globalProperties.$bus.on('on-country-change', (val) => {
+			// 	data.countryId = val;
+			// 	data.countryChange(val);
+			// 	getShopList();
+			// });
 		});
 		return {
 			...toRefs(data)

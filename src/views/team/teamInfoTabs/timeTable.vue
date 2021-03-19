@@ -372,7 +372,16 @@ export default defineComponent({
 			entryCalendar: (row: any, type: number) => {
 				ROUTER.push({
 					path: 'calendar',
-					query: { activeKey: type, competitionId: data.league, divisionId: row.divisionId, confrontationInfoId: row.confrontationInfoId, ismatchTablePage: 1 }
+					query: {
+						ismatchTablePage: 1,
+						activeKey: 2,
+						competitionId: data.league,
+						divisionId: row.divisionId,
+						confrontationInfoId: row.confrontationInfoId,
+						isResult: type === 2 ? 1 : 0,
+						isMatchTable: type === 1 ? 1 : 0,
+						currentKey: type === 1 ? 2 : 1
+					}
 				});
 			},
 			Gohistory: () => {

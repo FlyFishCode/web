@@ -804,11 +804,9 @@ export default defineComponent({
 .otherSrcBox div {
 	width: 80px;
 	height: 80px;
-	font-size: 50px;
 	cursor: pointer;
 	background: #eee;
 	border-radius: 10px;
-	margin-top: 5px;
 }
 .otherSrcBox div img {
 	width: 100%;

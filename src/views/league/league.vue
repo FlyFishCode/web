@@ -356,7 +356,6 @@ export default defineComponent({
 		watch(
 			() => sessionStorage.getItem('countryId'),
 			(val) => {
-				debugger;
 				console.log(val);
 			}
 		);

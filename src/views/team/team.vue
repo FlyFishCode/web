@@ -227,7 +227,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { teamBestListHttp, teamListHttp, indexCityHttp, indexCountryHttp } from '@/axios/api';
 import divTitle from '@/components/DividingLine.vue';
@@ -268,7 +268,7 @@ export default defineComponent({
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
-		// const instance: any = getCurrentInstance();
+		const instance: any = getCurrentInstance();
 		const data: DataProps = reactive({
 			title: 'default.9',
 			currentValue: 1,
@@ -428,7 +428,7 @@ export default defineComponent({
 				if (res.data.data.length) {
 					const id = Number(sessionStorage.getItem('countryId')) || data.areaList[0]['countryId'];
 					data.areaList = res.data.data;
-					data.countryId = id
+					data.countryId = id;
 					data.countryChange(id);
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
 					getTeamList(undefined, value);
@@ -438,12 +438,12 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountry(ROUTE.query.value);
-			// instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
-			// 	data.countryId = val;
-			// 	data.countryChange(val);
-			// 	getBestTeamList();
-			// 	getTeamList();
-			// });
+			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
+				data.countryId = val;
+				data.countryChange(val);
+				getBestTeamList();
+				getTeamList();
+			});
 		});
 		return {
 			...toRefs(data)

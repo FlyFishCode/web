@@ -199,7 +199,8 @@ export default defineComponent({
 			levelTableList: [{ month: 0 }],
 			tableList: [{ rating: 0 }],
 			yearChange: () => {
-				console.log();
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDataInfo()
 			},
 			showInfo: (key: number) => {
 				console.log(key);

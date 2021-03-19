@@ -102,7 +102,9 @@ export default defineComponent({
 		});
 		const getMatchTeam = (confrontationInfoId = prop.confrontationInfoId) => {
 			matchTeamInfoHttp({ confrontationInfoId }).then((res) => {
-				data.matchTeam = res.data.data;
+				if(res.data.data){
+					data.matchTeam = res.data.data;
+				}
 			});
 		};
 		onMounted(() => {

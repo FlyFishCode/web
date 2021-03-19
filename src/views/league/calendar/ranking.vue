@@ -3,7 +3,6 @@
 		<a-row>
 			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ $t('default.26') }} </a-col>
 		</a-row>
-
 		<a-row>
 			<a-tabs type="card" class="tabsBox">
 				<a-tab-pane key="1" :tab="$t('default.67')">
@@ -20,9 +19,6 @@
 							<a-select v-model:value="stageId" @change="stageChange" class="selectBox">
 								<a-select-option v-for="item in stageList" :key="item.stageId" :value="item.stageId">{{ item.stageName }}</a-select-option>
 							</a-select>
-						</a-col>
-						<a-col :lg="{ span: 3, offset: 15 }" :xs="0">
-							<a-button type="danger" @click="showMatchTable">{{ $t('default.151') }}</a-button>
 						</a-col>
 					</a-row>
 
@@ -112,9 +108,6 @@
 							<a-select v-model:value="teamId" @change="leagueChange" class="selectBox">
 								<a-select-option v-for="item in teamList" :key="item.teamId" :value="item.teamId">{{ item.teamName }}</a-select-option>
 							</a-select>
-						</a-col>
-						<a-col :lg="3" :offset="6" :xs="0">
-							<a-button type="danger" @click="showMatchTable">{{ $t('default.151') }}</a-button>
 						</a-col>
 					</a-row>
 					<!-- 第一名展示信息 -->
@@ -275,7 +268,7 @@ export default defineComponent({
 				{ title: 'LT.OFF', dataIndex: 'teamResultDetails.lowTonOut', width: 85 },
 				{ title: 'BED', dataIndex: 'teamResultDetails.threeInBed', width: 70 },
 				{ title: '180', dataIndex: 'teamResultDetails.ton80', width: 70 },
-				{ title: 'EYE', dataIndex: 'teamResultDetails.threeInBlack', width: 70 },
+				{ title: '3 In the Black', dataIndex: 'teamResultDetails.threeInBlack', width: 80 },
 				{ title: '5M', dataIndex: 'teamResultDetails.fiveMarks', width: 60 },
 				{ title: '6M', dataIndex: 'teamResultDetails.sixMarks', width: 60 },
 				{ title: '7M', dataIndex: 'teamResultDetails.sevenMarks', width: 60 },
@@ -344,12 +337,13 @@ export default defineComponent({
 					]
 				},
 				{ title: 'LT', dataIndex: 'playerResultDetails.lowTon', width: 50 },
+				{ title: 'HT', dataIndex: 'playerResultDetails.highTon', width: 65 },
 				{ title: 'HAT', dataIndex: 'playerResultDetails.hatTrick', width: 70 },
 				{ title: 'HT.OFF', dataIndex: 'playerResultDetails.highTonOut', width: 85 },
 				{ title: 'LT.OFF', dataIndex: 'playerResultDetails.lowTonOut', width: 80 },
 				{ title: 'BED', dataIndex: 'playerResultDetails.threeInBed', width: 65 },
 				{ title: '180', dataIndex: 'playerResultDetails.ton80', width: 60 },
-				{ title: 'EYE', dataIndex: 'playerResultDetails.threeInBlack', width: 65 },
+				{ title: '3 In the Black', dataIndex: 'playerResultDetails.threeInBlack', width: 80 },
 				{ title: '5M', dataIndex: 'playerResultDetails.fiveMarks', width: 60 },
 				{ title: '6M', dataIndex: 'playerResultDetails.sixMarks', width: 60 },
 				{ title: '7M', dataIndex: 'playerResultDetails.sevenMarks', width: 60 },
@@ -365,13 +359,7 @@ export default defineComponent({
 			dialogVisible: (value: boolean) => {
 				data.visible = value;
 			},
-			showMatchTable: () => {
-				console.log('1111');
-			},
 			handleMenuClick: () => {
-				console.log('1');
-			},
-			onSearch: () => {
 				console.log('1');
 			},
 			Gohistory: () => {

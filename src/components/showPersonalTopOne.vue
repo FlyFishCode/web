@@ -84,6 +84,7 @@ interface DataProps {
 }
 
 const getNewData = (obj: any) => {
+	debugger
 	const data = {
 		img: obj.playerImg || '',
 		playerName: obj.playerName || '',
@@ -103,10 +104,10 @@ const getNewData = (obj: any) => {
 			},
 			{
 				title: 'Award 02',
-				HAT: obj.playerResultDetails && obj.playerResultDetails.lowTon || 0,
-				BED: obj.playerResultDetails && obj.playerResultDetails.highTon || 0,
-				180: obj.playerResultDetails && obj.playerResultDetails.lowTonOut || 0,
-				EYE: obj.playerResultDetails && obj.playerResultDetails.highTonOut || 0
+				HAT: obj.playerResultDetails && obj.playerResultDetails.hatTrick || 0,
+				BED: obj.playerResultDetails && obj.playerResultDetails.threeInBed || 0,
+				180: obj.playerResultDetails && obj.playerResultDetails.ton80 || 0,
+				Black: obj.playerResultDetails && obj.playerResultDetails.threeInBlack || 0
 			},
 			{
 				title: 'Award 03',

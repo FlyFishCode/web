@@ -215,6 +215,7 @@ export default defineComponent({
 				return str;
 			},
 			getState: (row: any) => {
+				debugger;
 				let str = '';
 				if (row.homeTeamId === data.teamId && row.homeTeamScore > row.visitingTeamScore) {
 					str = `win`;
@@ -228,7 +229,7 @@ export default defineComponent({
 				if (row.homeTeamId === data.teamId && row.homeTeamScore > row.visitingTeamScore) {
 					str = `${row.visitingTeamScore} : ${row.homeTeamScore}`;
 				} else {
-					str = `${row.homeTeamScore} : ${row.visitingTeamScore}`;
+					str = `${row.homeTeamScore || '-'} : ${row.visitingTeamScore || '-'}`;
 				}
 				return str;
 			}

@@ -149,7 +149,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
 import { SettingFilled, AimOutlined, EnvironmentOutlined } from '@ant-design/icons-vue';
 import { indexCountryHttp, indexCityHttp, playerRankingHttp } from '@/axios/api';
 import playerRanking from '@/components/rankingPlayer.vue';
@@ -157,22 +157,22 @@ import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 
 interface DataProps {
-  dataObj: any;
-  total: any;
-  pageSize: any;
-  pageNum: any;
-  year: any;
-  countryChange: (value: any) => void;
-  countryList: any;
-  areaChange: () => void;
-  areaId: any;
-  areaList: any;
-  visible: boolean;
-  dialogObj: any;
-  gender: any;
-  isChange: boolean;
-  tableList: any;
-	countryId: number|string;
+	dataObj: any;
+	total: any;
+	pageSize: any;
+	pageNum: any;
+	year: any;
+	countryChange: (value: any) => void;
+	countryList: any;
+	areaChange: () => void;
+	areaId: any;
+	areaList: any;
+	visible: boolean;
+	dialogObj: any;
+	gender: any;
+	isChange: boolean;
+	tableList: any;
+	countryId: number | string;
 }
 
 export default defineComponent({
@@ -185,7 +185,7 @@ export default defineComponent({
 	},
 	setup(prop: any, ctx: any) {
 		const ROUTER = useRouter();
-		// const instance: any = getCurrentInstance();
+		const instance: any = getCurrentInstance();
 		let currentSelectList: Array<any> = [];
 		const data: DataProps = reactive({
 			colSpan: 5,
@@ -464,11 +464,11 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountryList();
-			// instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
-			// 	data.countryId = val;
-			// 	data.countryChange(val);
-			// 	getDataList();
-			// });
+			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
+				data.countryId = val;
+				data.countryChange(val);
+				getDataList();
+			});
 		});
 		return {
 			...toRefs(data)

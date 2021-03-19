@@ -228,7 +228,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { playerBestListHttp, playerListHttp, indexCountryHttp, indexCityHttp } from '@/axios/api';
 import divTitle from '@/components/DividingLine.vue';
@@ -272,7 +272,7 @@ export default defineComponent({
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
-		// const instance: any = getCurrentInstance();
+		const instance: any = getCurrentInstance();
 		const data: DataProps = reactive({
 			title: 'default.10',
 			btnType: 1,
@@ -441,12 +441,12 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountry(ROUTE.query.value);
-			// instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
-			// 	data.countryId = val;
-			// 	data.countryChange(val);
-			// 	getBestTeamList();
-			// 	getPlayerList();
-			// });
+			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
+				data.countryId = val;
+				data.countryChange(val);
+				getBestTeamList();
+				getPlayerList();
+			});
 		});
 		return {
 			...toRefs(data)

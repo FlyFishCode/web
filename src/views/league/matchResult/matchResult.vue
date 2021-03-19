@@ -2,7 +2,7 @@
 	<div class="content">
 		<a-row>
 			<a-col :span="4" class="smallTitle"> <SettingFilled /> {{ $t('default.62') }} </a-col>
-			<a-col :span="2" :offset="18">
+			<a-col v-if="showBtn" :span="2" :offset="18">
 				<a-button type="danger" @click="changeMatchTable">{{ $t('default.308') }}</a-button>
 			</a-col>
 		</a-row>
@@ -77,13 +77,14 @@ import emptyList from '@/components/common/emptyList.vue';
 // import { DOM } from '@/type/interface';
 export default defineComponent({
 	name: 'matchResult',
-	props: ['confrontationInfoId'],
+	props: ['confrontationInfoId','showBtn'],
 	components: {
 		SettingFilled,
 		emptyList
 	},
 	setup(prop: any, ctx: any) {
 		const data = reactive({
+			isShowMatchTableBtn:true,
 			tableList: [{ legResultList: [{ playerResultList: [] }] }],
 			defaultTeamImg: require('@/assets/icon.png'),
 			columns: [
@@ -300,7 +301,6 @@ export default defineComponent({
 							});
 						});
 					});
-					debugger;
 					data.tableList = res.data.data;
 				}
 			});

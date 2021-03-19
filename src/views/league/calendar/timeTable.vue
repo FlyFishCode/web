@@ -27,7 +27,7 @@
 			<a-row class="rowStyle">
 				<a-tabs type="card" v-model:activeKey="currentKey">
 					<a-tab-pane v-if="isResult" key="1" :tab="$t('default.62')">
-						<matchResult :confrontationInfoId="confrontationInfoId" @enter-matchtable="changeStates" />
+						<matchResult :confrontationInfoId="confrontationInfoId" :showBtn ='showBtn' @enter-matchtable="changeStates" />
 					</a-tab-pane>
 					<a-tab-pane v-if="isMatchTable" key="2" :tab="$t('default.41')">
 						<matchTable :confrontationInfoId="confrontationInfoId" :isHome="isHome" :teamId="playerListId" />
@@ -104,7 +104,7 @@
 						<div class="tableState">
 							<div v-if="getTypeBtn(record)" class="plan" @click="readyClick(record)">{{ $t('default.41') }}</div>
 							<div v-if="record.status === 2">{{ $t('default.104') }}</div>
-							<div v-if="record.status === 3" class="plan" @click="finishClick(record.confrontationInfoId)">{{ $t('default.244') }}</div>
+							<div v-if="record.status === 3" class="plan" @click="finishClick(record.confrontationInfoId,record.homeAyerChange,record.visitingAyerChange,record.playerChangeNumber)">{{ $t('default.244') }}</div>
 						</div>
 					</template>
 				</a-table>
@@ -183,7 +183,8 @@ import { yearList } from '@/components/common/public';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 
 interface DataProps {
-	handleState: (state: number, playerNumber: number,row: any) => void;
+	handleState: (state: number, playerNumber: number, row: any) => void;
+	showBtn: boolean;
 	showChangeBtn: boolean;
 	cycleNum: any;
 	allMatchTableData: Array<any>;
@@ -244,6 +245,7 @@ export default defineComponent({
 			confrontationInfoId: ROUTE.query.confrontationInfoId,
 			visible: false,
 			showChangeBtn: false,
+			showBtn:false,
 			isHome: 0,
 			playerListId: 0,
 			isResult: false,
@@ -336,7 +338,6 @@ export default defineComponent({
 			customRow: (record: any) => {
 				return {
 					click: () => {
-						debugger;
 						console.log(record);
 					}
 				};
@@ -502,26 +503,28 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTimeTableList();
 			},
-			showMatch: (row: any, playerChangeNumber: number) => {
+			showMatch: (row: any, playerChangeCount: number) => {
 				/*1.未登录，不可进入排阵页面。进去结果页面
 				 *2.登录  如果是草稿或者未排阵或者可以更改玩家次数，则进入排阵页面。
 				 *			  如果是已提交状态，进入结果页面
 				 */
 				if (row.state === 2) return;
 				if (row.state === 1) {
-					debugger;
 					if (row.homeCaptainId === userId) {
 						data.isHome = 1;
 						data.playerListId = row.homeTeamId;
-						data.handleState(row.homeManageStatus, playerChangeNumber,row.confrontationInfoId);
+						data.handleState(row.homeManageStatus, playerChangeCount, row.confrontationInfoId);
 					}
 					if (row.visitingCaptainId === userId) {
 						data.isHome = 2;
 						data.playerListId = row.visitingTeamId;
-						data.handleState(row.visitingManageStatus, playerChangeNumber,row.confrontationInfoId);
+						data.handleState(row.visitingManageStatus, playerChangeCount, row.confrontationInfoId);
 					}
 				}
 				if (row.state === 3) {
+					if(playerChangeCount && row.homeAyerChange + row.visitingAyerChange < playerChangeCount){
+						data.showBtn = true
+					}
 					data.confrontationInfoId = row.confrontationInfoId;
 					data.ismatchTablePage = true;
 					data.isResult = true;
@@ -549,21 +552,24 @@ export default defineComponent({
 				if (row.homeCaptainId === userId) {
 					data.isHome = 1;
 					data.playerListId = row.homeTeamId;
-					data.handleState(row.homeManageStatus, row.playerChangeNumber,row.confrontationInfoId);
+					data.handleState(row.homeManageStatus, row.playerChangeNumber, row.confrontationInfoId);
 				}
 				if (row.visitingCaptainId === userId) {
 					data.isHome = 2;
 					data.playerListId = row.visitingTeamId;
-					data.handleState(row.visitingManageStatus, row.playerChangeNumber,row.confrontationInfoId);
+					data.handleState(row.visitingManageStatus, row.playerChangeNumber, row.confrontationInfoId);
 				}
 			},
-			finishClick: (confrontationInfoId: number) => {
+			finishClick: (confrontationInfoId: number,homeChangeCount: number,visitingChangeCount: number,playerChangeCount: number) => {
+				if(playerChangeCount && homeChangeCount + visitingChangeCount < playerChangeCount){
+						data.showBtn = true
+					}
 				data.confrontationInfoId = confrontationInfoId;
 				data.ismatchTablePage = true;
 				data.isResult = true;
 				data.isAward = true;
 			},
-			handleState: (state: number, playerChangeNumber: number,confrontationInfoId: any) => {
+			handleState: (state: number, playerChangeNumber: number, confrontationInfoId: any) => {
 				if (state <= 1) {
 					data.isMatchTable = true;
 					data.currentKey = '2';
@@ -671,14 +677,17 @@ export default defineComponent({
 			});
 		};
 		const init = (queryObj: any) => {
-			if (queryObj.ismatchTablePage) {
+			if (Number(queryObj.ismatchTablePage)) {
 				data.ismatchTablePage = true;
 			}
 			if (queryObj.currentKey) {
 				data.currentKey = queryObj.currentKey;
 			}
-			if (queryObj.ready) {
-				data.isMatchTable = Boolean(queryObj.ready);
+			if (Number(queryObj.isResult)) {
+				data.isResult = Boolean(queryObj.isResult);
+			}
+			if (Number(queryObj.isMatchTable)) {
+				data.isMatchTable = Boolean(queryObj.isMatchTable);
 			}
 			if (queryObj.teamId) {
 				data.playerListId = queryObj.teamId;

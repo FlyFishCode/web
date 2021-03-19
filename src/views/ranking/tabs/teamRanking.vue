@@ -113,7 +113,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
 import { SettingFilled, AimOutlined, EnvironmentOutlined } from '@ant-design/icons-vue';
 import { indexCountryHttp, indexCityHttp, teamRankingHttp } from '@/axios/api';
 import tramRanking from '@/components/rankingTeam.vue';
@@ -121,21 +121,21 @@ import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 
 interface DataProps {
-  areaChange: (value: any) => void;
-  countryList: any;
-  pageNum: any;
-  pageSize: any;
-  dataObj: any;
-  total: any;
-  year: any;
-  visible: boolean;
-  dialogObj: any;
-  tableList: any;
-  isChange: boolean;
-  cityChange: () => void;
-  areaId: any;
-  areaList: any;
-	countryId: number|string;
+	areaChange: (value: any) => void;
+	countryList: any;
+	pageNum: any;
+	pageSize: any;
+	dataObj: any;
+	total: any;
+	year: any;
+	visible: boolean;
+	dialogObj: any;
+	tableList: any;
+	isChange: boolean;
+	cityChange: () => void;
+	areaId: any;
+	areaList: any;
+	countryId: number | string;
 }
 
 export default defineComponent({
@@ -148,7 +148,7 @@ export default defineComponent({
 	},
 	setup(prop: any, ctx: any) {
 		const ROUTER = useRouter();
-		// const instance: any = getCurrentInstance();
+		const instance: any = getCurrentInstance();
 		let currentSelectList: Array<any> = [];
 		const data: DataProps = reactive({
 			colSpan: 5,
@@ -369,11 +369,11 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountryList();
-			// instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
-			// 	data.countryId = val;
-			// 	data.areaChange(val);
-			// 	getDataList();
-			// });
+			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
+				data.countryId = val;
+				data.areaChange(val);
+				getDataList();
+			});
 		});
 		return {
 			...toRefs(data)

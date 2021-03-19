@@ -151,8 +151,8 @@ export default defineComponent({
 				}
 				ctx.emit('change-list', item.confrontationDate);
 			},
-			info: (row: any, playerNumber: number) => {
-				ctx.emit('show-match', row, playerNumber);
+			info: (row: any, playerChangeCount: number) => {
+				ctx.emit('show-match', row, playerChangeCount);
 			}
 		});
 		const getList = () => {

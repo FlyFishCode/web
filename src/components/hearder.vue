@@ -419,12 +419,12 @@ export default defineComponent({
 					ROUTER.push({
 						path: 'calendar',
 						query: {
+							ready: ready,
+							divisionId,
 							teamId: teamId,
 							ismatchTablePage: '1',
-							ready: ready,
 							currentKey: currentKey,
 							competitionId: data.leagueId,
-							divisionId,
 							confrontationInfoId: item.confrontationInfoId
 						}
 					});
@@ -478,8 +478,10 @@ export default defineComponent({
 		// 	document.head.appendChild(jsapi);
 		// };
 		const init = () => {
-			// data.isLogin = true;
-			data.userName = sessionStorage.getItem('userName') as string;
+			if (sessionStorage.getItem('userName')) {
+				data.userName = sessionStorage.getItem('userName') as string;
+				data.isLogin = true;
+			}
 			indexCountryHttp().then((res) => {
 				if (res.data.data) {
 					let currentCountry = '';

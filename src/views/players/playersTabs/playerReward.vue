@@ -30,6 +30,7 @@ import { plauerRewardListHttp } from '@/axios/api';
 import entryList from '@/components/common/entryList.vue';
 import { SettingFilled } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
+import { yearList } from '@/components/common/public/index';
 export default defineComponent({
 	name: 'playerReward',
 	components: {
@@ -42,12 +43,9 @@ export default defineComponent({
 		const data = reactive({
 			entryPath: '/players',
 			title: '玩家奖励',
-			year: 2020,
+			year: new Date().getFullYear(),
 			matchType: 2020,
-			yearList: [
-				{ value: 2020, label: 2020 },
-				{ value: 2021, label: 2021 }
-			],
+			yearList,
 			columns: [
 				{
 					title: 'MONTH',

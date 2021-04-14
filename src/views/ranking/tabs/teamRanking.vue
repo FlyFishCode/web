@@ -73,7 +73,11 @@
 				<template v-slot:Rating>{{ $t('default.168') }}</template>
 				<template v-slot:team="{ text }">
 					<div class="tableBox">
-						<div class="tableImgBox"><img :src="dialogObj.img" alt="" /></div>
+						<div class="tableImgBox">
+							<!-- <img v-if="record.teamImg" :src="text.teamImg" alt="" />
+							<img v-else :src="defaultImg" alt="" /> -->
+							<img :src="dialogObj.img" alt="" />
+						</div>
 						<div class="tableMsgCentent">
 							<div @click="entryInfoPage(record.teamId)" class="link">{{ text }}</div>
 							<div>
@@ -117,6 +121,7 @@ import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from
 import { SettingFilled, AimOutlined, EnvironmentOutlined } from '@ant-design/icons-vue';
 import { indexCountryHttp, indexCityHttp, teamRankingHttp } from '@/axios/api';
 import tramRanking from '@/components/rankingTeam.vue';
+import { yearList } from '@/components/common/public/index';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 
@@ -159,14 +164,11 @@ export default defineComponent({
 			pageNum: 1,
 			pageSize: 10,
 			total: 1,
-			year: 2020,
+			year: new Date().getFullYear(),
 			dataObj: {
 				teamId: 0
 			},
-			yearList: [
-				{ value: 2020, label: 2020 },
-				{ value: 2021, label: 2021 }
-			],
+			yearList,
 			areaId: '',
 			countryId: '',
 			countryList: [],
@@ -241,7 +243,6 @@ export default defineComponent({
 			inPhoneColumns: [
 				{ dataIndex: 'key', key: 'time', slots: { title: 'index' } },
 				{
-					dataIndex: 'data',
 					key: 'name',
 					slots: { title: 'date', customRender: 'team' }
 				},
@@ -251,8 +252,8 @@ export default defineComponent({
 				{ title: '排行', dataIndex: 'sort', key: 'time' },
 				{
 					title: '队名',
-					dataIndex: 'teamName',
 					key: 'name',
+					width: 250,
 					slots: { customRender: 'team' }
 				},
 				{ title: 'Rating', dataIndex: 'competitionRating.rating', key: 'time' },
@@ -392,13 +393,9 @@ export default defineComponent({
 	border-radius: 10px;
 	cursor: pointer;
 }
-.tableImgBox {
-	height: 60px;
-	width: 60px;
-	margin: 0 auto;
-}
 .tableImgBox img {
-	height: 100%;
+	height: 50px;
+	width: 50px;
 }
 .imgBox {
 	height: 100px;
@@ -419,5 +416,6 @@ export default defineComponent({
 }
 .tableBox {
 	display: flex;
+	justify-content: space-between;
 }
 </style>

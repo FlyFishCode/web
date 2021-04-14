@@ -57,7 +57,7 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { historyListHttp } from '@/axios/api';
 import entryList from '@/components/common/entryList.vue';
-// import { useRouter } from "vue-router";
+import { yearList } from '@/components/common/public/index';
 import { SettingFilled } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
 interface HTMLInputEvent {
@@ -82,12 +82,9 @@ export default defineComponent({
 			pageSize: 10,
 			total: 1,
 			value: '',
-			year: 2020,
+			year: new Date().getFullYear(),
 			shopId: '',
-			yearList: [
-				{ value: 2020, label: 2020 },
-				{ value: 2021, label: 2021 }
-			],
+			yearList,
 			leagueList: [],
 			yearChange: (year = 2020) => {
 				const obj = {

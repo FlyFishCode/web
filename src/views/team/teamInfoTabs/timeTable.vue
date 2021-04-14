@@ -181,6 +181,7 @@ import entryList from '@/components/common/entryList.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { UnorderedListOutlined, CalendarOutlined, CloudDownloadOutlined, PrinterOutlined, SettingFilled } from '@ant-design/icons-vue';
 import { timePageSelectListHttp, timePageListHttp, calendarListHttp } from '@/axios/api';
+import { yearList } from '@/components/common/public/index';
 // interface TableRenderProps {
 //   text: string;
 //   index: number;
@@ -208,14 +209,11 @@ export default defineComponent({
 			isCalendar: false,
 			visible: false,
 			state: '',
-			year: 2020,
+			year: new Date().getFullYear(),
 			month: new Date().getMonth() + 1,
 			league: '',
 			teamId: ROUTE.query.teamId,
-			yearList: [
-				{ value: 2020, label: 2020 },
-				{ value: 2021, label: 2021 }
-			],
+			yearList,
 			leagueList: [],
 			calendarList: [],
 			stateList: [

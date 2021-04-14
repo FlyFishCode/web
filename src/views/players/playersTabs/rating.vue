@@ -69,6 +69,7 @@ import entryList from '@/components/common/entryList.vue';
 import { SettingFilled } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { playerInfoHttp } from '@/axios/api';
+import { yearList } from '@/components/common/public/index';
 export default defineComponent({
 	name: 'rating',
 	components: {
@@ -124,11 +125,8 @@ export default defineComponent({
 		const data = reactive({
 			entryPath: '/players',
 			playerId: ROUTE.query.playerId,
-			year: 2020,
-			yearList: [
-				{ value: 2020, label: 2020 },
-				{ value: 2021, label: 2021 }
-			],
+			year: new Date().getFullYear(),
+			yearList,
 			inPhoneList: [
 				{ title: 'League Rating', Rating: 12, PPD: 52, MRP: 29 },
 				{ title: 'Adarts Rating', Rating: 62, PPD: 49, MRP: 5 }

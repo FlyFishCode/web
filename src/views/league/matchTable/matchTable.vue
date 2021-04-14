@@ -2,7 +2,10 @@
 	<div class="content">
 		<a-row>
 			<a-col :lg="{ span: 2 }" :xs="{ span: 0 }" class="smallTitle"> <SettingFilled /> {{ $t('default.41') }} </a-col>
-			<a-col :lg="{ span: 4, offset: 12 }" :xs="{ span: 8 }">
+			<a-col :lg="{ span: 4 }" :xs="{ span: 8 }" class="smallTitle">
+				<div>{{ `${$t('default.312')}：${surplusCount}` }}</div>
+			</a-col>
+			<a-col :lg="{ span: 4, offset: 8 }" :xs="{ span: 8 }">
 				<a-button>{{ $t('default.118') }}</a-button>
 			</a-col>
 			<a-col :lg="{ span: 3 }" :xs="{ span: 8 }">
@@ -128,6 +131,7 @@ export default defineComponent({
 		const instance = getCurrentInstance();
 		const data = reactive({
 			playerList: [],
+			surplusCount: '-',
 			competitionId: ROUTE.query.competitionId,
 			matchTable: {
 				lineupDeadLine: '',
@@ -514,7 +518,7 @@ export default defineComponent({
 				}
 				if (oldHours - hours > 0) {
 					surplusHours = oldHours - hours;
-				} else if (oldDAay - day < 0) {
+				} else if (oldHours - hours < 0) {
 					if (surplusDay) {
 						surplusDay -= 1;
 						surplusHours = surplusHours + 24 - hours;
@@ -566,6 +570,9 @@ export default defineComponent({
 			};
 			timeTableLineHttp(obj).then((res) => {
 				if (!res.data.data) return;
+				if (res.data.data[0].playerChangeNumber) {
+					data.surplusCount = res.data.data[0].playerChangeNumber - res.data.data[0].homeAyerChange - res.data.data[0].visitingAyerChange;
+				}
 				res.data.data.forEach((i) => {
 					i.legGameList.forEach((j) => {
 						switch (i.mode) {

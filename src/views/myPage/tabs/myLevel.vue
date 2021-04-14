@@ -69,6 +69,7 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { SettingFilled } from '@ant-design/icons-vue';
 import { playerInfoHttp } from '@/axios/api';
+import { yearList } from '@/components/common/public/index';
 export default defineComponent({
 	name: 'myLevel',
 	components: {
@@ -118,11 +119,8 @@ export default defineComponent({
 			});
 		};
 		const data = reactive({
-			year: 2020,
-			yearList: [
-				{ value: 2020, label: 2020 },
-				{ value: 2021, label: 2021 }
-			],
+			year: new Date().getFullYear(),
+			yearList,
 			echarsList: {
 				monthRating: [],
 				totalRating: []
@@ -200,7 +198,7 @@ export default defineComponent({
 			tableList: [{ rating: 0 }],
 			yearChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getDataInfo()
+				getDataInfo();
 			},
 			showInfo: (key: number) => {
 				console.log(key);

@@ -178,7 +178,7 @@ export default defineComponent({
 			isUp: true,
 			all: 'ALL',
 			my: 'MY',
-			year: '',
+			year: new Date().getFullYear(),
 			month: ' ',
 			status: '',
 			inputValue: '',
@@ -348,9 +348,9 @@ export default defineComponent({
 			getCountryList(ROUTE.query.value);
 			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
 				data.countryId = val;
-				getAllLeagueList()
-				getMyLeagueList()
-				data.areaChange(val)
+				getAllLeagueList();
+				getMyLeagueList();
+				data.areaChange(val);
 			});
 		});
 		watch(

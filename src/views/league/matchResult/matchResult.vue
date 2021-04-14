@@ -77,14 +77,14 @@ import emptyList from '@/components/common/emptyList.vue';
 // import { DOM } from '@/type/interface';
 export default defineComponent({
 	name: 'matchResult',
-	props: ['confrontationInfoId','showBtn'],
+	props: ['confrontationInfoId', 'showBtn'],
 	components: {
 		SettingFilled,
 		emptyList
 	},
 	setup(prop: any, ctx: any) {
 		const data = reactive({
-			isShowMatchTableBtn:true,
+			isShowMatchTableBtn: true,
 			tableList: [{ legResultList: [{ playerResultList: [] }] }],
 			defaultTeamImg: require('@/assets/icon.png'),
 			columns: [
@@ -163,18 +163,20 @@ export default defineComponent({
 				return str;
 			},
 			getTableContent: (data: any, row: any, type: number) => {
-				let str = '';
-				if (data.gameName <= 4 || data.gameName === 7 || data.gameName === 8) {
-					if (type === 1) {
-						str = row.homePpd;
+				let str = 0;
+				if (data.gameName) {
+					if (data.gameName <= 4 || data.gameName === 7 || data.gameName === 8) {
+						if (type === 1) {
+							str = row.homePpd;
+						} else {
+							str = row.visitingPpd;
+						}
 					} else {
-						str = row.visitingPpd;
-					}
-				} else {
-					if (type === 1) {
-						str = row.homeMpr;
-					} else {
-						str = row.visitingMpr;
+						if (type === 1) {
+							str = row.homeMpr;
+						} else {
+							str = row.visitingMpr;
+						}
 					}
 				}
 				return str;

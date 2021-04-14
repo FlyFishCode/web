@@ -105,6 +105,7 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { SettingFilled, DownCircleOutlined, UpCircleOutlined } from '@ant-design/icons-vue';
 import { myMatchInfoHttp, myMatchMoreHttp } from '@/axios/api';
+import { yearList } from '@/components/common/public/index';
 import { useRouter } from 'vue-router';
 export default defineComponent({
 	name: 'myMatchInfo',
@@ -118,14 +119,11 @@ export default defineComponent({
 		const userId = sessionStorage.getItem('userId');
 		const data: any = reactive({
 			colSpan: 5,
-			year: 2020,
+			year: new Date().getFullYear(),
 			pageNum: 1,
 			pageSize: 10,
 			total: 1,
-			yearList: [
-				{ value: 2020, label: 2020 },
-				{ value: 2021, label: 2021 }
-			],
+			yearList,
 			teamList: [{ flag: false, record: [] }],
 			changeFlag: (matchId: number, index: number) => {
 				if (matchId) {

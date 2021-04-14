@@ -148,6 +148,7 @@ import { playerHistoryHttp, playerRewardDropDownHttp } from '@/axios/api';
 import entryList from '@/components/common/entryList.vue';
 import { SettingFilled, DownCircleOutlined, UpCircleOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
+import { yearList } from '@/components/common/public/index';
 export default defineComponent({
 	name: 'matchRecord',
 	components: {
@@ -163,16 +164,13 @@ export default defineComponent({
 		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/players',
-			year: 2020,
+			year: new Date().getFullYear(),
 			sort: 1,
 			total: 1,
 			pageNum: 1,
 			pageSize: 10,
 			sortTeam: true,
-			yearLiat: [
-				{ value: 2020, label: 2020 },
-				{ value: 2019, label: 2019 }
-			],
+			yearList,
 			dataList: [
 				{
 					flag: false,

@@ -148,6 +148,7 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import entryList from '@/components/common/entryList.vue';
 import { useRouter } from 'vue-router';
+import { yearList } from '@/components/common/public/index';
 import { myBattleSelectHttp, myBattleDataListHttp, myBattleDateListHttp } from '@/axios/api';
 import { UnorderedListOutlined, CalendarOutlined, CloudDownloadOutlined, PrinterOutlined, SettingFilled } from '@ant-design/icons-vue';
 // interface TableRenderProps {
@@ -174,7 +175,7 @@ export default defineComponent({
 			isCalendar: false,
 			calendarValue: '',
 			matchType: 2020,
-			year: 2020,
+			year: new Date().getFullYear(),
 			month: new Date().getMonth() + 1,
 			leagueId: null,
 			status: '',
@@ -185,10 +186,7 @@ export default defineComponent({
 				{ value: 2, label: 'default.104' },
 				{ value: 3, label: 'default.244' }
 			],
-			yearList: [
-				{ value: 2020, label: 2020 },
-				{ value: 2021, label: 2021 }
-			],
+			yearList,
 			dataList: [],
 			dateList: [],
 			getTypeBtn: (row: any) => {
@@ -364,7 +362,7 @@ export default defineComponent({
 			},
 			yearChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getSelectList()
+				getSelectList();
 			},
 			entryPage: () => {
 				ROUTER.push({

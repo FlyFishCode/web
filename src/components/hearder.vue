@@ -309,7 +309,7 @@ export default defineComponent({
 						playerId: userId,
 						countryId: sessionStorage.getItem('countryId'),
 						sort: 1,
-						date: 2020,
+						date: new Date().getFullYear(),
 						pageIndex: 1,
 						pageSize: 5
 					};
@@ -321,7 +321,7 @@ export default defineComponent({
 					const first = new Promise((resolve) => {
 						const obj = {
 							playerId: sessionStorage.getItem('userId'),
-							year: 2020
+							year: new Date().getFullYear()
 						};
 						myBattleSelectHttp(obj).then((res) => {
 							if (res.data.data) {

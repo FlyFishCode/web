@@ -242,7 +242,6 @@ export default defineComponent({
 		const loadMap = () => {
 			const url = 'https://webapi.amap.com/maps?v=1.4.15&key=4288b5f8c829eba5d80f4664f7e40dcf&callback=load';
 			const jsapi = document.createElement('script');
-			jsapi.charset = 'utf-8';
 			jsapi.src = url;
 			document.head.appendChild(jsapi);
 		};

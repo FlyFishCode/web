@@ -48,7 +48,7 @@
 
 		<!-- 表格 -->
 		<a-row class="inPhoneTableDisplay">
-			<a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey="playerId" :customHeaderRow="customHeaderRow" :scroll="{ x: 1750 }">
+			<a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey="playerId" :customHeaderRow="customHeaderRow" :scroll="{ x: 1800 }">
 				<template v-slot:index>{{ $t('default.70') }}</template>
 				<template v-slot:date>{{ $t('default.10') }}</template>
 				<template v-slot:Rating>{{ $t('default.168') }}</template>
@@ -99,6 +99,9 @@
 					</div>
 				</template>
 			</a-table>
+			<div class="pagination">
+				<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @change="playerPageChange" />
+			</div>
 		</a-row>
 
 		<a-row class="showPhoneTable">
@@ -155,12 +158,13 @@ import { indexCountryHttp, indexCityHttp, playerRankingHttp } from '@/axios/api'
 import playerRanking from '@/components/rankingPlayer.vue';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
+import { yearList } from '@/components/common/public/index';
 
 interface DataProps {
 	dataObj: any;
 	total: any;
 	pageSize: any;
-	pageNum: any;
+	pageNum: number;
 	year: any;
 	countryChange: (value: any) => void;
 	countryList: any;
@@ -195,14 +199,11 @@ export default defineComponent({
 			gender: '',
 			isChange: false,
 			dataObj: {},
-			year: 2020,
+			year: new Date().getFullYear(),
 			total: 1,
 			pageNum: 1,
 			pageSize: 10,
-			yearList: [
-				{ value: 2020, label: 2020 },
-				{ value: 2021, label: 2021 }
-			],
+			yearList,
 			matchType: 1,
 			areaId: '',
 			countryId: '',
@@ -264,7 +265,6 @@ export default defineComponent({
 			inPhoneColumns: [
 				{ dataIndex: 'key', key: 'time', slots: { title: 'index' } },
 				{
-					dataIndex: 'data',
 					key: 'name',
 					slots: { title: 'date', customRender: 'team' }
 				},
@@ -277,8 +277,7 @@ export default defineComponent({
 					fixed: 'left'
 				},
 				{
-					dataIndex: 'data',
-					width: 160,
+					width: 200,
 					slots: { title: 'date', customRender: 'team' },
 					fixed: 'left'
 				},
@@ -409,6 +408,11 @@ export default defineComponent({
 			genderChange: () => {
 				console.log(data.gender);
 			},
+			playerPageChange: (index: number) => {
+				data.pageNum = index;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDataList();
+			},
 			showDialog: (item: any) => {
 				data.dialogObj.title = item.shopName;
 				data.dialogObj.img = item.shopImg;
@@ -501,17 +505,13 @@ export default defineComponent({
 	width: 100%;
 	height: 100%;
 }
-.tableImgBox {
-	height: 40px;
-	width: 40px;
-	margin: 0 auto;
-}
 .tableImgBox img {
-	width: 100%;
-	height: 100%;
+	width: 50px;
+	height: 50px;
 }
 .tableBox {
 	display: flex;
+	justify-content: space-between;
 }
 .tableMsgCentent {
 	display: flex;

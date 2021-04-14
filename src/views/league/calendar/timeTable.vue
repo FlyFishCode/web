@@ -27,7 +27,7 @@
 			<a-row class="rowStyle">
 				<a-tabs type="card" v-model:activeKey="currentKey">
 					<a-tab-pane v-if="isResult" key="1" :tab="$t('default.62')">
-						<matchResult :confrontationInfoId="confrontationInfoId" :showBtn ='showBtn' @enter-matchtable="changeStates" />
+						<matchResult :confrontationInfoId="confrontationInfoId" :showBtn="showBtn" @enter-matchtable="changeStates" />
 					</a-tab-pane>
 					<a-tab-pane v-if="isMatchTable" key="2" :tab="$t('default.41')">
 						<matchTable :confrontationInfoId="confrontationInfoId" :isHome="isHome" :teamId="playerListId" />
@@ -102,9 +102,14 @@
 					</template>
 					<template v-slot:status="{ record }">
 						<div class="tableState">
-							<div v-if="getTypeBtn(record)" class="plan" @click="readyClick(record)">{{ $t('default.41') }}</div>
+							<div v-if="getTypeBtn(record) === 1" class="plan" @click="readyClick(record)">{{ $t('default.41') }}</div>
+							<div v-if="getTypeBtn(record) === 2" class="plan" @click="readyClick(record)">
+								{{ $t('default.41') }}
+							</div>
 							<div v-if="record.status === 2">{{ $t('default.104') }}</div>
-							<div v-if="record.status === 3" class="plan" @click="finishClick(record.confrontationInfoId,record.homeAyerChange,record.visitingAyerChange,record.playerChangeNumber)">{{ $t('default.244') }}</div>
+							<div v-if="record.status === 3" class="plan" @click="finishClick(record.confrontationInfoId, record.homeAyerChange, record.visitingAyerChange, record.playerChangeNumber)">
+								<div>{{ $t('default.244') }}</div>
+							</div>
 						</div>
 					</template>
 				</a-table>
@@ -183,9 +188,9 @@ import { yearList } from '@/components/common/public';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 
 interface DataProps {
+	loginPlayerId: null | string;
 	handleState: (state: number, playerNumber: number, row: any) => void;
 	showBtn: boolean;
-	showChangeBtn: boolean;
 	cycleNum: any;
 	allMatchTableData: Array<any>;
 	tableHeader: Array<any>;
@@ -243,9 +248,9 @@ export default defineComponent({
 			competitionId: ROUTE.query.competitionId,
 			confrontationId: ROUTE.query.confrontationId,
 			confrontationInfoId: ROUTE.query.confrontationInfoId,
+			loginPlayerId: sessionStorage.getItem('userId'),
 			visible: false,
-			showChangeBtn: false,
-			showBtn:false,
+			showBtn: false,
 			isHome: 0,
 			playerListId: 0,
 			isResult: false,
@@ -264,7 +269,7 @@ export default defineComponent({
 			divisiton: '',
 			stageList: [{ stageId: '' }],
 			divisitonList: [{ divisionId: 0, stageList: [] }],
-			year: '',
+			year: new Date().getFullYear(),
 			yearList,
 			state: '',
 			stateList: [
@@ -329,11 +334,16 @@ export default defineComponent({
 				data.currentKey = '2';
 			},
 			getTypeBtn: (row: any) => {
+				// 1:队长
+				// 2:队员
+				// 登录人是队长
 				if ((row.homeCaptainId === userId || row.visitingCaptainId === userId) && row.status === 1) {
-					return true;
-				} else {
-					return false;
+					return 1;
 				}
+				if (row.status === 1) {
+					return 2;
+				}
+				return false;
 			},
 			customRow: (record: any) => {
 				return {
@@ -513,22 +523,22 @@ export default defineComponent({
 					if (row.homeCaptainId === userId) {
 						data.isHome = 1;
 						data.playerListId = row.homeTeamId;
-						data.handleState(row.homeManageStatus, playerChangeCount, row.confrontationInfoId);
+						data.handleState(row.status, playerChangeCount, row.confrontationInfoId);
 					}
 					if (row.visitingCaptainId === userId) {
 						data.isHome = 2;
 						data.playerListId = row.visitingTeamId;
-						data.handleState(row.visitingManageStatus, playerChangeCount, row.confrontationInfoId);
+						data.handleState(row.status, playerChangeCount, row.confrontationInfoId);
 					}
 				}
 				if (row.state === 3) {
-					if(playerChangeCount && row.homeAyerChange + row.visitingAyerChange < playerChangeCount){
-						data.showBtn = true
-					}
 					data.confrontationInfoId = row.confrontationInfoId;
 					data.ismatchTablePage = true;
 					data.isResult = true;
 					data.isAward = true;
+				}
+				if (!playerChangeCount && row.homeAyerChange + row.visitingAyerChange < playerChangeCount) {
+					data.showBtn = true;
 				}
 			},
 			changelist: (date: string) => {
@@ -539,6 +549,7 @@ export default defineComponent({
 					month: parseInt(month),
 					teamId: '',
 					status: data.state,
+					loginPlayerId: data.loginPlayerId,
 					[data.secrchType]: data.searchValue,
 					pageIndex: data.pageNum,
 					pageSize: data.pageSize
@@ -552,35 +563,42 @@ export default defineComponent({
 				if (row.homeCaptainId === userId) {
 					data.isHome = 1;
 					data.playerListId = row.homeTeamId;
-					data.handleState(row.homeManageStatus, row.playerChangeNumber, row.confrontationInfoId);
+					data.handleState(row.status, row, row.confrontationInfoId);
+					return;
 				}
 				if (row.visitingCaptainId === userId) {
 					data.isHome = 2;
 					data.playerListId = row.visitingTeamId;
-					data.handleState(row.visitingManageStatus, row.playerChangeNumber, row.confrontationInfoId);
+					data.handleState(row.status, row, row.confrontationInfoId);
+					return;
 				}
+				if (row.loginTeamId === row.homeTeamId) {
+					data.isHome = 1;
+				}
+				if (row.loginTeamId === row.visitingTeamId) {
+					data.isHome = 2;
+				}
+				data.isResult = true;
+				data.currentKey = '1';
+				data.ismatchTablePage = true;
+				data.confrontationInfoId = row.confrontationInfoId;
 			},
-			finishClick: (confrontationInfoId: number,homeChangeCount: number,visitingChangeCount: number,playerChangeCount: number) => {
-				if(playerChangeCount && homeChangeCount + visitingChangeCount < playerChangeCount){
-						data.showBtn = true
-					}
+			finishClick: (confrontationInfoId: number, homeChangeCount: number, visitingChangeCount: number, playerChangeCount: number) => {
+				if (playerChangeCount && homeChangeCount + visitingChangeCount < playerChangeCount) {
+					data.showBtn = true;
+				}
 				data.confrontationInfoId = confrontationInfoId;
 				data.ismatchTablePage = true;
 				data.isResult = true;
 				data.isAward = true;
 			},
-			handleState: (state: number, playerChangeNumber: number, confrontationInfoId: any) => {
-				if (state <= 1) {
-					data.isMatchTable = true;
-					data.currentKey = '2';
-				} else {
-					if (playerChangeNumber) {
-						data.showChangeBtn = true;
-					}
-					data.isResult = true;
-					data.currentKey = '1';
-				}
+			handleState: (state: number, row: any, confrontationInfoId: any) => {
 				data.ismatchTablePage = true;
+				data.isResult = true;
+				data.currentKey = '1';
+				if (!row.playerChangeNumber || row.playerChangeNumber - row.homeAyerChange - row.visitingAyerChange > 0) {
+					data.showBtn = true;
+				}
 				data.confrontationInfoId = confrontationInfoId;
 			},
 			entryInfoPage: (row: any) => {
@@ -666,6 +684,7 @@ export default defineComponent({
 				month: data.month,
 				teamId: data.teamId,
 				status: data.state,
+				loginPlayerId: data.loginPlayerId,
 				[data.secrchType]: data.searchValue,
 				pageIndex: data.pageNum,
 				pageSize: data.pageSize

@@ -518,7 +518,7 @@ export default defineComponent({
 }
 .tableStyle {
 	display: flex;
-	justify-content: space-around;
+	justify-content: space-between;
 	align-items: center;
 }
 .showPhoneTable {

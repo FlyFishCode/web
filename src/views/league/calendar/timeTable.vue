@@ -104,7 +104,7 @@
 						<div class="tableState">
 							<div v-if="getTypeBtn(record) === 1" class="plan" @click="readyClick(record)">{{ $t('default.41') }}</div>
 							<div v-if="getTypeBtn(record) === 2" class="plan" @click="readyClick(record)">
-								{{ $t('default.41') }}
+								{{ $t('default.166') }}
 							</div>
 							<div v-if="record.status === 2">{{ $t('default.104') }}</div>
 							<div v-if="record.status === 3" class="plan" @click="finishClick(record.confrontationInfoId, record.homeAyerChange, record.visitingAyerChange, record.playerChangeNumber)">
@@ -560,6 +560,7 @@ export default defineComponent({
 				});
 			},
 			readyClick: (row: any) => {
+				debugger;
 				if (row.homeCaptainId === userId) {
 					data.isHome = 1;
 					data.playerListId = row.homeTeamId;
@@ -593,12 +594,26 @@ export default defineComponent({
 				data.isAward = true;
 			},
 			handleState: (state: number, row: any, confrontationInfoId: any) => {
+				debugger;
+				const count = row.playerChangeNumber - row.homeAyerChange - row.visitingAyerChange;
 				data.ismatchTablePage = true;
-				data.isResult = true;
-				data.currentKey = '1';
-				if (!row.playerChangeNumber || row.playerChangeNumber - row.homeAyerChange - row.visitingAyerChange > 0) {
-					data.showBtn = true;
+				if (!row.playerChangeNumber || count === row.playerChangeNumber) {
+					data.isMatchTable = true;
+					data.currentKey = '2';
+				} else {
+					if (count > 0) {
+						data.showBtn = true;
+					} else {
+						data.showBtn = false;
+					}
+					data.isResult = true;
+					data.currentKey = '1';
 				}
+				// if (row.playerChangeNumber - row.homeAyerChange - row.visitingAyerChange > 0) {
+				// 	data.showBtn = true;
+				// 	data.isResult = true;
+				// 	data.currentKey = '1';
+				// }
 				data.confrontationInfoId = confrontationInfoId;
 			},
 			entryInfoPage: (row: any) => {

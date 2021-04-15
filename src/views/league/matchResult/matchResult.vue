@@ -163,7 +163,7 @@ export default defineComponent({
 				return str;
 			},
 			getTableContent: (data: any, row: any, type: number) => {
-				let str = 0;
+				let str = '-';
 				if (data.gameName) {
 					if (data.gameName <= 4 || data.gameName === 7 || data.gameName === 8) {
 						if (type === 1) {

@@ -1,4 +1,5 @@
-import { stringify } from 'qs';
+import vue from 'vue';
+import { getCurrentInstance } from 'vue';
 
 const yearList: Array<any> = [
 	{ value: '', label: 'ALL' },
@@ -18,4 +19,10 @@ const init = () => {
 	initYearList();
 };
 init();
-export { yearList };
+
+const i18n = (value: string) => {
+	const currentInstance: any = getCurrentInstance();
+	const instance: any = currentInstance.appContext.config.globalProperties.$i18n.global;
+	return instance.t(value);
+};
+export { yearList, i18n };

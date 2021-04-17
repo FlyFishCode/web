@@ -6,7 +6,7 @@ import { message } from 'ant-design-vue';
 // import { useRouter } from 'vue-router'
 
 // 首页
-import { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCitylist, indexNewslist, newslist, newsInfo, indexCarousel } from './index/index';
+import { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCitylist, indexNewslist, newslist, newsInfo, indexCarousel, register } from './index/index';
 
 // 我的页面
 import {
@@ -124,6 +124,10 @@ const loginHttp = (json: boolean, data: any) => {
 		DATA = qs.stringify(data);
 	}
 	return Axios.post(login, DATA);
+};
+// 注册会员
+const registerHttp = (data: any) => {
+	return Axios.post(register, data);
 };
 // 国家列表
 const indexCountryHttp = () => {
@@ -493,5 +497,6 @@ export {
 	myMessageListSet,
 	messageListDeleteHttp,
 	messageListDeleteAllHttp,
-	playerDetailsHttp
+	playerDetailsHttp,
+	registerHttp
 };

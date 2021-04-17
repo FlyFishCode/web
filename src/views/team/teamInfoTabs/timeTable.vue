@@ -339,6 +339,7 @@ export default defineComponent({
 				data.isCalendar = true;
 			},
 			getListData: (value: any) => {
+				const year = value.year();
 				let month = '0';
 				let day = '0';
 				let current = '';
@@ -352,8 +353,8 @@ export default defineComponent({
 				} else {
 					day = value.date();
 				}
-				current = `${month}-${day}`;
-				const list = data.calendarList.filter((i: any) => i.date === current);
+				current = `${year}-${month}-${day}`;
+				const list = data.calendarList.filter((i: any) => i.date.split('(')[0] === current);
 				return list;
 			},
 			calendarlChange: (data: any) => {

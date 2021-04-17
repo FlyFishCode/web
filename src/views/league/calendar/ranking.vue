@@ -105,7 +105,7 @@
 						</a-col>
 						<a-col :lg="2" :offset="4" :xs="0" class="titleStyle"> <ClusterOutlined />{{ $t('default.140') }} </a-col>
 						<a-col :lg="3" :xs="0">
-							<a-select v-model:value="teamId" @change="leagueChange" class="selectBox">
+							<a-select v-model:value="teamId" @change="teamChange" class="selectBox">
 								<a-select-option v-for="item in teamList" :key="item.teamId" :value="item.teamId">{{ item.teamName }}</a-select-option>
 							</a-select>
 						</a-col>
@@ -133,7 +133,7 @@
 									<img class="tableImg" :src="record.playerImg" alt="" />
 									<div>
 										<div>{{ record.playerName }}</div>
-										<div v-if="record.shop" class="link" @click="showDialog(record.teamId)">{{ record.shop.shopName }}</div>
+										<div class="link" @click="showDialog(record.teamId)">{{ teamName }}</div>
 									</div>
 								</div>
 							</template>
@@ -188,6 +188,8 @@ export default defineComponent({
 			entryPath: '/league',
 			visible: false,
 			isChange: false,
+			teamId: '',
+			teamName: '',
 			leaguePageNum: 1,
 			leaguePageSize: 10,
 			leagueTotal: 1,
@@ -199,7 +201,6 @@ export default defineComponent({
 			playerPageSize: 10,
 			monthList: [],
 			stateList: [],
-			teamId: '',
 			competitionId: ROUTE.query.competitionId,
 			stageId: '',
 			divisiton: '',
@@ -392,9 +393,9 @@ export default defineComponent({
 				} else {
 					data.teamId = '';
 				}
-				data.leagueChange();
+				data.teamChange();
 			},
-			leagueChange: () => {
+			teamChange: () => {
 				data.isChange = true;
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getPlayerList();
@@ -428,6 +429,8 @@ export default defineComponent({
 				if (res.data.data.list.length) {
 					data.isChange = false;
 					data.playerObj = res.data.data.list[0];
+					const obj: any = data.teamList.find((i) => data.teamId === i.teamId);
+					data.teamName = obj.teamName;
 				}
 			});
 		};

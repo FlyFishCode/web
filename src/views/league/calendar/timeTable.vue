@@ -103,9 +103,7 @@
 					<template v-slot:status="{ record }">
 						<div class="tableState">
 							<div v-if="getTypeBtn(record) === 1" class="plan" @click="readyClick(record)">{{ $t('default.41') }}</div>
-							<div v-if="getTypeBtn(record) === 2" class="plan" @click="readyClick(record)">
-								{{ $t('default.166') }}
-							</div>
+							<div v-if="getTypeBtn(record) === 2" class="plan" @click="readyClick(record)">{{ $t('default.166') }}</div>
 							<div v-if="record.status === 2">{{ $t('default.104') }}</div>
 							<div v-if="record.status === 3" class="plan" @click="finishClick(record.confrontationInfoId, record.homeAyerChange, record.visitingAyerChange, record.playerChangeNumber)">
 								<div>{{ $t('default.244') }}</div>

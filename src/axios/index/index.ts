@@ -1,6 +1,7 @@
 // 登录
 const login = '/login';
-
+// 注册
+const register = '/register';
 // 首页联赛列表
 const leagueList = '/home/competition';
 
@@ -25,4 +26,5 @@ const newsInfo = '/news/details';
 
 // 首页 首页轮播图
 const indexCarousel = '/home/banner';
-export { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCitylist, indexNewslist, newslist, newsInfo, indexCarousel };
+
+export { login, leagueList, indexTeam, indexPlayer, indexCountrylist, indexCitylist, indexNewslist, newslist, newsInfo, indexCarousel, register };

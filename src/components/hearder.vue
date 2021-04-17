@@ -31,7 +31,7 @@
 									<a-button type="primary" @click="login">{{ $t('default.0') }}</a-button>
 								</a-col>
 							</a-row>
-							<a-row class="loginMore">
+							<!-- <a-row class="loginMore">
 								<a-col :span="4">
 									<a-button type="link">
 										{{ $t('default.1') }}
@@ -47,12 +47,12 @@
 										{{ $t('default.7') }}
 									</a-button>
 								</a-col>
-							</a-row>
+							</a-row> -->
 						</template>
 					</a-modal>
 				</a-col>
 				<a-col :lg="3" :xs="3" v-show="!isLogin">
-					<a-button type="link" size="small">{{ $t('default.1') }}</a-button>
+					<a-button type="link" size="small" @click="register">{{ $t('default.1') }}</a-button>
 				</a-col>
 				<a-col :lg="3" :xs="3" v-show="isLogin">{{ userName }}</a-col>
 				<a-col :lg="3" :xs="3" v-show="isLogin">
@@ -183,14 +183,45 @@
 				</a-button>
 			</div>
 		</div>
+		<a-modal id="loginBox" v-model:visible="registerVisible" :title="$t('default.1')" centered>
+			<a-form ref="formRef" :model="otherObj" :rules="rules" :label-col="{ span: 6 }" :wrapper-col="{ span: 14 }">
+				<a-form-item label="ID" name="account">
+					<a-input v-model:value="otherObj.account" />
+				</a-form-item>
+				<a-form-item :label="$t('default.313')" name="cardNo">
+					<a-input v-model:value="otherObj.cardNo" />
+				</a-form-item>
+				<a-form-item :label="$t('default.314')" name="nickname">
+					<a-input v-model:value="otherObj.nickname" />
+				</a-form-item>
+				<a-form-item :label="$t('default.3')" name="countryId">
+					<a-select v-model:value="otherObj.countryId" placeholder="please select your country">
+						<a-select-option v-for="item in countryList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
+					</a-select>
+				</a-form-item>
+				<a-form-item :label="$t('default.315')" name="password">
+					<a-input v-model:value="otherObj.password" type="password" />
+				</a-form-item>
+				<a-form-item :label="$t('default.316')" name="confirmPassword">
+					<a-input v-model:value="otherObj.confirmPassword" type="password" />
+				</a-form-item>
+			</a-form>
+			<template v-slot:footer>
+				<a-row type="flex" justify="center">
+					<a-col :span="4" class="buttonBox">
+						<a-button type="primary" @click="registerClick">{{ $t('default.317') }}</a-button>
+					</a-col>
+				</a-row>
+			</template>
+		</a-modal>
 	</div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
-// import { useStore } from "vuex";
-import { useRouter } from 'vue-router';
-import { loginHttp, indexCountryHttp, myMatchInfoHttp, myPageInfoHttp, myBattleDataListHttp, myBattleSelectHttp } from '@/axios/api';
+import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance, ref } from 'vue';
+import { loginHttp, indexCountryHttp, myMatchInfoHttp, myPageInfoHttp, myBattleDataListHttp, myBattleSelectHttp, registerHttp } from '@/axios/api';
 import { ProfileTwoTone, CloseOutlined, UserOutlined, LockOutlined, PlusCircleOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
+import { i18n } from '@/components/common/public/index';
+import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 export default defineComponent({
 	name: 'hearder',
@@ -207,24 +238,70 @@ export default defineComponent({
 		const MD5 = require('blueimp-md5');
 		const ROUTER = useRouter();
 		const instance: any = getCurrentInstance();
-		// const Store = useStore();
+		const formRef = ref();
+		const passwordChange = async (rule: any, value: any) => {
+			if (!value) {
+				return Promise.reject(i18n('default.323'));
+			}
+			// eslint-disable-next-line @typescript-eslint/no-use-before-define
+			if (data.otherObj.password !== value) {
+				return Promise.reject(i18n('default.324'));
+			} else {
+				return Promise.resolve();
+			}
+		};
+		const checkCountry = async (rule: any, value: number) => {
+			if (!value) {
+				return Promise.reject(i18n('default.321'));
+			}
+		};
 		const data = reactive({
 			showPhoneTabs: false,
 			collapsed: true,
 			activeKey: 'league',
-			leagueId: '',
 			leagueList: [{ competitionId: '', divisionList: [{ divisionId: 0 }] }],
 			isLogin: false,
-			imputValue: '',
 			visible: false,
+			registerVisible: false,
 			showBox: false,
 			autoLogin: false,
+			leagueId: '',
+			imputValue: '',
 			userId: '',
 			passWord: '',
 			userName: '',
 			country: '',
 			img: require('@/assets/logo.png'),
 			isMyMatch: true,
+			registerObj: {
+				account: '',
+				cardNo: '',
+				countryId: '',
+				nickname: '',
+				password: ''
+			},
+			otherObj: {
+				account: '',
+				cardNo: '',
+				countryId: '',
+				nickname: '',
+				password: '',
+				confirmPassword: ''
+			},
+			rules: {
+				account: [{ required: true, message: i18n('default.318'), trigger: 'blur' }],
+				cardNo: [{ required: true, message: i18n('default.319'), trigger: 'blur' }],
+				countryId: [
+					{
+						required: true,
+						message: i18n('default.321'),
+						validator: checkCountry
+					}
+				],
+				nickname: [{ required: true, message: i18n('default.320'), trigger: 'blur' }],
+				password: [{ required: true, message: i18n('default.322'), trigger: 'blur' }],
+				confirmPassword: [{ required: true, message: i18n('default.324'), validator: passwordChange }]
+			},
 			phoneTabsList: [
 				{ value: 'league', label: 'default.8' },
 				{ value: 'team', label: 'default.9' },
@@ -261,6 +338,31 @@ export default defineComponent({
 			countryChange: () => {
 				sessionStorage.setItem('countryId', data.country);
 				instance.appContext.config.globalProperties.$bus.emit('on-country-change', data.country);
+			},
+			register: () => {
+				data.registerVisible = true;
+			},
+			registerClick: () => {
+				formRef.value
+					.validate()
+					.then(() => {
+						data.registerObj.account = data.otherObj.account;
+						data.registerObj.cardNo = data.otherObj.cardNo;
+						data.registerObj.countryId = data.otherObj.countryId;
+						data.registerObj.nickname = data.otherObj.nickname;
+						data.registerObj.password = MD5(data.otherObj.password + 'kitekey').toUpperCase();
+						registerHttp(data.registerObj).then((res: any) => {
+							if (res.data.code == 100) {
+								message.info(res.data.msg);
+								data.registerVisible = false;
+							} else {
+								message.warning(res.data.msg);
+							}
+						});
+					})
+					.catch((error: any) => {
+						console.log('error', error);
+					});
 			},
 			typeChange: (value: number) => {
 				console.log(value);
@@ -535,7 +637,8 @@ export default defineComponent({
 			init();
 		});
 		return {
-			...toRefs(data)
+			...toRefs(data),
+			formRef
 		};
 	}
 });

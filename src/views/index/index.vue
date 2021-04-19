@@ -143,12 +143,17 @@
 						<div class="gameStyle">{{ every.title }}</div>
 						<div v-for="(item, index) in every.list" :key="index" class="teamBox">
 							<div :class="{ first: !index, noFirst: index }">
-								<div v-if="!index" class="teamImgBox"><img :src="item.teamImg" /></div>
-								<div :class="{ topOne: !index }" class="teamImgBox"><img :src="item.defultImg" /></div>
+								<div v-if="!index" class="teamImgBox">
+									<img v-if="item.teamImg" :src="item.teamImg" />
+									<img v-else :src="defaultTeamImg" />
+								</div>
+								<div :class="{ topOne: !index }" class="teamImgBox">
+									<img :src="item.defultImg" />
+								</div>
 								<div v-if="!index" class="detailStyle">
 									<div class="teamName" @click="entryTeamPage(item.teamId)">{{ item.teamName }}</div>
 									<div class="name">{{ item.captainName }}</div>
-									<div class="area">
+									<div v-if="item.shopAddress" class="area">
 										{{ item.shopAddress }}
 										<span @click="showDetail(item)">
 											<EnvironmentOutlined />
@@ -159,7 +164,7 @@
 								</div>
 								<div v-else class="detailStyle">
 									<div class="name smallBox" @click="entryTeamPage(item.teamId)">{{ item.teamName }}</div>
-									<div class="area">
+									<div v-if="item.shopAddress" class="area">
 										{{ item.shopAddress }}
 										<span @click="showDetail(item)">
 											<EnvironmentOutlined />
@@ -186,7 +191,7 @@
 								<div v-if="!index" class="detailStyle">
 									<div class="teamName" @click="entryPlayerPage(item.playerId)">{{ item.playerName }}</div>
 									<div class="name">{{ item.name }}</div>
-									<div class="area">
+									<div v-if="item.shopAddress" class="area">
 										{{ item.shopAddress }}
 										<span @click="showDetail(item)">
 											<EnvironmentOutlined />
@@ -197,7 +202,7 @@
 								</div>
 								<div v-else class="detailStyle">
 									<div class="name smallBox" @click="entryPlayerPage(item.playerId)">{{ item.playerName }}</div>
-									<div class="area">
+									<div v-if="item.shopAddress" class="area">
 										{{ item.shopAddress }}
 										<span @click="showDetail(item)">
 											<EnvironmentOutlined />
@@ -249,7 +254,7 @@
 								<div v-if="!index" class="detailStyle">
 									<div class="teamName" @click="entryTeamPage(item.teamId)">{{ item.teamName }}</div>
 									<div class="name">{{ item.captainName }}</div>
-									<div class="area">
+									<div v-if="item.shopAddress" class="area">
 										{{ item.shopAddress }}
 										<span @click="showDetail(item)">
 											<EnvironmentOutlined />
@@ -260,7 +265,7 @@
 								</div>
 								<div v-else class="detailStyle">
 									<div class="name smallBox" @click="entryTeamPage(item.teamId)">{{ item.teamName }}</div>
-									<div class="area">
+									<div v-if="item.shopAddress" class="area">
 										{{ item.shopAddress }}
 										<span @click="showDetail(item)">
 											<EnvironmentOutlined />
@@ -301,7 +306,7 @@
 								<div v-if="!index" class="detailStyle">
 									<div class="teamName" @click="entryPlayerPage(item.playerId)">{{ item.playerName }}</div>
 									<div class="name">{{ item.name }}</div>
-									<div class="area">
+									<div v-if="item.shopAddress" class="area">
 										{{ item.shopAddress }}
 										<span @click="showDetail(item)">
 											<EnvironmentOutlined />
@@ -312,7 +317,7 @@
 								</div>
 								<div v-else class="detailStyle">
 									<div class="name smallBox" @click="entryPlayerPage(item.playerId)">{{ item.playerName }}</div>
-									<div class="area">
+									<div v-if="item.shopAddress" class="area">
 										{{ item.shopAddress }}
 										<span @click="showDetail(item)">
 											<EnvironmentOutlined />
@@ -388,6 +393,8 @@ export default defineComponent({
 			title: 'default.134',
 			matchTitle: 'default.18',
 			defultImg: require('@/assets/icon.png'),
+			defaultTeamImg: require('@/assets/team.png'),
+			defaultBannarImg: require('@/assets/bannar.png'),
 			lastDate: new Date(),
 			time: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
 			colSpan: 4,
@@ -489,6 +496,9 @@ export default defineComponent({
 			},
 			showPlayerBox: () => {
 				data.isTeam = false;
+			},
+			onerror: (e: any) => {
+				console.log(e);
 			}
 		});
 		const getCarouselList = () => {
@@ -496,6 +506,12 @@ export default defineComponent({
 				countryId: sessionStorage.getItem('countryId')
 			}).then((res) => {
 				[data.mainList, data.viceList] = [res.data.data.main, res.data.data.vice];
+				if (!data.mainList.length) {
+					data.mainList.push({ image: data.defaultBannarImg });
+				}
+				// if (!data.viceList.length) {
+				// 	data.viceList.push({ image: data.defaultBannarImg });
+				// }
 			});
 		};
 		const getTeamList = () => {

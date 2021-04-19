@@ -8,10 +8,8 @@
 				<div class="firstBox">{{ $t('default.162') }}</div>
 				|
 				<div class="textBox">{{ $t('default.22') }}</div>
-				|
-				<div class="textBox">{{ $t('default.22') }}</div>
 			</div>
-			<div>asdasdasdsadsadasdsadasdsadadsadsadsadas</div>
+			<div>ADarts League Official Website</div>
 		</a-col>
 		<!-- <a-col :span="4" class="btnBG">
       <a-select v-model:value="value" class="selectBox" @change="valueChange">

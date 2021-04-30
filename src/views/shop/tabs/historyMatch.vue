@@ -16,7 +16,7 @@
 					</a-select>
 				</a-col> -->
 			</a-row>
-			<div>
+			<div v-if="leagueList.length">
 				<a-row v-for="item in leagueList" :key="item.matchId" class="matchBox">
 					<a-col :lg="14" :xs="24">
 						<a-col :span="4" class="matchImgBox">
@@ -46,6 +46,9 @@
 					</a-col>
 				</a-row>
 			</div>
+			<div v-else>
+				<emptyList />
+			</div>
 		</a-row>
 		<a-row type="flex" justify="end">
 			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" />
@@ -57,6 +60,7 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { historyListHttp } from '@/axios/api';
 import entryList from '@/components/common/entryList.vue';
+import emptyList from '@/components/common/emptyList.vue';
 import { yearList } from '@/components/common/public/index';
 import { SettingFilled } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -72,7 +76,7 @@ interface DataProp {
 }
 export default defineComponent({
 	name: 'historyMatch',
-	components: { SettingFilled, entryList },
+	components: { SettingFilled, entryList, emptyList },
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
@@ -94,8 +98,10 @@ export default defineComponent({
 					pageSize: 10
 				};
 				historyListHttp(obj).then((res) => {
-					data.leagueList = res.data.data.list;
-					data.total = res.data.data.totalPage;
+					if (res.data.data) {
+						data.leagueList = res.data.data.list;
+						data.total = res.data.data.totalPage;
+					}
 				});
 			},
 			entryPage: (competitionId: number, divisionId: number) => {

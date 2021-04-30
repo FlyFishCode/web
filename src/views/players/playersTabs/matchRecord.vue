@@ -6,7 +6,7 @@
 		<a-row>
 			<a-col :lg="3" :xs="6">
 				<a-select v-model:value="year" class="selectBox" @change="yearChange">
-					<a-select-option v-for="yaer in yearLiat" :key="yaer.value" :value="yaer.value">{{ yaer.label }}</a-select-option>
+					<a-select-option v-for="yaer in yearList" :key="yaer.value" :value="yaer.value">{{ yaer.label }}</a-select-option>
 				</a-select>
 			</a-col>
 			<a-col :lg="{ span: 3, offset: 18 }" :xs="0" class="sortColBox">

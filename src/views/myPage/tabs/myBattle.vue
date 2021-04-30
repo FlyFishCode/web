@@ -42,7 +42,8 @@
 					<a-select-option v-for="item in statusList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
 				</a-select>
 			</a-col>
-			<a-col :span="3">
+
+			<!-- <a-col :span="3">
 				<a-button>
 					<template v-slot:icon> <CloudDownloadOutlined /> </template>{{ $t('default.111') }}
 				</a-button>
@@ -51,7 +52,7 @@
 				<a-button>
 					<template v-slot:icon> <PrinterOutlined /> </template>{{ $t('default.69') }}
 				</a-button>
-			</a-col>
+			</a-col> -->
 		</a-row>
 		<!--  移动端显示 -->
 		<a-row class="showPhoneTable">
@@ -87,15 +88,16 @@
 				</template>
 				<template v-slot:status="{ record }">
 					<div class="stateBox">
-						<div v-if="getTypeBtn(record)" class="inPlay" @click="goPlay(record)">{{ $t('default.41') }}</div>
+						<div v-if="getTypeBtn(record)">{{ $t('default.41') }}</div>
 						<div v-if="record.status === 2">{{ $t('default.104') }}</div>
 						<div v-if="record.status === 3">{{ $t('default.244') }}</div>
 					</div>
 				</template>
-				<template v-slot:move>
-					<div class="moveBox">{{ '捷径' }}</div>
+				<template v-slot:move="{ record }">
+					<div class="moveBox" @click="entryPage(record)">{{ '捷径' }}</div>
 				</template>
 			</a-table>
+
 			<a-table class="showPhoneTable" :columns="inPhoneColumns" :data-source="dataList" :pagination="false" bordered>
 				<template v-slot:home="{ record }">
 					<div class="teamBox">
@@ -115,13 +117,13 @@
 				</template>
 				<template v-slot:status="{ record }">
 					<div class="stateBox">
-						<div v-if="getTypeBtn(record)" class="inPlay" @click="goPlay(record)">{{ $t('default.41') }}</div>
+						<div v-if="getTypeBtn(record)">{{ $t('default.41') }}</div>
 						<div v-if="record.status === 2">{{ $t('default.104') }}</div>
 						<div v-if="record.status === 3">{{ $t('default.244') }}</div>
 					</div>
 				</template>
-				<template v-slot:move>
-					<div class="moveBox">{{ '捷径' }}</div>
+				<template v-slot:move="{ record }">
+					<div class="moveBox" @click="entryPage(record)">{{ '捷径' }}</div>
 				</template>
 			</a-table>
 		</a-row>
@@ -130,7 +132,7 @@
 			<a-calendar v-model:value="calendarValue" @panelChange="calendarlChange" @select="onSelect">
 				<template #dateCellRender="{ current: value }">
 					<div>
-						<div v-for="item in getListData(value)" :key="item.id" class="every" @click="entryPage">
+						<div v-for="item in getListData(value)" :key="item.id" class="every" @click="entryPage(item)">
 							<div class="type">{{ item.type === 1 ? $t('default.63') : $t('default.142') }}</div>
 							<div>{{ item.homeTeamName }}</div>
 							<div>{{ `${item.homeTeamScore} : ${item.visitingTeamScore}` }}</div>
@@ -150,7 +152,7 @@ import entryList from '@/components/common/entryList.vue';
 import { useRouter } from 'vue-router';
 import { yearList } from '@/components/common/public/index';
 import { myBattleSelectHttp, myBattleDataListHttp, myBattleDateListHttp } from '@/axios/api';
-import { UnorderedListOutlined, CalendarOutlined, CloudDownloadOutlined, PrinterOutlined, SettingFilled } from '@ant-design/icons-vue';
+import { UnorderedListOutlined, CalendarOutlined, SettingFilled } from '@ant-design/icons-vue';
 // interface TableRenderProps {
 //   text: string;
 //   index: number;
@@ -160,8 +162,8 @@ export default defineComponent({
 	components: {
 		UnorderedListOutlined,
 		CalendarOutlined,
-		CloudDownloadOutlined,
-		PrinterOutlined,
+		// CloudDownloadOutlined,
+		// PrinterOutlined,
 		SettingFilled,
 		entryList
 	},
@@ -197,6 +199,7 @@ export default defineComponent({
 				}
 			},
 			getListData: (value: any) => {
+				const year = new Date().getFullYear();
 				let month = '0';
 				let day = '0';
 				let current = '';
@@ -210,8 +213,8 @@ export default defineComponent({
 				} else {
 					day = value.date();
 				}
-				current = `${month}-${day}`;
-				const list = data.dateList.filter((i: any) => i.date === current);
+				current = `${year}-${month}-${day}`;
+				const list = data.dateList.filter((i: any) => i.date.split('(')[0] === current);
 				return list;
 			},
 			columns: [
@@ -333,8 +336,7 @@ export default defineComponent({
 			Gohistory: () => {
 				ROUTER.push('/teamIndex');
 			},
-			goPlay: (row: any) => {
-				debugger;
+			entryPage: (row: any) => {
 				let isHome = 0;
 				let teamId = 0;
 				if (row.homeCaptainId === playerId) {
@@ -350,11 +352,13 @@ export default defineComponent({
 					query: {
 						activeKey: '2',
 						currentKey: '2',
+						isMatchTable: '1',
 						ismatchTablePage: '1',
 						isHome,
 						teamId,
 						flag: 1,
 						ready: 1,
+						divisionId: row.divisionId,
 						competitionId: data.leagueId,
 						confrontationInfoId: row.confrontationInfoId
 					}
@@ -363,12 +367,6 @@ export default defineComponent({
 			yearChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getSelectList();
-			},
-			entryPage: () => {
-				ROUTER.push({
-					path: 'calendar',
-					query: { ismatchTablePage: 1 }
-				});
 			},
 			statusChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define

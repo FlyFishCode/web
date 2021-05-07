@@ -291,12 +291,14 @@ export default defineComponent({
 		const getMyMessageSetList = () => {
 			myMessageSetList({ playerId: userId }).then((res) => {
 				const response = res.data.data;
-				data.setList.mode = Boolean(response.mode);
-				data.setList.updateMatch = Boolean(response.updateMatch);
-				data.setList.submitMatch = Boolean(response.submitMatch);
-				data.setList.homeShop = Boolean(response.homeShop);
-				data.setList.time = Boolean(response.time);
-				data.setList.result = Boolean(response.result);
+				if (response) {
+					data.setList.mode = Boolean(response.mode);
+					data.setList.updateMatch = Boolean(response.updateMatch);
+					data.setList.submitMatch = Boolean(response.submitMatch);
+					data.setList.homeShop = Boolean(response.homeShop);
+					data.setList.time = Boolean(response.time);
+					data.setList.result = Boolean(response.result);
+				}
 			});
 		};
 		onMounted(() => {

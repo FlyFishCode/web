@@ -339,11 +339,11 @@ export default defineComponent({
 			entryPage: (row: any) => {
 				let isHome = 0;
 				let teamId = 0;
-				if (row.homeCaptainId === playerId) {
+				if (row.homeCaptainId === playerId || row.loginTeamId === row.homeTeamId) {
 					isHome = 1;
 					teamId = row.homeTeamId;
 				}
-				if (row.visitingCaptainId === playerId) {
+				if (row.visitingCaptainId === playerId || row.loginTeamId === row.visitingTeamId) {
 					isHome = 2;
 					teamId = row.visitingTeamId;
 				}

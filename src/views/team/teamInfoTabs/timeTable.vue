@@ -55,16 +55,16 @@
 					<a-select-option v-for="item in stateList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
 				</a-select>
 			</a-col>
-			<a-col :span="3">
+			<!-- <a-col :span="3">
 				<a-button>
 					<template v-slot:icon> <CloudDownloadOutlined /> </template>{{ $t('default.111') }}
 				</a-button>
-			</a-col>
-			<a-col :span="2">
+			</a-col> -->
+			<!-- <a-col :span="2">
 				<a-button>
 					<template v-slot:icon> <PrinterOutlined /> </template>{{ $t('default.69') }}
 				</a-button>
-			</a-col>
+			</a-col> -->
 		</a-row>
 
 		<a-row v-show="isList">
@@ -179,7 +179,7 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import entryList from '@/components/common/entryList.vue';
 import { useRoute, useRouter } from 'vue-router';
-import { UnorderedListOutlined, CalendarOutlined, CloudDownloadOutlined, PrinterOutlined, SettingFilled } from '@ant-design/icons-vue';
+import { UnorderedListOutlined, CalendarOutlined, SettingFilled } from '@ant-design/icons-vue';
 import { timePageSelectListHttp, timePageListHttp, calendarListHttp } from '@/axios/api';
 import { yearList } from '@/components/common/public/index';
 // interface TableRenderProps {
@@ -191,8 +191,8 @@ export default defineComponent({
 	components: {
 		UnorderedListOutlined,
 		CalendarOutlined,
-		CloudDownloadOutlined,
-		PrinterOutlined,
+		// CloudDownloadOutlined,
+		// PrinterOutlined,
 		SettingFilled,
 		entryList
 	},

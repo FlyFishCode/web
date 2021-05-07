@@ -8,7 +8,8 @@
 				<a-row>
 					<a-col class="personBox">
 						<div class="dialogImgBox">
-							<img :src="infoData.teamImg" alt="" />
+							<span v-if="infoData.teamImg"><img :src="infoData.teamImg" alt=""/></span>
+							<span v-else><img :src="defaultTeamImg" alt=""/></span>
 						</div>
 						<div class="personInfo">
 							<div>{{ infoData.teamName }}</div>
@@ -45,9 +46,9 @@
 								<span>{{ 'VS' }}</span>
 								<span class="scoreBox">{{ infoData.latestConfrontation.visitingTeamScore }}</span>
 							</div>
-							<div>
+							<!-- <div>
 								<a-button type="primary">{{ '详细资料' }}</a-button>
-							</div>
+							</div> -->
 						</div>
 					</a-col>
 					<a-col :span="8" class="matchBoxDiv">
@@ -68,7 +69,8 @@
 									<span v-if="record.playerImg"><img :src="record.playerImg" alt=""/></span>
 									<span v-else><img :src="defaultPlayerImg" alt=""/></span>
 								</div>
-								<div class="link" @click="showDialog(record.id)">{{ record.playerName }}</div>
+								<!-- <div class="link" @click="showDialog(record.id)">{{ record.playerName }}</div> -->
+								<div >{{ record.playerName }}</div>
 							</div>
 						</template>
 					</a-table>
@@ -116,6 +118,7 @@ export default defineComponent({
 			visible: props.propsVisible,
 			teamId: props.teamId,
 			competitionId: props.competitionId,
+			defaultTeamImg: require('@/assets/team.png'),
 			defaultPlayerImg: require('@/assets/player.png'),
 			infoData: {
 				shop: {},

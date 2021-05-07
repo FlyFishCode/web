@@ -30,9 +30,9 @@
 						<a-col :lg="2" :xs="8">
 							<div><span class="iconRound"></span>{{ $t('default.73') }}</div>
 						</a-col>
-						<a-col :lg="{ span: 2, offset: 20 }" :xs="0">
+						<!-- <a-col :lg="{ span: 2, offset: 20 }" :xs="0">
 							<a-button type="primary" size="small">{{ $t('default.69') }}</a-button>
-						</a-col>
+						</a-col> -->
 					</a-row>
 					<a-row>
 						<a-table class="inPhoneTableDisplay" :columns="leagueColumns" :data-source="leagueTableList" :pagination="false" rowkey="captainId" :scroll="{ x: 300 }" bordered>
@@ -118,9 +118,9 @@
 						<a-col :lg="2" :xs="8">
 							<div><span class="iconRound"></span>{{ $t('default.68') }}</div>
 						</a-col>
-						<a-col :lg="2" :offset="20" :xs="0">
+						<!-- <a-col :lg="2" :offset="20" :xs="0">
 							<a-button type="primary" size="small">{{ $t('default.69') }}</a-button>
-						</a-col>
+						</a-col> -->
 					</a-row>
 
 					<a-row>

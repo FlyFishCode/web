@@ -21,7 +21,8 @@ import {
 	messageSetList,
 	messageListSet,
 	messageListDelete,
-	messageListDeleteAll
+	messageListDeleteAll,
+	messageInfo
 } from './myPage/index';
 
 // 联赛
@@ -210,6 +211,10 @@ const messageListDeleteAllHttp = (data: any) => {
 // 我的页面 消息全部删除
 const messageListDeleteHttp = (data: any) => {
 	return Axios.get(getNewUrl(messageListDeleteAll, data));
+};
+// 消息详情
+const messageInfoHttp = (data: any) => {
+	return Axios.get(getNewUrl(messageInfo, data));
 };
 
 //  弹框 组件 信息
@@ -497,6 +502,7 @@ export {
 	myMessageListSet,
 	messageListDeleteHttp,
 	messageListDeleteAllHttp,
+	messageInfoHttp,
 	playerDetailsHttp,
 	registerHttp
 };

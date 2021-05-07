@@ -33,22 +33,44 @@
 						<img :src="require('@/assets/1.jpg')" alt="" />
 					</div>
 				</template>
-				<template v-slot:title="{ text }">
-					<div class="link">{{ text }}</div>
+				<template v-slot:league="{ record }">
+					<div class="link" @click="showDetailDialog(record)">{{ record.competitionName }}</div>
 				</template>
 			</a-table>
 		</a-row>
 
 		<a-row class="showPhoneTable">
 			<a-table :row-selection="rowSelection" :columns="inPhoneColumns" :data-source="tableList" bordered :pagination="false" rowKey="noticeId">
-				<template v-slot:title="{ text }">
-					<div class="link">{{ text }}</div>
+				<template v-slot:league="{ record }">
+					<div class="link" @click="showDetailDialog(record)">{{ record.competitionName }}</div>
 				</template>
 			</a-table>
 		</a-row>
 		<div class="pagination">
 			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @change="pageChange" />
 		</div>
+
+		<div>
+			<a-modal v-model:visible="leagueInfoVisible" :title="dialogInfo.title" :footer="null" centered>
+				<div>{{ dialogInfo.division }}</div>
+				<div class="teamBox">
+					<div>{{ dialogInfo.time }}</div>
+					<div class="teamInfo">
+						<div>
+							<div>{{ dialogInfo.homeTeamName }}</div>
+							<div>{{ dialogInfo.homeTeamShopName }}</div>
+						</div>
+						<div class="point">{{ dialogInfo.homePoint || '-' }}</div>
+						<div>{{ 'VS' }}</div>
+						<div>{{ dialogInfo.visitingPoint }}</div>
+						<div class="point">{{ dialogInfo.visitingPoint || '-' }}</div>
+						<div>{{ dialogInfo.visitingTeamName }}</div>
+						<div>{{ dialogInfo.visitingTeamShopName }}</div>
+					</div>
+				</div>
+			</a-modal>
+		</div>
+
 		<entryList :entryPath="entryPath" />
 		<a-modal v-model:visible="visible" :title="$t('default.240')" centered>
 			<a-row>
@@ -148,7 +170,7 @@ import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import entryList from '@/components/common/entryList.vue';
 import { useRouter } from 'vue-router';
 import { SettingFilled, CheckOutlined, CloseOutlined } from '@ant-design/icons-vue';
-import { myMessageHttp, myMessageSetList, myMessageListSet, messageListDeleteHttp, messageListDeleteAllHttp } from '@/axios/api';
+import { myMessageHttp, myMessageSetList, myMessageListSet, messageListDeleteHttp, messageListDeleteAllHttp, messageInfoHttp } from '@/axios/api';
 import { message } from 'ant-design-vue';
 // interface TableRenderProps {
 //   text: string;
@@ -167,6 +189,9 @@ export default defineComponent({
 		const userId = sessionStorage.getItem('userId');
 		let selectList: any = [];
 		const data = reactive({
+			visible: false,
+			checked: false,
+			leagueInfoVisible: false,
 			entryPath: '/myPage',
 			setList: {
 				mode: false,
@@ -176,11 +201,20 @@ export default defineComponent({
 				time: false,
 				result: false
 			},
+			dialogInfo: {
+				title: '',
+				division: '',
+				time: '',
+				homeTeamName: '',
+				visitingTeamName: '',
+				homePoint: '',
+				visitingPoint: '',
+				homeTeamShopName: '',
+				visitingTeamShopName: ''
+			},
 			total: 1,
 			pageNum: 1,
 			pageSize: 10,
-			visible: false,
-			checked: false,
 			matchType: 2020,
 			rowSelection: {
 				onChange: (selectedRowKeys: number, selectedRows: any) => {
@@ -201,8 +235,7 @@ export default defineComponent({
 				},
 				{
 					title: '标题',
-					dataIndex: 'competitionName',
-					slots: { customRender: 'title' }
+					slots: { customRender: 'league' }
 				},
 				{
 					title: '日期',
@@ -228,7 +261,7 @@ export default defineComponent({
 					width: 80
 				}
 			],
-			tableList: [{ noticeId: 0 }],
+			tableList: [],
 			pageChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTableList();
@@ -275,6 +308,23 @@ export default defineComponent({
 					getTableList();
 					data.visible = false;
 				});
+			},
+			showDetailDialog: (info: any) => {
+				messageInfoHttp({ noticeId: info.noticeId }).then((res: any) => {
+					const responseData = res.data.data;
+					if (responseData) {
+						const time = new Date(responseData.noticeDate);
+						const [year, month, day, hours, minutes, seconds] = [time.getFullYear(), time.getMonth() + 1, time.getDate(), time.getHours(), time.getMinutes(), time.getSeconds()];
+						data.dialogInfo.title = info.competitionName;
+						data.dialogInfo.time = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+						data.dialogInfo.division = responseData.division;
+						data.dialogInfo.homePoint = responseData.homePoint;
+						data.dialogInfo.visitingPoint = responseData.visitingPoint;
+						data.dialogInfo.homeTeamName = responseData.homeTeamName;
+						data.dialogInfo.visitingTeamName = responseData.visitingTeamName;
+					}
+				});
+				data.leagueInfoVisible = true;
 			}
 		});
 		const getTableList = () => {
@@ -348,5 +398,27 @@ export default defineComponent({
 }
 .imgBox img {
 	width: 100%;
+}
+.teamBox {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border: 1px solid #666;
+	border-radius: 5px;
+	margin-top: 10px;
+	padding: 15px;
+}
+.teamInfo {
+	display: flex;
+	height: 50px;
+	line-height: 50px;
+	justify-content: space-around;
+}
+.point {
+	width: 50px;
+	border-radius: 5px;
+	border: 1px solid #eee;
+	text-align: center;
 }
 </style>

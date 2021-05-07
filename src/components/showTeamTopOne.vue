@@ -44,10 +44,10 @@
 										<a-progress :percent="item.win" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.draw" strokeColor="red" :format="(percent) => `${percent}`" />
+										<a-progress :percent="item.lost" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.lost" strokeColor="red" :format="(percent) => `${percent}`" />
+										<a-progress :percent="item.draw" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
 										<a-progress :percent="item.probability" strokeColor="red">

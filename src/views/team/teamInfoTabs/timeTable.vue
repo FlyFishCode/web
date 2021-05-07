@@ -74,23 +74,23 @@
 				</template>
 				<template v-slot:homeTeam="{ record }">
 					<div class="btnClass">
-						<div v-if="record.status !== 1">
+						<!-- <div v-if="record.status !== 1">
 							<a-button type="link" size="small" @click="entryPage(record.id)">{{ record.homeTeamName }}</a-button>
-						</div>
-						<div v-else>
-							{{ record.homeTeamName }}
-						</div>
+						</div> -->
+						<!-- <div v-else> -->
+						{{ record.homeTeamName }}
+						<!-- </div> -->
 						<a-button type="link" size="small" @click="showDetail(1, record)">{{ record.homeTeamShopName }}</a-button>
 					</div>
 				</template>
 				<template v-slot:awayTeam="{ record }">
 					<div class="btnClass">
-						<div v-if="record.status !== 1">
+						<!-- <div v-if="record.status !== 1">
 							<a-button type="link" size="small" @click="entryPage(record.id)">{{ record.visitingTeamName }}</a-button>
-						</div>
-						<div v-else>
-							{{ record.visitingTeamName }}
-						</div>
+						</div> -->
+						<!-- <div v-else> -->
+						{{ record.visitingTeamName }}
+						<!-- </div> -->
 						<a-button type="link" size="small" @click="showDetail(2, record)">{{ record.visitingTeamShopName }}</a-button>
 					</div>
 				</template>
@@ -152,9 +152,9 @@
 						<div>{{ `${$t('default.125')}：${dialogObj.address}` }}</div>
 					</a-col>
 				</a-row>
-				<div class="dialogBtn">
+				<!-- <div class="dialogBtn">
 					<a-button type="primary" @click="handleOk">{{ $t('default.25') }}</a-button>
-				</div>
+				</div> -->
 			</template>
 		</a-modal>
 		<a-row v-show="isCalendar">
@@ -180,7 +180,7 @@ import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import entryList from '@/components/common/entryList.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { UnorderedListOutlined, CalendarOutlined, SettingFilled } from '@ant-design/icons-vue';
-import { timePageSelectListHttp, timePageListHttp, calendarListHttp } from '@/axios/api';
+import { timePageSelectListHttp, timePageListHttp, calendarListHttp, shopdetailsHttp } from '@/axios/api';
 import { yearList } from '@/components/common/public/index';
 // interface TableRenderProps {
 //   text: string;
@@ -300,19 +300,23 @@ export default defineComponent({
 				return '2020-10-17';
 			},
 			showDetail: (type: number, item: any) => {
+				let shopId = 0;
 				if (type === 1) {
+					shopId = item.homeTeamShopId;
 					data.dialogObj.title = item.homeTeamName;
-					data.dialogObj.img = item.homeTeamImg;
-					data.dialogObj.shopName = item.homeTeamShopName;
-					data.dialogObj.phone = item.shopPhone;
-					data.dialogObj.address = item.shopAddress;
 				} else {
+					shopId = item.visitingTeamShopId;
 					data.dialogObj.title = item.visitingTeamName;
-					data.dialogObj.img = item.visitingTeamImg;
-					data.dialogObj.shopName = item.visitingTeamShopName;
-					data.dialogObj.phone = item.shopPhone;
-					data.dialogObj.address = item.shopAddress;
 				}
+				shopdetailsHttp({ shopId }).then((res: any) => {
+					const responseData = res.data.data;
+					if (responseData) {
+						data.dialogObj.img = responseData.shopImg;
+						data.dialogObj.shopName = responseData.shopName;
+						data.dialogObj.phone = responseData.shopPhone;
+						data.dialogObj.address = responseData.shopAddress;
+					}
+				});
 				data.visible = true;
 			},
 			yearChange: (value: number) => {

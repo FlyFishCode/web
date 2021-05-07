@@ -104,7 +104,9 @@
 						<div class="tableState">
 							<div v-if="getTypeBtn(record) === 1" class="plan" @click="readyClick(record)">{{ $t('default.41') }}</div>
 							<div v-if="getTypeBtn(record) === 2" class="plan" @click="readyClick(record)">{{ $t('default.166') }}</div>
-							<div v-if="record.status === 2">{{ $t('default.104') }}</div>
+							<div v-if="record.status === 2" class="plan" @click="finishClick(record.confrontationInfoId, record.homeAyerChange, record.visitingAyerChange, record.playerChangeNumber)">
+								{{ $t('default.104') }}
+							</div>
 							<div v-if="record.status === 3" class="plan" @click="finishClick(record.confrontationInfoId, record.homeAyerChange, record.visitingAyerChange, record.playerChangeNumber)">
 								<div>{{ $t('default.244') }}</div>
 							</div>
@@ -516,7 +518,6 @@ export default defineComponent({
 				 *2.登录  如果是草稿或者未排阵或者可以更改玩家次数，则进入排阵页面。
 				 *			  如果是已提交状态，进入结果页面
 				 */
-				if (row.state === 2) return;
 				if (row.state === 1) {
 					if (row.homeCaptainId === userId) {
 						data.isHome = 1;
@@ -529,7 +530,7 @@ export default defineComponent({
 						data.handleState(row.status, playerChangeCount, row.confrontationInfoId);
 					}
 				}
-				if (row.state === 3) {
+				if (row.state === 2 || row.state === 3) {
 					data.confrontationInfoId = row.confrontationInfoId;
 					data.ismatchTablePage = true;
 					data.isResult = true;

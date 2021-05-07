@@ -8,7 +8,7 @@
 				<template v-slot:count="{ record }">
 					<div class="countBox">
 						<div>{{ record.count }}</div>
-						<a-button type="danger" size="small" @click="showInfo(record.key)">{{ $t('default.166') }}</a-button>
+						<!-- <a-button type="danger" size="small" @click="showInfo(record.key)">{{ $t('default.166') }}</a-button> -->
 					</div>
 				</template>
 			</a-table>
@@ -26,11 +26,11 @@
 		</a-row>
 		<a-row class="inPhoneTableDisplay">
 			<a-table :columns="levelColumns" :data-source="levelTableList" :pagination="false" rowKey="month" bordered>
-				<template v-slot:level="{ record }">
+				<!-- <template v-slot:level="{ record }">
 					<div class="btnBox">
 						<a-button type="danger" size="small" @click="showInfo(record.key)">{{ $t('default.166') }}</a-button>
 					</div>
-				</template>
+				</template> -->
 			</a-table>
 		</a-row>
 

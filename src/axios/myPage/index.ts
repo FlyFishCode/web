@@ -24,6 +24,8 @@ const messageListSet = '/addleaguenoticesetup';
 const messageListDelete = '/delnotice';
 // 设置消息全部删除
 const messageListDeleteAll = '/delallnotice';
+// 获取消息详情
+const messageInfo = '/noticeDetails';
 export {
 	myPageInfo,
 	myMatchInfo,
@@ -36,5 +38,6 @@ export {
 	messageSetList,
 	messageListSet,
 	messageListDelete,
-	messageListDeleteAll
+	messageListDeleteAll,
+	messageInfo
 };

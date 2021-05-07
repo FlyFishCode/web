@@ -17,16 +17,18 @@
 		</a-row>
 
 		<a-row class="inPhoneTableDisplay">
-			<a-table :columns="columns" :data-source="tableList" :pagination="false" rowKey="competitionId" bordered>
+			<a-table :columns="columns" :data-source="tableList" :pagination="false" rowKey="competitionId" :scroll="{ x: 1200 }" bordered>
 				<template #action="{ record }">
-					<u class="tableMatch" @click="showMatchInfo(record.competitionId)">{{ record.competitionName }}</u>
+					<!-- <u class="tableMatch" @click="showMatchInfo(record)">{{ record.competitionName }}</u> -->
+					{{ record.competitionName }}
 				</template>
 			</a-table>
 		</a-row>
 		<a-row class="showPhoneTable">
-			<a-table :columns="inPhoneColumns" :data-source="tableList" :pagination="false" rowKey="competitionId" bordered>
+			<a-table :columns="inPhoneColumns" :data-source="tableList" :pagination="false" rowKey="competitionId" :scroll="{ x: 1200 }" bordered>
 				<template #action="{ record }">
-					<u class="tableMatch" @click="showMatchInfo(record.competitionId)">{{ record.competitionName }}</u>
+					<!-- <u class="tableMatch" @click="showMatchInfo(record)">{{ record.competitionName }}</u> -->
+					{{ record.competitionName }}
 				</template>
 			</a-table>
 		</a-row>
@@ -83,20 +85,22 @@ export default defineComponent({
 					title: '年',
 					width: 80,
 					dataIndex: 'year',
-					key: 1
+					key: 1,
+					fixed: 'left'
 				},
 				{
 					title: '比赛',
 					dataIndex: 'competitionName',
 					width: 200,
 					key: 2,
+					fixed: 'left',
 					slots: { customRender: 'action' }
 				},
 				{
 					title: '排行',
 					dataIndex: 'address',
 					key: 3,
-					width: 60
+					width: 65
 				},
 				{
 					title: '队伍',
@@ -122,7 +126,7 @@ export default defineComponent({
 						{ title: '胜', dataIndex: 'matchResult.wins', key: 12, width: 40 },
 						{ title: '败', dataIndex: 'matchResult.losses', key: 13, width: 40 },
 						{ title: '和', dataIndex: 'matchResult.draws', key: 14, width: 40 },
-						{ title: '胜率', dataIndex: 'matchResult.winProbability', key: 15, width: 70 }
+						{ title: '胜率', dataIndex: 'matchResult.winProbability', key: 15, width: 100 }
 					]
 				},
 				{
@@ -133,14 +137,14 @@ export default defineComponent({
 						{ title: '胜', dataIndex: 'setResult.wins', key: '2', width: 40 },
 						{ title: '败', dataIndex: 'setResult.losses', key: '2', width: 40 },
 						{ title: '和', dataIndex: 'setResult.draws', key: '2', width: 40 },
-						{ title: '胜率', dataIndex: 'setResult.winProbability', key: '2', width: 70 }
+						{ title: '胜率', dataIndex: 'setResult.winProbability', key: '2', width: 100 }
 					]
 				},
 				{
 					title: '罚分',
 					dataIndex: 'address',
 					key: 8,
-					width: 60
+					width: 65
 				}
 			],
 			tableList: [],
@@ -150,10 +154,16 @@ export default defineComponent({
 			Gohistory: () => {
 				ROUTER.push('/teamIndex');
 			},
-			showMatchInfo: (id: number) => {
+			showMatchInfo: (row: any) => {
+				// 需要 divisitionId
 				ROUTER.push({
 					path: '/calendar',
-					query: { competitionId: id }
+					query: {
+						// teamId: row.teamId,
+						// divisionId: row.divisionId,
+						competitionId: row.competitionId
+						// confrontationInfoId: row.confrontationInfoId
+					}
 				});
 			},
 			yearChange: () => {

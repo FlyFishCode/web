@@ -299,9 +299,9 @@ export default defineComponent({
 			},
 			customHeaderRow: () => {
 				return {
-					className: 'selectBox',
+					className: 'selectDiv',
 					onClick: (e: any) => {
-						if (e.target.className.includes('ant-table-column-title')) {
+						if (e.target.innerText === '对比') {
 							if (currentSelectList.length === 2) {
 								ctx.emit('team-key-change', '2', currentSelectList);
 							} else {

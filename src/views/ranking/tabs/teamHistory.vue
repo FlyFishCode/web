@@ -279,17 +279,15 @@ import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
 import { teamDataListHttp, teamSearchHttp, indexCountryHttp } from '@/axios/api';
 import { SettingFilled, CloseCircleFilled, PlusOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
-import { useRoute } from 'vue-router';
 export default defineComponent({
 	name: 'teamHistory',
-	props: ['activeKey'],
+	props: ['activeKey', 'teamList'],
 	components: {
 		SettingFilled,
 		CloseCircleFilled,
 		PlusOutlined
 	},
-	setup(prop: any) {
-		const ROUTE = useRoute();
+	setup(prop: any, ctx: any) {
 		const data = reactive({
 			total: 1,
 			pageNum: 1,
@@ -339,9 +337,9 @@ export default defineComponent({
 					});
 					data.teamList.splice(index, 1, { flag: false });
 				});
+				ctx.emit('team-clear', []);
 			},
 			selectPlayer: (value: number) => {
-				debugger;
 				data.dataList.forEach((i) => {
 					if (i.teamId === value) {
 						// dialog table 设置数据已被选择
@@ -445,20 +443,16 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountryList();
-			let list: any = ROUTE.query.teamList;
-			if (list) {
-				list = list.split(',');
-				getDataList(list);
+			if (prop.teamList.length) {
+				getDataList(prop.teamList);
 			}
 		});
 		watch(
 			() => prop.activeKey,
 			(val) => {
 				if (val === '2') {
-					let list: any = ROUTE.query.teamList;
-					if (list) {
-						list = list.split(',');
-						getDataList(list);
+					if (prop.teamList.length) {
+						getDataList(prop.teamList);
 					}
 				}
 			}

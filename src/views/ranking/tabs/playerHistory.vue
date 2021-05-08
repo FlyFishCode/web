@@ -305,17 +305,15 @@
 import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
 import { playerSearchHttp, playerDataListHttp, indexCountryHttp } from '@/axios/api';
 import { SettingFilled, CloseCircleFilled, PlusOutlined } from '@ant-design/icons-vue';
-import { useRoute } from 'vue-router';
 export default defineComponent({
 	name: 'playerHistory',
-	props: ['activeKey'],
+	props: ['activeKey', 'playerList'],
 	components: {
 		SettingFilled,
 		CloseCircleFilled,
 		PlusOutlined
 	},
-	setup(prop: any) {
-		const ROUTE = useRoute();
+	setup(prop: any, ctx: any) {
 		const data = reactive({
 			total: 10,
 			pageNum: 1,
@@ -363,6 +361,7 @@ export default defineComponent({
 						}
 					});
 					data.teamList.splice(index, 1, { flag: false });
+					ctx.emit('player-clear', []);
 				});
 			},
 			selectPlayer: (value: number) => {
@@ -468,20 +467,16 @@ export default defineComponent({
 		};
 		onMounted(() => {
 			getCountryList();
-			let list: any = ROUTE.query.teamList;
-			if (list) {
-				list = list.split(',');
-				getDataList(list);
+			if (prop.playerList.length) {
+				getDataList(prop.playerList);
 			}
 		});
 		watch(
 			() => prop.activeKey,
 			(val) => {
 				if (val === '4') {
-					let list: any = ROUTE.query.teamList;
-					if (list) {
-						list = list.split(',');
-						getDataList(list);
+					if (prop.playerList.length) {
+						getDataList(prop.playerList);
 					}
 				}
 			}

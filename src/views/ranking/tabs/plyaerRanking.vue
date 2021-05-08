@@ -222,7 +222,7 @@ export default defineComponent({
 				return {
 					className: 'selectBox',
 					onClick: (e: any) => {
-						if (e.target.className.includes('ant-table-column-title')) {
+						if (e.target.innerText === '对比') {
 							if (currentSelectList.length === 2) {
 								ctx.emit('player-key-change', '4', currentSelectList);
 							} else {

@@ -170,6 +170,7 @@ export default defineComponent({
 	setup() {
 		const ROUTER = useRouter();
 		const playerId = Number(sessionStorage.getItem('userId'));
+		const loginTeamId: number | null = Number(sessionStorage.getItem('teamId'));
 		const data = reactive({
 			entryPath: '/myPage',
 			colSpan: 5,
@@ -337,32 +338,46 @@ export default defineComponent({
 				ROUTER.push('/teamIndex');
 			},
 			entryPage: (row: any) => {
+				debugger;
 				let isHome = 0;
 				let teamId = 0;
-				if (row.homeCaptainId === playerId || row.loginTeamId === row.homeTeamId) {
+				if (row.homeCaptainId === playerId || row.loginTeamId === loginTeamId) {
 					isHome = 1;
 					teamId = row.homeTeamId;
 				}
-				if (row.visitingCaptainId === playerId || row.loginTeamId === row.visitingTeamId) {
+				if (row.visitingCaptainId === playerId || row.loginTeamId === loginTeamId) {
 					isHome = 2;
 					teamId = row.visitingTeamId;
 				}
-				ROUTER.push({
-					path: '/calendar',
-					query: {
-						activeKey: '2',
-						currentKey: '2',
-						isMatchTable: '1',
-						ismatchTablePage: '1',
-						isHome,
-						teamId,
-						flag: 1,
-						ready: 1,
-						divisionId: row.divisionId,
-						competitionId: data.leagueId,
-						confrontationInfoId: row.confrontationInfoId
-					}
-				});
+				if (teamId) {
+					ROUTER.push({
+						path: '/calendar',
+						query: {
+							activeKey: '2',
+							currentKey: '2',
+							isMatchTable: '1',
+							ismatchTablePage: '1',
+							isHome,
+							teamId,
+							divisionId: row.divisionId,
+							competitionId: data.leagueId,
+							confrontationInfoId: row.confrontationInfoId
+						}
+					});
+				} else {
+					ROUTER.push({
+						path: '/calendar',
+						query: {
+							isResult: '1',
+							currentKey: '1',
+							ismatchTablePage: '1',
+							teamId,
+							// divisionId: row.divisionId,
+							competitionId: data.leagueId,
+							confrontationInfoId: row.confrontationInfoId
+						}
+					});
+				}
 			},
 			yearChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define

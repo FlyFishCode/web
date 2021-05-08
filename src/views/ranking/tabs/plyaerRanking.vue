@@ -143,9 +143,9 @@
 						<div>{{ `${$t('default.125')}：${dialogObj.address}` }}</div>
 					</a-col>
 				</a-row>
-				<div class="dialogBtn">
+				<!-- <div class="dialogBtn">
 					<a-button type="primary" @click="handleOk">{{ $t('default.25') }}</a-button>
-				</div>
+				</div> -->
 			</template>
 		</a-modal>
 	</div>
@@ -168,7 +168,7 @@ interface DataProps {
 	year: any;
 	countryChange: (value: any) => void;
 	countryList: any;
-	areaChange: () => void;
+	areaChange: (value: any) => void;
 	areaId: any;
 	areaList: any;
 	visible: boolean;
@@ -399,11 +399,16 @@ export default defineComponent({
 					}
 				});
 			},
-			areaChange: () => {
+			areaChange: (value: any) => {
 				data.isChange = true;
+				data.areaId = value;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDataList();
 			},
 			yearChange: (value: number) => {
-				console.log(value);
+				data.year = value;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDataList();
 			},
 			genderChange: () => {
 				console.log(data.gender);
@@ -432,7 +437,7 @@ export default defineComponent({
 					} else {
 						data.areaId = null;
 					}
-					data.areaChange();
+					data.areaChange('');
 				});
 			}
 		});

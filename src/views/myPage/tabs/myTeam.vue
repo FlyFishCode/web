@@ -12,7 +12,7 @@
 					</div>
 				</a-col>
 				<a-col :lg="4" :xs="10" class="infoClass">
-					<div class="teamStyle" @click="entryPage">{{ item.teamName }}</div>
+					<div class="teamStyle" @click="entryPage(item.teamId)">{{ item.teamName }}</div>
 					<div v-if="item.shop" class="placeStyle">
 						<div>{{ item.shop.countryName }}</div>
 						/
@@ -144,7 +144,6 @@ export default defineComponent({
 				ROUTER.push('/');
 			},
 			showInfo: (competitionId: number, divisionId: number) => {
-				debugger;
 				ROUTER.push({
 					path: '/calendar',
 					query: {
@@ -153,8 +152,13 @@ export default defineComponent({
 					}
 				});
 			},
-			entryPage: () => {
-				ROUTER.push('teamInfo');
+			entryPage: (teamId: number) => {
+				ROUTER.push({
+					path: 'teamInfo',
+					query: {
+						teamId
+					}
+				});
 			}
 		});
 		const getList = () => {

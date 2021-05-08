@@ -5,7 +5,7 @@
 		</a-row>
 		<a-row class="rowStyle rowSearchBox">
 			<a-col :lg="3" :xs="6">
-				<a-select v-model:value="year" @change="matchTypeChange" class="selectBox">
+				<a-select v-model:value="year" @change="yearChange" class="selectBox">
 					<a-select-option v-for="item in yearList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
 				</a-select>
 			</a-col>
@@ -16,12 +16,12 @@
 			</a-col> -->
 			<a-col :lg="{ span: 2, offset: 13 }" :xs="{ span: 6, offset: 0 }" class="titleStyle"> <AimOutlined class="fontIcon" />{{ $t('default.27') }} </a-col>
 			<a-col :lg="3" :xs="6">
-				<a-select v-model:value="countryId" @change="areaChange" class="selectBox">
+				<a-select v-model:value="countryId" @change="countryChange" class="selectBox">
 					<a-select-option v-for="item in countryList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 				</a-select>
 			</a-col>
 			<a-col :lg="3" :xs="6">
-				<a-select v-model:value="areaId" @change="cityChange" class="selectBox">
+				<a-select v-model:value="areaId" @change="areaChange" class="selectBox">
 					<a-select-option v-for="item in areaList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 				</a-select>
 			</a-col>
@@ -126,7 +126,7 @@ import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 
 interface DataProps {
-	areaChange: (value: any) => void;
+	countryChange: (value: any) => void;
 	countryList: any;
 	pageNum: any;
 	pageSize: any;
@@ -137,7 +137,7 @@ interface DataProps {
 	dialogObj: any;
 	tableList: any;
 	isChange: boolean;
-	cityChange: () => void;
+	areaChange: (value: any) => void;
 	areaId: any;
 	areaList: any;
 	countryId: number | string;
@@ -157,9 +157,6 @@ export default defineComponent({
 		let currentSelectList: Array<any> = [];
 		const data: DataProps = reactive({
 			colSpan: 5,
-			getDate: () => {
-				return '2020-10-17';
-			},
 			isChange: false,
 			pageNum: 1,
 			pageSize: 10,
@@ -182,34 +179,6 @@ export default defineComponent({
 				address: ''
 			},
 			defaultImg: require('@/assets/team.png'),
-			areaChange: (value: number) => {
-				indexCityHttp({ countryId: value }).then((res) => {
-					data.areaList = res.data.data;
-					if (data.areaList.length) {
-						data.areaId = data.areaList[0]['areaId'];
-					} else {
-						data.areaId = '';
-					}
-					data.cityChange();
-				});
-			},
-			cityChange: () => {
-				data.isChange = true;
-			},
-			customHeaderRow: () => {
-				return {
-					className: 'selectBox',
-					onClick: (e: any) => {
-						if (e.target.className.includes('ant-table-column-title')) {
-							if (currentSelectList.length === 2) {
-								ctx.emit('team-key-change', '2', currentSelectList);
-							} else {
-								message.warning('请选择两支队伍');
-							}
-						}
-					}
-				};
-			},
 			rowSelection: {
 				columnWidth: 80,
 				columnTitle: '对比',
@@ -311,8 +280,41 @@ export default defineComponent({
 				}
 			],
 			tableList: [{ teamId: 1, disabled: false }],
-			matchTypeChange: (value: number) => {
-				console.log(value);
+			countryChange: (value: number) => {
+				indexCityHttp({ countryId: value }).then((res) => {
+					data.areaList = res.data.data;
+					if (data.areaList.length) {
+						data.areaId = data.areaList[0]['areaId'];
+					} else {
+						data.areaId = '';
+					}
+					data.areaChange('');
+				});
+			},
+			areaChange: (value: any) => {
+				data.isChange = true;
+				data.areaId = value;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDataList();
+			},
+			customHeaderRow: () => {
+				return {
+					className: 'selectBox',
+					onClick: (e: any) => {
+						if (e.target.className.includes('ant-table-column-title')) {
+							if (currentSelectList.length === 2) {
+								ctx.emit('team-key-change', '2', currentSelectList);
+							} else {
+								message.warning('请选择两支队伍');
+							}
+						}
+					}
+				};
+			},
+			yearChange: (value: number) => {
+				data.year = value;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDataList();
 			},
 			showDialog: (item: any) => {
 				data.dialogObj.title = item.place;
@@ -345,7 +347,7 @@ export default defineComponent({
 					const id = Number(sessionStorage.getItem('countryId')) || data.areaList[0]['countryId'];
 					data.countryList = res.data.data;
 					data.countryId = id;
-					data.areaChange(id);
+					data.countryChange(id);
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
 					getDataList();
 				}
@@ -372,7 +374,7 @@ export default defineComponent({
 			getCountryList();
 			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
 				data.countryId = val;
-				data.areaChange(val);
+				data.countryChange(val);
 				getDataList();
 			});
 		});

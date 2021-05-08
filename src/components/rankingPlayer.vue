@@ -106,20 +106,20 @@ const getNewData = (obj: any) => {
 	const data = {
 		playerImg: obj.playerImg,
 		playerName: obj.playerName,
-		shopName: obj.shop.shopName,
-		rating: obj.playerRating.rating,
-		ppd: obj.playerRating.ppd,
-		mpr: obj.playerRating.mpr,
-		shopImg: obj.shop.shopImg,
-		phone: obj.shop.shopPhone,
-		address: obj.shop.shopAddress,
+		shopName: obj.shop && obj.shop.shopName,
+		shopImg: obj.shop && obj.shop.shopImg,
+		phone: obj.shop && obj.shop.shopPhone,
+		address: obj.shop && obj.shop.shopAddress,
+		rating: obj.playerRating && obj.playerRating.rating,
+		ppd: obj.playerRating && obj.playerRating.ppd,
+		mpr: obj.playerRating && obj.playerRating.mpr,
 		resultList: [
 			{
 				title: 'setResult',
-				win: obj.setResult.wins,
-				draw: obj.setResult.draws,
-				lost: obj.setResult.losses,
-				winProbability: Number(obj.setResult.winProbability)
+				win: obj.setResult && obj.setResult.wins,
+				draw: obj.setResult && obj.setResult.draws,
+				lost: obj.setResult && obj.setResult.losses,
+				winProbability: obj.setResult && Number(obj.setResult.winProbability)
 			}
 			// {
 			// 	title: 'setResult',

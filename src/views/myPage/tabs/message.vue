@@ -51,7 +51,7 @@
 		</div>
 
 		<div>
-			<a-modal v-model:visible="leagueInfoVisible" :title="dialogInfo.title" :footer="null" centered>
+			<a-modal v-model:visible="leagueInfoVisible" :title="dialogInfo.title" :footer="null" @cancel="handleCancel" centered>
 				<div>{{ dialogInfo.division }}</div>
 				<div class="teamBox">
 					<div>{{ dialogInfo.time }}</div>
@@ -325,6 +325,9 @@ export default defineComponent({
 					}
 				});
 				data.leagueInfoVisible = true;
+			},
+			handleCancel: () => {
+				console.log(1);
 			}
 		});
 		const getTableList = () => {

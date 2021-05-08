@@ -204,13 +204,13 @@ const myMessageSetList = (data: any = null) => {
 const myMessageListSet = (data: any = null) => {
 	return Axios.post(messageListSet, data);
 };
-// 我的页面 消息删除
-const messageListDeleteAllHttp = (data: any) => {
-	return Axios.post(messageListDelete, data);
-};
 // 我的页面 消息全部删除
-const messageListDeleteHttp = (data: any) => {
+const messageListDeleteAllHttp = (data: any) => {
 	return Axios.get(getNewUrl(messageListDeleteAll, data));
+};
+// 我的页面 消息删除
+const messageListDeleteHttp = (data: any) => {
+	return Axios.post(messageListDelete, data);
 };
 // 消息详情
 const messageInfoHttp = (data: any) => {

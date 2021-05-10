@@ -156,27 +156,26 @@ export default defineComponent({
 		const instance: any = getCurrentInstance();
 		let currentSelectList: Array<any> = [];
 		const data: DataProps = reactive({
-			colSpan: 5,
 			isChange: false,
+			visible: false,
+			total: 1,
 			pageNum: 1,
 			pageSize: 10,
-			total: 1,
 			year: new Date().getFullYear(),
-			dataObj: {
-				teamId: 0
-			},
 			yearList,
 			areaId: '',
 			countryId: '',
-			countryList: [],
 			areaList: [],
-			visible: false,
+			countryList: [],
 			dialogObj: {
 				title: '',
 				img: '',
 				shopName: '',
 				phone: '',
 				address: ''
+			},
+			dataObj: {
+				teamId: 0
 			},
 			defaultImg: require('@/assets/team.png'),
 			rowSelection: {

@@ -95,9 +95,12 @@
 					</div>
 				</template>
 				<template v-slot:status="{ record }">
-					<a-button v-if="record.status === 1" type="link" size="small" @click="entryCalendar(record, 1)">{{ $t('default.64') }}</a-button>
+					<div v-if="record.status === 1">{{ $t('default.64') }}</div>
+					<div v-if="record.status === 2">{{ $t('default.104') }}</div>
+					<div v-if="record.status === 3">{{ $t('default.244') }}</div>
+					<!-- <a-button v-if="record.status === 1" type="link" size="small" @click="entryCalendar(record, 1)">{{ $t('default.64') }}</a-button>
 					<a-button v-if="record.status === 2" type="link" size="small">{{ $t('default.104') }}</a-button>
-					<a-button v-if="record.status === 3" type="link" size="small" @click="entryCalendar(record, 2)">{{ $t('default.244') }}</a-button>
+					<a-button v-if="record.status === 3" type="link" size="small" @click="entryCalendar(record, 2)">{{ $t('default.244') }}</a-button> -->
 				</template>
 			</a-table>
 			<a-table class="showPhoneTable" :columns="inPhoneColumns" :data-source="dataList" :pagination="false" rowKey="id" bordered>
@@ -201,21 +204,20 @@ export default defineComponent({
 		const ROUTER = useRouter();
 		const data = reactive({
 			entryPath: '/team',
+			total: 1,
 			pageNum: 1,
 			pageSize: 10,
-			total: 1,
-			colSpan: 5,
 			isList: true,
 			isCalendar: false,
 			visible: false,
 			state: '',
-			year: new Date().getFullYear(),
-			month: new Date().getMonth() + 1,
 			league: '',
-			teamId: ROUTE.query.teamId,
 			yearList,
 			leagueList: [],
 			calendarList: [],
+			teamId: ROUTE.query.teamId,
+			year: new Date().getFullYear(),
+			month: new Date().getMonth() + 1,
 			stateList: [
 				{ value: '', label: 'default.246' },
 				{ value: 1, label: 'default.64' },
@@ -296,9 +298,6 @@ export default defineComponent({
 				}
 			],
 			dataList: [],
-			getDate: () => {
-				return '2020-10-17';
-			},
 			showDetail: (type: number, item: any) => {
 				let shopId = 0;
 				if (type === 1) {
@@ -399,8 +398,8 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getCalendarList();
 			},
-			entryPage: (row: any) => {
-				console.log(row);
+			entryPage: (id: number) => {
+				console.log(id);
 			}
 		});
 		const getList = () => {

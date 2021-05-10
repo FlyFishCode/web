@@ -157,7 +157,7 @@ export default defineComponent({
 		});
 		const getList = () => {
 			timetablecustomHttp({ stageId: prop.stageId }).then((res) => {
-				if (res.data.data) {
+				if (res.data.data.length) {
 					data.topList = res.data.data;
 					if (data.topList.length > 6) {
 						data.direction = true;

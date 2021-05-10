@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="carouselBox">
-			<h1>{{ $t('default.12') }}</h1>
+			<!-- <h1>{{ $t('default.12') }}</h1> -->
 			<a-carousel arrows :autoplay="true" dotsClass="dots">
 				<template #prevArrow>
 					<div class="custom-slick-arrow" style="left: 10px;zIndex: 1">

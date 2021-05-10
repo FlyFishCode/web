@@ -106,12 +106,12 @@
 			<a-table class="showPhoneTable" :columns="inPhoneColumns" :data-source="dataList" :pagination="false" rowKey="id" bordered>
 				<template v-slot:homeTeam="{ record }">
 					<div class="inphoneBtnClass">
-						<div v-if="record.status !== 1">
+						<!-- <div v-if="record.status !== 1">
 							<a-button type="link" size="small" @click="entryPage(record.id)">{{ record.homeTeamName }}</a-button>
-						</div>
-						<div v-else>
-							{{ record.homeTeamName }}
-						</div>
+						</div> -->
+						<!-- <div v-else> -->
+						{{ record.homeTeamName }}
+						<!-- </div> -->
 						<a-button type="link" size="small" @click="showDetail(1, record)">{{ record.homeTeamShop }}</a-button>
 					</div>
 				</template>
@@ -122,12 +122,12 @@
 				</template>
 				<template v-slot:awayTeam="{ record }">
 					<div class="inphoneBtnClass">
-						<div v-if="record.status !== 1">
+						<!-- <div v-if="record.status !== 1">
 							<a-button type="link" size="small" @click="entryPage(record.id)">{{ record.visitingTeamName }}</a-button>
-						</div>
-						<div v-else>
-							{{ record.visitingTeamName }}
-						</div>
+						</div> -->
+						<!-- <div v-else> -->
+						{{ record.visitingTeamName }}
+						<!-- </div> -->
 						<a-button type="link" size="small" @click="showDetail(2, record)">{{ record.visitingTeamShop }}</a-button>
 					</div>
 				</template>
@@ -164,7 +164,7 @@
 			<a-calendar @panelChange="calendarlChange" @select="onSelect">
 				<template #dateCellRender="{ current: value }">
 					<div>
-						<div v-for="item in getListData(value)" :key="item.id" class="every" @click="entryPage(item.id)">
+						<div v-for="item in getListData(value)" :key="item.id" class="every" @click="entryPage(item)">
 							<div class="type">{{ item.type === 1 ? $t('default.63') : $t('default.142') }}</div>
 							<div>{{ item.homeTeamName }}</div>
 							<div>{{ `${item.homeTeamScore} : ${item.visitingTeamScore}` }}</div>
@@ -202,6 +202,8 @@ export default defineComponent({
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
+		const playerId = Number(sessionStorage.getItem('webUserId'));
+		const loginTeamIds: any = sessionStorage.getItem('webTeamIds')?.split(',');
 		const data = reactive({
 			entryPath: '/team',
 			total: 1,
@@ -398,8 +400,46 @@ export default defineComponent({
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getCalendarList();
 			},
-			entryPage: (id: number) => {
-				console.log(id);
+			entryPage: (row: any) => {
+				let isHome = 0;
+				let teamId = 0;
+				if (row.homeCaptainId === playerId || loginTeamIds?.includes(String(row.loginTeamId))) {
+					isHome = 1;
+					teamId = row.homeTeamId;
+				}
+				if (row.visitingCaptainId === playerId || loginTeamIds?.includes(String(row.loginTeamId))) {
+					isHome = 2;
+					teamId = row.visitingTeamId;
+				}
+				if (teamId) {
+					ROUTER.push({
+						path: '/calendar',
+						query: {
+							activeKey: '2',
+							currentKey: '2',
+							isMatchTable: '1',
+							ismatchTablePage: '1',
+							isHome,
+							teamId,
+							divisionId: row.divisionId,
+							competitionId: data.league,
+							confrontationInfoId: row.confrontationInfoId
+						}
+					});
+				} else {
+					ROUTER.push({
+						path: '/calendar',
+						query: {
+							isResult: '1',
+							currentKey: '1',
+							ismatchTablePage: '1',
+							teamId,
+							divisionId: row.divisionId,
+							competitionId: data.league,
+							confrontationInfoId: row.confrontationInfoId
+						}
+					});
+				}
 			}
 		});
 		const getList = () => {

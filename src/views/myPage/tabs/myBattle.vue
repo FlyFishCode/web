@@ -338,7 +338,6 @@ export default defineComponent({
 				ROUTER.push('/teamIndex');
 			},
 			entryPage: (row: any) => {
-				debugger;
 				let isHome = 0;
 				let teamId = 0;
 				if (row.homeCaptainId === playerId || loginTeamIds?.includes(String(row.loginTeamId))) {
@@ -372,7 +371,7 @@ export default defineComponent({
 							currentKey: '1',
 							ismatchTablePage: '1',
 							teamId,
-							// divisionId: row.divisionId,
+							divisionId: row.divisionId,
 							competitionId: data.leagueId,
 							confrontationInfoId: row.confrontationInfoId
 						}

@@ -78,12 +78,12 @@ export default defineComponent({
 			shopId: ROUTE.query.shopId,
 			playerList: [],
 			getDate: () => '220-10-16',
-			entryPage: (id: number) => {
+			entryPage: (playerId: number) => {
 				ROUTER.push({
 					path: '/playerInfo',
 					query: {
 						activeKey: '1',
-						id
+						playerId
 					}
 				});
 			},

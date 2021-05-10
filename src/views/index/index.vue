@@ -503,7 +503,7 @@ export default defineComponent({
 		});
 		const getCarouselList = () => {
 			indexCarouselHttp({
-				countryId: sessionStorage.getItem('countryId')
+				countryId: sessionStorage.getItem('webCountryId')
 			}).then((res) => {
 				[data.mainList, data.viceList] = [res.data.data.main, res.data.data.vice];
 				if (!data.mainList.length) {
@@ -515,7 +515,7 @@ export default defineComponent({
 			});
 		};
 		const getTeamList = () => {
-			indexTeamHttp({ countryId: sessionStorage.getItem('countryId') }).then((res) => {
+			indexTeamHttp({ countryId: sessionStorage.getItem('webCountryId') }).then((res) => {
 				res.data.data.forEach((i: any) => {
 					i.list.forEach((i: any, index: number) => {
 						Object.assign(i, { defultImg: data.defaultSortImg[index] });
@@ -525,7 +525,7 @@ export default defineComponent({
 			});
 		};
 		const getPlayerList = () => {
-			indexPlayerHttp({ countryId: sessionStorage.getItem('countryId') }).then((res) => {
+			indexPlayerHttp({ countryId: sessionStorage.getItem('webCountryId') }).then((res) => {
 				res.data.data.forEach((i: any) => {
 					i.list.forEach((i: any, index: number) => {
 						Object.assign(i, { defultImg: data.defaultSortImg[index] });
@@ -535,7 +535,7 @@ export default defineComponent({
 			});
 		};
 		const getNewsList = () => {
-			indexNewsHttp({ countryId: sessionStorage.getItem('countryId') }).then((res) => {
+			indexNewsHttp({ countryId: sessionStorage.getItem('webCountryId') }).then((res) => {
 				data.newsList = res.data.data;
 			});
 		};

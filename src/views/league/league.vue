@@ -323,7 +323,7 @@ export default defineComponent({
 				countryId: data.countryId,
 				areaId: data.areaId,
 				status: data.status,
-				memberId: sessionStorage.getItem('userId'),
+				memberId: sessionStorage.getItem('webUserId'),
 				competitionName: value,
 				pageIndex: data.MyPageNum,
 				pageSize: data.MyPageSize
@@ -354,7 +354,7 @@ export default defineComponent({
 			});
 		});
 		watch(
-			() => sessionStorage.getItem('countryId'),
+			() => sessionStorage.getItem('webCountryId'),
 			(val) => {
 				console.log(val);
 			}

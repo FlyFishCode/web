@@ -240,7 +240,7 @@ export default defineComponent({
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
-		const userId = Number(sessionStorage.getItem('userId'));
+		const userId = Number(sessionStorage.getItem('webUserId'));
 		let currentSelectList: Array<any> = [];
 		const data: DataProps = reactive({
 			entryPath: '/league',
@@ -248,7 +248,7 @@ export default defineComponent({
 			competitionId: ROUTE.query.competitionId,
 			confrontationId: ROUTE.query.confrontationId,
 			confrontationInfoId: ROUTE.query.confrontationInfoId,
-			loginPlayerId: sessionStorage.getItem('userId'),
+			loginPlayerId: sessionStorage.getItem('webUserId'),
 			visible: false,
 			showBtn: false,
 			isHome: 0,

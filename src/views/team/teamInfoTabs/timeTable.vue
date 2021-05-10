@@ -430,7 +430,7 @@ export default defineComponent({
 		};
 		const getSelectList = (year = data.year) => {
 			const obj = {
-				countryId: sessionStorage.getItem('countryId'),
+				countryId: sessionStorage.getItem('webCountryId'),
 				teamId: data.teamId,
 				year
 			};

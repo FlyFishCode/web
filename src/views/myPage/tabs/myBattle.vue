@@ -169,8 +169,8 @@ export default defineComponent({
 	},
 	setup() {
 		const ROUTER = useRouter();
-		const playerId = Number(sessionStorage.getItem('userId'));
-		const loginTeamId: number | null = Number(sessionStorage.getItem('teamId'));
+		const playerId = Number(sessionStorage.getItem('webUserId'));
+		const loginTeamIds: any = sessionStorage.getItem('webTeamIds')?.split(',');
 		const data = reactive({
 			entryPath: '/myPage',
 			colSpan: 5,
@@ -341,11 +341,11 @@ export default defineComponent({
 				debugger;
 				let isHome = 0;
 				let teamId = 0;
-				if (row.homeCaptainId === playerId || row.loginTeamId === loginTeamId) {
+				if (row.homeCaptainId === playerId || loginTeamIds?.includes(String(row.loginTeamId))) {
 					isHome = 1;
 					teamId = row.homeTeamId;
 				}
-				if (row.visitingCaptainId === playerId || row.loginTeamId === loginTeamId) {
+				if (row.visitingCaptainId === playerId || loginTeamIds?.includes(String(row.loginTeamId))) {
 					isHome = 2;
 					teamId = row.visitingTeamId;
 				}

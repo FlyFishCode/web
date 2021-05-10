@@ -336,7 +336,7 @@ export default defineComponent({
 				data.showPhoneTabs = !data.showPhoneTabs;
 			},
 			countryChange: () => {
-				sessionStorage.setItem('countryId', data.country);
+				sessionStorage.setItem('webCountryId', data.country);
 				instance.appContext.config.globalProperties.$bus.emit('on-country-change', data.country);
 			},
 			register: () => {
@@ -400,16 +400,16 @@ export default defineComponent({
 					if (data.matchTimeTable.length) {
 						return false;
 					}
-					const userId = sessionStorage.getItem('userId');
+					const userId = sessionStorage.getItem('webUserId');
 					myPageInfoHttp({ playerId: userId }).then((res) => {
 						if (res.data.data) {
 							data.myInfo = res.data.data;
-							data.myInfo.name = sessionStorage.getItem('userName') || '';
+							data.myInfo.name = sessionStorage.getItem('webUserName') || '';
 						}
 					});
 					const obj = {
 						playerId: userId,
-						countryId: sessionStorage.getItem('countryId'),
+						countryId: sessionStorage.getItem('webCountryId'),
 						sort: 1,
 						date: new Date().getFullYear(),
 						pageIndex: 1,
@@ -422,7 +422,7 @@ export default defineComponent({
 					});
 					const first = new Promise((resolve) => {
 						const obj = {
-							playerId: sessionStorage.getItem('userId'),
+							playerId: sessionStorage.getItem('webUserId'),
 							year: new Date().getFullYear()
 						};
 						myBattleSelectHttp(obj).then((res) => {
@@ -436,7 +436,7 @@ export default defineComponent({
 						data.leagueId = res[0].competitionId;
 						const obj = {
 							competitionId: data.leagueId,
-							playerId: sessionStorage.getItem('userId'),
+							playerId: sessionStorage.getItem('webUserId'),
 							pageIndex: 1,
 							pageSize: 5
 						};
@@ -476,9 +476,10 @@ export default defineComponent({
 				loginHttp(false, obj).then((res) => {
 					if (res.data.code === 100) {
 						message.success(res.data.msg);
-						sessionStorage.setItem('token', res.data.data.token);
-						sessionStorage.setItem('userId', res.data.data.memberId);
-						sessionStorage.setItem('userName', res.data.data.username);
+						sessionStorage.setItem('webToken', res.data.data.token);
+						sessionStorage.setItem('webUserId', res.data.data.memberId);
+						sessionStorage.setItem('webUserName', res.data.data.username);
+						sessionStorage.setItem('webTeamIds', res.data.data.teamIds);
 						// 保存玩家id至vuex
 						// Store.dispatch("changeMemberId", res.data.data.memberId);
 						data.userName = res.data.data.username;
@@ -495,13 +496,15 @@ export default defineComponent({
 			},
 			loginOut: () => {
 				data.isLogin = false;
-				sessionStorage.removeItem('token');
-				sessionStorage.removeItem('userId');
-				sessionStorage.removeItem('userName');
+				sessionStorage.removeItem('webToken');
+				sessionStorage.removeItem('webUserId');
+				sessionStorage.removeItem('webUserName');
+				sessionStorage.removeItem('webCountryId');
+				sessionStorage.removeItem('webTeamIds');
 				ROUTER.push('/');
 			},
 			entryMatchTablePage: (item: any) => {
-				const currentUserId = Number(sessionStorage.getItem('userId'));
+				const currentUserId = Number(sessionStorage.getItem('webUserId'));
 				const divisionId = data.leagueList[0].divisionList[0].divisionId;
 				let teamId = '';
 				let ready = 0;
@@ -535,7 +538,7 @@ export default defineComponent({
 			leagueIdChange: () => {
 				const obj = {
 					competitionId: data.leagueId,
-					playerId: sessionStorage.getItem('userId'),
+					playerId: sessionStorage.getItem('webUserId'),
 					pageIndex: 1,
 					pageSize: 5
 				};
@@ -580,8 +583,8 @@ export default defineComponent({
 		// 	document.head.appendChild(jsapi);
 		// };
 		const init = () => {
-			if (sessionStorage.getItem('userName')) {
-				data.userName = sessionStorage.getItem('userName') as string;
+			if (sessionStorage.getItem('webUserName')) {
+				data.userName = sessionStorage.getItem('webUserName') as string;
 				data.isLogin = true;
 			}
 			indexCountryHttp().then((res) => {
@@ -629,7 +632,7 @@ export default defineComponent({
 							data.country = i.countryId;
 						}
 					});
-					sessionStorage.setItem('countryId', data.country);
+					sessionStorage.setItem('webCountryId', data.country);
 				}
 			});
 		};

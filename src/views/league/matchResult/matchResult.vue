@@ -292,7 +292,7 @@ export default defineComponent({
 			return rowSpan;
 		};
 		const getMatchResultList = (confrontationInfoId: any = '') => {
-			matchResultHttp({ confrontationInfoId, memberId: sessionStorage.getItem('userId') || 0 }).then((res) => {
+			matchResultHttp({ confrontationInfoId, memberId: sessionStorage.getItem('webUserId') || 0 }).then((res) => {
 				if (res.data.data) {
 					res.data.data.forEach((i: any, index: number) => {
 						i.legResultList.forEach((j: any, jndex: number) => {

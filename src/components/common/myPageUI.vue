@@ -101,7 +101,7 @@ export default {
 		});
 		const getPlayerInfo = () => {
 			const obj = {
-				playerId: sessionStorage.getItem('userId')
+				playerId: sessionStorage.getItem('webUserId')
 			};
 			myPageInfoHttp(obj).then((res) => {
 				if (res.data.data) {

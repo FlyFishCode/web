@@ -180,7 +180,8 @@
 						</a-col>
 						<a-col :span="20" class="countBox">
 							<div class="recordInfoStyle inPhoneTableStyle">
-								<div class="recordInfoFont" @click="entryCalendar(2, recordInfo.competitionId)">{{ recordInfo.competitionName }}</div>
+								<!-- <div class="recordInfoFont" @click="entryCalendar(2, recordInfo.competitionId)">{{ recordInfo.competitionName }}</div> -->
+								<div>{{ recordInfo.competitionName }}</div>
 								<div class="tableDate">
 									<div v-if="recordInfo.date">{{ `  / ${recordInfo.date}` }}</div>
 									<div v-if="recordInfo.countryName">{{ `  / ${recordInfo.countryName}` }}</div>
@@ -429,7 +430,7 @@ export default defineComponent({
 		const getCountry = (inputValue: any) => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
-					const id = Number(sessionStorage.getItem('countryId')) || data.areaList[0]['countryId'];
+					const id = Number(sessionStorage.getItem('webCountryId')) || data.areaList[0]['countryId'];
 					data.areaList = res.data.data;
 					data.countryId = id;
 					data.countryChange(id);

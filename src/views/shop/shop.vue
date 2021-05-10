@@ -202,9 +202,9 @@
 						<div>{{ `${$t('default.125')}：${dialogObj.address}` }}</div>
 					</a-col>
 				</a-row>
-				<div class="dialogBtn">
+				<!-- <div class="dialogBtn">
 					<a-button type="primary" @click="handleOk">{{ $t('default.25') }}</a-button>
-				</div>
+				</div> -->
 			</template>
 		</a-modal>
 		<a-row>

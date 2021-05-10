@@ -51,10 +51,10 @@
 					</a-col>
 					<a-col :lg="2" :xs="2" class="iconFont">
 						<div v-if="item.matchHistory">
-							<div v-if="item.flag" @click="changeFlag(index)">
+							<div v-if="item.flag" @click="changeFlag(index, item)">
 								<DownCircleOutlined />
 							</div>
-							<div v-else @click="changeFlag(index)">
+							<div v-else @click="changeFlag(index, item)">
 								<UpCircleOutlined />
 							</div>
 						</div>
@@ -238,7 +238,7 @@ export default defineComponent({
 				data.dataList = res.data.data.list;
 			});
 		};
-		const getDropDownList = (index: number,item: any) => {
+		const getDropDownList = (index: number, item: any) => {
 			const obj = {
 				competitionId: item.competitionId,
 				playerId: ROUTE.query.playerId

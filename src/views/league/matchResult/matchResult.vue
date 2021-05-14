@@ -73,6 +73,7 @@
 import { defineComponent, onMounted, reactive, toRefs, watch } from 'vue';
 import { matchResultHttp } from '@/axios/api';
 import { SettingFilled } from '@ant-design/icons-vue';
+import { i18n } from '@/components/common/public/index';
 import emptyList from '@/components/common/emptyList.vue';
 // import { DOM } from '@/type/interface';
 export default defineComponent({
@@ -89,7 +90,7 @@ export default defineComponent({
 			defaultTeamImg: require('@/assets/icon.png'),
 			columns: [
 				{
-					title: '玩家',
+					title: i18n('default.10'),
 					dataIndex: 'homePlayerName',
 					slots: { customRender: 'homePlayerInfo' }
 				},
@@ -97,8 +98,20 @@ export default defineComponent({
 					slots: { title: 'homeTitle', customRender: 'homeContent' }
 				},
 				{
-					title: '分数',
-					dataIndex: 'homeScore'
+					// slots: {
+					title: i18n('default.58'),
+					customRender: (text: any) => {
+						const obj = {
+							children: text.text.homeScore,
+							attrs: {
+								rowSpan: 0
+							}
+						};
+						// eslint-disable-next-line @typescript-eslint/no-use-before-define
+						obj.attrs.rowSpan = mergeCells(text.text.homeScore, text.record.dataIndex, 'homeScore', text.index, text.record.legIndex);
+						return obj;
+					}
+					// }
 				},
 				{
 					colSpan: 2,
@@ -132,14 +145,26 @@ export default defineComponent({
 					}
 				},
 				{
-					title: '分数',
-					dataIndex: 'visitingScore'
+					// slots: {
+					title: i18n('default.58'),
+					customRender: (text: any) => {
+						const obj = {
+							children: text.text.visitingScore,
+							attrs: {
+								rowSpan: 0
+							}
+						};
+						// eslint-disable-next-line @typescript-eslint/no-use-before-define
+						obj.attrs.rowSpan = mergeCells(text.text.visitingScore, text.record.dataIndex, 'visitingScore', text.index, text.record.legIndex);
+						return obj;
+					}
+					// }
 				},
 				{
 					slots: { title: 'awayTitle', customRender: 'awayContent' }
 				},
 				{
-					title: '玩家',
+					title: i18n('default.10'),
 					dataIndex: 'visitingPlayerName',
 					slots: { customRender: 'awayPlayerInfo' }
 				}
@@ -154,10 +179,19 @@ export default defineComponent({
 					case 2:
 					case 3:
 					case 4:
+					case 11:
+					case 12:
+					case 13:
+					case 14:
 						str = 'PPD';
 						break;
-					default:
+					case 5:
+					case 6:
+					case 10:
 						str = 'MPR';
+						break;
+					default:
+						str = ' ';
 						break;
 				}
 				return str;
@@ -165,18 +199,33 @@ export default defineComponent({
 			getTableContent: (data: any, row: any, type: number) => {
 				let str = '-';
 				if (data.gameName) {
-					if (data.gameName <= 4 || data.gameName === 7 || data.gameName === 8) {
-						if (type === 1) {
-							str = row.homePpd;
-						} else {
-							str = row.visitingPpd;
-						}
-					} else {
-						if (type === 1) {
-							str = row.homeMpr;
-						} else {
-							str = row.visitingMpr;
-						}
+					switch (data.gameName) {
+						case 1:
+						case 2:
+						case 3:
+						case 4:
+						case 11:
+						case 12:
+						case 13:
+						case 14:
+							if (type === 1) {
+								str = row.homePpd;
+							} else {
+								str = row.visitingPpd;
+							}
+							break;
+						case 5:
+						case 6:
+						case 10:
+							if (type === 1) {
+								str = row.homeMpr;
+							} else {
+								str = row.visitingMpr;
+							}
+							break;
+						default:
+							str = ' ';
+							break;
 					}
 				}
 				return str;
@@ -251,10 +300,16 @@ export default defineComponent({
 						str = 'Doubles';
 						break;
 					case 3:
+						str = 'Trios';
+						break;
+					case 4:
+						str = 'Gallon';
+						break;
+					case 5:
 						str = 'Team';
 						break;
 					default:
-						str = 'Gallon';
+						str = 'Team2';
 						break;
 				}
 				return str;
@@ -297,6 +352,8 @@ export default defineComponent({
 					res.data.data.forEach((i: any, index: number) => {
 						i.legResultList.forEach((j: any, jndex: number) => {
 							j.playerResultList.forEach((k: any) => {
+								k.homeScore = j.homeScore;
+								k.visitingScore = j.visitingScore;
 								k.dataIndex = index;
 								k.legIndex = jndex;
 								k.homeIsWin = j.homeIsWin;

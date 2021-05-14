@@ -28,10 +28,8 @@
 		</a-row>
 		<a-row class="inPhoneTableDisplay">
 			<a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" bordered :pagination="false" rowKey="noticeId">
-				<template v-slot:type>
-					<div class="imgBox">
-						<img :src="require('@/assets/1.jpg')" alt="" />
-					</div>
+				<template v-slot:type="{ record }">
+					<div>{{ getType(record.type) }}</div>
 				</template>
 				<template v-slot:league="{ record }">
 					<div class="link" @click="showDetailDialog(record)">{{ record.competitionName }}</div>
@@ -67,6 +65,10 @@
 						<div>{{ dialogInfo.visitingTeamName }}</div>
 						<div>{{ dialogInfo.visitingTeamShopName }}</div>
 					</div>
+				</div>
+				<div class="centent">
+					<div>{{ `Before：${dialogInfo.contentList[0].beforeContent}` }}</div>
+					<div>{{ `After：${dialogInfo.contentList[0].afterContent}` }}</div>
 				</div>
 			</a-modal>
 		</div>
@@ -172,6 +174,7 @@ import { useRouter } from 'vue-router';
 import { SettingFilled, CheckOutlined, CloseOutlined } from '@ant-design/icons-vue';
 import { myMessageHttp, myMessageSetList, myMessageListSet, messageListDeleteHttp, messageListDeleteAllHttp, messageInfoHttp } from '@/axios/api';
 import { message } from 'ant-design-vue';
+import { i18n } from '@/components/common/public';
 // interface TableRenderProps {
 //   text: string;
 //   index: number;
@@ -205,6 +208,7 @@ export default defineComponent({
 				title: '',
 				division: '',
 				time: '',
+				contentList: [{ beforeContent: '', afterContent: '' }],
 				homeTeamName: '',
 				visitingTeamName: '',
 				homePoint: '',
@@ -224,7 +228,6 @@ export default defineComponent({
 			columns: [
 				{
 					title: '比赛类型',
-					dataIndex: 'name',
 					width: 100,
 					slots: { customRender: 'type' }
 				},
@@ -262,6 +265,27 @@ export default defineComponent({
 				}
 			],
 			tableList: [],
+			getType: (type: number) => {
+				let str = '';
+				switch (type) {
+					case 1:
+						str = i18n('default.325');
+						break;
+					case 2:
+						str = i18n('default.326');
+						break;
+					case 3:
+						str = i18n('default.289');
+						break;
+					case 4:
+						str = i18n('default.307');
+						break;
+					default:
+						str = i18n('default.308');
+						break;
+				}
+				return str;
+			},
 			pageChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTableList();
@@ -313,12 +337,12 @@ export default defineComponent({
 				messageInfoHttp({ noticeId: info.noticeId }).then((res: any) => {
 					const responseData = res.data.data;
 					if (responseData) {
-						const time = new Date(responseData.noticeDate);
-						const [year, month, day, hours, minutes, seconds] = [time.getFullYear(), time.getMonth() + 1, time.getDate(), time.getHours(), time.getMinutes(), time.getSeconds()];
+						const timeArray = responseData.noticeDate.split('T');
 						data.dialogInfo.title = info.competitionName;
-						data.dialogInfo.time = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+						data.dialogInfo.time = `${timeArray[0]} ${timeArray[1].split('.')[0]}`;
 						data.dialogInfo.division = responseData.division;
 						data.dialogInfo.homePoint = responseData.homePoint;
+						data.dialogInfo.contentList = responseData.contentList;
 						data.dialogInfo.visitingPoint = responseData.visitingPoint;
 						data.dialogInfo.homeTeamName = responseData.homeTeamName;
 						data.dialogInfo.visitingTeamName = responseData.visitingTeamName;
@@ -423,5 +447,15 @@ export default defineComponent({
 	border-radius: 5px;
 	border: 1px solid #eee;
 	text-align: center;
+}
+.centent {
+	display: flex;
+	flex-direction: column;
+}
+.centent div {
+	margin: 5px 0;
+	padding: 5px;
+	border: 1px solid #eee;
+	border-radius: 5px;
 }
 </style>

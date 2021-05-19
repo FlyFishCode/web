@@ -352,8 +352,8 @@ export default defineComponent({
 					res.data.data.forEach((i: any, index: number) => {
 						i.legResultList.forEach((j: any, jndex: number) => {
 							j.playerResultList.forEach((k: any) => {
-								k.homeScore = j.homeScore;
-								k.visitingScore = j.visitingScore;
+								// k.homeScore = j.homeScore;
+								// k.visitingScore = j.visitingScore;
 								k.dataIndex = index;
 								k.legIndex = jndex;
 								k.homeIsWin = j.homeIsWin;

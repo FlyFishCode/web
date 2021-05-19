@@ -102,7 +102,7 @@ export default defineComponent({
 		});
 		const getMatchTeam = (confrontationInfoId = prop.confrontationInfoId) => {
 			matchTeamInfoHttp({ confrontationInfoId }).then((res) => {
-				if(res.data.data){
+				if (res.data.data) {
 					data.matchTeam = res.data.data;
 				}
 			});
@@ -270,6 +270,7 @@ export default defineComponent({
 }
 .matchImgBox img {
 	height: 100px;
+	width: 100px;
 }
 .pkLevel {
 	display: flex;

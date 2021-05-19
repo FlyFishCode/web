@@ -577,6 +577,7 @@ export default defineComponent({
 			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
 				data.countryId = val;
 				init(true);
+				data.countryChange(data.countryId);
 			});
 		});
 		return {

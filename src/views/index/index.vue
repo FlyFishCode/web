@@ -496,14 +496,11 @@ export default defineComponent({
 			},
 			showPlayerBox: () => {
 				data.isTeam = false;
-			},
-			onerror: (e: any) => {
-				console.log(e);
 			}
 		});
-		const getCarouselList = () => {
+		const getCarouselList = (id: any) => {
 			indexCarouselHttp({
-				countryId: sessionStorage.getItem('webCountryId')
+				countryId: id
 			}).then((res) => {
 				[data.mainList, data.viceList] = [res.data.data.main, res.data.data.vice];
 				if (!data.mainList.length) {
@@ -514,8 +511,8 @@ export default defineComponent({
 				// }
 			});
 		};
-		const getTeamList = () => {
-			indexTeamHttp({ countryId: sessionStorage.getItem('webCountryId') }).then((res) => {
+		const getTeamList = (id: any) => {
+			indexTeamHttp({ countryId: id }).then((res) => {
 				res.data.data.forEach((i: any) => {
 					i.list.forEach((i: any, index: number) => {
 						Object.assign(i, { defultImg: data.defaultSortImg[index] });
@@ -524,8 +521,8 @@ export default defineComponent({
 				data.teamList = res.data.data;
 			});
 		};
-		const getPlayerList = () => {
-			indexPlayerHttp({ countryId: sessionStorage.getItem('webCountryId') }).then((res) => {
+		const getPlayerList = (id: any) => {
+			indexPlayerHttp({ countryId: id }).then((res) => {
 				res.data.data.forEach((i: any) => {
 					i.list.forEach((i: any, index: number) => {
 						Object.assign(i, { defultImg: data.defaultSortImg[index] });
@@ -534,8 +531,8 @@ export default defineComponent({
 				data.playerList = res.data.data;
 			});
 		};
-		const getNewsList = () => {
-			indexNewsHttp({ countryId: sessionStorage.getItem('webCountryId') }).then((res) => {
+		const getNewsList = (id: any) => {
+			indexNewsHttp({ countryId: id }).then((res) => {
 				data.newsList = res.data.data;
 			});
 		};
@@ -562,10 +559,11 @@ export default defineComponent({
 			});
 		};
 		const init = (flag = false) => {
-			getTeamList();
-			getPlayerList();
-			getNewsList();
-			getCarouselList();
+			const id = sessionStorage.getItem('webCountryId');
+			getTeamList(id);
+			getPlayerList(id);
+			getNewsList(id);
+			getCarouselList(id);
 			if (flag) {
 				getLeagueList();
 				return;

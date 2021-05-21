@@ -240,7 +240,7 @@ export default defineComponent({
 					title: 'Set',
 					dataIndex: 'set',
 					key: 'name',
-					width: 80,
+					width: 70,
 					customRender: (text) => {
 						const obj = {
 							children: text.text !== null ? text.text : '',
@@ -257,9 +257,8 @@ export default defineComponent({
 					title: 'Set Point',
 					dataIndex: 'setPoint',
 					key: 'name',
-					width: 150,
+					width: 90,
 					customRender: (text) => {
-						debugger;
 						const obj = {
 							children: text.text !== null ? text.text : '',
 							attrs: {
@@ -279,23 +278,23 @@ export default defineComponent({
 					key: 'name',
 					width: 100
 				},
-				{ title: 'Round', dataIndex: 'round', key: 'name', width: 100 },
-				{ title: 'IN', dataIndex: 'in', key: 'IN', width: 100 },
-				{ title: 'OUT', dataIndex: 'out', key: 'OUT', width: 100 },
+				{ title: 'Round', dataIndex: 'round', key: 'name', width: 110 },
+				{ title: 'IN', dataIndex: 'in', key: 'IN', width: 90 },
+				{ title: 'OUT', dataIndex: 'out', key: 'OUT', width: 90 },
 				{ title: 'Bull', dataIndex: 'bull', key: '牛眼', width: 100 },
-				{ title: 'Team Freeze', dataIndex: 'freeze', key: 'Team Freeze', width: 100 },
+				{ title: 'Team Freeze', dataIndex: 'freeze', key: 'Team Freeze', width: 110 },
 				{
 					title: 'Freeze Option',
 					dataIndex: 'option',
 					key: 'Freeze Option',
-					width: 100
+					width: 110
 				},
-				{ title: 'Overkill', dataIndex: 'overKill', key: 'Overkill', width: 100 },
+				{ title: 'Overkill', dataIndex: 'overKill', key: 'Overkill', width: 115 },
 				{
 					title: 'Team Cricket',
 					dataIndex: 'cricket',
 					key: 'Team Cricket',
-					width: 100
+					width: 110
 				}
 			],
 			inPhoneColumns: [
@@ -406,7 +405,6 @@ export default defineComponent({
 			});
 		};
 		const getGameName = (type) => {
-			if (!type) return;
 			let str = '';
 			switch (type) {
 				case 1:
@@ -461,7 +459,7 @@ export default defineComponent({
 					str = 'default.306';
 					break;
 				default:
-					str = '';
+					str = 'choice';
 					break;
 			}
 			return instance.parent.ctx.$t(str);
@@ -562,7 +560,7 @@ export default defineComponent({
 									setPoint: j.setPoint,
 									leg: k.legNumber,
 									game: getGameName(k.gameName),
-									gameMode: getMode(i.mode),
+									gameMode: getMode(j.mode),
 									round: k.round,
 									in: getGameIn(k.gameIn),
 									out: getGameOut(k.gameOut),

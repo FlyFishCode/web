@@ -310,9 +310,11 @@ export default defineComponent({
 				pageSize: data.AllPageSize
 			};
 			leagueAllListHttp(obj).then((res) => {
-				data.allLeagueList = res.data.data.list;
-				data.matchTotal = res.data.data.list.length;
-				data.AllTotal = res.data.data.totalCount;
+				if (res.data.data) {
+					data.allLeagueList = res.data.data.list;
+					data.matchTotal = res.data.data.list.length;
+					data.AllTotal = res.data.data.totalCount;
+				}
 			});
 		};
 		const getMyLeagueList = (value = data.inputValue) => {
@@ -329,8 +331,10 @@ export default defineComponent({
 				pageSize: data.MyPageSize
 			};
 			leagueMyListHttp(obj).then((res) => {
-				data.myLeagueList = res.data.data.list;
-				data.MyTotal = res.data.data.totalCount;
+				if (res.data.data) {
+					data.myLeagueList = res.data.data.list;
+					data.MyTotal = res.data.data.totalCount;
+				}
 			});
 		};
 		const getCountryList = (value: any) => {

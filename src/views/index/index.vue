@@ -613,7 +613,8 @@ export default defineComponent({
 	width: 100%;
 }
 .matchImg {
-	height: 40px;
+	height: 50px;
+	width: 50px;
 }
 .matchBox {
 	height: 80px;

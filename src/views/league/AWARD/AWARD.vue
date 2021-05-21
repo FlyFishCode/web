@@ -111,6 +111,7 @@ import { SettingFilled, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 import { awardInfoHttp, awardHomeListHttp, awardAwayListHttp } from '@/axios/api';
 import dialogVue from '@/components/common/dialogVue.vue';
 import { useRoute } from 'vue-router';
+import { message } from 'ant-design-vue';
 
 interface DataProps {
 	isUp: boolean;
@@ -364,7 +365,10 @@ export default defineComponent({
 		});
 		const getAwardData = () => {
 			awardInfoHttp({ confrontationInfoId: prop.confrontationInfoId }).then((res) => {
-				if (!res.data.data) return;
+				if (!res.data.data) {
+					message.error(res.data.msg);
+					return;
+				}
 				const { homeTeam, visitingTeam } = res.data.data;
 				const obj = {
 					homeName: homeTeam.teamName,

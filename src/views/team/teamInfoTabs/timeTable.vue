@@ -202,8 +202,8 @@ export default defineComponent({
 	setup() {
 		const ROUTE = useRoute();
 		const ROUTER = useRouter();
-		const playerId = Number(sessionStorage.getItem('webUserId'));
-		const loginTeamIds: any = sessionStorage.getItem('webTeamIds')?.split(',');
+		const playerId = Number(localStorage.getItem('webUserId'));
+		const loginTeamIds: any = localStorage.getItem('webTeamIds')?.split(',');
 		const data = reactive({
 			entryPath: '/team',
 			total: 1,
@@ -469,7 +469,7 @@ export default defineComponent({
 		};
 		const getSelectList = (year = data.year) => {
 			const obj = {
-				countryId: sessionStorage.getItem('webCountryId'),
+				countryId: localStorage.getItem('webCountryId'),
 				teamId: data.teamId,
 				year
 			};

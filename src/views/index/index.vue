@@ -559,7 +559,7 @@ export default defineComponent({
 			});
 		};
 		const init = (flag = false) => {
-			const id = sessionStorage.getItem('webCountryId');
+			const id = localStorage.getItem('webCountryId');
 			getTeamList(id);
 			getPlayerList(id);
 			getNewsList(id);

@@ -444,7 +444,7 @@ export default defineComponent({
 		const getCountryList = () => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
-					const id = Number(sessionStorage.getItem('webCountryId')) || data.areaList[0]['countryId'];
+					const id = Number(localStorage.getItem('webCountryId')) || data.areaList[0]['countryId'];
 					data.countryList = res.data.data;
 					data.countryId = id;
 					data.countryChange(id);

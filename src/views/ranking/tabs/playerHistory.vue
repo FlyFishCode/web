@@ -422,7 +422,7 @@ export default defineComponent({
 		const getTeamList = () => {
 			const obj = {
 				countryId: data.countryId,
-				memberId: sessionStorage.getItem('webUserId'),
+				memberId: localStorage.getItem('webUserId'),
 				[data.type]: data.searchValue,
 				pageIndex: data.pageNum,
 				pageSize: data.pageSize

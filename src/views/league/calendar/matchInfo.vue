@@ -545,6 +545,13 @@ export default defineComponent({
 			}
 			return str;
 		};
+		const getOverKill = (type, score) => {
+			if (type === 2) {
+				return score;
+			} else {
+				return '-';
+			}
+		};
 		const getMatchTableList = () => {
 			matchInfoTableListHttp({ competitionId: ROUTE.query.competitionId || '' }).then((res) => {
 				res.data.data.forEach((i, index) => {
@@ -567,7 +574,7 @@ export default defineComponent({
 									bull: getBull(k.bull),
 									freeze: k.teamFreeze,
 									option: k.freezeOption,
-									overKill: k.overkill,
+									overKill: getOverKill(k.gameType, k.overkill),
 									cricket: k.teamCricket
 								});
 							});

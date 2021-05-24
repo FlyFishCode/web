@@ -336,7 +336,7 @@ export default defineComponent({
 				data.showPhoneTabs = !data.showPhoneTabs;
 			},
 			countryChange: () => {
-				sessionStorage.setItem('webCountryId', data.country);
+				localStorage.setItem('webCountryId', data.country);
 				instance.appContext.config.globalProperties.$bus.emit('on-country-change', data.country);
 			},
 			register: () => {
@@ -400,16 +400,16 @@ export default defineComponent({
 					if (data.matchTimeTable.length) {
 						return false;
 					}
-					const userId = sessionStorage.getItem('webUserId');
+					const userId = localStorage.getItem('webUserId');
 					myPageInfoHttp({ playerId: userId }).then((res) => {
 						if (res.data.data) {
 							data.myInfo = res.data.data;
-							data.myInfo.name = sessionStorage.getItem('webUserName') || '';
+							data.myInfo.name = localStorage.getItem('webUserName') || '';
 						}
 					});
 					const obj = {
 						playerId: userId,
-						countryId: sessionStorage.getItem('webCountryId'),
+						countryId: localStorage.getItem('webCountryId'),
 						sort: 1,
 						date: new Date().getFullYear(),
 						pageIndex: 1,
@@ -422,7 +422,7 @@ export default defineComponent({
 					});
 					const first = new Promise((resolve) => {
 						const obj = {
-							playerId: sessionStorage.getItem('webUserId'),
+							playerId: localStorage.getItem('webUserId'),
 							year: new Date().getFullYear()
 						};
 						myBattleSelectHttp(obj).then((res) => {
@@ -436,7 +436,7 @@ export default defineComponent({
 						data.leagueId = res[0].competitionId;
 						const obj = {
 							competitionId: data.leagueId,
-							playerId: sessionStorage.getItem('webUserId'),
+							playerId: localStorage.getItem('webUserId'),
 							pageIndex: 1,
 							pageSize: 5
 						};
@@ -476,10 +476,10 @@ export default defineComponent({
 				loginHttp(false, obj).then((res) => {
 					if (res.data.code === 100) {
 						message.success(res.data.msg);
-						sessionStorage.setItem('webToken', res.data.data.token);
-						sessionStorage.setItem('webUserId', res.data.data.memberId);
-						sessionStorage.setItem('webUserName', res.data.data.username);
-						sessionStorage.setItem('webTeamIds', res.data.data.teamIds);
+						localStorage.setItem('webToken', res.data.data.token);
+						localStorage.setItem('webUserId', res.data.data.memberId);
+						localStorage.setItem('webUserName', res.data.data.username);
+						localStorage.setItem('webTeamIds', res.data.data.teamIds);
 						// 保存玩家id至vuex
 						// Store.dispatch("changeMemberId", res.data.data.memberId);
 						data.userName = res.data.data.username;
@@ -496,15 +496,15 @@ export default defineComponent({
 			},
 			loginOut: () => {
 				data.isLogin = false;
-				sessionStorage.removeItem('webToken');
-				sessionStorage.removeItem('webUserId');
-				sessionStorage.removeItem('webUserName');
-				sessionStorage.removeItem('webCountryId');
-				sessionStorage.removeItem('webTeamIds');
+				localStorage.removeItem('webToken');
+				localStorage.removeItem('webUserId');
+				localStorage.removeItem('webUserName');
+				localStorage.removeItem('webCountryId');
+				localStorage.removeItem('webTeamIds');
 				ROUTER.push('/');
 			},
 			entryMatchTablePage: (item: any) => {
-				const currentUserId = Number(sessionStorage.getItem('webUserId'));
+				const currentUserId = Number(localStorage.getItem('webUserId'));
 				const divisionId = data.leagueList[0].divisionList[0].divisionId;
 				let teamId = '';
 				let ready = 0;
@@ -538,7 +538,7 @@ export default defineComponent({
 			leagueIdChange: () => {
 				const obj = {
 					competitionId: data.leagueId,
-					playerId: sessionStorage.getItem('webUserId'),
+					playerId: localStorage.getItem('webUserId'),
 					pageIndex: 1,
 					pageSize: 5
 				};
@@ -583,8 +583,9 @@ export default defineComponent({
 		// 	document.head.appendChild(jsapi);
 		// };
 		const init = () => {
-			if (sessionStorage.getItem('webUserName')) {
-				data.userName = sessionStorage.getItem('webUserName') as string;
+			debugger;
+			if (localStorage.getItem('webUserName')) {
+				data.userName = localStorage.getItem('webUserName') as string;
 				data.isLogin = true;
 			}
 			indexCountryHttp().then((res) => {
@@ -632,7 +633,7 @@ export default defineComponent({
 							data.country = i.countryId;
 						}
 					});
-					sessionStorage.setItem('webCountryId', data.country);
+					localStorage.setItem('webCountryId', data.country);
 				}
 			});
 		};

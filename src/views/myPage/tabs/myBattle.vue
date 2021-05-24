@@ -169,8 +169,8 @@ export default defineComponent({
 	},
 	setup() {
 		const ROUTER = useRouter();
-		const playerId = Number(sessionStorage.getItem('webUserId'));
-		const loginTeamIds: any = sessionStorage.getItem('webTeamIds')?.split(',');
+		const playerId = Number(localStorage.getItem('webUserId'));
+		const loginTeamIds: any = localStorage.getItem('webTeamIds')?.split(',');
 		const data = reactive({
 			entryPath: '/myPage',
 			colSpan: 5,

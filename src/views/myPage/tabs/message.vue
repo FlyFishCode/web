@@ -189,7 +189,7 @@ export default defineComponent({
 	},
 	setup() {
 		const ROUTER = useRouter();
-		const userId = sessionStorage.getItem('webUserId');
+		const userId = localStorage.getItem('webUserId');
 		let selectList: any = [];
 		const data = reactive({
 			visible: false,

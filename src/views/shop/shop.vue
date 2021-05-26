@@ -317,7 +317,7 @@ export default defineComponent({
 					});
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
 					data.markerList.push(marker);
-					MAP.add(marker);
+					MAP && MAP.add(marker);
 					//鼠标点击marker弹出自定义的信息窗体
 					// eslint-disable-next-line no-undef
 					AMap.event.addListener(marker, 'click', function() {

@@ -90,7 +90,7 @@ export default defineComponent({
 			shopId: '',
 			yearList,
 			leagueList: [],
-			yearChange: (year = 2020) => {
+			yearChange: (year: number) => {
 				const obj = {
 					shopId: data.shopId,
 					year,
@@ -123,7 +123,7 @@ export default defineComponent({
 		});
 		onMounted(() => {
 			data.shopId = ROUTE.query.shopId as string;
-			data.yearChange();
+			data.yearChange(data.year);
 		});
 		return {
 			...toRefs(data)

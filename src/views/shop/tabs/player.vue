@@ -27,7 +27,7 @@
 				</a-col>
 				<a-col :lg="{ span: 3 }" :xs="0" class="vipBox">
 					<div>{{ $t('default.55') }}</div>
-					<div>{{ item.teamName }}</div>
+					<div>{{ item.team.teamName }}</div>
 				</a-col>
 				<a-col :lg="8" :xs="12" class="topBox">
 					<div>{{ $t('default.184') }}</div>
@@ -42,7 +42,7 @@
 			</a-row>
 		</a-row>
 		<a-row type="flex" justify="end">
-			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @showSizeChange="onShowSizeChange" />
+			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @change="change" />
 		</a-row>
 		<entryList :entryPath="entryPath" />
 	</div>
@@ -87,8 +87,9 @@ export default defineComponent({
 					}
 				});
 			},
-			onShowSizeChange: () => {
-				console.log(1);
+			change: (index: number) => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getList(index);
 			},
 			changeSortTeam: (value: number) => {
 				data.sort = value;
@@ -97,16 +98,16 @@ export default defineComponent({
 				getList();
 			}
 		});
-		const getList = () => {
+		const getList = (pageIndex = 1) => {
 			const obj = {
 				shopId: data.shopId,
 				sort: data.sort,
-				pageIndex: 1,
+				pageIndex: pageIndex,
 				pageSize: 10
 			};
 			shopPlayerListHttp(obj).then((res) => {
 				data.playerList = res.data.data.list;
-				data.total = res.data.data.totalPage;
+				data.total = res.data.data.totalCount;
 			});
 		};
 		onMounted(() => {

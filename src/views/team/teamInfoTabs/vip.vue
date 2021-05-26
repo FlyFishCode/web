@@ -126,7 +126,7 @@ export default defineComponent({
 				},
 				{
 					title: '主店',
-					dataIndex: 'shop',
+					dataIndex: 'shop.shopName',
 					key: '2',
 					width: 10
 				},

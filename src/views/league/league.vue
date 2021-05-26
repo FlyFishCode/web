@@ -405,14 +405,15 @@ export default defineComponent({
 	margin: 5px 0;
 }
 .matchBox {
-	height: 80px;
+	min-height: 80px;
 	border: 1px solid #d4d4d4;
 	margin: 10px;
 	display: flex;
 	align-items: center;
 }
 .matchImg {
-	height: 40px;
+	width: 100%;
+	height: 100%;
 }
 .rightStyle {
 	display: flex;
@@ -422,8 +423,9 @@ export default defineComponent({
 	color: #999;
 }
 .matchImgBox {
-	height: 80px;
-	line-height: 80px;
+	height: 70px;
+	width: 70px;
+	line-height: 70px;
 }
 .matchState {
 	width: 100px;
@@ -445,8 +447,9 @@ export default defineComponent({
 .divClass {
 	display: flex;
 	justify-content: flex-start;
+	flex-wrap: wrap;
 }
 .divClass div {
-	margin: 0 2px;
+	margin: 2px 2px;
 }
 </style>

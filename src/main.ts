@@ -51,3 +51,11 @@ app.use(ElementPlus);
 app.use(i18n);
 app.use(router);
 app.mount('#app');
+
+window.onunload = function unload() {
+	localStorage.removeItem('webToken');
+	localStorage.removeItem('webUserId');
+	localStorage.removeItem('webUserName');
+	localStorage.removeItem('webCountryId');
+	localStorage.removeItem('webTeamIds');
+};

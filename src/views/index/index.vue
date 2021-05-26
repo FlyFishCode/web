@@ -108,8 +108,10 @@
 					<a-col :span="18">
 						<div class="divBg">
 							<div>{{ item.competitionName }}</div>
-							<div class="divClass" v-for="div in item.divisionList" :key="div.divisionId">
-								<a-button type="danger" size="small" @click="entryPage(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
+							<div class="divClass">
+								<div v-for="div in item.divisionList" :key="div.divisionId">
+									<a-button type="danger" size="small" @click="entryPage(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
+								</div>
 							</div>
 						</div>
 					</a-col>
@@ -615,7 +617,7 @@ export default defineComponent({
 	width: 50px;
 }
 .matchBox {
-	height: 80px;
+	min-height: 80px;
 	border: 1px solid #d4d4d4;
 	margin: 10px;
 	display: flex;
@@ -903,8 +905,9 @@ export default defineComponent({
 .divClass {
 	display: flex;
 	justify-content: flex-start;
+	flex-wrap: wrap;
 }
 .divClass div {
-	margin: 0 2px;
+	margin: 2px 2px;
 }
 </style>

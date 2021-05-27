@@ -163,8 +163,8 @@ export default defineComponent({
 		});
 		const getList = () => {
 			const obj = {
-				countryId: localStorage.getItem('webCountryId'),
-				playerId: localStorage.getItem('webUserId'),
+				countryId: sessionStorage.getItem('webCountryId'),
+				playerId: sessionStorage.getItem('webUserId'),
 				pageIndex: 1,
 				pageSize: 10
 			};

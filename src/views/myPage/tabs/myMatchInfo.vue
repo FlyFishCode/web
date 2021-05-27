@@ -116,7 +116,7 @@ export default defineComponent({
 	},
 	setup() {
 		const ROUTER = useRouter();
-		const userId = localStorage.getItem('webUserId');
+		const userId = sessionStorage.getItem('webUserId');
 		const data: any = reactive({
 			colSpan: 5,
 			year: new Date().getFullYear(),
@@ -143,7 +143,7 @@ export default defineComponent({
 				// 年份，当前页数，显示页码
 				const obj = {
 					playerId: Number(userId),
-					countryId: localStorage.getItem('webCountryId'),
+					countryId: sessionStorage.getItem('webCountryId'),
 					sort: 1,
 					year: data.year,
 					pageIndex: data.currentPage,

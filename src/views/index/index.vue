@@ -561,7 +561,7 @@ export default defineComponent({
 			});
 		};
 		const init = (flag = false) => {
-			const id = localStorage.getItem('webCountryId');
+			const id = sessionStorage.getItem('webCountryId');
 			getTeamList(id);
 			getPlayerList(id);
 			getNewsList(id);

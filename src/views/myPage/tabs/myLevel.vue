@@ -206,7 +206,7 @@ export default defineComponent({
 		});
 		const getDataInfo = () => {
 			const obj = {
-				playerId: localStorage.getItem('webUserId'),
+				playerId: sessionStorage.getItem('webUserId'),
 				year: data.year
 			};
 			playerInfoHttp(obj).then((res) => {

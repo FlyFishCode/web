@@ -232,7 +232,7 @@ export default defineComponent({
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	max-height: 30px;
+	height: 75px;
 }
 /* #diaLogTable >>> .ant-table-body .ant-table-thead > tr > th {
 	text-align: center;

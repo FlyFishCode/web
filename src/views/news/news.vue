@@ -89,8 +89,8 @@ export default defineComponent({
 			],
 			yaersList: [
 				{
-					id: 2020,
-					title: 2020,
+					id: new Date().getFullYear(),
+					title: new Date().getFullYear(),
 					children: [
 						{ id: 1, title: 1 },
 						{ id: 2, title: 2 },
@@ -98,13 +98,18 @@ export default defineComponent({
 						{ id: 4, title: 4 },
 						{ id: 5, title: 5 },
 						{ id: 6, title: 6 },
-						{ id: 7, title: 7 }
+						{ id: 7, title: 7 },
+						{ id: 8, title: 8 },
+						{ id: 9, title: 9 },
+						{ id: 10, title: 10 },
+						{ id: 11, title: 11 },
+						{ id: 12, title: 12 }
 					]
 				}
 			],
 			newsList: [],
 			showTypeNews: (value: number) => {
-				newsHttp({ countryId: localStorage.getItem('webCountryId'), category: value }).then((res) => {
+				newsHttp({ countryId: sessionStorage.getItem('webCountryId'), category: value }).then((res) => {
 					data.newsList = res.data.data.list;
 					data.total = res.data.data.totalPage;
 				});
@@ -112,7 +117,7 @@ export default defineComponent({
 			handleClick: (e: any) => {
 				[data.month, data.year] = e.keyPath;
 				const obj = {
-					countryId: localStorage.getItem('webCountryId'),
+					countryId: sessionStorage.getItem('webCountryId'),
 					year: data.year,
 					month: data.month
 				};
@@ -146,7 +151,7 @@ export default defineComponent({
 				let str = '';
 				switch (data.type) {
 					case 1:
-						str = 'contents';
+						str = 'contentsKeyword';
 						break;
 					case 2:
 						str = 'titleKeyword';
@@ -155,11 +160,9 @@ export default defineComponent({
 						str = 'allKeyword';
 						break;
 				}
-				newsHttp({ countryId: localStorage.getItem('webCountryId'), [str]: data.typeValue }).then((res) => {
-					if (res.data.data.list.length) {
-						data.newsList = res.data.data.list;
-						data.total = res.data.data.totalPage;
-					}
+				newsHttp({ countryId: sessionStorage.getItem('webCountryId'), [str]: data.typeValue }).then((res) => {
+					data.newsList = res.data.data.list;
+					data.total = res.data.data.totalPage;
 				});
 			},
 			entryNewsInfo: (id: number) => {
@@ -173,7 +176,7 @@ export default defineComponent({
 			}
 		});
 		onMounted(() => {
-			newsHttp({ countryId: localStorage.getItem('webCountryId') }).then((res) => {
+			newsHttp({ countryId: sessionStorage.getItem('webCountryId') }).then((res) => {
 				if (res.data.data.list.length) {
 					data.newsList = res.data.data.list;
 					data.total = res.data.data.totalPage;

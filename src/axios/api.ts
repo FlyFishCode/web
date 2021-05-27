@@ -76,7 +76,7 @@ let isLogin = false;
 Axios.interceptors.request.use(
 	(config) => {
 		// 修改获取token时机，解决token验证问题
-		const token = localStorage.getItem('webToken');
+		const token = sessionStorage.getItem('webToken');
 		if (config.url !== '/login' && token) {
 			config.headers.common['Authorization'] = token;
 		} else {

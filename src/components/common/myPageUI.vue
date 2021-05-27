@@ -3,7 +3,7 @@
 		<a-row class="rowStyle myPageUI">
 			<a-col :lg="10" :xs="24" class="allBox">
 				<a-col :span="12" class="imgClass">
-					<img :src="infoData.memberImg" alt="" />
+					<img :src="infoData.playerImg" alt="" />
 				</a-col>
 				<a-col :span="12" class="firstClass FONT">
 					<div class="teamIcon"><img :src="infoData.countryIcon" alt="" /></div>
@@ -101,7 +101,7 @@ export default {
 		});
 		const getPlayerInfo = () => {
 			const obj = {
-				playerId: localStorage.getItem('webUserId')
+				playerId: sessionStorage.getItem('webUserId')
 			};
 			myPageInfoHttp(obj).then((res) => {
 				if (res.data.data) {

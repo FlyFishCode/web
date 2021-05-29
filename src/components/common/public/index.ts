@@ -1,10 +1,7 @@
 import vue from 'vue';
 import { getCurrentInstance } from 'vue';
 
-const yearList: Array<any> = [
-	{ value: '', label: 'ALL' },
-	{ value: 2020, label: '2020' }
-];
+const yearList: Array<any> = [{ value: 2020, label: '2020' }];
 const initYearList = () => {
 	const currentYear = new Date().getFullYear();
 	const list: any[] = [];

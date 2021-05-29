@@ -98,7 +98,7 @@ export default defineComponent({
 				},
 				{
 					title: '排行',
-					dataIndex: 'address',
+					dataIndex: 'rank',
 					key: 3,
 					width: 65
 				},
@@ -107,14 +107,14 @@ export default defineComponent({
 					dataIndex: 'address',
 					key: 4,
 					children: [
-						{ title: 'Rating', dataIndex: 'teamRating.ranking', key: 9, width: 90 },
+						{ title: 'Rating', dataIndex: 'teamRating.rating', key: 9, width: 90 },
 						{ title: 'PPD', dataIndex: 'teamRating.ppd', key: 10, width: 75 },
 						{ title: 'MPR', dataIndex: 'teamRating.mpr', key: 11, width: 75 }
 					]
 				},
 				{
 					title: '总积分',
-					dataIndex: 'address',
+					dataIndex: 'totalPoint',
 					key: 5,
 					width: 90
 				},
@@ -142,7 +142,7 @@ export default defineComponent({
 				},
 				{
 					title: '罚分',
-					dataIndex: 'address',
+					dataIndex: 'penaltyPoint',
 					key: 8,
 					width: 65
 				}

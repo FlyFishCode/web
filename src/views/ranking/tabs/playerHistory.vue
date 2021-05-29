@@ -46,7 +46,7 @@
 							</div>
 							<div>
 								<div class="score">
-									<div>{{ $t('default.169') }}</div>
+									<div>{{ $t('default.170') }}</div>
 									<div>{{ item.generalRating.mpr }}</div>
 								</div>
 								<div class="progress">
@@ -76,7 +76,7 @@
 							</div>
 							<div>
 								<div class="score">
-									<div>{{ $t('default.169') }}</div>
+									<div>{{ $t('default.170') }}</div>
 									<div>{{ item.competitionRating.mpr }}</div>
 								</div>
 								<div class="progress">
@@ -106,7 +106,7 @@
 							</div>
 							<div>
 								<div class="score">
-									<div>{{ $t('default.169') }}</div>
+									<div>{{ $t('default.170') }}</div>
 									<div>{{ item.matchMPR }}</div>
 								</div>
 								<div class="progress">
@@ -163,7 +163,7 @@
 							</div>
 							<div>
 								<div class="score">
-									<div>{{ $t('default.169') }}</div>
+									<div>{{ $t('default.170') }}</div>
 									<div>{{ item.generalRating.mpr }}</div>
 								</div>
 								<div class="progress">

@@ -175,7 +175,7 @@
 					<div class="matchTitle">{{ $t('default.83') }}</div>
 					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" class="msgBox">
 						<a-col :span="4" class="imgColStyle">
-							<img v-if="recordInfo.img" class="matchImg" :src="recordInfo.img" alt="" />
+							<img v-if="recordInfo.competitionImg" class="matchImg" :src="recordInfo.competitionImg" alt="" />
 							<img v-else class="matchImg" :src="defaultImg" alt="" />
 						</a-col>
 						<a-col :span="20" class="countBox">
@@ -581,6 +581,7 @@ export default defineComponent({
 }
 .matchImg {
 	height: 60px;
+	width: 60px;
 }
 .eveyTeam {
 	height: 80px;

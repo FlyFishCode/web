@@ -31,7 +31,7 @@
 				</a-col>
 				<a-col :span="7" :offset="1">
 					<div class="scoreName">{{ $t('default.185') }}</div>
-					<div v-if="playerInfo.setResult" class="inPhonePlayer"><a-progress type="circle" strokeColor="red" :percent="playerInfo.setResult.winProbabilityDouble" /></div>
+					<div v-if="playerInfo.setResult" class="inPhonePlayer"><a-progress type="circle" strokeColor="red" :percent="playerInfo.setResult.winProbabilityDouble" :format="() => `100%`" /></div>
 				</a-col>
 			</a-col>
 		</a-row>
@@ -85,8 +85,8 @@ export default {
 	box-sizing: border-box;
 }
 .imgBg {
-	width: 100%;
-	height: 100%;
+	width: 120px;
+	height: 120px;
 }
 .allBox {
 	height: 100%;
@@ -127,7 +127,6 @@ export default {
 	transition: all 1s ease;
 }
 .scoreBox {
-	padding: 15px;
 	color: #8c8c8c;
 }
 .scoreBox > div {

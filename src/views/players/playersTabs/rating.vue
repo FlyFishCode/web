@@ -203,10 +203,8 @@ export default defineComponent({
 			],
 			levelTableList: [{ month: 0 }],
 			yearChange: (value: number) => {
-				console.log(value);
-			},
-			leagueChange: (value: number) => {
-				console.log(value);
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDataInfo(value);
 			},
 			showInfo: (key: number) => {
 				ctx.emit('show-info-data', key);
@@ -215,10 +213,10 @@ export default defineComponent({
 				ROUTER.push('/players');
 			}
 		});
-		const getDataInfo = () => {
+		const getDataInfo = (year = data.year) => {
 			const obj = {
 				playerId: data.playerId,
-				year: data.year
+				year
 			};
 			playerInfoHttp(obj).then((res) => {
 				const dataObj = res.data.data;

@@ -583,7 +583,6 @@ export default defineComponent({
 		// 	document.head.appendChild(jsapi);
 		// };
 		const init = () => {
-			debugger;
 			if (sessionStorage.getItem('webUserName')) {
 				data.userName = sessionStorage.getItem('webUserName') as string;
 				data.isLogin = true;

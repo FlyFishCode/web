@@ -255,12 +255,12 @@ export default defineComponent({
 				});
 			},
 			showALLleague: () => {
-				data.matchTotal = data.allLeagueList.length;
+				data.matchTotal = data.AllTotal;
 				data.allLeague = true;
 				data.myLeague = false;
 			},
 			showMyLengue: () => {
-				data.matchTotal = data.myLeagueList.length;
+				data.matchTotal = data.MyTotal;
 				data.myLeague = true;
 				data.allLeague = false;
 			},
@@ -312,8 +312,8 @@ export default defineComponent({
 			leagueAllListHttp(obj).then((res) => {
 				if (res.data.data) {
 					data.allLeagueList = res.data.data.list;
-					data.matchTotal = res.data.data.list.length;
 					data.AllTotal = res.data.data.totalCount;
+					data.matchTotal = data.AllTotal;
 				}
 			});
 		};

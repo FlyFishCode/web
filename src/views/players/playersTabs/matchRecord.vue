@@ -266,7 +266,8 @@ export default defineComponent({
 	align-items: center;
 }
 .matchImg {
-	height: 40px;
+	height: 60px;
+	width: 60px;
 }
 .divBg {
 	cursor: pointer;

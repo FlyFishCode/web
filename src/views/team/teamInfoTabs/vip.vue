@@ -85,6 +85,7 @@ import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import entryList from '@/components/common/entryList.vue';
 import { SettingFilled, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
+import { message } from 'ant-design-vue';
 interface DataProps {
 	[x: string]: any;
 	general: boolean;
@@ -300,8 +301,12 @@ export default defineComponent({
 				pageSize: data.pageSize
 			};
 			vipListHttp(obj).then((res) => {
-				data.tableList = res.data.data.list;
-				data.total = res.data.data.totalPage;
+				if (res.data.data) {
+					data.tableList = res.data.data.list;
+					data.total = res.data.data.totalPage;
+				} else {
+					message.error(res.data.msg);
+				}
 			});
 		};
 		onMounted(() => {

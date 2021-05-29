@@ -16,8 +16,8 @@
 			</a-col> -->
 		</a-row>
 		<a-table :columns="columns" :scroll="{ x: 600 }" :data-source="dataList" bordered rowKey="lowTon" :pagination="false">
-			<template v-slot:index="{ index }">
-				<div>{{ `${index + 1}` }}</div>
+			<template v-slot:month="{ record }">
+				<div>{{ record.month ? record.month : 'Total' }}</div>
 			</template>
 		</a-table>
 		<entryList :entryPath="entryPath" />
@@ -50,9 +50,9 @@ export default defineComponent({
 				{
 					title: 'MONTH',
 					align: 'center',
-					dataIndex: 'age',
+					dataIndex: 'month',
 					fixed: 'left',
-					slots: { customRender: 'index' }
+					slots: { customRender: 'month' }
 				},
 				{
 					title: 'LT',
@@ -147,7 +147,8 @@ export default defineComponent({
 			],
 			dataList: [],
 			yearChange: (value: number) => {
-				console.log(value);
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getList(value);
 			},
 			matchTypeChange: (value: number) => {
 				console.log(value);
@@ -156,10 +157,10 @@ export default defineComponent({
 				ROUTER.push('/players');
 			}
 		});
-		const getList = () => {
+		const getList = (year = data.year) => {
 			const obj = {
-				year: data.year,
-				playerId: ROUTE.query.playerId
+				playerId: ROUTE.query.playerId,
+				year
 			};
 			plauerRewardListHttp(obj).then((res) => {
 				data.dataList = res.data.data;

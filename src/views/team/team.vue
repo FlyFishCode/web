@@ -127,7 +127,7 @@
 		<a-row v-for="(item, index) in teamList" :key="item.id">
 			<a-row class="eveyTeam">
 				<a-col :lg="3" :xs="4" class="imgColStyle">
-					<img v-if="item.shopImg" class="matchImg" :src="item.shopImg" alt="" />
+					<img v-if="item.teamImg" class="matchImg" :src="item.teamImg" alt="" />
 					<img v-else class="matchImg" :src="defaultImg" alt="" />
 				</a-col>
 				<a-col :lg="6" :xs="{ span: 14, offset: 1 }" class="infoClass">
@@ -144,7 +144,7 @@
 				</a-col>
 				<a-col :lg="2" :xs="3" class="vipBox">
 					<a-col>{{ $t('default.227') }}</a-col>
-					<a-col class="vipPlayer" @click="entryPage(3, item.captainId)"> <UserOutlined />{{ item.playerCount }} </a-col>
+					<a-col class="vipPlayer" @click="entryPage(3, item.teamId)"> <UserOutlined />{{ item.playerCount }} </a-col>
 				</a-col>
 				<a-col :lg="8" :xs="0" class="topBox">
 					<a-col>{{ $t('default.178') }}</a-col>
@@ -419,6 +419,7 @@ export default defineComponent({
 						i.flag = false;
 					});
 				}
+				debugger;
 				data.teamList = res.data.data.list;
 				data.total = res.data.data.totalPage;
 			});

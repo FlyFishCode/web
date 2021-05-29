@@ -2,7 +2,7 @@
 	<div>
 		<a-row class="rowStyle">
 			<a-col :lg="12" :xs="24" class="allBox">
-				<a-col :span="10" class="firstClass">
+				<a-col :span="6" class="firstClass">
 					<img class="imgBg" :src="infoData.teamImg" alt="" />
 				</a-col>
 				<a-col :span="14" class="firstClass">
@@ -123,24 +123,25 @@ export default {
 		});
 		const getTeamDetails = () => {
 			teamdetailsHttp({ teamId: ROUTE.query.teamId }).then((res) => {
-				res.data.data.resultList = [];
-				for (const [key, value] of Object.entries(res.data.data)) {
-					switch (key) {
-						case 'bestPlayer':
-							res.data.data.resultList.push(Object.assign(value || '', { title: 'Highest Rating Player' }));
-							break;
-						case 'competitionRating':
-							res.data.data.resultList.push(Object.assign(value || '', { title: 'League Rating' }));
-							break;
-						case 'top4CompetitionRating':
-							res.data.data.resultList.push(Object.assign(value || '', { title: 'Top(4)Rating' }));
-							break;
-						default:
-							break;
+				if (res.data.data) {
+					res.data.data.resultList = [];
+					for (const [key, value] of Object.entries(res.data.data)) {
+						switch (key) {
+							case 'bestPlayer':
+								res.data.data.resultList.push(Object.assign(value || '', { title: 'Highest Rating Player' }));
+								break;
+							case 'competitionRating':
+								res.data.data.resultList.push(Object.assign(value || '', { title: 'League Rating' }));
+								break;
+							case 'top4CompetitionRating':
+								res.data.data.resultList.push(Object.assign(value || '', { title: 'Top(4)Rating' }));
+								break;
+							default:
+								break;
+						}
 					}
+					data.infoData = res.data.data;
 				}
-				data.infoData = res.data.data;
-				console.dir(res.data.data.resultList);
 			});
 		};
 		onMounted(() => {
@@ -162,7 +163,8 @@ export default {
 	box-sizing: border-box;
 }
 .imgBg {
-	width: 60%;
+	width: 120px;
+	height: 120px;
 }
 .allBox {
 	height: 100%;

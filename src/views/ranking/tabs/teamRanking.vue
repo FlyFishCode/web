@@ -136,7 +136,6 @@ interface DataProps {
 	visible: boolean;
 	dialogObj: any;
 	tableList: any;
-	isChange: boolean;
 	areaChange: (value: any) => void;
 	areaId: any;
 	areaList: any;
@@ -156,7 +155,6 @@ export default defineComponent({
 		const instance: any = getCurrentInstance();
 		let currentSelectList: Array<any> = [];
 		const data: DataProps = reactive({
-			isChange: false,
 			visible: false,
 			total: 1,
 			pageNum: 1,
@@ -291,7 +289,6 @@ export default defineComponent({
 				});
 			},
 			areaChange: (value: any) => {
-				data.isChange = true;
 				data.areaId = value;
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getDataList();
@@ -361,11 +358,12 @@ export default defineComponent({
 				pageSize: data.pageSize
 			};
 			teamRankingHttp(obj).then((res) => {
-				data.tableList = res.data.data.list;
-				data.total = res.data.data.totalCount;
-				if (res.data.data.list.length && data.isChange) {
-					data.isChange = false;
+				if (res.data.data.list.length) {
+					data.tableList = res.data.data.list;
+					data.total = res.data.data.totalCount;
 					data.dataObj = res.data.data.list[0];
+				} else {
+					data.dataObj = {};
 				}
 			});
 		};

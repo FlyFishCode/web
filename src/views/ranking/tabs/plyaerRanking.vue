@@ -77,7 +77,7 @@
 				<template v-slot:team="{ record }">
 					<div class="tableBox">
 						<div class="tableImgBox">
-							<img v-if="record.captainImg" :src="record.captainImg" alt="" />
+							<img v-if="record.playerImg" :src="record.playerImg" alt="" />
 							<img v-else :src="defaultImg" alt="" />
 						</div>
 						<div class="tableMsgCentent">
@@ -112,7 +112,7 @@
 				<template v-slot:team="{ record }">
 					<div class="tableBox">
 						<div class="tableImgBox">
-							<img v-if="record.captainImg" :src="record.captainImg" alt="" />
+							<img v-if="record.playerImg" :src="record.playerImg" alt="" />
 							<img v-else :src="defaultImg" alt="" />
 						</div>
 						<div class="tableMsgCentent">
@@ -174,7 +174,6 @@ interface DataProps {
 	visible: boolean;
 	dialogObj: any;
 	gender: any;
-	isChange: boolean;
 	tableList: any;
 	countryId: number | string;
 }
@@ -197,7 +196,6 @@ export default defineComponent({
 				return '2020-10-17';
 			},
 			gender: '',
-			isChange: false,
 			dataObj: {},
 			year: new Date().getFullYear(),
 			total: 1,
@@ -400,7 +398,6 @@ export default defineComponent({
 				});
 			},
 			areaChange: (value: any) => {
-				data.isChange = true;
 				data.areaId = value;
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getDataList();
@@ -463,11 +460,12 @@ export default defineComponent({
 				pageSize: data.pageSize
 			};
 			playerRankingHttp(obj).then((res: any) => {
-				data.tableList = res.data.data.list;
-				data.total = res.data.data.totalCount;
-				if (res.data.data.list.length && data.isChange) {
-					data.isChange = false;
+				if (res.data.data.list.length) {
+					data.tableList = res.data.data.list;
+					data.total = res.data.data.totalCount;
 					data.dataObj = res.data.data.list[0];
+				} else {
+					data.dataObj = {};
 				}
 			});
 		};

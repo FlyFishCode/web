@@ -13,7 +13,7 @@
 						</div>
 						<div class="disabledClass">{{ infoData.captainName }}</div>
 					</div>
-					<div class="disabledClass">
+					<div class="disabledClass" v-if="infoData.shopName">
 						<span>{{ infoData.shopName }}</span>
 						<span @click="showDetail(infoData)" class="icon">
 							<EnvironmentOutlined />
@@ -105,6 +105,11 @@ import { reactive, toRefs, onMounted, ref, watch } from 'vue';
 import { EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
 
 const getNewData = (obj: any) => {
+	if (JSON.stringify(obj) == '{}') {
+		return {
+			resultList: []
+		};
+	}
 	const data = {
 		teamImg: obj.teamImg,
 		teamName: obj.teamName,
@@ -178,8 +183,8 @@ export default {
 				data.dialogObj.title = obj.shopName;
 				data.dialogObj.img = obj.shopImg;
 				data.dialogObj.shopName = obj.shopName;
-				data.dialogObj.phone = obj.shopPhone;
-				data.dialogObj.address = obj.shopAddress;
+				data.dialogObj.phone = obj.phone;
+				data.dialogObj.address = obj.address;
 				data.visible = true;
 			},
 			leftClick: () => {

@@ -103,6 +103,11 @@ import { reactive, toRefs, onMounted, ref, watch } from 'vue';
 import { EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
 
 const getNewData = (obj: any) => {
+	if (JSON.stringify(obj) == '{}') {
+		return {
+			resultList: []
+		};
+	}
 	const data = {
 		playerImg: obj.playerImg,
 		playerName: obj.playerName,

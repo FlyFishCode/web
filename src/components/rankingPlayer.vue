@@ -45,20 +45,16 @@
 								</div>
 								<div class="right">
 									<div>
-										<a-progress :percent="item.win" strokeColor="red" :format="(percent) => `${percent}`" />
+										<a-progress :percent="item.wins" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.draw" strokeColor="red" :format="(percent) => `${percent}`" />
+										<a-progress :percent="item.losses" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.lost" strokeColor="red" :format="(percent) => `${percent}`" />
+										<a-progress :percent="item.draws" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.probability" strokeColor="red">
-											<template v-slot:format="percent">
-												{{ percent }}
-											</template>
-										</a-progress>
+										<a-progress :percent="item.winProbability" strokeColor="red" :format="(percent) => `${percent}%`"></a-progress>
 									</div>
 								</div>
 							</div>
@@ -121,10 +117,10 @@ const getNewData = (obj: any) => {
 		resultList: [
 			{
 				title: 'setResult',
-				win: obj.setResult && obj.setResult.wins,
-				draw: obj.setResult && obj.setResult.draws,
-				lost: obj.setResult && obj.setResult.losses,
-				winProbability: obj.setResult && Number(obj.setResult.winProbability)
+				wins: obj.setResult && obj.setResult.wins,
+				draws: obj.setResult && obj.setResult.draws,
+				losses: obj.setResult && obj.setResult.losses,
+				winProbability: obj.setResult && obj.setResult.winProbabilityDouble
 			}
 			// {
 			// 	title: 'setResult',
@@ -181,12 +177,11 @@ export default {
 				console.log(1);
 			},
 			showDetail: (obj: any) => {
-				debugger;
 				data.dialogObj.title = obj.shopName;
 				data.dialogObj.img = obj.playerImg;
 				data.dialogObj.shopName = obj.shopName;
-				data.dialogObj.phone = obj.phone;
-				data.dialogObj.address = obj.address;
+				data.dialogObj.phone = obj.phone || '-';
+				data.dialogObj.address = obj.address || '-';
 				data.visible = true;
 			},
 			leftClick: () => {

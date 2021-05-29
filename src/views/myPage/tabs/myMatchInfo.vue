@@ -19,7 +19,7 @@
 					</div>
 				</a-col>
 				<a-col :lg="8" :xs="16" class="infoClass">
-					<div class="teamStyle" @click="showInfo">{{ item.competitionName }}</div>
+					<div class="teamStyle">{{ item.competitionName }}</div>
 					<div class="placeStyle">
 						<div>{{ item.place }}</div>
 						<div class="btnBox">
@@ -160,9 +160,15 @@ export default defineComponent({
 					}
 				});
 			},
-			showInfo: () => {
-				ROUTER.push('/');
-			},
+			// showInfo: (competitionId: number, divisionId: number) => {
+			// 	ROUTER.push({
+			// 		path: '/calendar',
+			// 		query: {
+			// 			competitionId,
+			// 			divisionId
+			// 		}
+			// 	});
+			// },
 			entryPage: (competitionId: number, divisionId: number) => {
 				ROUTER.push({
 					path: '/calendar',
@@ -216,11 +222,7 @@ export default defineComponent({
 	height: 100%;
 }
 .teamStyle {
-	cursor: pointer;
 	font-weight: bold;
-}
-.teamStyle:hover {
-	text-decoration: underline;
 }
 .placeStyle {
 	display: flex;

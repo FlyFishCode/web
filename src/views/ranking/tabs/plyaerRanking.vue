@@ -117,8 +117,8 @@
 						</div>
 						<div class="tableMsgCentent">
 							<div @click="entryInfoPage(record.playerId)" class="link">{{ record.playerName }}</div>
-							<div>
-								<span v-if="record.shop">{{ record.shop.shopName }}</span>
+							<div v-if="record.shop">
+								<span>{{ record.shop.shopName }}</span>
 								<span style="cursor:pointer" @click="showDialog(record.shop)">
 									<EnvironmentOutlined />
 								</span>
@@ -299,14 +299,14 @@ export default defineComponent({
 							slots: { title: 'homeWin' }
 						},
 						{
-							dataIndex: 'setResult.draws',
-							width: 50,
-							slots: { title: 'homeLose' }
-						},
-						{
 							dataIndex: 'setResult.losses',
 							width: 50,
 							slots: { title: 'homeDraw' }
+						},
+						{
+							dataIndex: 'setResult.draws',
+							width: 50,
+							slots: { title: 'homeLose' }
 						},
 						{
 							dataIndex: 'setResult.winProbability',
@@ -408,7 +408,8 @@ export default defineComponent({
 				getDataList();
 			},
 			genderChange: () => {
-				console.log(data.gender);
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getDataList();
 			},
 			playerPageChange: (index: number) => {
 				data.pageNum = index;
@@ -465,6 +466,7 @@ export default defineComponent({
 					data.total = res.data.data.totalCount;
 					data.dataObj = res.data.data.list[0];
 				} else {
+					data.tableList = [];
 					data.dataObj = {};
 				}
 			});

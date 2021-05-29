@@ -235,12 +235,12 @@ export default defineComponent({
 						},
 						{
 							title: '败',
-							dataIndex: 'matchResult.draws',
+							dataIndex: 'matchResult.losses',
 							key: 'homeScore'
 						},
 						{
 							title: '和',
-							dataIndex: 'matchResult.losses',
+							dataIndex: 'matchResult.draws',
 							key: 'homeScore'
 						},
 						{
@@ -260,12 +260,12 @@ export default defineComponent({
 						},
 						{
 							title: '败',
-							dataIndex: 'setResult.draws',
+							dataIndex: 'setResult.losses',
 							key: 'awayName'
 						},
 						{
 							title: '和',
-							dataIndex: 'setResult.losses',
+							dataIndex: 'setResult.draws',
 							key: 'homeScore'
 						},
 						{
@@ -363,6 +363,7 @@ export default defineComponent({
 					data.total = res.data.data.totalCount;
 					data.dataObj = res.data.data.list[0];
 				} else {
+					data.tableList = [];
 					data.dataObj = {};
 				}
 			});

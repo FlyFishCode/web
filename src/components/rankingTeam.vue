@@ -27,7 +27,7 @@
 			</a-col>
 			<a-col :span="4" class="progressBox">
 				<div class="title">{{ '胜率(Set)' }}</div>
-				<a-progress type="circle" class="myYuan" :percent="infoData.winProbability" />
+				<a-progress type="circle" class="myYuan" strokeColor="red" :percent="infoData.winProbability" :format="(percent) => `${percent}%`" />
 			</a-col>
 			<!-- // 左侧按钮 -->
 			<a-col :span="8" class="carousel">
@@ -50,17 +50,13 @@
 										<a-progress :percent="item.win" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.draw" strokeColor="red" :format="(percent) => `${percent}`" />
-									</div>
-									<div>
 										<a-progress :percent="item.lost" strokeColor="red" :format="(percent) => `${percent}`" />
 									</div>
 									<div>
-										<a-progress :percent="item.winProbability" strokeColor="red">
-											<template v-slot:format="percent">
-												{{ percent }}
-											</template>
-										</a-progress>
+										<a-progress :percent="item.draw" strokeColor="red" :format="(percent) => `${percent}`" />
+									</div>
+									<div>
+										<a-progress :percent="item.winProbability" strokeColor="red" :format="(percent) => `${percent}%`"> </a-progress>
 									</div>
 								</div>
 							</div>
@@ -117,7 +113,7 @@ const getNewData = (obj: any) => {
 		captainImg: obj.captainImg,
 		shopName: obj.shop.shopName,
 		rating: obj.competitionRating.rating,
-		winProbability: obj.competitionRating.winProbability,
+		winProbability: obj.setResult.winProbabilityDouble,
 		shopImg: obj.shop.shopImg,
 		phone: obj.shop.shopPhone,
 		address: obj.shop.shopAddress,
@@ -125,16 +121,16 @@ const getNewData = (obj: any) => {
 			{
 				title: 'matchResult',
 				win: obj.matchResult.wins,
-				draw: obj.matchResult.draws,
 				lost: obj.matchResult.losses,
-				winProbability: Number(obj.matchResult.winProbability)
+				draw: obj.matchResult.draws,
+				winProbability: obj.matchResult.winProbabilityDouble
 			},
 			{
 				title: 'setResult',
 				win: obj.setResult.wins,
-				draw: obj.setResult.draws,
 				lost: obj.setResult.losses,
-				winProbability: Number(obj.setResult.winProbability)
+				draw: obj.setResult.draws,
+				winProbability: obj.setResult.winProbabilityDouble
 			}
 		]
 	};
@@ -183,8 +179,8 @@ export default {
 				data.dialogObj.title = obj.shopName;
 				data.dialogObj.img = obj.shopImg;
 				data.dialogObj.shopName = obj.shopName;
-				data.dialogObj.phone = obj.phone;
-				data.dialogObj.address = obj.address;
+				data.dialogObj.phone = obj.phone || '-';
+				data.dialogObj.address = obj.address || '-';
 				data.visible = true;
 			},
 			leftClick: () => {

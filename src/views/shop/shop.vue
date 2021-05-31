@@ -1,6 +1,6 @@
 <template>
 	<div class="content">
-		<divTitle :msg="title" :span="colSpan" />
+		<divTitle :msg="title" :span="4" />
 		<a-row class="rowStyle">
 			<a-col :lg="12" :xs="24">
 				<div id="container"></div>
@@ -10,10 +10,10 @@
 				<div class="center">
 					<div>{{ $t('default.27') }}</div>
 					<div class="selectBox">
-						<a-select class="selectBG" v-model:value="countryId" @change="countryChange" allowClear>
+						<a-select class="selectBG" v-model:value="searchVO.countryId" @change="countryChange" allowClear>
 							<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 						</a-select>
-						<a-select class="selectBG" v-model:value="areaId" @change="areaChange" allowClear>
+						<a-select class="selectBG" v-model:value="searchVO.areaId" @change="areaChange" allowClear>
 							<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 						</a-select>
 						<!-- <a-select v-model:value="city">
@@ -27,7 +27,7 @@
 					<div>{{ $t('default.28') }}</div>
 					<div>
 						<a-select
-							v-model:value="shopName"
+							v-model:value="searchVO.shopName"
 							show-search
 							style="width: 100%"
 							:placeholder="$t('default.160')"
@@ -43,14 +43,14 @@
 				<div class="center">
 					<div>{{ $t('default.159') }}</div>
 					<div>
-						<a-checkbox v-model:checked="a1">{{ 'A1' }}</a-checkbox>
-						<a-checkbox v-model:checked="w1">{{ 'W1' }}</a-checkbox>
+						<a-checkbox v-model:checked="searchVO.a1">{{ 'A1' }}</a-checkbox>
+						<a-checkbox v-model:checked="searchVO.w1">{{ 'W1' }}</a-checkbox>
 					</div>
 				</div>
 				<div class="center">
 					<div>{{ $t('default.119') }}</div>
 					<div>
-						<a-checkbox v-model:checked="league">{{ $t('default.8') }}</a-checkbox>
+						<a-checkbox v-model:checked="searchVO.competition">{{ $t('default.8') }}</a-checkbox>
 					</div>
 				</div>
 				<div class="btnBg">
@@ -65,10 +65,10 @@
 				<div class="center">
 					<div>{{ $t('default.27') }}</div>
 					<div class="selectBox">
-						<a-select v-model:value="countryId" @change="countryChange" class="selectBox" allowClear>
+						<a-select v-model:value="searchVO.countryId" @change="countryChange" class="selectBox" allowClear>
 							<a-select-option v-for="item in areaList" :key="item.countryId" :value="item.countryId">{{ item.countryName }}</a-select-option>
 						</a-select>
-						<a-select v-model:value="areaId" class="selectBox" @change="areaChange" allowClear>
+						<a-select v-model:value="searchVO.areaId" class="selectBox" @change="areaChange" allowClear>
 							<a-select-option v-for="item in cityList" :key="item.areaId" :value="item.areaId">{{ item.areaName }}</a-select-option>
 						</a-select>
 						<!-- <a-select v-model:value="city">
@@ -82,7 +82,7 @@
 					<div>{{ $t('default.28') }}</div>
 					<div>
 						<a-select
-							v-model:value="shopName"
+							v-model:value="searchVO.shopName"
 							show-search
 							style="width: 100%"
 							:placeholder="$t('default.160')"
@@ -98,14 +98,14 @@
 				<div class="center">
 					<div>{{ $t('default.159') }}</div>
 					<div>
-						<a-checkbox v-model:checked="a1">{{ 'A1' }}</a-checkbox>
-						<a-checkbox v-model:checked="w1">{{ 'W1' }}</a-checkbox>
+						<a-checkbox v-model:checked="searchVO.a1">{{ 'A1' }}</a-checkbox>
+						<a-checkbox v-model:checked="searchVO.w1">{{ 'W1' }}</a-checkbox>
 					</div>
 				</div>
 				<div class="center">
 					<div>{{ $t('default.119') }}</div>
 					<div>
-						<a-checkbox v-model:checked="league">{{ $t('default.8') }}</a-checkbox>
+						<a-checkbox v-model:checked="searchVO.competition">{{ $t('default.8') }}</a-checkbox>
 					</div>
 				</div>
 				<div class="btnBg">
@@ -114,7 +114,7 @@
 			</a-col>
 		</a-row>
 		<a-row class="shopRow">
-			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ `${$t('default.161')}(${shopList.length})` }} </a-col>
+			<a-col :span="12" class="centerFont"> <SettingFilled /> {{ `${$t('default.161')}(${total})` }} </a-col>
 		</a-row>
 		<a-row v-for="(item, index) in shopList" :key="item.id">
 			<a-row class="eveyTeam">
@@ -209,7 +209,7 @@
 		</a-modal>
 		<a-row>
 			<a-col class="pagination">
-				<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" />
+				<a-pagination v-model:current="searchVO.pageIndex" v-model:pageSize="searchVO.pageSize" :total="total" @change="pageChange" />
 			</a-col>
 		</a-row>
 	</div>
@@ -327,7 +327,7 @@ export default defineComponent({
 					// 设置层级以及定位 如果有多个marke则设置第一条数据定位
 					if (!index && i.x && i.y) {
 						// eslint-disable-next-line no-undef
-						MAP.setZoomAndCenter(14, [i.x, i.y]);
+						MAP && MAP.setZoomAndCenter(14, [i.x, i.y]);
 					}
 				});
 		};
@@ -383,18 +383,19 @@ export default defineComponent({
 		};
 		const data = reactive({
 			title: 'default.127',
-			colSpan: 4,
 			visible: false,
-			countryId: null,
-			areaId: null,
+			searchVO: {
+				countryId: null,
+				areaId: null,
+				shopName: '',
+				a1: false,
+				w1: false,
+				competition: false,
+				pageIndex: 1,
+				pageSize: 10
+			},
 			city: 1,
-			shopName: '',
-			a1: false,
-			w1: false,
-			league: false,
 			total: 1,
-			pageNum: 1,
-			pageSize: 10,
 			areaList: [],
 			cityList: [],
 			shopList: [{ flag: false, competitionList: [], machineMap: {} }],
@@ -441,7 +442,7 @@ export default defineComponent({
 			},
 			areaChange: () => {
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
-				getShopList(data.shopName);
+				getShopList();
 			},
 			entryPage: (competitionId, divisionId) => {
 				ROUTER.push({
@@ -462,56 +463,53 @@ export default defineComponent({
 			},
 			handleOk: () => {
 				console.log(1);
+			},
+			pageChange: (value) => {
+				data.searchVO.pageIndex = value;
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getShopList();
 			}
 		});
-		const getCountry = (searchValue) => {
+		const getCountry = () => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
 					const id = Number(sessionStorage.getItem('webCountryId')) || data.areaList[0]['countryId'];
 					data.areaList = res.data.data;
-					data.countryId = id;
+					data.searchVO.countryId = id;
 					data.countryChange(id);
-					// eslint-disable-next-line @typescript-eslint/no-use-before-define
-					getShopList(searchValue);
 				}
 			});
 		};
-		const getShopList = (searchValue = '') => {
-			const obj = {
-				countryId: data.countryId,
-				areaId: data.areaId,
-				shopName: searchValue,
-				competition: data.league,
-				a1: data.a1,
-				w1: data.w1,
-				pageIndex: 1,
-				pageSize: 10
-			};
-			shopListHttp(obj).then((res) => {
-				data.shopList = res.data.data.list;
-				data.total = res.data.data.totalPage;
-				data.InfoWindow = [];
-				data.shopNameList = res.data.data.list;
-				// 添加marker
-				res.data.data.list.forEach((i) => {
-					if (i.longitude && i.latitude) {
-						data.InfoWindow.push({
-							title: i.shopName,
-							phone: i.shopPhone,
-							address: i.shopAddress,
-							img: i.shopImg,
-							x: i.longitude,
-							y: i.latitude
-						});
-						// getGDXY(i.longitude, i.latitude);
-					}
-					initMarker();
-				});
+		const getShopList = (searchValue = data.searchVO.shopName) => {
+			data.searchVO.shopName = searchValue;
+			shopListHttp(data.searchVO).then((res) => {
+				if (res.data.data.list) {
+					data.shopList = res.data.data.list;
+					data.InfoWindow = [];
+					data.shopNameList = res.data.data.list;
+					// 添加marker
+					res.data.data.list.forEach((i) => {
+						if (i.longitude && i.latitude) {
+							data.InfoWindow.push({
+								title: i.shopName,
+								phone: i.shopPhone,
+								address: i.shopAddress,
+								img: i.shopImg,
+								x: i.longitude,
+								y: i.latitude
+							});
+							// getGDXY(i.longitude, i.latitude);
+						}
+						initMarker();
+					});
+				}
+				data.total = res.data.data.totalCount;
 			});
 		};
 		onMounted(() => {
 			showMap();
 			getCountry(ROUTE.query.searchValue);
+			getShopList();
 			loadMap();
 			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val) => {
 				data.countryId = val;
@@ -623,7 +621,7 @@ export default defineComponent({
 .msgBox {
 	margin: 10px 0;
 	padding: 0 0 0 10px;
-	height: 80px;
+	min-height: 80px;
 	border-radius: 10px;
 	box-sizing: border-box;
 	border: 1px solid #2b2b2b;
@@ -644,9 +642,10 @@ export default defineComponent({
 .btnBox {
 	display: flex;
 	padding: 0 0 0 10px;
+	flex-wrap: wrap;
 }
 .btnBox div {
-	margin-right: 15px;
+	margin: 5px;
 }
 .recordInfoStyle {
 	display: flex;

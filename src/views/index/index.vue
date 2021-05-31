@@ -41,7 +41,7 @@
 					</div>
 				</a-col>
 			</a-col>
-			<a-col :lg="8" :xs="24">
+			<a-col :lg="8" :xs="24" class="viceBox">
 				<div class="newHeader">
 					<div class="newSstyle">{{ 'PROMOTION' }}</div>
 				</div>
@@ -847,13 +847,13 @@ export default defineComponent({
 }
 .carouselBox .ant-carousel ::v-deep(.slick-slide) {
 	text-align: center;
-	height: 250px;
-	line-height: 250px;
+	height: 300px;
+	line-height: 300px;
 	background: #364d79;
 	overflow: hidden;
 }
 .carouselBox .ant-carousel {
-	min-height: 250px;
+	height: 300px;
 }
 .carouselBox .ant-carousel ::v-deep(.slick-arrow.custom-slick-arrow) {
 	width: 25px;
@@ -909,5 +909,10 @@ export default defineComponent({
 }
 .divClass div {
 	margin: 2px 2px;
+}
+.viceBox{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 </style>

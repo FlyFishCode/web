@@ -284,14 +284,21 @@ export default defineComponent({
 
 				// 当前排阵所有玩家
 				const allPlayerList = [];
-				// 当前Seg全部玩家
-				const currentSetPlayerList = [];
+				// 当前所有玩家游戏mode
+				const allPlayerModeList = [];
 				// 当前leg全部玩家
 				const currentLegPlayerList = [];
 				const playerObj = {};
-				data.matchTableList[setIndex].legGameList.forEach((i) => {
-					i.playerList.forEach((j) => {
-						currentSetPlayerList.push(data.playerList.find((y) => y.playerId === j.playerId));
+				data.matchTableList.forEach((i) => {
+					i.legGameList.forEach((j) => {
+						j.playerList.forEach((k) => {
+							allPlayerList.push({
+								setId: i.setId,
+								mode: i.mode,
+								gameName: j.gameName,
+								playerId: k.playerId
+							});
+						});
 					});
 				});
 				data.matchTableList[setIndex].legGameList[legIndex].playerList.forEach((i) => {
@@ -363,37 +370,43 @@ export default defineComponent({
 				}
 				// 玩家参加mode的最大数
 				if (data.matchTableList[setIndex].entryTypeNum) {
+					let flag = false;
 					const legPlayerObj = {};
-					let list = [];
-					data.matchTableList.forEach((i) => {
-						i.legGameList.forEach((j) => {
-							j.playerList.forEach((k) => {
-								if (k.playerId) {
-									const obj = {
-										playerId: k.playerId,
-										setId: i.setId,
-										mode: i.mode
-									};
-									allPlayerList.push(obj);
-								} else {
-									allPlayerList.push('');
-								}
-							});
-						});
-					});
-					// 玩家参加单人或者多人限制
-					if (data.matchTableList[setIndex].entryType === 1) {
-						for (let i = 0; i < allPlayerList.length; i++) {
-							if (i) {
-								list = allPlayerList.filter((j) => allPlayerList[i].playerId === j.playerId && allPlayerList[i].mode === j.mode && allPlayerList[i].setId !== j.setId);
-								if (list.length + 1 > data.matchTableList[setIndex].entryTypeNum) {
-									message.warning(instance.parent.ctx.$t('default.269') + data.matchTableList[setIndex].entryTypeNum);
-									data.matchTableList[setIndex].legGameList[legIndex].playerList[playerIndex].playerId = '';
-									break;
-								}
+					const finalList = [];
+					for (let i = 0; i < allPlayerList.length; i += 1) {
+						if (allPlayerList[i].playerId) {
+							const temp = {
+								setId: allPlayerList[i].setId,
+								modeType: allPlayerList[i].mode,
+								playerId: allPlayerList[i].playerId
+							};
+							flag = allPlayerModeList.every((e) => e.setId !== allPlayerList[i].setId || e.playerId !== allPlayerList[i].playerId);
+							if (flag) {
+								allPlayerModeList.push(temp);
 							}
 						}
 					}
+					console.log(allPlayerModeList);
+					allPlayerModeList.forEach((i) => {
+						const obj = {
+							modeType: i.modeType,
+							playerId: i.playerId,
+							count: 1
+						};
+						if (finalList.length && finalList.find((f) => i.playerId === f.playerId && i.modeType === f.modeType)) {
+							finalList.find((f) => i.playerId === f.playerId && i.modeType === f.modeType).count += 1;
+						} else {
+							finalList.push(obj);
+						}
+					});
+					finalList.forEach((i) => {
+						if (i.count > data.matchTableList[setIndex].entryTypeNum) {
+							message.warning(instance.parent.ctx.$t('default.269') + data.matchTableList[setIndex].entryTypeNum);
+							data.matchTableList[setIndex].legGameList[legIndex].playerList[playerIndex].playerId = '';
+							console.log(finalList);
+						}
+					});
+
 					// 玩家参加最大leg限制
 					if (data.matchTableList[setIndex].entryType === 2) {
 						allPlayerList.forEach((i) => {
@@ -726,7 +739,7 @@ export default defineComponent({
 	background: #f1f0ed;
 }
 .legStyle {
-	height: 106px;
+	min-height: 106px;
 	display: flex;
 	flex-direction: column;
 	text-align: center;

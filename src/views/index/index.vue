@@ -562,10 +562,12 @@ export default defineComponent({
 		};
 		const init = (flag = false) => {
 			const id = sessionStorage.getItem('webCountryId');
-			getTeamList(id);
-			getPlayerList(id);
-			getNewsList(id);
-			getCarouselList(id);
+			if (id) {
+				getTeamList(id);
+				getPlayerList(id);
+				getNewsList(id);
+				getCarouselList(id);
+			}
 			if (flag) {
 				getLeagueList();
 				return;
@@ -910,7 +912,7 @@ export default defineComponent({
 .divClass div {
 	margin: 2px 2px;
 }
-.viceBox{
+.viceBox {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;

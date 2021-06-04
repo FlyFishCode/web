@@ -719,6 +719,9 @@ export default defineComponent({
 			if (Number(queryObj.isResult)) {
 				data.isResult = Boolean(queryObj.isResult);
 			}
+			if (Number(queryObj.isAward)) {
+				data.isAward = Boolean(queryObj.isAward);
+			}
 			if (Number(queryObj.isMatchTable)) {
 				data.isMatchTable = Boolean(queryObj.isMatchTable);
 			}

@@ -149,7 +149,7 @@
 								</div>
 								<div>
 									<div>{{ `${item.date} ${item.time}` }}</div>
-									<div v-if="item.winOrLose === 0" class="winbox">{{ 'Win' }}</div>
+									<div v-if="item.winOrLose === 1" class="winbox">{{ 'Win' }}</div>
 									<div v-if="item.winOrLose === 3" class="winbox">{{ 'Win' }}</div>
 								</div>
 								<div>
@@ -258,21 +258,22 @@ export default defineComponent({
 		const data = reactive({
 			showPhoneTabs: false,
 			collapsed: true,
-			activeKey: 'league',
-			leagueList: [{ competitionId: '', divisionList: [{ divisionId: 0 }] }],
 			isLogin: false,
 			visible: false,
 			registerVisible: false,
 			showBox: false,
 			autoLogin: false,
+			isMyMatch: true,
+			activeKey: 'league',
+			leagueList: [{ competitionId: '', divisionList: [{ divisionId: 0 }] }],
 			leagueId: '',
 			imputValue: '',
 			userId: '',
+			loginUserId: 0,
 			passWord: '',
 			userName: '',
 			country: '',
 			img: require('@/assets/logo.png'),
-			isMyMatch: true,
 			registerObj: {
 				account: '',
 				cardNo: '',
@@ -394,21 +395,22 @@ export default defineComponent({
 					data.visible = true;
 				}
 			},
+			getPersonalInfo: () => {
+				myPageInfoHttp({ playerId: data.loginUserId }).then((res) => {
+					if (res.data.data) {
+						data.myInfo = res.data.data;
+						data.myInfo.name = sessionStorage.getItem('webUserName') || '';
+					}
+				});
+			},
 			showPersonBox: () => {
 				if (data.isLogin) {
 					data.showBox = true;
 					if (data.matchTimeTable.length) {
 						return false;
 					}
-					const userId = sessionStorage.getItem('webUserId');
-					myPageInfoHttp({ playerId: userId }).then((res) => {
-						if (res.data.data) {
-							data.myInfo = res.data.data;
-							data.myInfo.name = sessionStorage.getItem('webUserName') || '';
-						}
-					});
 					const obj = {
-						playerId: userId,
+						playerId: data.loginUserId,
 						countryId: sessionStorage.getItem('webCountryId'),
 						sort: 1,
 						date: new Date().getFullYear(),
@@ -422,7 +424,7 @@ export default defineComponent({
 					});
 					const first = new Promise((resolve) => {
 						const obj = {
-							playerId: sessionStorage.getItem('webUserId'),
+							playerId: data.loginUserId,
 							year: new Date().getFullYear()
 						};
 						myBattleSelectHttp(obj).then((res) => {
@@ -436,7 +438,7 @@ export default defineComponent({
 						data.leagueId = res[0].competitionId;
 						const obj = {
 							competitionId: data.leagueId,
-							playerId: sessionStorage.getItem('webUserId'),
+							playerId: data.loginUserId,
 							pageIndex: 1,
 							pageSize: 5
 						};
@@ -496,6 +498,7 @@ export default defineComponent({
 			},
 			loginOut: () => {
 				data.isLogin = false;
+				data.showBox = false;
 				sessionStorage.removeItem('webToken');
 				sessionStorage.removeItem('webUserId');
 				sessionStorage.removeItem('webUserName');
@@ -504,19 +507,23 @@ export default defineComponent({
 				ROUTER.push('/');
 			},
 			entryMatchTablePage: (item: any) => {
-				const currentUserId = Number(sessionStorage.getItem('webUserId'));
 				const divisionId = data.leagueList[0].divisionList[0].divisionId;
 				let teamId = '';
-				let ready = 0;
-				let currentKey = '1';
+				let currentKey = 1;
+				let isResult = 0;
+				let isAward = 0;
+				let isMatchTable = 0;
 				if (item.status === 1) {
-					ready = 1;
-					currentKey = '2';
+					isMatchTable = 1;
+					currentKey = 2;
+				} else {
+					isResult = 1;
+					isAward = 1;
 				}
-				if (item.homeCaptainId === currentUserId) {
+				if (item.homeCaptainId === data.loginUserId) {
 					teamId = item.homeTeamId;
 				}
-				if (item.visitingTeamShopId === currentUserId) {
+				if (item.visitingTeamShopId === data.loginUserId) {
 					teamId = item.visitingTeamId;
 				}
 				if (teamId && divisionId) {
@@ -524,11 +531,13 @@ export default defineComponent({
 					ROUTER.push({
 						path: 'calendar',
 						query: {
-							ready: ready,
+							ismatchTablePage: '1',
 							divisionId,
 							teamId: teamId,
-							ismatchTablePage: '1',
-							currentKey: currentKey,
+							isResult,
+							isAward,
+							currentKey,
+							isMatchTable,
 							competitionId: data.leagueId,
 							confrontationInfoId: item.confrontationInfoId
 						}
@@ -538,7 +547,7 @@ export default defineComponent({
 			leagueIdChange: () => {
 				const obj = {
 					competitionId: data.leagueId,
-					playerId: sessionStorage.getItem('webUserId'),
+					playerId: data.loginUserId,
 					pageIndex: 1,
 					pageSize: 5
 				};
@@ -583,10 +592,12 @@ export default defineComponent({
 		// 	document.head.appendChild(jsapi);
 		// };
 		const init = () => {
+			data.loginUserId = Number(sessionStorage.getItem('webUserId'));
 			if (sessionStorage.getItem('webUserName')) {
 				data.userName = sessionStorage.getItem('webUserName') as string;
 				data.isLogin = true;
 			}
+			data.getPersonalInfo();
 			indexCountryHttp().then((res) => {
 				if (res.data.data) {
 					let currentCountry = '';

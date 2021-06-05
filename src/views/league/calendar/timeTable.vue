@@ -680,7 +680,9 @@ export default defineComponent({
 			};
 			leagueSelectHttp(obj).then((res) => {
 				data.divisitonList = res.data.data;
-				data.divisiton = data.divisitonList.find((i) => i.divisionId === Number(ROUTE.query.divisionId)).divisionId;
+				if (data.divisitonList.find((i) => i.divisionId === Number(ROUTE.query.divisionId))) {
+					data.divisiton = data.divisitonList.find((i) => i.divisionId === Number(ROUTE.query.divisionId)).divisionId;
+				}
 				data.stageList = data.divisitonList[0].stageList;
 				data.stageId = data.divisitonList[0].stageList[0].stageId;
 				data.teamList = data.divisitonList[0].stageList[0].teamList;

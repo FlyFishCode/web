@@ -149,8 +149,8 @@
 								</div>
 								<div>
 									<div>{{ `${item.date} ${item.time}` }}</div>
-									<div v-if="item.winOrLose === 1" class="winbox">{{ 'Win' }}</div>
-									<div v-if="item.winOrLose === 3" class="winbox">{{ 'Win' }}</div>
+									<div class="winbox" :class="{ lose: item.winOrLose !== 1 }">{{ item.winOrLose === 1 ? 'Win' : '-' }}</div>
+									<div class="winbox" :class="{ lose: item.winOrLose !== 3 }">{{ item.winOrLose === 3 ? 'Win' : '-' }}</div>
 								</div>
 								<div>
 									<div>
@@ -395,8 +395,8 @@ export default defineComponent({
 					data.visible = true;
 				}
 			},
-			getPersonalInfo: () => {
-				myPageInfoHttp({ playerId: data.loginUserId }).then((res) => {
+			getPersonalInfo: (playerId: any) => {
+				myPageInfoHttp({ playerId }).then((res) => {
 					if (res.data.data) {
 						data.myInfo = res.data.data;
 						data.myInfo.name = sessionStorage.getItem('webUserName') || '';
@@ -405,12 +405,14 @@ export default defineComponent({
 			},
 			showPersonBox: () => {
 				if (data.isLogin) {
+					const playerId = sessionStorage.getItem('webUserId');
+					data.getPersonalInfo(playerId);
 					data.showBox = true;
 					if (data.matchTimeTable.length) {
 						return false;
 					}
 					const obj = {
-						playerId: data.loginUserId,
+						playerId,
 						countryId: sessionStorage.getItem('webCountryId'),
 						sort: 1,
 						date: new Date().getFullYear(),
@@ -424,7 +426,7 @@ export default defineComponent({
 					});
 					const first = new Promise((resolve) => {
 						const obj = {
-							playerId: data.loginUserId,
+							playerId,
 							year: new Date().getFullYear()
 						};
 						myBattleSelectHttp(obj).then((res) => {
@@ -438,7 +440,7 @@ export default defineComponent({
 						data.leagueId = res[0].competitionId;
 						const obj = {
 							competitionId: data.leagueId,
-							playerId: data.loginUserId,
+							playerId,
 							pageIndex: 1,
 							pageSize: 5
 						};
@@ -597,7 +599,7 @@ export default defineComponent({
 				data.userName = sessionStorage.getItem('webUserName') as string;
 				data.isLogin = true;
 			}
-			data.getPersonalInfo();
+			data.getPersonalInfo(data.loginUserId);
 			indexCountryHttp().then((res) => {
 				if (res.data.data) {
 					let currentCountry = '';
@@ -828,5 +830,8 @@ export default defineComponent({
 .winbox {
 	background: #ff5e00;
 	color: #fff;
+}
+.lose {
+	visibility: hidden;
 }
 </style>

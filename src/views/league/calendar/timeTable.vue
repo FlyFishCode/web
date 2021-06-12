@@ -459,7 +459,7 @@ export default defineComponent({
 				{
 					dataIndex: 'homeTeamName',
 					title: 'HomeTeam',
-					width: 240
+					width: 100
 				},
 				{
 					title: 'VS',
@@ -469,7 +469,7 @@ export default defineComponent({
 				{
 					dataIndex: 'visitingTeamName',
 					title: 'AwayTeam',
-					width: 240
+					width: 100
 				}
 			],
 			tableList: [{ confrontationInfoId: 1 }],

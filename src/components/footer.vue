@@ -1,5 +1,5 @@
 <template>
-	<a-row class="row">
+	<a-row class="row inPhoneTableDisplay">
 		<a-col :span="10">
 			<div @click="entryIndex" class="imgBox"><img :src="img" alt="" /></div>
 		</a-col>

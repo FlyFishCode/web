@@ -2,16 +2,16 @@
 	<div class="content">
 		<a-row>
 			<a-col :lg="{ span: 2 }" :xs="{ span: 0 }" class="smallTitle"> <SettingFilled /> {{ $t('default.41') }} </a-col>
-			<a-col :lg="{ span: 4 }" :xs="{ span: 8 }" class="smallTitle">
+			<a-col :lg="{ span: 4 }" :xs="{ span: 6 }" class="smallTitle">
 				<div>{{ `${$t('default.312')}：${surplusCount}` }}</div>
 			</a-col>
-			<a-col :lg="{ span: 4, offset: 8 }" :xs="{ span: 8 }">
+			<a-col :lg="{ span: 4, offset: 8 }" :xs="6">
 				<a-button>{{ $t('default.118') }}</a-button>
 			</a-col>
-			<a-col :lg="{ span: 3 }" :xs="{ span: 8 }">
+			<a-col :lg="{ span: 3 }" :xs="6">
 				<a-button @click="submitMatchTable(1)">{{ $t('default.143') }}</a-button>
 			</a-col>
-			<a-col :lg="{ span: 3 }" :xs="{ span: 8 }">
+			<a-col :lg="{ span: 3 }" :xs="6">
 				<a-button type="primary" @click="submitMatchTable(2)">{{ $t('default.144') }}</a-button>
 			</a-col>
 		</a-row>

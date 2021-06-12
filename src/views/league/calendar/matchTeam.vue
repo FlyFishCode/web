@@ -58,29 +58,22 @@
 		<!-- 移动端显示 -->
 		<a-row class="eveyTeam showPhoneTable" v-for="item in tableList" :key="item.id">
 			<a-col :lg="3" :xs="6" class="imgColStyle">
-				<div>
-					<img class="tableImg" :src="item.img" alt="" />
+				<div class="teamIngBox">
+					<img :src="item.teamImg" alt="" />
 				</div>
 				<div class="placeStyle">
-					<div>{{ item.homaName }}</div>
-					<div class="counyStyle">
-						{{ item.awayName }}
-						<span @click="showDetail">
-							<EnvironmentOutlined />
-						</span>
-					</div>
+					<div>{{ item.teamName }}</div>
 				</div>
 			</a-col>
 			<a-col :lg="4" :xs="14" class="topBox">
-				<a-col>{{ item.homaName }}</a-col>
-				<a-col class="infoStyle">
-					<a-col>{{ `Rating  ${item.ranting}` }}</a-col
-					>|<a-col>{{ `PPD  ${item.PPD}` }}</a-col
-					>|<a-col>{{ `MPR  ${item.MPR}` }}</a-col>
+				<a-col v-if="item.competitionRating" class="infoStyle">
+					<a-col>{{ `Rating  ${item.competitionRating.rating}` }}</a-col
+					>|<a-col>{{ `PPD  ${item.competitionRating.ppd}` }}</a-col
+					>|<a-col>{{ `MPR  ${item.competitionRating.mpr}` }}</a-col>
 				</a-col>
 			</a-col>
 			<a-col :lg="3" :xs="4" class="vipBox">
-				<a-col> <UserOutlined />{{ item.homeScore }} </a-col>
+				<a-col> <UserOutlined />{{ item.playerCount }} </a-col>
 			</a-col>
 		</a-row>
 		<div class="pagination">
@@ -368,6 +361,7 @@ export default defineComponent({
 	border: 1px solid #2b2b2b;
 	border-radius: 5px;
 	height: 60px;
+	margin: 3px 0;
 }
 .vipBox {
 	height: 100%;
@@ -388,6 +382,14 @@ export default defineComponent({
 	margin: 0 auto;
 }
 .imgBox img {
+	width: 100%;
+	height: 100%;
+}
+.teamIngBox{
+	width: 50px;
+	height: 50px;
+}
+.teamIngBox img{
 	width: 100%;
 	height: 100%;
 }

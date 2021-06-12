@@ -101,11 +101,11 @@
 
 		<div v-if="matchList.length">
 			<a-row v-for="item in matchList" :key="item.matchId" class="matchBox">
-				<a-col :lg="14" :xs="8">
-					<a-col :span="4">
+				<a-col :lg="14" :xs="10">
+					<a-col :lg="4" :xs='10'>
 						<img class="matchImg" :src="item.competitionImg" />
 					</a-col>
-					<a-col :span="18">
+					<a-col :lg="18" :xs='14'>
 						<div class="divBg">
 							<div>{{ item.competitionName }}</div>
 							<div class="divClass">
@@ -116,11 +116,11 @@
 						</div>
 					</a-col>
 				</a-col>
-				<a-col :lg="2" :xs="6">
+				<a-col :lg="2" :xs="0">
 					<div class="fontDisplay">{{ $t('default.27') }}</div>
 					<div>{{ item.areaName }}</div>
 				</a-col>
-				<a-col :lg="8" :xs="10">
+				<a-col :lg="8" :xs="14">
 					<a-col class="rightStyle">
 						<a-col :lg="18" :xs="16" class="fontDisplay">{{ $t('default.17') }}</a-col>
 						<a-col :lg="4" :xs="8" class="matchState I" v-if="item.status === 1">{{ $t('default.243') }}</a-col>
@@ -361,12 +361,13 @@
 	</div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { AimOutlined, SearchOutlined, EyeOutlined, ScheduleOutlined, EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
-import divTitle from '@/components/DividingLine.vue';
 import { indexTeamHttp, indexPlayerHttp, indexCountryHttp, indexCityHttp, indexNewsHttp, indexCarouselHttp, leagueListHttp } from '@/axios/api';
 import emptyList from '@/components/common/emptyList.vue';
+import divTitle from '@/components/DividingLine.vue';
 import { useRouter } from 'vue-router';
+import bus from '@/bus/index'
 interface DataProps {
 	click: () => void;
 }
@@ -385,7 +386,6 @@ export default defineComponent({
 	name: 'index',
 	setup() {
 		const ROUTER = useRouter();
-		const instance: any = getCurrentInstance();
 		const data: any = reactive({
 			isTeam: true,
 			leaguePath: 'league',
@@ -523,8 +523,8 @@ export default defineComponent({
 				data.teamList = res.data.data;
 			});
 		};
-		const getPlayerList = (id: any) => {
-			indexPlayerHttp({ countryId: id }).then((res) => {
+		const getPlayerList = (countryId: any) => {
+			indexPlayerHttp({ countryId }).then((res) => {
 				res.data.data.forEach((i: any) => {
 					i.list.forEach((i: any, index: number) => {
 						Object.assign(i, { defultImg: data.defaultSortImg[index] });
@@ -538,12 +538,12 @@ export default defineComponent({
 				data.newsList = res.data.data;
 			});
 		};
-		const getCountryList = () => {
+		const getCountryList = (id: number) => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
 					data.countryList = res.data.data;
-					data.countryId = data.countryList[0]['countryId'];
-					data.countryChange(data.countryList[0]['countryId']);
+					data.countryId = id;
+					data.countryChange(id);
 					// eslint-disable-next-line @typescript-eslint/no-use-before-define
 					getLeagueList();
 				}
@@ -560,27 +560,26 @@ export default defineComponent({
 				data.matchList = res.data.data;
 			});
 		};
-		const init = (flag = false) => {
-			const id = sessionStorage.getItem('webCountryId');
+		const init = (flag: boolean) => {
+			const id = Number(sessionStorage.getItem('webCountryId'));
 			if (id) {
+				data.countryId = id
+				data.countryChange(id);
+				getCountryList(id);
 				getTeamList(id);
-				getPlayerList(id);
 				getNewsList(id);
 				getCarouselList(id);
-			}
-			if (flag) {
 				getLeagueList();
-				return;
+				if(flag){
+					getPlayerList(id);
+				}
 			}
-			getCountryList();
 		};
 		onMounted(() => {
-			init();
-			instance.appContext.config.globalProperties.$bus.on('on-country-change', (val: any) => {
-				data.countryId = val;
-				init(true);
-				data.countryChange(data.countryId);
-			});
+			init(true);
+			bus.on('on-country-change',() => {
+				init(false);
+			})
 		});
 		return {
 			...toRefs(data)

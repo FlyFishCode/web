@@ -48,9 +48,11 @@
 						</a-table>
 						<!-- 移动端显示 -->
 						<a-table class="showPhoneTable" :columns="leagueColumns" :data-source="leagueTableList" rowkey="captainId" :pagination="false" :scroll="{ x: 300 }" bordered>
-							<template v-slot:teamName="{ record }">
-								<img class="tableImg" :src="record.img" alt="" />
-								<div class="link">{{ record.teamName }}</div>
+							<template v-slot:team="{ record }">
+								<div class="tableStyle">
+									<img class="tableImg" :src="record.teamImg" alt="" />
+									<div class="link" >{{ record.teamName }}</div>
+								</div>
 							</template>
 						</a-table>
 						<div class="pagination">
@@ -76,10 +78,12 @@
 							</template>
 						</a-table>
 						<!-- 移动端显示 -->
-						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 400 }" :columns="historyColumns" rowkey="captainId" :data-source="tableList" bordered>
+						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 400 }" :columns="historyColumns" rowkey="captainId" :data-source="rewardTableList" bordered>
 							<template v-slot:teamName="{ record }">
-								<img class="tableImg" :src="record.img" alt="" />
-								<a @click="fastWay(row)">{{ record.address }}</a>
+								<div class="tableStyle">
+									<img class="tableImg" :src="record.teamImg" alt="" />
+									<a @click="fastWay(row)">{{ record.teamName }}</a>
+								</div>
 							</template>
 						</a-table>
 						<div class="pagination">
@@ -288,25 +292,25 @@ export default defineComponent({
 				},
 				{
 					title: '队名',
-					width: 140,
+					width: 200,
 					dataIndex: 'name',
 					fixed: 'left',
 					slots: { customRender: 'teamName' }
 				},
-				{ title: 'LT', dataIndex: 'homeScore', width: 50 },
-				{ title: 'HAT', dataIndex: 'homeScore', width: 60 },
-				{ title: 'HT', dataIndex: 'homeScore', width: 60 },
-				{ title: 'HT.OFF', dataIndex: 'homeScore', width: 85 },
-				{ title: 'LT.OFF', dataIndex: 'homeScore', width: 80 },
-				{ title: 'BED', dataIndex: 'homeScore', width: 70 },
-				{ title: '180', dataIndex: 'homeScore', width: 70 },
-				{ title: 'EYE', dataIndex: 'homeScore', width: 70 },
-				{ title: '5M', dataIndex: 'homeScore', width: 60 },
-				{ title: '6M', dataIndex: 'homeScore', width: 60 },
-				{ title: '7M', dataIndex: 'homeScore', width: 60 },
-				{ title: '8M', dataIndex: 'homeScore', width: 60 },
-				{ title: '9M', dataIndex: 'homeScore', width: 60 },
-				{ title: 'WH', dataIndex: 'homeScore', width: 60 }
+				{ title: 'LT', dataIndex: 'teamResultDetails.lowTon', width: 50 },
+				{ title: 'HAT', dataIndex: 'teamResultDetails.hatTrick', width: 60 },
+				{ title: 'HT', dataIndex: 'teamResultDetails.highTon', width: 60 },
+				{ title: 'HT.OFF', dataIndex: 'teamResultDetails.highTonOut', width: 85 },
+				{ title: 'LT.OFF', dataIndex: 'teamResultDetails.lowTonOut', width: 80 },
+				{ title: 'BED', dataIndex: 'teamResultDetails.threeInBed', width: 70 },
+				{ title: '180', dataIndex: 'teamResultDetails.ton80', width: 70 },
+				{ title: '3 In the Black', dataIndex: 'teamResultDetails.threeInBlack', width: 70 },
+				{ title: '5M', dataIndex: 'teamResultDetails.fiveMarks', width: 60 },
+				{ title: '6M', dataIndex: 'teamResultDetails.sixMarks', width: 60 },
+				{ title: '7M', dataIndex: 'teamResultDetails.sevenMarks', width: 60 },
+				{ title: '8M', dataIndex: 'teamResultDetails.eightMarks', width: 60 },
+				{ title: '9M', dataIndex: 'teamResultDetails.nineMarks', width: 60 },
+				{ title: 'WH', dataIndex: 'teamResultDetails.whiteHorse', width: 60 }
 			],
 			playerColumns: [
 				{

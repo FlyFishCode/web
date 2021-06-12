@@ -58,21 +58,18 @@
 		<!-- 移动端显示 -->
 		<a-row class="eveyTeam showPhoneTable" v-for="item in tableList" :key="item.id">
 			<a-col :lg="3" :xs="6" class="imgColStyle">
-				<div class="teamIngBox">
-					<img :src="item.teamImg" alt="" />
-				</div>
 				<div class="placeStyle">
 					<div>{{ item.teamName }}</div>
 				</div>
 			</a-col>
-			<a-col :lg="4" :xs="14" class="topBox">
+			<a-col :lg="4" :xs="{span:14,offset:1}" class="topBox">
 				<a-col v-if="item.competitionRating" class="infoStyle">
 					<a-col>{{ `Rating  ${item.competitionRating.rating}` }}</a-col
 					>|<a-col>{{ `PPD  ${item.competitionRating.ppd}` }}</a-col
 					>|<a-col>{{ `MPR  ${item.competitionRating.mpr}` }}</a-col>
 				</a-col>
 			</a-col>
-			<a-col :lg="3" :xs="4" class="vipBox">
+			<a-col :lg="3" :xs="3" class="vipBox">
 				<a-col> <UserOutlined />{{ item.playerCount }} </a-col>
 			</a-col>
 		</a-row>
@@ -382,14 +379,6 @@ export default defineComponent({
 	margin: 0 auto;
 }
 .imgBox img {
-	width: 100%;
-	height: 100%;
-}
-.teamIngBox{
-	width: 50px;
-	height: 50px;
-}
-.teamIngBox img{
 	width: 100%;
 	height: 100%;
 }

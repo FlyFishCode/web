@@ -222,7 +222,7 @@ export default defineComponent({
 	flex-wrap: wrap;
 }
 .btnBox div {
-	margin-right: 15px;
+	margin: 1px 1px;
 }
 .playerBox {
 	width: 100%;
@@ -248,5 +248,13 @@ export default defineComponent({
 }
 .dialogHomeClass {
 	text-align: left;
+}
+#msgBox {
+	margin: 10px 0;
+	display: flex;
+	align-items: center;
+	border-radius:10px;
+	border: 1px solid #666;
+	min-height: 80px;
 }
 </style>

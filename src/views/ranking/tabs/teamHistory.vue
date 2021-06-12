@@ -123,19 +123,19 @@
 						<div class="closeBox">
 							<CloseCircleFilled class="closeIcon" @click="inPhonebySpliceIndex(index)" />
 						</div>
-						<div class="img"><img :src="item.img" alt="" /></div>
-						<div>{{ item.captain }}</div>
+						<div class="img"><img :src="item.teamImg" alt="" /></div>
+						<div>{{ item.captainName }}</div>
 					</div>
-					<div class="info">{{ item.place }}</div>
-					<div class="info">{{ item.address }}</div>
+					<div class="info">{{ item.countryName }}</div>
+					<div class="info shopNameBox">{{ item.shopName }}</div>
 					<div class="captainBox">
 						<div class="topBox"><img :src="item.captainImg" alt="" /></div>
-						<div>{{ item.captain }}</div>
+						<div>{{ item.captainName }}</div>
 					</div>
-					<div class="info">{{ item.playerNum }}</div>
+					<div class="info">{{ item.playerCount }}</div>
 					<div class="plainList">
 						<div>
-							<a-progress type="circle" status="exception" :percent="item.plainRating">
+							<a-progress type="circle" status="exception" :percent="item.top4GeneralRating.rating">
 								<template v-slot:format="percent">
 									<span style="color: red">{{ percent }}</span>
 								</template>
@@ -145,26 +145,26 @@
 							<div>
 								<div class="score">
 									<div>{{ $t('default.169') }}</div>
-									<div>{{ item.plainPPD }}</div>
+									<div>{{ item.top4GeneralRating.ppd }}</div>
 								</div>
 								<div class="progress">
-									<a-progress status="exception" :percent="item.plainPPD" />
+									<a-progress status="exception" :percent="item.top4GeneralRating.ppd" />
 								</div>
 							</div>
 							<div>
 								<div class="score">
 									<div>{{ $t('default.170') }}</div>
-									<div>{{ item.plainMPR }}</div>
+									<div>{{ item.top4GeneralRating.mpr }}</div>
 								</div>
 								<div class="progress">
-									<a-progress status="exception" :percent="item.plainMPR" />
+									<a-progress status="exception" :percent="item.top4GeneralRating.mpr" />
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="plainList">
 						<div>
-							<a-progress type="circle" status="exception" :percent="item.matchRating">
+							<a-progress type="circle" status="exception" :percent="item.top4CompetitionRating.rating">
 								<template v-slot:format="percent">
 									<span style="color: red">{{ percent }}</span>
 								</template>
@@ -174,27 +174,27 @@
 							<div>
 								<div class="score">
 									<div>{{ $t('default.169') }}</div>
-									<div>{{ item.matchPPD }}</div>
+									<div>{{ item.top4CompetitionRating.ppd }}</div>
 								</div>
 								<div class="progress">
-									<a-progress status="exception" :percent="item.matchPPD" />
+									<a-progress status="exception" :percent="item.top4CompetitionRating.ppd" />
 								</div>
 							</div>
 							<div>
 								<div class="score">
 									<div>{{ $t('default.170') }}</div>
-									<div>{{ item.matchMPR }}</div>
+									<div>{{ item.top4CompetitionRating.mpr }}</div>
 								</div>
 								<div class="progress">
-									<a-progress status="exception" :percent="item.matchMPR" />
+									<a-progress status="exception" :percent="item.top4CompetitionRating.mpr" />
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="info">{{ item.joinCount }}</div>
+					<div class="info">{{ item.competitionCount }}</div>
 					<div class="chanceBox">
 						<div>
-							<a-progress type="circle" status="exception" :percent="item.chanceSet" :width="80">
+							<a-progress type="circle" status="exception" :percent="parseInt(item.setWinProbability)" :width="80">
 								<template v-slot:format="percent">
 									<div class="scoreBox">{{ percent }}</div>
 									<div class="scoreTitle">{{ 'Set' }}</div>
@@ -202,7 +202,7 @@
 							</a-progress>
 						</div>
 						<div>
-							<a-progress type="circle" status="exception" :percent="item.chanceMatch" :width="80">
+							<a-progress type="circle" status="exception" :percent="parseInt(item.matchMinProbability)" :width="80">
 								<template v-slot:format="percent">
 									<div class="scoreBox">{{ percent }}</div>
 									<div class="scoreTitle">{{ 'Match' }}</div>
@@ -210,9 +210,9 @@
 							</a-progress>
 						</div>
 					</div>
-					<div v-for="top in item.top" :key="top" class="topBg">
+					<div v-for="top in item.top4Player" :key="top" class="topBg">
 						<div class="topBox"><img :src="top.img" alt="" /></div>
-						<div>{{ top.name }}</div>
+						<div>{{ top.playerName }}</div>
 					</div>
 				</div>
 				<div v-else class="addBox">
@@ -326,7 +326,7 @@ export default defineComponent({
 				{ id: 10, title: 'default.194' }
 			],
 			teamList: [{ teamId: 1, flag: false }, { flag: false }, { flag: false }, { flag: false }],
-			inPhoneTeamList: [{ flag: false }, { flag: false }],
+			inPhoneTeamList: [{ teamId: 1,flag: false }, { flag: false }],
 			dataList: [{ teamId: 1, flag: false }],
 			clearList: () => {
 				data.teamList.forEach((i, index) => {
@@ -337,6 +337,14 @@ export default defineComponent({
 					});
 					data.teamList.splice(index, 1, { flag: false });
 				});
+				data.inPhoneTeamList.forEach((i, index) => {
+					data.inPhoneTeamList.forEach((j) => {
+						if (i.teamId === j.teamId) {
+							j.flag = false;
+						}
+					});
+					data.inPhoneTeamList.splice(index, 1, { flag: false });
+				})
 				ctx.emit('team-clear', []);
 			},
 			selectPlayer: (value: number) => {
@@ -492,6 +500,7 @@ export default defineComponent({
 }
 .img img {
 	height: 100%;
+	width: 100%;
 }
 .addBox {
 	height: 140px;
@@ -575,6 +584,7 @@ export default defineComponent({
 }
 .topBox img {
 	width: 100%;
+	height: 100%;
 }
 .topBg {
 	display: flex;
@@ -612,5 +622,10 @@ export default defineComponent({
 .dialogBG {
 	height: 600px;
 	overflow-y: auto;
+}
+.shopNameBox{
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap
 }
 </style>

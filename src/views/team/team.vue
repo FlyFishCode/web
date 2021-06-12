@@ -173,7 +173,7 @@
 			<transition enter-active-class="animate__animated animate__bounceInUp">
 				<a-row v-show="item.flag" class="recordBox">
 					<div class="matchTitle">{{ $t('default.225') }}</div>
-					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" class="msgBox">
+					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" id="msgBox">
 						<a-col :span="4" class="imgColStyle">
 							<img v-if="recordInfo.competitionImg" class="matchImg" :src="recordInfo.competitionImg" alt="" />
 							<img v-else class="matchImg" :src="defaultImg" alt="" />
@@ -582,6 +582,7 @@ export default defineComponent({
 }
 .matchImg {
 	height: 60px;
+	width: 60px;
 }
 .eveyTeam {
 	height: 80px;
@@ -653,14 +654,6 @@ export default defineComponent({
 .matchTitle {
 	font-size: 20px;
 	border-bottom: 1px dashed #000;
-}
-.msgBox {
-	margin: 10px 0;
-	padding: 0 0 0 10px;
-	min-height: 60px;
-	border-radius: 10px;
-	box-sizing: border-box;
-	border: 1px solid #2b2b2b;
 }
 .recordInfoStyle {
 	display: flex;

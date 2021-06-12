@@ -211,19 +211,19 @@ export default defineComponent({
 						{
 							title: 'Rating',
 							width: 80,
-							dataIndex: 'competitionRating.rating',
+							dataIndex: 'playerRating.rating',
 							key: 'name'
 						},
 						{
 							title: 'PPD',
 							width: 80,
-							dataIndex: 'competitionRating.ppd',
+							dataIndex: 'playerRating.ppd',
 							key: 'name'
 						},
 						{
 							title: 'MPR',
 							width: 80,
-							dataIndex: 'competitionRating.mpr',
+							dataIndex: 'playerRating.mpr',
 							key: 'name'
 						}
 					]

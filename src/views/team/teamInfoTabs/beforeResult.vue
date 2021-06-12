@@ -25,9 +25,8 @@
 			</a-table>
 		</a-row>
 		<a-row class="showPhoneTable">
-			<a-table :columns="inPhoneColumns" :data-source="tableList" :pagination="false" rowKey="competitionId" :scroll="{ x: 1200 }" bordered>
+			<a-table :columns="inPhoneColumns" :data-source="tableList" :pagination="false" rowKey="competitionId" bordered>
 				<template #action="{ record }">
-					<!-- <u class="tableMatch" @click="showMatchInfo(record)">{{ record.competitionName }}</u> -->
 					{{ record.competitionName }}
 				</template>
 			</a-table>
@@ -66,17 +65,20 @@ export default defineComponent({
 				{
 					title: '年',
 					dataIndex: 'year',
+					width:100,
 					key: 1
 				},
 				{
 					title: '比赛',
 					dataIndex: 'competitionName',
+					width:100,
 					key: 2,
 					slots: { customRender: 'action' }
 				},
 				{
 					title: '排行',
-					dataIndex: 'address',
+					dataIndex: 'rank',
+					width:100,
 					key: 3
 				}
 			],

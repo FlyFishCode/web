@@ -130,7 +130,7 @@
 					<img v-if="item.playerImg" class="matchImg" :src="item.playerImg" alt="" />
 					<img v-else class="matchImg" :src="defaultImg" alt="" />
 				</a-col>
-				<a-col :lg="{ span: 7, offset: 0 }" :xs="{ span: 10, offset: 4 }" class="infoClass">
+				<a-col :lg="{ span: 7, offset: 0 }" :xs="{span:16,offset:1}" class="infoClass">
 					<div class="teamStyle" @click="entryPage(item.playerId)">{{ item.playerName }}</div>
 					<div v-if="item.shop" class="placeStyle">
 						<div>{{ item.shop.shopName }}</div>
@@ -173,7 +173,7 @@
 			<transition enter-active-class="animate__animated animate__bounceInUp">
 				<a-row v-show="item.flag" class="recordBox">
 					<div class="matchTitle">{{ $t('default.83') }}</div>
-					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" class="msgBox">
+					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" id="msgBox">
 						<a-col :span="4" class="imgColStyle">
 							<img v-if="recordInfo.competitionImg" class="matchImg" :src="recordInfo.competitionImg" alt="" />
 							<img v-else class="matchImg" :src="defaultImg" alt="" />
@@ -652,14 +652,6 @@ export default defineComponent({
 .matchTitle {
 	font-size: 20px;
 	border-bottom: 1px dashed #000;
-}
-.msgBox {
-	margin: 10px 0;
-	padding: 0 0 0 10px;
-	height: 80px;
-	border-radius: 10px;
-	box-sizing: border-box;
-	border: 1px solid #2b2b2b;
 }
 .recordInfoStyle {
 	display: flex;

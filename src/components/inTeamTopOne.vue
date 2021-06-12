@@ -2,10 +2,10 @@
 	<div>
 		<a-row class="rowStyle">
 			<a-col :lg="12" :xs="24" class="allBox">
-				<a-col :span="6" class="firstClass">
+				<a-col :lg="6" :xs="14" class="firstClass">
 					<img class="imgBg" :src="infoData.teamImg" alt="" />
 				</a-col>
-				<a-col :span="14" class="firstClass">
+				<a-col :lg="14" :xs="10" class="firstClass">
 					<div class="teamName" @click="showTeamInfo">{{ infoData.teamName }}</div>
 					<div class="disabledClass">{{ infoData.captainName }}</div>
 					<div class="disabledClass" v-if="infoData.shop">{{ infoData.shop.countryName }} > {{ infoData.shop.areaName }}</div>
@@ -179,12 +179,12 @@ export default {
 	position: relative;
 	overflow: hidden;
 }
-.firstClass {
+/* .firstClass {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	text-align: left;
-}
+} */
 .teamName {
 	font-size: 15px;
 	font-weight: bold;

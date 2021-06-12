@@ -46,12 +46,6 @@
     .plainList /deep/.ant-progress-inner {
         width: 100%!important;
     }
-    .plainScore {
-        flex-direction: column;
-    }
-    .plainScore div {
-        width: 100%!important;
-    }
     .chance {
         height: 200px!important;
     }
@@ -62,15 +56,8 @@
     .ant-col-xs-0 {
         display: none!important;
     }
-    .msgBox {
-        display: block!important;
-    }
     .ant-fullcalendar-date {
         height: 100px!important;
-    }
-    .tableImg {
-        width: 30px!important;
-        margin: 0 5px 0 0!important;
     }
     /* 队伍自定义组件样式 */
     .left {

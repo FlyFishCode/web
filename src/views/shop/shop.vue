@@ -162,7 +162,7 @@
 			<transition enter-active-class="animate__animated animate__bounceInUp">
 				<a-row v-show="item.flag" class="recordBox">
 					<!-- <div class="matchTitle">{{ joinMatch }}</div> -->
-					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" class="msgBox">
+					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" id="msgBox">
 						<a-col :span="4" class="imgColStyle">
 							<div>
 								<img class="matchImg" :src="recordInfo.competitionImg" alt="" />
@@ -618,14 +618,6 @@ export default defineComponent({
 .recordBox {
 	padding: 10px;
 }
-.msgBox {
-	margin: 10px 0;
-	padding: 0 0 0 10px;
-	min-height: 80px;
-	border-radius: 10px;
-	box-sizing: border-box;
-	border: 1px solid #2b2b2b;
-}
 .countBox {
 	height: 100%;
 	display: flex;
@@ -638,14 +630,6 @@ export default defineComponent({
 }
 .recordInfoFont:hover {
 	text-decoration: underline;
-}
-.btnBox {
-	display: flex;
-	padding: 0 0 0 10px;
-	flex-wrap: wrap;
-}
-.btnBox div {
-	margin: 5px;
 }
 .recordInfoStyle {
 	display: flex;

@@ -302,7 +302,7 @@ export default defineComponent({
 					title: 'Set',
 					dataIndex: 'set',
 					key: 'name',
-					width: 70,
+					width: 60,
 					customRender: (text) => {
 						const obj = {
 							children: text.text !== null ? text.text : '',
@@ -315,12 +315,12 @@ export default defineComponent({
 						return obj;
 					}
 				},
-				{ title: 'Leg', dataIndex: 'leg', key: 'name', width: 80 },
-				{ title: '游戏', dataIndex: 'game', key: 'name', width: 80 },
-				{ title: '游戏模式', dataIndex: 'gameMode', key: 'name', width: 100 },
-				{ title: 'Round', dataIndex: 'round', key: 'name', width: 80 },
-				{ title: 'IN', dataIndex: 'in', key: 'IN', width: 80 },
-				{ title: 'OUT', dataIndex: 'out', key: 'OUT', width: 80 }
+				{ title: 'Leg', dataIndex: 'leg', key: 'name', width: 60 },
+				{ title: '游戏', dataIndex: 'game', key: 'name', width: 90 },
+				{ title: '游戏模式', dataIndex: 'gameMode', key: 'name', width: 90 },
+				// { title: 'Round', dataIndex: 'round', key: 'name', width: 80 },
+				// { title: 'IN', dataIndex: 'in', key: 'IN', width: 60 },
+				// { title: 'OUT', dataIndex: 'out', key: 'OUT', width: 60 }
 			],
 			tableList: [
 				{

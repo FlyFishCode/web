@@ -85,7 +85,7 @@
 			</a-col>
 		</a-row>
 		<a-row class="showPhoneTable">
-			<a-col :span='4'>
+			<a-col :span='2'>
 				<div class="phoneButton">
 					<a-button type="primary" @click="toggleCollapsed">
 					<MenuUnfoldOutlined v-if="collapsed" />
@@ -93,7 +93,7 @@
 					</a-button>
 				</div>
 			</a-col>
-			<a-col :span='20'>
+			<a-col :span='22'>
 				<div class="showPhoneLogoBox" @click="entryIndex"><img :src="img" alt=""></div>
 			</a-col>
 		</a-row>

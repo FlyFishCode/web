@@ -55,7 +55,7 @@
 			<transition enter-active-class="animate__animated animate__bounceInUp">
 				<a-row v-show="item.flag" class="recordBox">
 					<div class="matchTitle">{{ $t('default.83') }}</div>
-					<a-row v-for="info in item.competitionList" :key="info.index" class="msgBox">
+					<a-row v-for="info in item.competitionList" :key="info.index" id="msgBox">
 						<a-col :span="4" class="imgColStyle">
 							<div>
 								<img class="matchImg" :src="info.competitionImg" alt="" />
@@ -261,12 +261,6 @@ export default defineComponent({
 .recordInfoStyle {
 	display: flex;
 	justify-content: flex-start;
-}
-.msgBox {
-	margin: 10px 0;
-	min-height: 80px;
-	box-sizing: border-box;
-	border-bottom: 1px dashed #666;
 }
 .matchTitle {
 	font-size: 20px;

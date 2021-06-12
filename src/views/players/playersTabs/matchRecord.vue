@@ -67,7 +67,7 @@
 								<a-col :span="12">{{ $t('default.156') }}</a-col>
 								<a-col :span="12">{{ $t('default.157') }}</a-col>
 							</a-row>
-							<a-row v-for="history in item.matchHistory" :key="history.index" class="msgBox">
+							<a-row v-for="history in item.matchHistory" :key="history.index" id="msgBox">
 								<a-col :span="12" class="teamBox">
 									<div class="teamName">{{ history.teamName }}</div>
 								</a-col>
@@ -322,13 +322,6 @@ export default defineComponent({
 .title {
 	text-align: left;
 	color: #999;
-}
-.msgBox {
-	margin: 10px 0;
-	height: 80px;
-	box-sizing: border-box;
-	border-bottom: 1px solid #eee;
-	display: flex;
 }
 .teamBox {
 	display: flex;

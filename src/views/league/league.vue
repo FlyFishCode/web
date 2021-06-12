@@ -191,7 +191,7 @@ export default defineComponent({
 			MyTotal: 1,
 			allLeague: true,
 			myLeague: false,
-			countryId: '',
+			countryId: null,
 			areaId: null,
 			countryList: [],
 			areaList: [],
@@ -340,10 +340,9 @@ export default defineComponent({
 		const getCountryList = (value: any) => {
 			indexCountryHttp().then((res) => {
 				if (res.data.data.length) {
-					const id = Number(sessionStorage.getItem('webCountryId')) as any;
 					data.countryList = res.data.data;
-					data.countryId = id;
-					data.areaChange(id);
+					data.countryId = data.countryList[0]['countryId'];
+					data.areaChange(data.countryList[0]['countryId']);
 					getAllLeagueList(value);
 					getMyLeagueList(value);
 				}

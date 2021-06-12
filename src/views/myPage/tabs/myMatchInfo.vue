@@ -11,95 +11,90 @@
 			</a-col>
 		</a-row>
 
-		<div v-if="teamList.length">
-			<a-row v-for="(item, index) in teamList" :key="item.id">
-				<a-row class="eveyTeam">
-					<a-col :lg="3" :xs="4" class="imgColStyle">
-						<div>
-							<img class="matchImg" :src="item.competitionImg" />
-						</div>
-					</a-col>
-					<a-col :lg="8" :xs="16" class="infoClass">
-						<div class="teamStyle">{{ item.competitionName }}</div>
-						<div class="placeStyle">
-							<div>{{ item.place }}</div>
-							<div class="btnBox">
-								<div v-for="disition in item.divisionList" :key="disition.divisionId">
-									<a-button type="danger" size="small" @click="entryPage(item.competitionId, disition.divisionId)">{{ disition.divisionName }}</a-button>
-								</div>
+		<a-row v-for="(item, index) in teamList" :key="item.id">
+			<a-row class="eveyTeam">
+				<a-col :lg="3" :xs="4" class="imgColStyle">
+					<div>
+						<img class="matchImg" :src="item.competitionImg" />
+					</div>
+				</a-col>
+				<a-col :lg="8" :xs="16" class="infoClass">
+					<div class="teamStyle">{{ item.competitionName }}</div>
+					<div class="placeStyle">
+						<div>{{ item.place }}</div>
+						<div class="btnBox">
+							<div v-for="disition in item.divisionList" :key="disition.divisionId">
+								<a-button type="danger" size="small" @click="entryPage(item.competitionId, disition.divisionId)">{{ disition.divisionName }}</a-button>
 							</div>
 						</div>
-					</a-col>
-					<a-col :lg="{ span: 4, offset: 0 }" :xs="0" class="vipBox">
-						<div class="disableFont">{{ $t('default.27') }}</div>
-						<div>-{{ item.areaName }}</div>
-					</a-col>
-					<a-col :lg="{ span: 5, offset: 1 }" :xs="0" class="topBox">
-						<div class="stateClass">
-							<div class="disableFont">{{ $t('default.17') }}</div>
-							<div v-if="item.status === 1" class="stateBox N">{{ $t('default.243') }}</div>
-							<div v-if="item.status === 2" class="stateBox I">{{ $t('default.104') }}</div>
-							<div v-if="item.status === 3" class="stateBox F">{{ $t('default.244') }}</div>
+					</div>
+				</a-col>
+				<a-col :lg="{ span: 4, offset: 0 }" :xs="0" class="vipBox">
+					<div class="disableFont">{{ $t('default.27') }}</div>
+					<div>-{{ item.areaName }}</div>
+				</a-col>
+				<a-col :lg="{ span: 5, offset: 1 }" :xs="0" class="topBox">
+					<div class="stateClass">
+						<div class="disableFont">{{ $t('default.17') }}</div>
+						<div v-if="item.status === 1" class="stateBox N">{{ $t('default.243') }}</div>
+						<div v-if="item.status === 2" class="stateBox I">{{ $t('default.104') }}</div>
+						<div v-if="item.status === 3" class="stateBox F">{{ $t('default.244') }}</div>
+					</div>
+					<div class="infoStyle">{{ item.date }}</div>
+				</a-col>
+				<a-col :lg="{ span: 2, offset: 1 }" :xs="4" class="iconFont">
+					<div v-if="item.record">
+						<div v-if="item.flag" @click="changeFlag(0, index)">
+							<DownCircleOutlined />
 						</div>
-						<div class="infoStyle">{{ item.date }}</div>
-					</a-col>
-					<a-col :lg="{ span: 2, offset: 1 }" :xs="4" class="iconFont">
-						<div v-if="item.record">
-							<div v-if="item.flag" @click="changeFlag(0, index)">
-								<DownCircleOutlined />
-							</div>
-							<div v-else @click="changeFlag(item.competitionId, index)">
-								<UpCircleOutlined />
-							</div>
+						<div v-else @click="changeFlag(item.competitionId, index)">
+							<UpCircleOutlined />
 						</div>
-					</a-col>
-				</a-row>
-				<transition enter-active-class="animate__animated animate__bounceInUp">
-					<a-row v-show="item.flag" class="recordBox">
-						<a-row class="title inPhoneTableDisplay">
-							<a-col :span="12">{{ $t('default.156') }}</a-col>
-							<a-col :span="12">{{ $t('default.157') }}</a-col>
-						</a-row>
-						<a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
-							<a-col :lg="12" :xs="24" class="teamBox">
-								<a-col :lg="12" :xs="0" class="teamName">{{ recordInfo.teamName }}</a-col>
-								<a-col :lg="0" :xs="24" class="topTitle">
-									<a-col :span="4" class="titleBox">{{ $t('default.9') }}</a-col>
-									<a-col :span="20">{{ recordInfo.teamName }}</a-col>
-									<a-col :span="4" class="titleBox">{{ $t('default.247') }}</a-col>
-									<a-col :span="20" class="inPhoneDivBox">
-										<div v-for="div in item.divisionList" :key="div.id" class="divBox">{{ div.divisionName }}</div>
-									</a-col>
+					</div>
+				</a-col>
+			</a-row>
+			<transition enter-active-class="animate__animated animate__bounceInUp">
+				<a-row v-show="item.flag" class="recordBox">
+					<a-row class="title inPhoneTableDisplay">
+						<a-col :span="12">{{ $t('default.156') }}</a-col>
+						<a-col :span="12">{{ $t('default.157') }}</a-col>
+					</a-row>
+					<a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
+						<a-col :lg="12" :xs="24" class="teamBox">
+							<a-col :lg="12" :xs="0" class="teamName">{{ recordInfo.teamName }}</a-col>
+							<a-col :lg="0" :xs="24" class="topTitle">
+								<a-col :span="4" class="titleBox">{{ $t('default.9') }}</a-col>
+								<a-col :span="20">{{ recordInfo.teamName }}</a-col>
+								<a-col :span="4" class="titleBox">{{ $t('default.247') }}</a-col>
+								<a-col :span="20" class="inPhoneDivBox">
+									<div v-for="div in item.divisionList" :key="div.id" class="divBox">{{ div.divisionName }}</div>
 								</a-col>
 							</a-col>
-							<a-col :lg="12" :xs="24" class="countBox">
-								<div class="tableBox Header">
-									<div>{{ $t('default.70') }}</div>
-									<div>{{ 'Rating' }}</div>
-									<div>{{ 'PPD' }}</div>
-									<div>{{ 'MPR' }}</div>
-									<div>{{ 'Set 胜' }}</div>
-									<div>{{ 'Set 和' }}</div>
-									<div>{{ 'Set 败' }}</div>
-								</div>
-								<div class="tableBox Content">
-									<div>{{ recordInfo.sort }}</div>
-									<div>{{ recordInfo.competitionRating.rating }}</div>
-									<div>{{ recordInfo.competitionRating.ppd }}</div>
-									<div>{{ recordInfo.competitionRating.mpr }}</div>
-									<div>{{ recordInfo.setResult.wins }}</div>
-									<div>{{ recordInfo.setResult.draws }}</div>
-									<div>{{ recordInfo.setResult.losses }}</div>
-								</div>
-							</a-col>
-						</a-row>
+						</a-col>
+						<a-col :lg="12" :xs="24" class="countBox">
+							<div class="tableBox Header">
+								<div>{{ $t('default.70') }}</div>
+								<div>{{ 'Rating' }}</div>
+								<div>{{ 'PPD' }}</div>
+								<div>{{ 'MPR' }}</div>
+								<div>{{ 'Set 胜' }}</div>
+								<div>{{ 'Set 和' }}</div>
+								<div>{{ 'Set 败' }}</div>
+							</div>
+							<div class="tableBox Content">
+								<div>{{ recordInfo.sort }}</div>
+								<div>{{ recordInfo.competitionRating.rating }}</div>
+								<div>{{ recordInfo.competitionRating.ppd }}</div>
+								<div>{{ recordInfo.competitionRating.mpr }}</div>
+								<div>{{ recordInfo.setResult.wins }}</div>
+								<div>{{ recordInfo.setResult.draws }}</div>
+								<div>{{ recordInfo.setResult.losses }}</div>
+							</div>
+						</a-col>
 					</a-row>
-				</transition>
-			</a-row>
-		</div>
-		<div v-else>
-			<emptyList />
-		</div>
+				</a-row>
+			</transition>
+		</a-row>
 		<div class="pagination">
 			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @change="pageChange" @showSizeChange="onShowSizeChange" />
 		</div>
@@ -110,7 +105,6 @@
 import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { SettingFilled, DownCircleOutlined, UpCircleOutlined } from '@ant-design/icons-vue';
 import { myMatchInfoHttp, myMatchMoreHttp } from '@/axios/api';
-import emptyList from '@/components/common/emptyList.vue';
 import { yearList } from '@/components/common/public/index';
 import { useRouter } from 'vue-router';
 export default defineComponent({
@@ -118,8 +112,7 @@ export default defineComponent({
 	components: {
 		SettingFilled,
 		DownCircleOutlined,
-		UpCircleOutlined,
-		emptyList
+		UpCircleOutlined
 	},
 	setup() {
 		const ROUTER = useRouter();

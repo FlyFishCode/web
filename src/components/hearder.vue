@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<a-row type="flex" justify="end" class="lineBox inPhoneTableDisplay">
-			<a-col :lg="{ span: 10, offset: 0 }">
+		<a-row type="flex" justify="end" class="lineBox">
+			<a-col :lg="{ span: 10, offset: 0 }" :xs="{ span: 8, offset: 0 }">
 				<div class="imgBox" @click="entryIndex"><img :src="img" alt="" /></div>
 			</a-col>
 			<a-col :lg="14" :xs="24" class="lineStyle">
@@ -84,29 +84,7 @@
 				</a-row>
 			</a-col>
 		</a-row>
-		<a-row class="showPhoneTable">
-			<a-col :span='4'>
-				<div class="phoneButton">
-					<a-button type="primary" @click="toggleCollapsed">
-					<MenuUnfoldOutlined v-if="collapsed" />
-					<MenuFoldOutlined v-else />
-					</a-button>
-				</div>
-			</a-col>
-			<a-col :span='20'>
-				<div class="showPhoneLogoBox" @click="entryIndex"><img :src="img" alt=""></div>
-			</a-col>
-		</a-row>
-		<div class="transitionBox">
-			<transition enter-active-class="animate__animated animate__fadeInLeft">
-					<div v-if="showPhoneTabs" class="phoneTabsBg">
-						<div v-for="item in phoneTabsList" :key="item.value" class="phoneTabsBox" @click="entryPage(item.value)">
-							{{ $t(item.label) }}
-						</div>
-					</div>
-				</transition>
-		</div>
-		<a-row class="rowStyle inPhoneTableDisplay">
+		<a-row class="rowStyle boxBG">
 			<a-tabs class="tabsBox" type="card" @tabClick="tabClick" v-model:activeKey="activeKey">
 				<a-tab-pane key="league" :tab="$t('default.8')"></a-tab-pane>
 				<a-tab-pane key="team" :tab="$t('default.9')"></a-tab-pane>
@@ -190,6 +168,21 @@
 				</div>
 			</div>
 		</a-row>
+		<div id="isPhoneTabs">
+			<transition enter-active-class="animate__animated animate__fadeInLeft">
+				<div v-if="showPhoneTabs" class="phoneTabsBg">
+					<div v-for="item in phoneTabsList" :key="item.value" class="phoneTabsBox" @click="entryPage(item.value)">
+						{{ $t(item.label) }}
+					</div>
+				</div>
+			</transition>
+			<div class="phoneButton">
+				<a-button type="primary" @click="toggleCollapsed">
+					<MenuUnfoldOutlined v-if="collapsed" />
+					<MenuFoldOutlined v-else />
+				</a-button>
+			</div>
+		</div>
 		<a-modal id="loginBox" v-model:visible="registerVisible" :title="$t('default.1')" centered>
 			<a-form ref="formRef" :model="otherObj" :rules="rules" :label-col="{ span: 6 }" :wrapper-col="{ span: 14 }">
 				<a-form-item label="ID" name="account">
@@ -443,21 +436,19 @@ export default defineComponent({
 						});
 					});
 					first.then((res: any) => {
-						if (res.length) {
-							data.leagueList = res;
-							data.leagueId = res[0].competitionId;
-							const obj = {
-								competitionId: data.leagueId,
-								playerId,
-								pageIndex: 1,
-								pageSize: 5
-							};
-							myBattleDataListHttp(obj).then((res) => {
-								if (res.data.data) {
-									data.matchTimeTable = res.data.data.list;
-								}
-							});
-						}
+						data.leagueList = res;
+						data.leagueId = res[0].competitionId;
+						const obj = {
+							competitionId: data.leagueId,
+							playerId,
+							pageIndex: 1,
+							pageSize: 5
+						};
+						myBattleDataListHttp(obj).then((res) => {
+							if (res.data.data) {
+								data.matchTimeTable = res.data.data.list;
+							}
+						});
 					});
 				} else {
 					data.visible = true;
@@ -678,7 +669,7 @@ export default defineComponent({
 .tabsBox >>> .ant-tabs-nav-scroll {
 	display: flex;
 }
-.inPhoneTableDisplay {
+.boxBG {
 	position: relative;
 }
 .showBox {
@@ -812,6 +803,13 @@ export default defineComponent({
 	width: 50px;
 	margin: 2px 0;
 }
+#isPhoneTabs {
+	display: flex;
+	position: absolute;
+	z-index: 10;
+	top: 38px;
+	display: none;
+}
 .inPlay {
 	background: red;
 	border-radius: 10px;
@@ -835,21 +833,5 @@ export default defineComponent({
 }
 .lose {
 	visibility: hidden;
-}
-.showPhoneTable{
-	background: #eee;
-	line-height: 50px;
-	display: none;
-}
-.showPhoneLogoBox{
-	text-align: center;
-	height: 50px;
-}
-.showPhoneLogoBox img{
-	height: 100%;
-}
-.transitionBox{
-	position: absolute;
-	z-index: 10;
 }
 </style>

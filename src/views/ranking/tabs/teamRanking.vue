@@ -71,7 +71,7 @@
 				<template v-slot:index>{{ $t('default.70') }}</template>
 				<template v-slot:date>{{ $t('default.55') }}</template>
 				<template v-slot:Rating>{{ $t('default.168') }}</template>
-				<template v-slot:team="{ record }">
+				<template v-slot:team="{ text }">
 					<div class="tableBox">
 						<div class="tableImgBox">
 							<!-- <img v-if="record.teamImg" :src="text.teamImg" alt="" />
@@ -79,10 +79,10 @@
 							<img :src="dialogObj.img" alt="" />
 						</div>
 						<div class="tableMsgCentent">
-							<div @click="entryInfoPage(record.teamId)" class="link">{{ record.teamName }}</div>
-							<div v-if="record.shop">
-								<span>{{ record.shop.shopName }}</span>
-								<span style="cursor:pointer" @click="showDialog(record.shop)">
+							<div @click="entryInfoPage(record.teamId)" class="link">{{ text }}</div>
+							<div>
+								{{ text }}
+								<span style="cursor:pointer" @click="showDialog(text)">
 									<EnvironmentOutlined />
 								</span>
 							</div>
@@ -207,12 +207,12 @@ export default defineComponent({
 				})
 			},
 			inPhoneColumns: [
-				{ dataIndex: 'sort', key: 'time', slots: { title: 'index' } },
+				{ dataIndex: 'key', key: 'time', slots: { title: 'index' } },
 				{
 					key: 'name',
 					slots: { title: 'date', customRender: 'team' }
 				},
-				{ dataIndex: 'competitionRating.rating', key: 'time', slots: { title: 'Rating' } }
+				{ dataIndex: 'data', key: 'time', slots: { title: 'Rating' } }
 			],
 			columns: [
 				{ title: '排行', dataIndex: 'sort', key: 'time' },

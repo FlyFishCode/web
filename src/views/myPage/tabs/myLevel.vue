@@ -55,9 +55,9 @@
 						<div>{{ 'MRP' }}</div>
 					</a-col>
 					<a-col :span="16">
-						<a-progress :percent="item.Rating" />
-						<a-progress :percent="item.PPD" />
-						<a-progress :percent="item.MRP" />
+						<a-progress :percent="item.rating" :format="(percent) => `${percent}`" />
+						<a-progress :percent="item.ppd" :format="(percent) => `${percent}`" />
+						<a-progress :percent="item.mpr" :format="(percent) => `${percent}`" />
 					</a-col>
 				</a-col>
 			</a-row>
@@ -126,8 +126,7 @@ export default defineComponent({
 				totalRating: []
 			},
 			inPhoneList: [
-				{ title: 'League Rating', Rating: 12, PPD: 52, MRP: 29 },
-				{ title: 'Adarts Rating', Rating: 62, PPD: 49, MRP: 5 }
+				{ title: 'League Rating', rating: 12, ppd: 52, mpr: 29 },
 			],
 			columns: [
 				{
@@ -211,6 +210,14 @@ export default defineComponent({
 			};
 			playerInfoHttp(obj).then((res) => {
 				const dataObj = res.data.data;
+				// 处理移动端数据格式
+				data.inPhoneList = [{
+					title:'League Rating',
+					rating:dataObj.playerRating.rating,
+					ppd:dataObj.playerRating.ppd,
+					mpr:dataObj.playerRating.mpr,
+				}]
+				dataObj.playerRating
 				const obj = {
 					league: 'League',
 					rating: dataObj.playerRating.rating,

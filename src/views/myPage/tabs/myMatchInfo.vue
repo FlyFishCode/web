@@ -60,7 +60,7 @@
 							<a-col :span="12">{{ $t('default.156') }}</a-col>
 							<a-col :span="12">{{ $t('default.157') }}</a-col>
 						</a-row>
-						<a-row v-for="recordInfo in item.record" :key="recordInfo.index" id="msgBox">
+						<a-row v-for="recordInfo in item.record" :key="recordInfo.index" class="msgBox">
 							<a-col :lg="12" :xs="24" class="teamBox">
 								<a-col :lg="12" :xs="0" class="teamName">{{ recordInfo.teamName }}</a-col>
 								<a-col :lg="0" :xs="24" class="topTitle">
@@ -272,6 +272,13 @@ export default defineComponent({
 }
 .iconFont:hover {
 	color: #1890ff;
+}
+.msgBox {
+	margin: 10px 0;
+	box-sizing: border-box;
+	border-bottom: 1px solid #eee;
+	display: flex;
+	align-items: center;
 }
 .recordBox {
 	padding: 10px;

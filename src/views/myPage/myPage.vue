@@ -51,7 +51,7 @@ export default defineComponent({
 	setup() {
 		const data = reactive({
 			title: 'default.2',
-			colSpan: 4,
+			colSpan: 6,
 			getDate: () => {
 				return '2020-10-17';
 			}

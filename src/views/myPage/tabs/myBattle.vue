@@ -292,23 +292,23 @@ export default defineComponent({
 			inPhoneColumns: [
 				{
 					title: '日期',
-					width: 80,
+					width: 95,
 					dataIndex: 'date'
 				},
 				{
 					title: 'HOME TEAM',
-					width: 190,
+					width: 100,
 					dataIndex: 'homeTeamName',
 					slots: { customRender: 'home' }
 				},
 				{
 					title: 'VS',
-					width: 60,
+					width: 80,
 					dataIndex: 'homeTeamName'
 				},
 				{
 					title: 'AWAY TEAM',
-					width: 180,
+					width: 100,
 					dataIndex: 'visitingTeamName',
 					slots: { customRender: 'away' }
 				}
@@ -464,8 +464,8 @@ export default defineComponent({
 	justify-content: space-around;
 }
 .every {
-	border: 2px solid #2f2f2f;
-	margin: 2px 0;
+	border: 1px solid #2f2f2f;
+	margin: 1px 0;
 	text-align: center;
 	cursor: pointer;
 }

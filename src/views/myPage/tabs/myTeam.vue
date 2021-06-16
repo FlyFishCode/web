@@ -199,6 +199,7 @@ export default defineComponent({
 }
 .matchImg {
 	height: 60px;
+	width: 60px;
 }
 .infoClass {
 	text-align: left;
@@ -260,6 +261,7 @@ export default defineComponent({
 }
 .recordInfoStyle {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: flex-start;
 }
 .matchTitle {

@@ -28,7 +28,7 @@
 				</div>
 			</a-col>
 			<a-col :lg="{ span: 2, offset: 2 }" :xs="0" class="titleStyle"> <SearchOutlined class="fontIcon" />{{ $t('default.140') }} </a-col>
-			<a-col :lg="3" :xs="8">
+			<a-col :lg="3" :xs="0">
 				<a-select v-model:value="matchType" class="selectBox">
 					<a-select-option v-for="item in matchTypeList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
 				</a-select>

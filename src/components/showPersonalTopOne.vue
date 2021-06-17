@@ -204,6 +204,7 @@ export default {
 }
 .imgBg {
 	width: 80%;
+	height: 100%;
 }
 .allBox {
 	height: 100%;

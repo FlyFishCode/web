@@ -47,11 +47,14 @@
 							</template>
 						</a-table>
 						<!-- 移动端显示 -->
-						<a-table class="showPhoneTable" :columns="leagueColumns" :data-source="leagueTableList" rowkey="captainId" :pagination="false" :scroll="{ x: 300 }" bordered>
+						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 400 }"  :columns="leagueColumns" :data-source="leagueTableList" rowkey="captainId" bordered>
+							<template #sort="{ index }">
+								<div>{{ index + 1 }}</div>
+							</template>
 							<template v-slot:team="{ record }">
 								<div class="tableStyle">
 									<img class="tableImg" :src="record.teamImg" alt="" />
-									<div class="link" >{{ record.teamName }}</div>
+									<div>{{ record.teamName }}</div>
 								</div>
 							</template>
 						</a-table>
@@ -66,7 +69,7 @@
 						</a-col>
 					</a-row>
 					<a-row>
-						<a-table class="inPhoneTableDisplay" :scroll="{ x: 1200 }" :columns="rewardColumns" :data-source="rewardTableList" :pagination="false" rowkey="captainId" bordered>
+						<a-table class="inPhoneTableDisplay" :pagination="false" :scroll="{ x: 1200 }" :columns="rewardColumns" :data-source="rewardTableList" rowkey="captainId" bordered>
 							<template #sort="{ index }">
 								<div>{{ index + 1 }}</div>
 							</template>
@@ -79,10 +82,13 @@
 						</a-table>
 						<!-- 移动端显示 -->
 						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 400 }" :columns="historyColumns" rowkey="captainId" :data-source="rewardTableList" bordered>
+							<template #action="{ index }">
+								<div>{{ index + 1 }}</div>
+							</template>
 							<template v-slot:teamName="{ record }">
 								<div class="tableStyle">
 									<img class="tableImg" :src="record.teamImg" alt="" />
-									<a @click="fastWay(row)">{{ record.teamName }}</a>
+									<div>{{ record.teamName }}</div>
 								</div>
 							</template>
 						</a-table>
@@ -128,9 +134,9 @@
 					</a-row>
 
 					<a-row>
-						<a-table :columns="playerColumns" :data-source="playerTableList" rowkey="playerId" :scroll="{ x: 1300 }" :pagination="false" bordered>
+						<a-table  class="inPhoneTableDisplay" :columns="playerColumns" :data-source="playerTableList" rowkey="playerId" :scroll="{ x: 1300 }" :pagination="false" bordered>
 							<template #index="{ index }">
-								<div>{{ index + 1 }}</div>
+								<div>{{ index +1 }}</div>
 							</template>
 							<template #player="{ record }">
 								<div class="tableStyle">
@@ -142,6 +148,21 @@
 								</div>
 							</template>
 						</a-table>
+						<!-- 移动端显示 -->
+							<a-table class="showPhoneTable" :columns="playerColumns" :data-source="playerTableList" rowkey="playerId" :scroll="{ x: 1300 }" :pagination="false" bordered>
+								<template #index="{ index }">
+									<div>{{ index +1 }}</div>
+								</template>
+								<template #player="{ record }">
+									<div class="tableStyle">
+										<img class="tableImg" :src="record.playerImg" alt="" />
+										<div>
+											<div>{{ record.playerName }}</div>
+											<div>{{ teamName }}</div>
+										</div>
+									</div>
+								</template>
+							</a-table>
 					</a-row>
 					<div class="pagination">
 						<a-pagination v-model:current="playerPageNum" v-model:pageSize="playerPageSize" :total="playerTotal" @change="pageChange" />

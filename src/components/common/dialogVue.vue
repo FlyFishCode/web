@@ -323,6 +323,7 @@ export default defineComponent({
 }
 .dialogImgBox img {
 	width: 100%;
+	height: 100%;
 }
 .personInfo {
 	padding-left: 20px;

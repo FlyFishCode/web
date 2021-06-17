@@ -132,9 +132,9 @@
 					</div>
 					<div class="decisionBox">
 						<div class="rakingBox">{{ infoData.rankingDecision === 1 ? 'Set point' : 'Winning Point' }}</div>
-						<div>{{ infoData.win }}</div>
-						<div>{{ infoData.drawn }}</div>
-						<div>{{ infoData.lose }}</div>
+						<div>{{ infoData.win || '-'}}</div>
+						<div>{{ infoData.drawn || '-'}}</div>
+						<div>{{ infoData.lose || '-'}}</div>
 					</div>
 				</div>
 			</a-col>
@@ -240,7 +240,6 @@ export default defineComponent({
 					title: 'Set',
 					dataIndex: 'set',
 					key: 'name',
-					width: 70,
 					customRender: (text) => {
 						const obj = {
 							children: text.text !== null ? text.text : '',
@@ -253,48 +252,44 @@ export default defineComponent({
 						return obj;
 					}
 				},
-				{
-					title: 'Set Point',
-					dataIndex: 'setPoint',
-					key: 'name',
-					width: 90,
-					customRender: (text) => {
-						const obj = {
-							children: text.text !== null ? text.text : '',
-							attrs: {
-								rowSpan: 0
-							}
-						};
-						// eslint-disable-next-line @typescript-eslint/no-use-before-define
-						obj.attrs.rowSpan = mergeCells(text.text, text.record.dataIndex, 'setPoint', text.index);
-						return obj;
-					}
-				},
-				{ title: 'Leg', dataIndex: 'leg', key: 'name', width: 80 },
-				{ title: 'Game', dataIndex: 'game', key: 'name', width: 100, slots: { customRender: 'game' } },
+				// {
+				// 	title: 'Set Point',
+				// 	dataIndex: 'setPoint',
+				// 	key: 'name',
+				// 	customRender: (text) => {
+				// 		const obj = {
+				// 			children: text.text !== null ? text.text : '',
+				// 			attrs: {
+				// 				rowSpan: 0
+				// 			}
+				// 		};
+				// 		// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				// 		obj.attrs.rowSpan = mergeCells(text.text, text.record.dataIndex, 'setPoint', text.index);
+				// 		return obj;
+				// 	}
+				// },
+				{ title: 'Leg', dataIndex: 'leg', key: 'name' },
+				{ title: 'Game', dataIndex: 'game', key: 'name', slots: { customRender: 'game' } },
 				{
 					title: 'Game Mode',
 					dataIndex: 'gameMode',
 					key: 'name',
-					width: 100
 				},
-				{ title: 'Round', dataIndex: 'round', key: 'name', width: 110 },
-				{ title: 'IN', dataIndex: 'in', key: 'IN', width: 90 },
-				{ title: 'OUT', dataIndex: 'out', key: 'OUT', width: 90 },
-				{ title: 'Bull', dataIndex: 'bull', key: '牛眼', width: 100 },
-				{ title: 'Team Freeze', dataIndex: 'freeze', key: 'Team Freeze', width: 110 },
+				{ title: 'Round', dataIndex: 'round', key: 'name'  },
+				{ title: 'IN', dataIndex: 'in', key: 'IN'  },
+				{ title: 'OUT', dataIndex: 'out', key: 'OUT'  },
+				{ title: 'Bull', dataIndex: 'bull', key: '牛眼' },
+				{ title: 'Team Freeze', dataIndex: 'freeze', key: 'Team Freeze' },
 				{
 					title: 'Freeze Option',
 					dataIndex: 'option',
 					key: 'Freeze Option',
-					width: 110
 				},
-				{ title: 'Overkill', dataIndex: 'overKill', key: 'Overkill', width: 115 },
+				{ title: 'Overkill', dataIndex: 'overKill', key: 'Overkill' },
 				{
 					title: 'Team Cricket',
 					dataIndex: 'cricket',
 					key: 'Team Cricket',
-					width: 110
 				}
 			],
 			inPhoneColumns: [

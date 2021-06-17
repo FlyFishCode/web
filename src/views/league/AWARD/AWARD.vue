@@ -16,11 +16,11 @@
 				</a-row>
 				<a-row class="awardRow">
 					<a-col :span="11">
-						<span class="home teamName" @click="showDialog(0)">{{ awardData.HomeCaptain }}</span>
+						<span class="home teamName">{{ awardData.HomeCaptain }}</span>
 					</a-col>
 					<a-col :span="2"></a-col>
 					<a-col :span="11">
-						<span class="away teamName" @click="showDialog(1)">{{ awardData.awayCaptain }}</span>
+						<span class="away teamName">{{ awardData.awayCaptain }}</span>
 					</a-col>
 				</a-row>
 				<a-row class="awardRow inPhoneTableDisplay" id="awardProgress">
@@ -63,7 +63,7 @@
 		</a-row>
 		<a-row class="awardRow">
 			<a-col class="teamBox home" :lg="3" :xs='6'>{{ 'Home Team' }}</a-col>
-			<a-col class="home teamName" :lg="3" :xs='6' @click="showDialog(0)">{{ 'Home Team' }}</a-col>
+			<a-col class="home teamName" :lg="3" :xs='6'>{{ 'Home Team' }}</a-col>
 		</a-row>
 		<a-row class="awardTop">
 			<a-table :columns="homeColumns" :data-source="homeList" :pagination="false" :scroll="{ x: 1300 }" bordered rowKey="playerId">
@@ -76,14 +76,15 @@
 							<span v-if="record.playerImg"><img :src="record.playerImg" alt=""/></span>
 							<span v-else><img :src="defaultPlayerImg" alt=""/></span>
 						</div>
-						<div class="link" @click="showDialog(0)">{{ record.playerName }}</div>
+						<div class="link inPhoneTableDisplay" @click="showDialog(0)">{{ record.playerName }}</div>
+						<div class="showPhoneTable">{{ record.playerName }}</div>
 					</div>
 				</template>
 			</a-table>
 		</a-row>
 		<a-row class="awardRow">
 			<a-col class="teamBox home" :lg="3" :xs='6'>{{ 'Away Team' }}</a-col>
-			<a-col class="home teamName" :lg="3" :xs='6' @click="showDialog(1)">{{ 'Away Team' }}</a-col>
+			<a-col class="home teamName" :lg="3" :xs='6'>{{ 'Away Team' }}</a-col>
 		</a-row>
 		<a-row class="awardTop">
 			<a-table :columns="homeColumns" :data-source="awayList" :pagination="false" :scroll="{ x: 1300 }" bordered rowKey="playerId">
@@ -96,7 +97,8 @@
 							<span v-if="record.playerImg"><img :src="record.playerImg" alt=""/></span>
 							<span v-else><img :src="defaultPlayerImg" alt=""/></span>
 						</div>
-						<div class="link" @click="showDialog(1)">{{ record.playerName }}</div>
+						<div class="link inPhoneTableDisplay" @click="showDialog(1)">{{ record.playerName }}</div>
+						<div class="showPhoneTable">{{ record.playerName }}</div>
 					</div>
 				</template>
 			</a-table>
@@ -454,8 +456,6 @@ export default defineComponent({
 	border-radius: 15px;
 }
 .teamName {
-	cursor: pointer;
-	text-decoration: underline;
 	font-weight: bold;
 }
 .home {

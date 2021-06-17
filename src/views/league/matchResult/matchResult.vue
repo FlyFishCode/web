@@ -1,7 +1,7 @@
 <template>
 	<div class="content">
 		<a-row>
-			<a-col :span="4" class="smallTitle"> <SettingFilled /> {{ $t('default.62') }} </a-col>
+			<a-col :lg="4" :xs='6' class="smallTitle"> <SettingFilled /> {{ $t('default.62') }} </a-col>
 			<a-col v-if="showBtn" :span="2" :offset="18">
 				<a-button type="danger" @click="changeMatchTable">{{ $t('default.308') }}</a-button>
 			</a-col>
@@ -22,7 +22,7 @@
 						<div v-if="set.visitingIsWin" :class="{ winner: set.visitingIsWin === 1, loseer: set.visitingIsWin === 3 }">{{ set.visitingIsWin === 1 ? 'win' : 'lose' }}</div>
 					</a-col>
 				</a-row>
-				<a-row v-for="(leg, legIndex) in set.legResultList" :key="legIndex" id="table">
+				<a-row class="inPhoneTableDisplay" v-for="(leg, legIndex) in set.legResultList" :key="legIndex" id="table">
 					<a-table :columns="columns" :data-source="leg.playerResultList" rowkey="mode" :pagination="false" bordered>
 						<template #gameNameTitle>
 							<span>{{ `leg  ${legIndex + 1} (${getGameMode(leg.gameName)})` }}</span>
@@ -61,6 +61,53 @@
 						</template>
 					</a-table>
 				</a-row>
+				<div class="showPhoneTable" v-for="(leg, legIndex) in set.legResultList" :key="legIndex">
+					<div class="inPhoneResultBox">
+						<div class="inPhoneResultLeg">{{ `leg  ${legIndex + 1} (${getGameMode(leg.gameName)})` }}</div>
+						<div class="inPhoneResultContentBox">
+							<div class="inPhoneResultPlayerBox">
+								<div v-for="(player,pndex) in leg.playerResultList" :key="pndex">
+									<div class="inPhoneResultPlayer">
+										<div class="playerImgBox">
+											<span v-if="player.homePlayerPortrait"><img :src="player.homePlayerPortrait" alt=""/></span>
+											<span v-else><img :src="defaultTeamImg" alt=""/></span>
+										</div>
+										<div class="inPhoneResultConent">{{ player.homePlayerName }}</div>
+									</div>
+									<div class="inPhoneResultPlayer">
+										<div>{{ getTableTitle(leg.gameName) }}</div>
+										<div>{{ getTableContent(leg, player, 1) || '-'}}</div>
+									</div>
+									<div class="inPhoneResultPlayer">
+										<div>{{ 'Scores' }}</div>
+										<div>{{ player.homeScore || '-'}}</div>
+									</div>
+								</div>
+							</div>
+							<div v-if="leg.homeIsWin" class="inPhoneResult">{{ leg.homeIsWin === 1 ? 'win' : 'lose' }}</div>
+							<div v-if="leg.visitingIsWin" class="inPhoneResult">{{ leg.visitingIsWin === 1 ? 'win' : 'lose' }}</div>
+							<div class="inPhoneResultPlayerBox">
+								<div v-for="(player,pndex) in leg.playerResultList" :key="pndex">
+									<div class="inPhoneResultPlayer">
+										<div class="inPhoneResultConent">{{ player.visitingPlayerName }}</div>
+										<div class="playerImgBox">
+											<span v-if="player.visitingPlayerPortrait"><img :src="player.visitingPlayerPortrait" alt=""/></span>
+											<span v-else><img :src="defaultTeamImg" alt=""/></span>
+										</div>
+									</div>
+									<div class="inPhoneResultPlayer">
+										<div>{{ getTableContent(leg, player, 2) || '-'}}</div>
+										<div>{{ getTableTitle(leg.gameName) }}</div>
+									</div>
+									<div class="inPhoneResultPlayer">
+										<div>{{ player.visitingScore || '-' }}</div>
+										<div>{{ 'Scores' }}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div v-else>
@@ -450,6 +497,7 @@ export default defineComponent({
 }
 .playerImgBox img {
 	width: 100%;
+	height: 100%;
 }
 .playerBox .ant-col {
 	border: 1px solid #999;
@@ -484,5 +532,37 @@ export default defineComponent({
 }
 #table >>> .ant-table-tbody > tr > td {
 	text-align: center;
+}
+.inPhoneResultPlayerBox{
+	display: flex;
+	flex-direction: column;
+	flex: 4;
+}
+.inPhoneResultPlayer{
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	border: 1px solid #eee;
+}
+.inPhoneResultBox{
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #eee;
+	margin: 1px 0;
+}
+.inPhoneResultContentBox{
+	display: flex;
+	justify-content: space-between;
+}
+.inPhoneResult{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #eee;
+	flex: 1;
+}
+.inPhoneResultLeg{
+	height: 30px;
+	line-height: 30px;
 }
 </style>

@@ -23,7 +23,7 @@
 						<span class="away teamName" @click="showDialog(1)">{{ awardData.awayCaptain }}</span>
 					</a-col>
 				</a-row>
-				<a-row class="awardRow" id="awardProgress">
+				<a-row class="awardRow inPhoneTableDisplay" id="awardProgress">
 					<a-col :span="11">
 						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `Rating  ${percent}`" :percent="Number(awardData.homeRating)"/></a-col>
 						<a-col :span="8"><a-progress type="circle" status="exception" :format="(percent) => `PPD  ${percent}`" :percent="Number(awardData.homePPD)"/></a-col>
@@ -62,8 +62,8 @@
 			</a-row>
 		</a-row>
 		<a-row class="awardRow">
-			<a-col class="teamBox home" :span="3">{{ 'Home Team' }}</a-col>
-			<a-col class="home teamName" :span="3" @click="showDialog(0)">{{ 'Home Team' }}</a-col>
+			<a-col class="teamBox home" :lg="3" :xs='6'>{{ 'Home Team' }}</a-col>
+			<a-col class="home teamName" :lg="3" :xs='6' @click="showDialog(0)">{{ 'Home Team' }}</a-col>
 		</a-row>
 		<a-row class="awardTop">
 			<a-table :columns="homeColumns" :data-source="homeList" :pagination="false" :scroll="{ x: 1300 }" bordered rowKey="playerId">
@@ -82,8 +82,8 @@
 			</a-table>
 		</a-row>
 		<a-row class="awardRow">
-			<a-col class="teamBox home" :span="3">{{ 'Away Team' }}</a-col>
-			<a-col class="home teamName" :span="3" @click="showDialog(1)">{{ 'Away Team' }}</a-col>
+			<a-col class="teamBox home" :lg="3" :xs='6'>{{ 'Away Team' }}</a-col>
+			<a-col class="home teamName" :lg="3" :xs='6' @click="showDialog(1)">{{ 'Away Team' }}</a-col>
 		</a-row>
 		<a-row class="awardTop">
 			<a-table :columns="homeColumns" :data-source="awayList" :pagination="false" :scroll="{ x: 1300 }" bordered rowKey="playerId">
@@ -496,6 +496,7 @@ export default defineComponent({
 }
 .imgBox img {
 	width: 100%;
+	height: 100%;
 }
 .dialogImgBox {
 	height: 100px;

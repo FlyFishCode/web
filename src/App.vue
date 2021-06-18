@@ -182,9 +182,6 @@ export default defineComponent({
 .link:hover {
 	text-decoration: underline;
 }
-.showPhoneTable {
-	display: none !important;
-}
 /* 排序样式 */
 .linkIcon {
 	cursor: pointer;

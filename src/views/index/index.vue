@@ -101,35 +101,49 @@
 
 		<div v-if="matchList.length">
 			<a-row v-for="item in matchList" :key="item.matchId" class="matchBox">
-				<a-col :lg="14" :xs="10">
-					<a-col :lg="4" :xs='10'>
-						<img class="matchImg" :src="item.competitionImg" />
-					</a-col>
-					<a-col :lg="18" :xs='14'>
-						<div class="divBg">
-							<div>{{ item.competitionName }}</div>
-							<div class="divClass">
-								<div v-for="div in item.divisionList" :key="div.divisionId">
-									<a-button type="danger" size="small" @click="entryPage(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
+				<a-col :span='24' class="inPhoneTableDisplay">
+					<a-col :span="14">
+						<a-col :span="4">
+							<img class="matchImg" :src="item.competitionImg" />
+						</a-col>
+						<a-col :span="18">
+							<div class="divBg">
+								<div>{{ item.competitionName }}</div>
+								<div class="divClass">
+									<div v-for="div in item.divisionList" :key="div.divisionId">
+										<a-button type="danger" size="small" @click="entryPage(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
+									</div>
 								</div>
 							</div>
-						</div>
+						</a-col>
 					</a-col>
-				</a-col>
-				<a-col :lg="2" :xs="0">
+					<a-col :span="2">
 					<div class="fontDisplay">{{ $t('default.27') }}</div>
 					<div>{{ item.areaName }}</div>
-				</a-col>
-				<a-col :lg="8" :xs="14">
-					<a-col class="rightStyle">
-						<a-col :lg="18" :xs="16" class="fontDisplay">{{ $t('default.17') }}</a-col>
-						<a-col :lg="4" :xs="8" class="matchState I" v-if="item.status === 1">{{ $t('default.243') }}</a-col>
-						<a-col :lg="4" :xs="8" class="matchState R" v-if="item.status === 2">{{ $t('default.104') }}</a-col>
-						<a-col :lg="4" :xs="8" class="matchState F" v-if="item.status === 3">{{ $t('default.244') }}</a-col>
 					</a-col>
+					<a-col :span="8">
+						<a-col class="rightStyle">
+							<a-col :span="18"  class="fontDisplay">{{ $t('default.17') }}</a-col>
+							<a-col :span="4" class="matchState I" v-if="item.status === 1">{{ $t('default.243') }}</a-col>
+							<a-col :span="4" class="matchState R" v-if="item.status === 2">{{ $t('default.104') }}</a-col>
+							<a-col :span="4" class="matchState F" v-if="item.status === 3">{{ $t('default.244') }}</a-col>
+						</a-col>
 					<!-- <div>{{ $filters.filterDate(item) }}</div> -->
 					<a-col>{{ item.date }}</a-col>
+					</a-col>
 				</a-col>
+				<div class="showPhoneTable">
+					<div class="inPhoneMatch">
+						<img class="matchImg" :src="item.competitionImg" />
+						<div>
+							<div>{{ item.competitionName }}</div>
+							<div>{{ item.date }}</div>
+							<div class="divClass">
+								<a-button v-for="div in item.divisionList" :key="div.divisionId" type="danger" size="small" @click="entryPage(item.competitionId, div.divisionId)">{{ div.divisionName }}</a-button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</a-row>
 		</div>
 		<div v-else>
@@ -908,12 +922,20 @@ export default defineComponent({
 	justify-content: flex-start;
 	flex-wrap: wrap;
 }
-.divClass div {
+.divClass button {
 	margin: 2px 2px;
 }
 .viceBox {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+}
+.inPhoneMatch{
+	display: flex;
+	width: 100%;
+	justify-content: flex-start;
+}
+.showPhoneTable{
+	width: 100%;
 }
 </style>

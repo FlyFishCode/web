@@ -69,7 +69,7 @@
 				<a-col :lg="2" :xs="6" class="titleStyle">{{ $t('default.141') }}</a-col>
 				<a-col :lg="3" :xs="6">
 					<a-select v-model:value="state" @change="stateChange" class="selectBox">
-						<a-select-option v-for="item in stateList" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+						<a-select-option v-for="item in stateList" :key="item.value" :value="item.value">{{ $t(item.label) }}</a-select-option>
 					</a-select>
 				</a-col>
 				<a-col :lg="{ span: 2, offset: 4 }" :xs="0" class="titleStyle"> <SearchOutlined class="fontIcon" />{{ $t('default.16') }} </a-col>

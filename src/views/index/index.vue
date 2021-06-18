@@ -937,5 +937,6 @@ export default defineComponent({
 }
 .showPhoneTable{
 	width: 100%;
+	display: none;
 }
 </style>

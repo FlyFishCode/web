@@ -22,4 +22,8 @@ const i18n = (value: string) => {
 	const instance: any = currentInstance.appContext.config.globalProperties.$i18n.global;
 	return instance.t(value);
 };
-export { yearList, i18n };
+const defaultImg = {
+	teamImg:require('@/assets/team.png'),
+	playerImg:require('@/assets/player.png')
+}
+export { yearList, i18n, defaultImg };

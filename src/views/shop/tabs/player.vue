@@ -15,9 +15,8 @@
 		<a-row v-for="item in playerList" :key="item.id">
 			<a-row class="eveyTeam">
 				<a-col :lg="3" :xs="4" class="imgColStyle">
-					<div>
-						<img class="matchImg" :src="item.playerImg" alt="" />
-					</div>
+					<img v-if="item.playerImg" class="matchImg" :src="item.playerImg" alt="" />
+					<img v-else class="matchImg" :src="defaultImg.playerImg" alt="" />
 				</a-col>
 				<a-col :lg="4" :xs="{ span: 7, offset: 1 }" class="infoClass">
 					<div class="teamStyle" @click="entryPage(item.playerId)">{{ item.playerName }}</div>
@@ -54,6 +53,7 @@ import { shopPlayerListHttp } from '@/axios/api';
 import entryList from '@/components/common/entryList.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { SettingFilled, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
+import { defaultImg } from '@/components/common/public/index'
 export default defineComponent({
 	name: 'player',
 	components: {
@@ -77,6 +77,7 @@ export default defineComponent({
 			sortTeam: true,
 			shopId: ROUTE.query.shopId,
 			playerList: [],
+			defaultImg,
 			getDate: () => '220-10-16',
 			entryPage: (playerId: number) => {
 				ROUTER.push({
@@ -133,6 +134,7 @@ export default defineComponent({
 }
 .matchImg {
 	height: 60px;
+	width: 60px;
 }
 .eveyTeam {
 	height: 80px;

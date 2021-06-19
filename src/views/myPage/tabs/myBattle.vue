@@ -489,4 +489,11 @@ export default defineComponent({
 	text-align: center;
 	color: #fff;
 }
+.ant-fullcalendar-fullscreen>>>.ant-fullcalendar-calendar-body{
+	padding: 0;
+}
+.ant-fullcalendar-fullscreen>>>.ant-fullcalendar-date{
+	padding: 0;
+	margin: 0;
+}
 </style>

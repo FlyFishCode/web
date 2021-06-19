@@ -23,9 +23,8 @@
 		<a-row v-for="item in teamList" :key="item.id">
 			<a-row class="eveyTeam">
 				<a-col :lg="3" :xs="5" class="imgColStyle">
-					<div>
-						<img class="matchImg" :src="item.teamImg" alt="" />
-					</div>
+					<img v-if="item.teamImg" class="matchImg" :src="item.teamImg" alt="" />
+					<img v-else class="matchImg" :src="defaultImg.teamImg" alt="" />
 				</a-col>
 				<a-col :lg="4" :xs="15" class="infoClass">
 					<div class="teamStyle" @click="entryPage(item.teamId)">{{ item.teamName }}</div>
@@ -48,7 +47,7 @@
 			</a-row>
 		</a-row>
 		<a-row type="flex" justify="end">
-			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @showSizeChange="onShowSizeChange" />
+			<a-pagination v-model:current="pageNum" v-model:pageSize="pageSize" :total="total" @change="pageChange" />
 		</a-row>
 		<entryList :entryPath="entryPath" />
 	</div>
@@ -60,6 +59,7 @@ import entryList from '@/components/common/entryList.vue';
 import { shopTeamListHttp } from '@/axios/api';
 import { useRoute, useRouter } from 'vue-router';
 import { SettingFilled, UserOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
+import { defaultImg } from '@/components/common/public/index'
 export default defineComponent({
 	name: 'team',
 	components: {
@@ -83,6 +83,7 @@ export default defineComponent({
 			sortTeam: true,
 			sortPlayer: true,
 			shopId: ROUTE.query.shopId,
+			defaultImg,
 			teamList: [],
 			getDate: () => '220-10-16',
 			entryPage: (id: number) => {
@@ -94,8 +95,9 @@ export default defineComponent({
 					}
 				});
 			},
-			onShowSizeChange: () => {
-				console.log(1);
+			pageChange: (value: number) => {
+				// eslint-disable-next-line @typescript-eslint/no-use-before-define
+				getTeamList(value)
 			},
 			changeSortTeam: (type: number) => {
 				data.sort = type;
@@ -110,16 +112,16 @@ export default defineComponent({
 				getTeamList();
 			}
 		});
-		const getTeamList = () => {
+		const getTeamList = (pageIndex = 1) => {
 			const obj = {
 				shopId: data.shopId,
 				sort: data.sort,
-				pageIndex: 1,
+				pageIndex,
 				pageSize: 10
 			};
 			shopTeamListHttp(obj).then((res) => {
 				data.teamList = res.data.data.list;
-				data.total = res.data.data.totalPage;
+				data.total = res.data.data.totalCount;
 			});
 		};
 		onMounted(() => {
@@ -145,6 +147,7 @@ export default defineComponent({
 }
 .matchImg {
 	height: 60px;
+	width: 60px;
 }
 .eveyTeam {
 	height: 80px;

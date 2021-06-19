@@ -106,7 +106,8 @@ export default {
 	box-sizing: border-box;
 }
 .imgBg {
-	width: 70%;
+	width: 100px;
+	height: 100px;
 	margin: 0 auto;
 }
 .allBox {

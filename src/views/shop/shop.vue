@@ -568,6 +568,7 @@ export default defineComponent({
 }
 .matchImg {
 	height: 60px;
+	width: 60px;
 }
 .infoClass {
 	text-align: left;

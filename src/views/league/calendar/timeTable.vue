@@ -594,7 +594,6 @@ export default defineComponent({
 				data.isAward = true;
 			},
 			handleState: (state: number, row: any, confrontationInfoId: any) => {
-				debugger;
 				const count = row.playerChangeNumber - row.homeAyerChange - row.visitingAyerChange;
 				data.ismatchTablePage = true;
 				if (!row.playerChangeNumber || count === row.playerChangeNumber) {

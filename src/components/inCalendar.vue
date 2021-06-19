@@ -35,7 +35,7 @@
 							<div v-for="(item, index) in every.matchList" :key="index">
 								<div class="matchBox" @click="info(item, every.playerChangeNumber)">
 									<div class="bg">
-										<div class="imgBox"><img :src="item.homeTeamImg" /></div>
+										<div class="imgBox"><img :src="item.homeTeamImg" :onerror='handleTeamImgError'/></div>
 										<div>{{ item.homeTeamName }}</div>
 									</div>
 									<div class="bg">
@@ -43,7 +43,7 @@
 										<div>{{ item.confrontationDate }}</div>
 									</div>
 									<div class="bg">
-										<div class="imgBox"><img :src="item.visitingTeamImg" /></div>
+										<div class="imgBox"><img :src="item.visitingTeamImg" :onerror='handleTeamImgError'/></div>
 										<div>{{ item.visitingTeamName }}</div>
 									</div>
 									<span v-if="item.state === 1" class="stateStyle N">{{ $t('default.64') }}</span>
@@ -67,6 +67,7 @@
 import { defineComponent, reactive, toRefs, onMounted, watch, nextTick } from 'vue';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue';
 import { timetablecustomHttp } from '@/axios/api';
+import { handleTeamImgError } from '@/components/common/public/index'
 
 export default defineComponent({
 	name: 'inCalendar',
@@ -87,6 +88,7 @@ export default defineComponent({
 			currentDiv: 0,
 			topList: [{ confrontationDate: '' }],
 			detailList: [{ matchList: [] }],
+			handleTeamImgError,
 			init: () => {
 				if (data.detailList[0].matchList && data.detailList[0].matchList.length > 3) {
 					data.hasData = true;
@@ -295,6 +297,8 @@ export default defineComponent({
 }
 .imgBox {
 	height: 50px;
+	width: 50px;
+	margin: 0 auto;
 }
 .imgBox img {
 	height: 100%;

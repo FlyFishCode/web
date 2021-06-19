@@ -104,7 +104,7 @@
 				<a-col :span='24' class="inPhoneTableDisplay">
 					<a-col :span="14">
 						<a-col :span="4">
-							<img class="matchImg" :src="item.competitionImg" />
+							<img class="matchImg" :src="item.competitionImg" :onerror='handleLeagueImgError'/>
 						</a-col>
 						<a-col :span="18">
 							<div class="divBg">
@@ -160,8 +160,7 @@
 						<div v-for="(item, index) in every.list" :key="index" class="teamBox">
 							<div :class="{ first: !index, noFirst: index }">
 								<div v-if="!index" class="teamImgBox">
-									<img v-if="item.teamImg" :src="item.teamImg" />
-									<img v-else :src="defaultTeamImg" />
+									<img :src="item.teamImg" :onerror='handleTeamImgError'/>
 								</div>
 								<div :class="{ topOne: !index }" class="teamImgBox">
 									<img :src="item.defultImg" />
@@ -381,6 +380,7 @@ import { indexTeamHttp, indexPlayerHttp, indexCountryHttp, indexCityHttp, indexN
 import emptyList from '@/components/common/emptyList.vue';
 import divTitle from '@/components/DividingLine.vue';
 import { useRouter } from 'vue-router';
+import { handleLeagueImgError, handlePlayerImgError, handleTeamImgError } from '@/components/common/public/index'
 import bus from '@/bus/index'
 interface DataProps {
 	click: () => void;
@@ -409,8 +409,10 @@ export default defineComponent({
 			title: 'default.134',
 			matchTitle: 'default.18',
 			defultImg: require('@/assets/icon.png'),
-			defaultTeamImg: require('@/assets/team.png'),
 			defaultBannarImg: require('@/assets/bannar.png'),
+			handleLeagueImgError,
+			handlePlayerImgError,
+			handleTeamImgError,
 			lastDate: new Date(),
 			time: `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`,
 			colSpan: 4,

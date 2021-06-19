@@ -28,6 +28,6 @@ const handleTeamImgError = (e: any) =>{
 	e.target.src = require('@/assets/team.png')
 }
 const handleLeagueImgError = (e: any) =>{
-	e.target.src = require('@/assets/League.png')
+	e.target.src = require('@/assets/league.png')
 }
 export { yearList, i18n, handlePlayerImgError,handleTeamImgError,handleLeagueImgError };

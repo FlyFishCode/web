@@ -283,6 +283,7 @@ import { handleTeamImgError } from '@/components/common/public/index'
 export default defineComponent({
 	name: 'teamHistory',
 	props: ['activeKey', 'teamList'],
+	emits:['team-clear'],
 	components: {
 		SettingFilled,
 		CloseCircleFilled,
@@ -499,6 +500,8 @@ export default defineComponent({
 }
 .img {
 	height: 80px;
+	width: 80px;
+	margin: 0 auto;
 }
 .img img {
 	height: 100%;

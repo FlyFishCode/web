@@ -309,6 +309,7 @@ import { handlePlayerImgError } from '@/components/common/public/index'
 export default defineComponent({
 	name: 'playerHistory',
 	props: ['activeKey', 'playerList'],
+	emits:['player-clear'],
 	components: {
 		SettingFilled,
 		CloseCircleFilled,
@@ -515,9 +516,12 @@ export default defineComponent({
 }
 .img {
 	height: 80px;
+	width: 80px;
+	margin: 0 auto;
 }
 .img img {
 	height: 100%;
+	width: 100%;
 }
 .addBox {
 	height: 140px;

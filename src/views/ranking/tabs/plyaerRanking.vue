@@ -77,8 +77,7 @@
 				<template v-slot:team="{ record }">
 					<div class="tableBox">
 						<div class="tableImgBox">
-							<img v-if="record.playerImg" :src="record.playerImg" alt="" />
-							<img v-else :src="defaultImg" alt="" />
+							<img :src="record.playerImg" alt="" :onerror='handlePlayerImgError'/>
 						</div>
 						<div class="tableMsgCentent">
 							<div @click="entryInfoPage(record.playerId)" class="link">{{ record.playerName }}</div>
@@ -112,8 +111,7 @@
 				<template v-slot:team="{ record }">
 					<div class="tableBox">
 						<div class="tableImgBox">
-							<img v-if="record.playerImg" :src="record.playerImg" alt="" />
-							<img v-else :src="defaultImg" alt="" />
+							<img :src="record.playerImg" alt="" :onerror='handlePlayerImgError'/>
 						</div>
 						<div class="tableMsgCentent">
 							<div @click="entryInfoPage(record.playerId)" class="link">{{ record.playerName }}</div>
@@ -159,7 +157,7 @@ import playerRanking from '@/components/rankingPlayer.vue';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { yearList } from '@/components/common/public/index';
-
+import { handlePlayerImgError } from '@/components/common/public/index'
 interface DataProps {
 	dataObj: any;
 	total: any;
@@ -215,7 +213,7 @@ export default defineComponent({
 				phone: '',
 				address: ''
 			},
-			defaultImg: require('@/assets/player.png'),
+			handlePlayerImgError,
 			customHeaderRow: () => {
 				return {
 					className: 'selectBox',
@@ -522,5 +520,8 @@ export default defineComponent({
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
+}
+.showPhoneTable{
+	display: none;
 }
 </style>

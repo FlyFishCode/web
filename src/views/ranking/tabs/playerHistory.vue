@@ -14,7 +14,7 @@
 					</div>
 				</div>
 			</a-col>
-			<a-col class="inPhoneTableDisplay" :span="5" v-for="(item, index) in teamList" :key="index">
+			<a-col class="inPhoneTableDisplay" :span="5" v-for="(item, index) in playerList" :key="index">
 				<div v-if="item.flag" class="playerBox">
 					<div class="imgBg">
 						<div class="closeBox">
@@ -285,7 +285,7 @@
 					</template>
 					<template v-slot:teamImg="{ record }">
 						<div class="diaLogBox">
-							<div class="teamImgBox"><img :src="record.playerImg" alt="" /></div>
+							<div class="teamImgBox"><img :src="record.playerImg" alt=""  :onerror='handlePlayerImgError'/></div>
 							<div>
 								<div>{{ record.playerName }}</div>
 								<div>{{ record.shopName }}</div>
@@ -305,6 +305,7 @@
 import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
 import { playerSearchHttp, playerDataListHttp, indexCountryHttp } from '@/axios/api';
 import { SettingFilled, CloseCircleFilled, PlusOutlined } from '@ant-design/icons-vue';
+import { handlePlayerImgError } from '@/components/common/public/index'
 export default defineComponent({
 	name: 'playerHistory',
 	props: ['activeKey', 'playerList'],
@@ -324,6 +325,7 @@ export default defineComponent({
 			countryId: null,
 			countryList: [],
 			type: 'teamName',
+			handlePlayerImgError,
 			typeList: [
 				{ value: 'teamName', label: 'default.266' },
 				{ value: 'playerName', label: 'default.248' },
@@ -350,17 +352,17 @@ export default defineComponent({
 				// { id: 8, title: "default.220" },
 				// { id: 9, title: "default.221" },
 			],
-			teamList: [{ playerId: 1, flag: false }, { flag: false }, { flag: false }, { flag: false }],
+			playerList: [{ playerId: 1, flag: false }, { flag: false }, { flag: false }, { flag: false }],
 			inPhoneTeamList: [{ flag: false }, { flag: false }],
 			dataList: [{ playerId: 1, flag: false }],
 			clearList: () => {
-				data.teamList.forEach((i, index) => {
+				data.playerList.forEach((i, index) => {
 					data.dataList.forEach((j) => {
 						if (i.playerId === j.playerId) {
 							j.flag = false;
 						}
 					});
-					data.teamList.splice(index, 1, { flag: false });
+					data.playerList.splice(index, 1, { flag: false });
 					ctx.emit('player-clear', []);
 				});
 			},
@@ -372,7 +374,7 @@ export default defineComponent({
 						//  展示表格显示填充数据
 						// eslint-disable-next-line @typescript-eslint/no-use-before-define
 						addTeam([value]).then((response: any) => {
-							data.teamList.fill(response, data.currentIndex, data.currentIndex + 1);
+							data.playerList.fill(response, data.currentIndex, data.currentIndex + 1);
 						});
 					}
 				});
@@ -403,7 +405,7 @@ export default defineComponent({
 				data.visible = true;
 			},
 			bySpliceIndex: (index: number) => {
-				const obj: any = data.teamList.splice(index, 1, { flag: false });
+				const obj: any = data.playerList.splice(index, 1, { flag: false });
 				data.dataList.forEach((i) => {
 					if (i.playerId === obj[0].playerId) {
 						i.flag = false;
@@ -460,8 +462,8 @@ export default defineComponent({
 					res.data.data.forEach((i: any) => {
 						i.flag = true;
 					});
-					data.teamList[0] = res.data.data[0];
-					data.teamList[1] = res.data.data[1];
+					data.playerList[0] = res.data.data[0];
+					data.playerList[1] = res.data.data[1];
 				}
 			});
 		};
@@ -616,6 +618,7 @@ export default defineComponent({
 }
 .teamImgBox img {
 	width: 100%;
+	height: 100%;
 }
 .diaLogBox {
 	display: flex;
@@ -624,5 +627,8 @@ export default defineComponent({
 .dialogBG {
 	height: 600px;
 	overflow-y: auto;
+}
+.showPhoneTable{
+	display: none;
 }
 </style>

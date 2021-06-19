@@ -47,7 +47,7 @@
 				<template #player="{ record }">
 					<div class="inPhoneTableBox">
 						<div class="imgBox">
-							<img :src="record.playerImg" alt="" />
+							<img :src="record.playerImg" alt="" :onerror='handlePlayerImgError'/>
 						</div>
 						<div class="tableMatch" @click="entryPage(1, record.playerId)">{{ record.playerName }}</div>
 					</div>
@@ -86,6 +86,7 @@ import entryList from '@/components/common/entryList.vue';
 import { SettingFilled, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
+import { handlePlayerImgError } from '@/components/common/public/index'
 interface DataProps {
 	[x: string]: any;
 	general: boolean;
@@ -112,6 +113,7 @@ export default defineComponent({
 			general: true,
 			league: true,
 			quarter: true,
+			handlePlayerImgError,
 			columns: [
 				{
 					title: '玩家',

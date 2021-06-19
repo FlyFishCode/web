@@ -67,7 +67,7 @@
 					<a-row v-for="item in allLeagueList" :key="item.matchId" class="matchBox">
 						<a-col :lg="14" :xs="24">
 							<a-col :span="4" class="matchImgBox">
-								<img class="matchImg" :src="item.competitionImg" />
+								<img class="matchImg" :src="item.competitionImg" :onerror='handleLeagueImgError'/>
 							</a-col>
 							<a-col :span="18">
 								<div>
@@ -108,7 +108,7 @@
 					<a-row v-for="item in myLeagueList" :key="item.matchId" class="matchBox">
 						<a-col :lg="14" :xs="24">
 							<a-col :span="4" class="matchImgBox">
-								<img class="matchImg" :src="item.competitionImg" />
+								<img class="matchImg" :src="item.competitionImg" :onerror='handleLeagueImgError'/>
 							</a-col>
 							<a-col :span="18">
 								<div>
@@ -153,6 +153,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { SearchOutlined, SettingFilled, EnvironmentOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 import emptyList from '@/components/common/emptyList.vue';
 import { yearList } from '@/components/common/public';
+import { handleLeagueImgError } from '@/components/common/public/index'
 interface HTMLInputEvent {
 	value: HTMLInputElement & EventTarget;
 }
@@ -196,6 +197,7 @@ export default defineComponent({
 			countryList: [],
 			areaList: [],
 			yearList,
+			handleLeagueImgError,
 			monthList: [
 				{ value: ' ', label: 'ALL' },
 				{ value: 1, label: 1 },

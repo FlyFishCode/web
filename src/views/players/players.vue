@@ -127,8 +127,7 @@
 		<a-row v-for="(item, index) in playerList" :key="item.id">
 			<a-row class="eveyTeam">
 				<a-col :lg="3" :xs="4" class="imgColStyle">
-					<img v-if="item.playerImg" class="matchImg" :src="item.playerImg" alt="" />
-					<img v-else class="matchImg" :src="defaultImg" alt="" />
+					<img class="matchImg" :src="item.playerImg" alt="" :onerror='handlePlayerImgError'/>
 				</a-col>
 				<a-col :lg="{ span: 7, offset: 0 }" :xs="{span:16,offset:1}" class="infoClass">
 					<div class="teamStyle" @click="entryPage(item.playerId)">{{ item.playerName }}</div>
@@ -175,8 +174,7 @@
 					<div class="matchTitle">{{ $t('default.83') }}</div>
 					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" id="msgBox">
 						<a-col :span="4" class="imgColStyle">
-							<img v-if="recordInfo.competitionImg" class="matchImg" :src="recordInfo.competitionImg" alt="" />
-							<img v-else class="matchImg" :src="defaultImg" alt="" />
+							<img class="matchImg" :src="recordInfo.competitionImg" alt="" :onerror='handleLeagueImgError'/>
 						</a-col>
 						<a-col :span="20" class="countBox">
 							<div class="recordInfoStyle inPhoneTableStyle">
@@ -235,7 +233,7 @@ import { playerBestListHttp, playerListHttp, indexCountryHttp, indexCityHttp } f
 import divTitle from '@/components/DividingLine.vue';
 import emptyList from '@/components/common/emptyList.vue';
 import { SettingFilled, BankFilled, SearchOutlined, EnvironmentOutlined, DownCircleOutlined, UpCircleOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
-
+import { handlePlayerImgError, handleLeagueImgError } from '@/components/common/public/index'
 interface DataProps {
 	countryChange: (value: any) => void;
 	changeIcon: () => void;
@@ -287,6 +285,8 @@ export default defineComponent({
 			colSpan: 4,
 			matchType: 1,
 			visible: false,
+			handleLeagueImgError,
+			handlePlayerImgError,
 			dialogObj: {
 				title: '',
 				img: '',
@@ -294,7 +294,6 @@ export default defineComponent({
 				phone: '',
 				address: ''
 			},
-			defaultImg: require('@/assets/player.png'),
 			matchTypeList: [
 				{ value: 1, label: 'default.55' },
 				{ value: 2, label: 'default.93' },

@@ -127,8 +127,7 @@
 		<a-row v-for="(item, index) in teamList" :key="item.id">
 			<a-row class="eveyTeam">
 				<a-col :lg="3" :xs="4" class="imgColStyle">
-					<img v-if="item.teamImg" class="matchImg" :src="item.teamImg" alt="" />
-					<img v-else class="matchImg" :src="defaultImg" alt="" />
+					<img class="matchImg" :src="item.teamImg" alt="" :onerror='handleTeamImgError'/>
 				</a-col>
 				<a-col :lg="6" :xs="{ span: 14, offset: 1 }" class="infoClass">
 					<div class="teamStyle" @click="entryPage(1, item.teamId)">{{ item.teamName }}</div>
@@ -175,8 +174,7 @@
 					<div class="matchTitle">{{ $t('default.225') }}</div>
 					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" id="msgBox">
 						<a-col :span="4" class="imgColStyle">
-							<img v-if="recordInfo.competitionImg" class="matchImg" :src="recordInfo.competitionImg" alt="" />
-							<img v-else class="matchImg" :src="defaultImg" alt="" />
+							<img class="matchImg" :src="recordInfo.competitionImg" alt="" :onerror='handleLeagueImgError'/>
 						</a-col>
 						<a-col :span="20" class="countBox">
 							<div class="recordInfoStyle inPhoneTableStyle">
@@ -233,6 +231,7 @@ import { teamBestListHttp, teamListHttp, indexCityHttp, indexCountryHttp } from 
 import divTitle from '@/components/DividingLine.vue';
 import emptyList from '@/components/common/emptyList.vue';
 import { SettingFilled, BankFilled, SearchOutlined, EnvironmentOutlined, UserOutlined, DownCircleOutlined, UpCircleOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
+import { handleTeamImgError,handleLeagueImgError } from '@/components/common/public/index'
 interface DataProps {
 	countryChange: (value: any) => void;
 	total: any;
@@ -287,7 +286,8 @@ export default defineComponent({
 			stateList: [],
 			areaList: [],
 			cityList: [],
-			defaultImg: require('@/assets/team.png'),
+			handleTeamImgError,
+			handleLeagueImgError,
 			matchTypeList: [
 				{ value: 1, label: 'default.55' },
 				{ value: 2, label: 'default.248' },

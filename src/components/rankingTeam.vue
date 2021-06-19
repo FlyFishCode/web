@@ -3,7 +3,7 @@
 		<a-row class="rowStyle">
 			<a-col :span="8" class="allBox">
 				<a-col :span="12" class="firstClass">
-					<img class="imgBg" :src="infoData.teamImg" alt="" />
+					<img class="imgBg" :src="infoData.teamImg" alt="" :onerror='handleTeamImgError'/>
 				</a-col>
 				<a-col :span="12" class="firstClass FONT">
 					<div class="teamName">{{ infoData.teamName }}</div>
@@ -99,7 +99,7 @@
 import { useRoute } from 'vue-router';
 import { reactive, toRefs, onMounted, ref, watch } from 'vue';
 import { EnvironmentOutlined, LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
-
+import { handleTeamImgError } from '@/components/common/public/index'
 const getNewData = (obj: any) => {
 	if (JSON.stringify(obj) == '{}') {
 		return {
@@ -172,6 +172,7 @@ export default {
 				phone: '',
 				address: ''
 			},
+			handleTeamImgError,
 			infoData: {
 				resultList: []
 			},
@@ -240,7 +241,8 @@ export default {
 	box-sizing: border-box;
 }
 .imgBg {
-	width: 80%;
+	width: 100%;
+	height: 100%;
 	margin: 0 auto;
 }
 .allBox {
@@ -260,6 +262,7 @@ export default {
 .firstClass {
 	height: 140px;
 	display: flex;
+	padding: 10px;
 	flex-direction: column;
 	justify-content: space-between;
 	text-align: left;

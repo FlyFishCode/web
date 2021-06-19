@@ -38,12 +38,11 @@
 
 		<!-- 表格 -->
 		<a-row class="inPhoneTableDisplay">
-			<a-table :row-selection="rowSelection" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey="teamId" :customHeaderRow="customHeaderRow">
+			<a-table :row-selection="rowSelection" :scroll="{ x: 1200 }" :columns="columns" :data-source="tableList" :pagination="false" bordered rowKey="teamId" :customHeaderRow="customHeaderRow">
 				<template v-slot:team="{ record }">
 					<div class="tableBox">
 						<div class="tableImgBox">
-							<img v-if="record.teamImg" :src="record.teamImg" alt="" />
-							<img v-else :src="defaultImg" alt="" />
+							<img :src="record.teamImg" alt="" :onerror='handleTeamImgError'/>
 						</div>
 						<div class="tableMsgCentent">
 							<div @click="entryInfoPage(record.teamId)" class="link">{{ record.teamName }}</div>
@@ -74,9 +73,7 @@
 				<template v-slot:team="{ record }">
 					<div class="tableBox">
 						<div class="tableImgBox">
-							<!-- <img v-if="record.teamImg" :src="text.teamImg" alt="" />
-							<img v-else :src="defaultImg" alt="" /> -->
-							<img :src="dialogObj.img" alt="" />
+							<img :src="dialogObj.img" alt="" :onerror='handleTeamImgError'/>
 						</div>
 						<div class="tableMsgCentent">
 							<div @click="entryInfoPage(record.teamId)" class="link">{{ record.teamName }}</div>
@@ -124,7 +121,7 @@ import tramRanking from '@/components/rankingTeam.vue';
 import { yearList } from '@/components/common/public/index';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-
+import { handleTeamImgError } from '@/components/common/public/index'
 interface DataProps {
 	countryChange: (value: any) => void;
 	countryList: any;
@@ -175,7 +172,7 @@ export default defineComponent({
 			dataObj: {
 				teamId: 0
 			},
-			defaultImg: require('@/assets/team.png'),
+			handleTeamImgError,
 			rowSelection: {
 				columnWidth: 80,
 				columnTitle: '对比',
@@ -215,12 +212,13 @@ export default defineComponent({
 				{ dataIndex: 'competitionRating.rating', key: 'time', slots: { title: 'Rating' } }
 			],
 			columns: [
-				{ title: '排行', dataIndex: 'sort', key: 'time' },
+				{ title: '排行', dataIndex: 'sort', key: 'time', fixed: 'left' },
 				{
 					title: '队名',
 					key: 'name',
-					width: 250,
-					slots: { customRender: 'team' }
+					width: 230,
+					slots: { customRender: 'team' },
+					fixed: 'left'
 				},
 				{ title: 'Rating', dataIndex: 'competitionRating.rating', key: 'time' },
 				{ title: 'PPD', dataIndex: 'competitionRating.ppd', key: 'type' },
@@ -417,5 +415,8 @@ export default defineComponent({
 .tableBox {
 	display: flex;
 	justify-content: space-between;
+}
+.showPhoneTable{
+	display: none;
 }
 </style>

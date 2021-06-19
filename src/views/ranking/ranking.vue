@@ -59,7 +59,6 @@ export default defineComponent({
 				return '2020-10-17';
 			},
 			teamKeyChange: (key: string, list: Array<any>) => {
-				debugger;
 				data.activeKey = key;
 				data.teamList = list;
 			},

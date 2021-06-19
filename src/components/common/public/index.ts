@@ -27,4 +27,7 @@ const handlePlayerImgError = (e: any) =>{
 const handleTeamImgError = (e: any) =>{
 	e.target.src = require('@/assets/team.png')
 }
-export { yearList, i18n, handlePlayerImgError,handleTeamImgError };
+const handleLeagueImgError = (e: any) =>{
+	e.target.src = require('@/assets/League.png')
+}
+export { yearList, i18n, handlePlayerImgError,handleTeamImgError,handleLeagueImgError };

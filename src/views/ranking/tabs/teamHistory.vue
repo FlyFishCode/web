@@ -258,7 +258,7 @@
 					</template>
 					<template v-slot:teamImg="{ record }">
 						<div class="diaLogBox">
-							<div class="teamImgBox"><img :src="record.teamImg" alt="" /></div>
+							<div class="teamImgBox"><img :src="record.teamImg" alt="" :onerror='handleTeamImgError'/></div>
 							<div>
 								<div>{{ record.teamName }}</div>
 								<div>{{ record.shopName }}</div>
@@ -279,6 +279,7 @@ import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
 import { teamDataListHttp, teamSearchHttp, indexCountryHttp } from '@/axios/api';
 import { SettingFilled, CloseCircleFilled, PlusOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
+import { handleTeamImgError } from '@/components/common/public/index'
 export default defineComponent({
 	name: 'teamHistory',
 	props: ['activeKey', 'teamList'],
@@ -298,6 +299,7 @@ export default defineComponent({
 			countryId: null,
 			countryList: [],
 			type: 'teamName',
+			handleTeamImgError,
 			typeList: [
 				{ value: 'teamName', label: 'default.266' },
 				{ value: 'playerName', label: 'default.248' },
@@ -614,6 +616,7 @@ export default defineComponent({
 }
 .teamImgBox img {
 	width: 100%;
+	height: 100%;
 }
 .diaLogBox {
 	display: flex;
@@ -627,5 +630,8 @@ export default defineComponent({
 	overflow:hidden;
 	text-overflow:ellipsis;
 	white-space:nowrap
+}
+.showPhoneTable{
+	display: none;
 }
 </style>

@@ -20,7 +20,7 @@
 				<a-row v-for="item in leagueList" :key="item.matchId" class="matchBox">
 					<a-col :lg="14" :xs="24">
 						<a-col :span="4" class="matchImgBox">
-							<img class="matchImg" :src="item.competitionImg" />
+							<img class="matchImg" :src="item.competitionImg" :onerror='handleLeagueImgError'/>
 						</a-col>
 						<a-col :span="20" class="matchInfo">
 							<div class="teamStyle" @click="showShopInfo(item.competitionId)">{{ item.competitionName }}</div>
@@ -64,6 +64,7 @@ import emptyList from '@/components/common/emptyList.vue';
 import { yearList } from '@/components/common/public/index';
 import { SettingFilled } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
+import { handleLeagueImgError } from '@/components/common/public/index'
 interface HTMLInputEvent {
 	value: HTMLInputElement & EventTarget;
 }
@@ -89,6 +90,7 @@ export default defineComponent({
 			year: new Date().getFullYear(),
 			shopId: '',
 			yearList,
+			handleLeagueImgError,
 			leagueList: [],
 			yearChange: (year: number) => {
 				const obj = {

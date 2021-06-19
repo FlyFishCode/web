@@ -23,7 +23,7 @@
 				<a-row class="matchBox">
 					<a-col :lg="14" :xs="22">
 						<a-col :span="5">
-							<img class="matchImg" :src="item.competitionImg" />
+							<img class="matchImg" :src="item.competitionImg" :onerror='handleLeagueImgError'/>
 						</a-col>
 						<a-col :span="10">
 							<div class="divBg">
@@ -155,6 +155,7 @@ import emptyList from '@/components/common/emptyList.vue';
 import { SettingFilled, DownCircleOutlined, UpCircleOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { yearList } from '@/components/common/public/index';
+import { handleLeagueImgError } from '@/components/common/public/index'
 export default defineComponent({
 	name: 'matchRecord',
 	components: {
@@ -178,6 +179,7 @@ export default defineComponent({
 			pageSize: 10,
 			sortTeam: true,
 			yearList,
+			handleLeagueImgError,
 			dataList: [
 				{
 					flag: false,

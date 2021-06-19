@@ -1,4 +1,3 @@
-import vue from 'vue';
 import { getCurrentInstance } from 'vue';
 
 const yearList: Array<any> = [{ value: 2020, label: '2020' }];
@@ -22,8 +21,10 @@ const i18n = (value: string) => {
 	const instance: any = currentInstance.appContext.config.globalProperties.$i18n.global;
 	return instance.t(value);
 };
-const defaultImg = {
-	teamImg:require('@/assets/team.png'),
-	playerImg:require('@/assets/player.png')
+const handlePlayerImgError = (e: any) =>{
+	e.target.src = require('@/assets/player.png')
 }
-export { yearList, i18n, defaultImg };
+const handleTeamImgError = (e: any) =>{
+	e.target.src = require('@/assets/team.png')
+}
+export { yearList, i18n, handlePlayerImgError,handleTeamImgError };

@@ -23,8 +23,7 @@
 		<a-row v-for="item in teamList" :key="item.id">
 			<a-row class="eveyTeam">
 				<a-col :lg="3" :xs="5" class="imgColStyle">
-					<img v-if="item.teamImg" class="matchImg" :src="item.teamImg" alt="" />
-					<img v-else class="matchImg" :src="defaultImg.teamImg" alt="" />
+					<img class="matchImg" :src="item.teamImg" alt="" :onerror='handleTeamImgError'/>
 				</a-col>
 				<a-col :lg="4" :xs="15" class="infoClass">
 					<div class="teamStyle" @click="entryPage(item.teamId)">{{ item.teamName }}</div>
@@ -59,7 +58,7 @@ import entryList from '@/components/common/entryList.vue';
 import { shopTeamListHttp } from '@/axios/api';
 import { useRoute, useRouter } from 'vue-router';
 import { SettingFilled, UserOutlined, DownOutlined, UpOutlined } from '@ant-design/icons-vue';
-import { defaultImg } from '@/components/common/public/index'
+import { handleTeamImgError } from '@/components/common/public/index'
 export default defineComponent({
 	name: 'team',
 	components: {
@@ -83,8 +82,8 @@ export default defineComponent({
 			sortTeam: true,
 			sortPlayer: true,
 			shopId: ROUTE.query.shopId,
-			defaultImg,
 			teamList: [],
+			handleTeamImgError,
 			getDate: () => '220-10-16',
 			entryPage: (id: number) => {
 				ROUTER.push({
@@ -110,7 +109,7 @@ export default defineComponent({
 				data.sortPlayer = !data.sortPlayer;
 				// eslint-disable-next-line @typescript-eslint/no-use-before-define
 				getTeamList();
-			}
+			},
 		});
 		const getTeamList = (pageIndex = 1) => {
 			const obj = {

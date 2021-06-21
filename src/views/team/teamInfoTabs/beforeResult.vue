@@ -204,4 +204,7 @@ export default defineComponent({
 	cursor: pointer;
 	color: #1890ff;
 }
+.showPhoneTable{
+	display: none;
+}
 </style>

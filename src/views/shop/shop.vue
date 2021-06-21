@@ -165,7 +165,7 @@
 					<a-row v-for="recordInfo in item.competitionList" :key="recordInfo.index" id="msgBox">
 						<a-col :span="4" class="imgColStyle">
 							<div>
-								<img class="matchImg" :src="recordInfo.competitionImg" alt="" />
+								<img class="matchImg" :src="recordInfo.competitionImg" alt="" :onerror='handleLeagueImgError'/>
 							</div>
 						</a-col>
 						<a-col :span="20" class="countBox">
@@ -221,6 +221,7 @@ import divTitle from '@/components/DividingLine.vue';
 import emptyList from '@/components/common/emptyList.vue';
 import { indexCityHttp, indexCountryHttp, shopListHttp } from '@/axios/api';
 import { message } from 'ant-design-vue';
+import { handleLeagueImgError } from '@/components/common/public/index'
 import { SettingFilled, EnvironmentOutlined, PhoneOutlined, DownCircleOutlined, UpCircleOutlined } from '@ant-design/icons-vue';
 import { useRoute, useRouter } from 'vue-router';
 export default defineComponent({
@@ -402,6 +403,7 @@ export default defineComponent({
 			shopNameList: [],
 			InfoWindow: [],
 			markerList: [],
+			handleLeagueImgError,
 			dialogObj: {
 				title: '',
 				img: '',

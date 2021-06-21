@@ -261,6 +261,7 @@ export default {
 }
 .firstClass {
 	height: 140px;
+	width: 140px;
 	display: flex;
 	padding: 10px;
 	flex-direction: column;

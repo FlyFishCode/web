@@ -8,8 +8,7 @@
 					<div v-if="matchTeam.homeManageStatus === 2" class="teamStateStyle">{{ $t('default.61') }}</div>
 				</div>
 				<div class="matchImgBox">
-					<span v-if="matchTeam.homeImgUrl"><img :src="matchTeam.homeImgUrl" alt=""/></span>
-					<span v-else><img :src="defaultTeamImg" alt=""/></span>
+					<img :src="matchTeam.homeImgUrl" alt="" :onerror='handleTeamImgError'/>
 				</div>
 				<div class="teamName">{{ matchTeam.homeTeamName }}</div>
 				<div class="teamTopStyle">{{ matchTeam.homeRanking }} <span>th</span></div>
@@ -61,8 +60,7 @@
 					<div v-if="matchTeam.visitingManageStatus === 2" class="teamStateStyle">{{ $t('default.61') }}</div>
 				</div>
 				<div class="matchImgBox">
-					<span v-if="matchTeam.visitingImgUrl"><img :src="matchTeam.visitingImgUrl" alt=""/></span>
-					<span v-else><img :src="defaultTeamImg" alt=""/></span>
+					<img :src="matchTeam.visitingImgUrl" alt="" :onerror='handleTeamImgError'/>
 				</div>
 				<div class="teamName">{{ matchTeam.visitingTeamName }}</div>
 				<div class="teamTopStyle">{{ matchTeam.visitingRanking }} <span>th</span></div>
@@ -87,6 +85,7 @@
 <script>
 import { defineComponent, reactive, toRefs, onMounted, watch } from 'vue';
 import { matchTeamInfoHttp } from '@/axios/api';
+import { handleTeamImgError } from '@/components/common/public/index'
 // import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 // interface DataProps {
 //   detailList: string;
@@ -98,7 +97,7 @@ export default defineComponent({
 	setup(prop) {
 		const data = reactive({
 			matchTeam: {},
-			defaultTeamImg: require('@/assets/icon.png')
+			handleTeamImgError,
 		});
 		const getMatchTeam = (confrontationInfoId = prop.confrontationInfoId) => {
 			matchTeamInfoHttp({ confrontationInfoId }).then((res) => {

@@ -238,7 +238,8 @@ export default {
 	box-sizing: border-box;
 }
 .imgBg {
-	width: 80%;
+	width: 100%;
+	height: 100%;
 	margin: 0 auto;
 }
 .allBox {
@@ -249,14 +250,15 @@ export default {
 	border-right: 1px solid #fff;
 }
 .carousel {
-	border-left: 1px solid #fff;
 	display: flex;
 	height: 180px;
 	position: relative;
 	overflow: hidden;
+	border-left: 1px solid #fff;
 }
 .firstClass {
 	height: 140px;
+	width: 140px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;

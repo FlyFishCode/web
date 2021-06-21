@@ -73,8 +73,7 @@
 				<template #player="{record}">
 					<div class="playerInfoBox">
 						<div class="imgBox">
-							<span v-if="record.playerImg"><img :src="record.playerImg" alt=""/></span>
-							<span v-else><img :src="defaultPlayerImg" alt=""/></span>
+							<img :src="record.playerImg" alt="" :onerror='handlePlayerImgError'/>
 						</div>
 						<div class="link inPhoneTableDisplay" @click="showDialog(0)">{{ record.playerName }}</div>
 						<div class="showPhoneTable">{{ record.playerName }}</div>
@@ -94,8 +93,7 @@
 				<template #player="{record}">
 					<div class="playerInfoBox">
 						<div class="imgBox">
-							<span v-if="record.playerImg"><img :src="record.playerImg" alt=""/></span>
-							<span v-else><img :src="defaultPlayerImg" alt=""/></span>
+							<img :src="record.playerImg" alt="" :onerror='handlePlayerImgError'/>
 						</div>
 						<div class="link inPhoneTableDisplay" @click="showDialog(1)">{{ record.playerName }}</div>
 						<div class="showPhoneTable">{{ record.playerName }}</div>
@@ -114,6 +112,7 @@ import { awardInfoHttp, awardHomeListHttp, awardAwayListHttp } from '@/axios/api
 import dialogVue from '@/components/common/dialogVue.vue';
 import { useRoute } from 'vue-router';
 import { message } from 'ant-design-vue';
+import { handlePlayerImgError } from '@/components/common/public/index'
 
 interface DataProps {
 	isUp: boolean;
@@ -145,7 +144,7 @@ export default defineComponent({
 			homeTeamId: 0,
 			awayTeamId: 0,
 			diaVisible: false,
-			defaultPlayerImg: require('@/assets/player.png'),
+			handlePlayerImgError,
 			competitionId: ROUTE.query.competitionId,
 			showDialog: (type: number) => {
 				if (type) {
@@ -493,6 +492,7 @@ export default defineComponent({
 }
 .imgBox {
 	width: 50px;
+	height: 50px;
 }
 .imgBox img {
 	width: 100%;

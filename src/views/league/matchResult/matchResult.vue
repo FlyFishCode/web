@@ -44,8 +44,7 @@
 						<template v-slot:homePlayerInfo="{ record }">
 							<div class="playerbox">
 								<div class="playerImgBox">
-									<span v-if="record.homePlayerPortrait"><img :src="record.homePlayerPortrait" alt=""/></span>
-									<span v-else><img :src="defaultTeamImg" alt=""/></span>
+									<img :src="record.homePlayerPortrait" alt="" :onerror='handlePlayerImgError'/>
 								</div>
 								<div>{{ record.homePlayerName }}</div>
 							</div>
@@ -54,8 +53,7 @@
 							<div class="playerbox">
 								<div>{{ record.visitingPlayerName }}</div>
 								<div class="playerImgBox">
-									<span v-if="record.visitingPlayerPortrait"><img :src="record.visitingPlayerPortrait" alt=""/></span>
-									<span v-else><img :src="defaultTeamImg" alt=""/></span>
+									<img :src="record.visitingPlayerPortrait" alt="" :onerror='handlePlayerImgError'/>
 								</div>
 							</div>
 						</template>
@@ -69,8 +67,7 @@
 								<div v-for="(player,pndex) in leg.playerResultList" :key="pndex">
 									<div class="inPhoneResultPlayer">
 										<div class="playerImgBox">
-											<span v-if="player.homePlayerPortrait"><img :src="player.homePlayerPortrait" alt=""/></span>
-											<span v-else><img :src="defaultTeamImg" alt=""/></span>
+											<img :src="player.homePlayerPortrait" alt="" :onerror='handlePlayerImgError'/>
 										</div>
 										<div class="inPhoneResultConent">{{ player.homePlayerName }}</div>
 									</div>
@@ -91,8 +88,7 @@
 									<div class="inPhoneResultPlayer">
 										<div class="inPhoneResultConent">{{ player.visitingPlayerName }}</div>
 										<div class="playerImgBox">
-											<span v-if="player.visitingPlayerPortrait"><img :src="player.visitingPlayerPortrait" alt=""/></span>
-											<span v-else><img :src="defaultTeamImg" alt=""/></span>
+											<img :src="player.visitingPlayerPortrait" alt="" :onerror='handlePlayerImgError'/>
 										</div>
 									</div>
 									<div class="inPhoneResultPlayer">
@@ -121,6 +117,7 @@ import { defineComponent, onMounted, reactive, toRefs, watch } from 'vue';
 import { matchResultHttp } from '@/axios/api';
 import { SettingFilled } from '@ant-design/icons-vue';
 import { i18n } from '@/components/common/public/index';
+import { handlePlayerImgError } from '@/components/common/public/index'
 import emptyList from '@/components/common/emptyList.vue';
 // import { DOM } from '@/type/interface';
 export default defineComponent({
@@ -134,7 +131,7 @@ export default defineComponent({
 		const data = reactive({
 			isShowMatchTableBtn: true,
 			tableList: [{ legResultList: [{ playerResultList: [] }] }],
-			defaultTeamImg: require('@/assets/icon.png'),
+			handlePlayerImgError,
 			columns: [
 				{
 					title: i18n('default.10'),
@@ -564,5 +561,8 @@ export default defineComponent({
 .inPhoneResultLeg{
 	height: 30px;
 	line-height: 30px;
+}
+.showPhoneTable{
+	display: none;
 }
 </style>

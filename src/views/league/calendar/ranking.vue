@@ -75,7 +75,7 @@
 							</template>
 							<template #team="{ record }">
 								<div class="tableStyle">
-									<img class="tableImg" :src="record.teamImg" alt="" />
+									<img class="tableImg" :src="record.teamImg" alt="" :onerror='handleTeamImgError'/>
 									<div class="link" @click="showDialog(record.teamId)">{{ record.teamName }}</div>
 								</div>
 							</template>
@@ -140,7 +140,7 @@
 							</template>
 							<template #player="{ record }">
 								<div class="tableStyle">
-									<img class="tableImg" :src="record.playerImg" alt="" />
+									<img class="tableImg" :src="record.playerImg" alt="" :onerror='handlePlayerImgError'/>
 									<div>
 										<div>{{ record.playerName }}</div>
 										<div class="link" @click="showDialog(record.teamId)">{{ teamName }}</div>
@@ -185,6 +185,7 @@ import showTeam from '@/components/showTeamTopOne.vue';
 import showPersonal from '@/components/showPersonalTopOne.vue';
 import entryList from '@/components/common/entryList.vue';
 import dialogVue from '@/components/common/dialogVue.vue';
+import { handlePlayerImgError, handleTeamImgError } from '@/components/common/public/index'
 // eslint-disable-next-line @typescript-eslint/class-name-casing
 interface rowType {
 	[x: string]: string | number;
@@ -229,6 +230,8 @@ export default defineComponent({
 			competitionId: ROUTE.query.competitionId,
 			stageId: '',
 			divisiton: '',
+			handlePlayerImgError,
+			handleTeamImgError,
 			teamList: [{ teamId: '' }],
 			stageList: [{ stageId: '', teamList: [] }],
 			divisitonList: [{ divisionId: '', stageList: [] }],

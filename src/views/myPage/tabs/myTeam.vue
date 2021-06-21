@@ -8,7 +8,7 @@
 			<a-row class="eveyTeam">
 				<a-col :lg="3" :xs="4" class="imgColStyle">
 					<div>
-						<img class="matchImg" :src="item.teamImg" alt="" />
+						<img class="matchImg" :src="item.teamImg" alt="" :onerror='handleTeamImgError'/>
 					</div>
 				</a-col>
 				<a-col :lg="4" :xs="10" class="infoClass">
@@ -58,7 +58,7 @@
 					<a-row v-for="info in item.competitionList" :key="info.index" id="msgBox">
 						<a-col :span="4" class="imgColStyle">
 							<div>
-								<img class="matchImg" :src="info.competitionImg" alt="" />
+								<img class="matchImg" :src="info.competitionImg" alt="" :onerror='handleLeagueImgError'/>
 							</div>
 						</a-col>
 						<a-col :span="20" class="countBox">
@@ -103,6 +103,7 @@ import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { myTeamListHttp } from '@/axios/api';
 import { SettingFilled, EnvironmentOutlined, UserOutlined, UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons-vue';
+import { handleTeamImgError, handleLeagueImgError } from '@/components/common/public/index'
 export default defineComponent({
 	name: 'myTeam',
 	components: {
@@ -125,6 +126,8 @@ export default defineComponent({
 			},
 			colSpan: 5,
 			topInfoTitle: 'Top 4 平均 League Rating',
+			handleTeamImgError,
+			handleLeagueImgError,
 			teamList: [{ flag: false, competitionList: [] }],
 			showDetail: (item: any) => {
 				data.dialogObj.title = item.shopAddress;

@@ -203,7 +203,7 @@ export default {
 	box-sizing: border-box;
 }
 .imgBg {
-	width: 80%;
+	width: 100%;
 	height: 100%;
 }
 .allBox {
@@ -221,6 +221,8 @@ export default {
 	overflow: hidden;
 }
 .firstClass {
+	width: 100px;
+	height: 100px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;

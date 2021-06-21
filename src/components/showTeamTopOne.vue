@@ -226,7 +226,8 @@ export default {
 	overflow: hidden;
 }
 .firstClass {
-	height: 140px;
+	height: 100px;
+	width: 100px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;

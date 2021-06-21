@@ -496,4 +496,7 @@ export default defineComponent({
 	padding: 0;
 	margin: 0;
 }
+.showPhoneTable{
+	display: none;
+}
 </style>

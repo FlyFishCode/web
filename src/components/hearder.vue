@@ -85,17 +85,23 @@
 			</a-col>
 		</a-row>
 		<a-row class="showPhoneTable">
-			<a-col :span='3'>
-				<div class="phoneButton">
-					<a-button type="primary" @click="toggleCollapsed">
-					<MenuUnfoldOutlined v-if="collapsed" />
-					<MenuFoldOutlined v-else />
-					</a-button>
-				</div>
+			<div v-if="location === '/'">
+				<a-col :span='3'>
+					<div class="phoneButton">
+						<a-button type="primary" @click="toggleCollapsed">
+						<MenuUnfoldOutlined v-if="collapsed" />
+						<MenuFoldOutlined v-else />
+						</a-button>
+					</div>
 			</a-col>
 			<a-col :span='21'>
 				<div class="showPhoneLogoBox" @click="entryIndex"><img :src="img" alt=""></div>
 			</a-col>
+			</div>
+			<div v-else class="goHistory">
+				<div @click="goHistory"><LeftOutlined /></div>
+				<div>{{ $t(getLocationName(location)) }}</div>
+			</div>
 		</a-row>
 		<div class="transitionBox">
 			<transition enter-active-class="animate__animated animate__fadeInLeft">
@@ -226,10 +232,11 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted, getCurrentInstance, ref } from 'vue';
 import { loginHttp, indexCountryHttp, myMatchInfoHttp, myPageInfoHttp, myBattleDataListHttp, myBattleSelectHttp, registerHttp } from '@/axios/api';
-import { ProfileTwoTone, CloseOutlined, UserOutlined, LockOutlined, PlusCircleOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
+import { ProfileTwoTone, CloseOutlined, UserOutlined, LockOutlined, PlusCircleOutlined, MenuUnfoldOutlined, MenuFoldOutlined , LeftOutlined} from '@ant-design/icons-vue';
 import { i18n } from '@/components/common/public/index';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
+// import { useStore } from 'vuex';
 export default defineComponent({
 	name: 'hearder',
 	components: {
@@ -239,13 +246,15 @@ export default defineComponent({
 		LockOutlined,
 		PlusCircleOutlined,
 		MenuUnfoldOutlined,
-		MenuFoldOutlined
+		MenuFoldOutlined,
+		LeftOutlined
 	},
 	setup() {
 		const MD5 = require('blueimp-md5');
 		const ROUTER = useRouter();
-		const instance: any = getCurrentInstance();
 		const formRef = ref();
+		// const STORE = useStore()
+		const instance: any = getCurrentInstance();
 		const passwordChange = async (rule: any, value: any) => {
 			if (!value) {
 				return Promise.reject(i18n('default.323'));
@@ -272,6 +281,8 @@ export default defineComponent({
 			autoLogin: false,
 			isMyMatch: true,
 			activeKey: 'league',
+			location: '/',
+			img: require('@/assets/logo.png'),
 			leagueList: [{ competitionId: '', divisionList: [{ divisionId: 0 }] }],
 			leagueId: '',
 			imputValue: '',
@@ -280,7 +291,6 @@ export default defineComponent({
 			passWord: '',
 			userName: '',
 			country: '',
-			img: require('@/assets/logo.png'),
 			registerObj: {
 				account: '',
 				cardNo: '',
@@ -384,6 +394,36 @@ export default defineComponent({
 					}
 				});
 			},
+			getLocationName:(value: string) =>{
+				let str = ''
+				switch(value){
+					case "league":
+						str = 'default.8'
+					break;
+					case "team":
+						str = 'default.9'
+					break;
+					case "players":
+						str = 'default.10'
+					break;
+					case "shop":
+						str = 'default.127'
+					break;
+					case "ranking":
+						str = 'default.26'
+					break;
+					case "myPage":
+						str = 'default.2'
+					break;
+				}
+				return str
+			},
+			goHistory:() =>{
+				ROUTER.back()
+				setTimeout(() =>{
+					data.location = location.hash.split('/')[1] || '/'
+				},300)
+			},
 			infoPage: (competitionId: number, divisionId: number) => {
 				data.showBox = false;
 				ROUTER.push({
@@ -397,6 +437,7 @@ export default defineComponent({
 			entryPage: (path: string) => {
 				if (data.isLogin) {
 					data.showPhoneTabs = false;
+					data.location = path
 					ROUTER.push(path);
 				} else {
 					data.visible = true;
@@ -419,10 +460,10 @@ export default defineComponent({
 						return false;
 					}
 					const obj = {
-						playerId,
-						countryId: sessionStorage.getItem('webCountryId'),
 						sort: 1,
+						playerId,
 						date: new Date().getFullYear(),
+						countryId: sessionStorage.getItem('webCountryId'),
 						pageIndex: 1,
 						pageSize: 5
 					};
@@ -479,6 +520,7 @@ export default defineComponent({
 				console.log(e);
 			},
 			entryIndex: () => {
+				data.location = '/'
 				ROUTER.push('/');
 			},
 			login: () => {
@@ -851,5 +893,14 @@ export default defineComponent({
 .transitionBox{
 	position: absolute;
 	z-index: 10;
+}
+.goHistory{
+	font-size: 25px;
+	text-align: center;
+	padding-left: 10px;
+	display: flex;
+}
+.goHistory div:nth-child(2) {
+  flex: 2;
 }
 </style>

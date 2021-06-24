@@ -65,7 +65,7 @@
 				<template #player="{ record }">
 					<div class="inPhoneTableBox">
 						<div class="imgBox">
-							<img :src="record.playerImg" alt="" />
+							<img :src="record.playerImg" alt="" :onerror='handlePlayerImgError'/>
 						</div>
 						<div class="tableMatch" @click="entryPage(1, record.playerId)">{{ record.playerName }}</div>
 					</div>
@@ -337,5 +337,9 @@ export default defineComponent({
 }
 .imgBox img {
 	width: 100%;
+	height: 100%;
+}
+.showPhoneTable{
+	display: none;
 }
 </style>

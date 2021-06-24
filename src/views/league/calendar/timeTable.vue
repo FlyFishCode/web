@@ -127,7 +127,7 @@
 						<div>{{ $t('default.55') }}</div>
 					</template>
 					<template v-slot:VS="{ record }">
-						<div >{{ `${record.homeTeamScore}:${record.visitingTeamScore}` }}</div>
+						<div >{{ `${record.homeTeamScore || '-'}:${record.visitingTeamScore || '-'}` }}</div>
 						<div v-if="getTypeBtn(record) === 1" class="plan" @click="readyClick(record)">{{ $t('default.41') }}</div>
 						<div v-if="getTypeBtn(record) === 2" class="plan" @click="readyClick(record)">{{ $t('default.166') }}</div>
 					</template>

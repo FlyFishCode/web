@@ -30,12 +30,9 @@
 						<a-col :lg="2" :xs="8">
 							<div><span class="iconRound"></span>{{ $t('default.73') }}</div>
 						</a-col>
-						<!-- <a-col :lg="{ span: 2, offset: 20 }" :xs="0">
-							<a-button type="primary" size="small">{{ $t('default.69') }}</a-button>
-						</a-col> -->
 					</a-row>
 					<a-row>
-						<a-table class="inPhoneTableDisplay" :columns="leagueColumns" :data-source="leagueTableList" :pagination="false" rowkey="captainId" :scroll="{ x: 300 }" bordered>
+						<a-table class="inPhoneTableDisplay" :columns="leagueColumns" :data-source="leagueTableList" :pagination="false" rowkey="captainId" :scroll="{ x: 1200 }" bordered>
 							<template #sort="{ index }">
 								<div>{{ index + 1 }}</div>
 							</template>
@@ -47,7 +44,7 @@
 							</template>
 						</a-table>
 						<!-- 移动端显示 -->
-						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 400 }"  :columns="leagueColumns" :data-source="leagueTableList" rowkey="captainId" bordered>
+						<a-table class="showPhoneTable" :columns="leagueColumns" :data-source="leagueTableList"  :pagination="false" rowkey="captainId" :scroll="{ x: 1200 }" bordered>
 							<template #sort="{ index }">
 								<div>{{ index + 1 }}</div>
 							</template>
@@ -81,7 +78,7 @@
 							</template>
 						</a-table>
 						<!-- 移动端显示 -->
-						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 400 }" :columns="historyColumns" rowkey="captainId" :data-source="rewardTableList" bordered>
+						<a-table class="showPhoneTable" :pagination="false" :scroll="{ x: 1200 }" :columns="historyColumns" :data-source="rewardTableList" rowkey="captainId"  bordered>
 							<template #action="{ index }">
 								<div>{{ index + 1 }}</div>
 							</template>
@@ -248,11 +245,15 @@ export default defineComponent({
 					slots: { customRender: 'sort' }
 				},
 				{
-					title: '队伍',
+					title: '队名',
+					width: 200,
 					fixed: 'left',
+					slots: { customRender: 'team' }
+				},
+				{
+					title: '队伍',
 					dataIndex: 'name',
 					children: [
-						{ title: '队名', dataIndex: 'address', width: 200, slots: { customRender: 'team' } },
 						{ title: 'Rating', dataIndex: 'competitionRating.rating', width: 75 },
 						{ title: 'PPD', dataIndex: 'competitionRating.ppd', width: 70 },
 						{ title: 'MPR', dataIndex: 'competitionRating.mpr', width: 70 }
